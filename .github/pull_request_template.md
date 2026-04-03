@@ -1,5 +1,9 @@
 # 🚀 Pull Request
 
+## Ramas
+- Rama: 'tipo/nro-ricket/descripcion'
+- Destino: 'dev'
+
 ## 📝 Descripción
 **Tipo de cambio:**
 - [ ] Feat (Nueva funcionalidad)
