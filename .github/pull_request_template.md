@@ -1,7 +1,7 @@
 # 🚀 Pull Request
 
 ## Ramas
-- Rama: 'tipo/nro-ricket/descripcion'
+- Rama: 'tipo/nro-ticket/descripcion'
 - Destino: 'dev'
 
 ## 📝 Descripción
@@ -13,7 +13,7 @@
 - [ ] Performance (Mejora de rendimiento)
 
 ## 🔗 Tickets o enlaces relacionados
-Ticket: 
+- Ticket: 
 ---
 
 ## 🛠️ Checklist de Convenciones (Basado en v1.0)
