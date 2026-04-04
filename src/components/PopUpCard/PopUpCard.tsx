@@ -1,6 +1,8 @@
+import type React from "react";
+
 interface PopUpCardProps {
-    title: string;
-    children?: React.ReactNode;
+  title: string;
+  children?: React.ReactNode;
 }
 
 const PopUpCard = ({ title, children }: PopUpCardProps) => {
@@ -11,9 +13,7 @@ const PopUpCard = ({ title, children }: PopUpCardProps) => {
           {title}
         </h2>
       </div>
-      <div className="w-full">
-        {children}
-      </div>
+      <div className="w-full">{children}</div>
     </div>
   );
 };
