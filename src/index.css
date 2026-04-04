@@ -1,1 +1,40 @@
 @import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+.font-inter {
+  font-family: 'Inter', sans-serif;
+}
+
+.font-nunito {
+  font-family: 'Nunito', sans-serif;
+}
+
+@layer utilities {
+  /* Fondo Principal (Onyx) */
+  .bg-main { background-color: #0A090C; }
+  .text-main { color: #0A090C; }
+
+  /* Superficie/Cards (Platinum) */
+  .bg-surface { background-color: #EFEDEE; }
+  .text-surface { color: #EFEDEE; }
+
+  /* Primario (Stormy Teal) */
+  .bg-primary { background-color: #2C676F; }
+  .text-primary { color: #2C676F; }
+
+  /* Secundario/Oscuro (Dark Teal) */
+  .bg-secondary { background-color: #07383C; }
+  .text-secondary { color: #07383C; }
+
+  /* Acento (Frosted Blue) */
+  .bg-accent { background-color: #8EB4BA; }
+  .text-accent { color: #8EB4BA; }
+  
+  .border-surface { border-color: #EFEDEE; } /* Platinum */
+  .border-primary { border-color: #2C676F; } /* Stormy Teal */
+  .border-secondary { border-color: #07383C; } /* Dark Teal */
+  .border-accent { border-color: #8EB4BA; } /* Frosted Blue */
+}
+
