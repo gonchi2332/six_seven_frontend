@@ -31,4 +31,10 @@
   /* Acento (Frosted Blue) */
   .bg-accent { background-color: #8EB4BA; }
   .text-accent { color: #8EB4BA; }
+  
+  .border-surface { border-color: #EFEDEE; } /* Platinum */
+  .border-primary { border-color: #2C676F; } /* Stormy Teal */
+  .border-secondary { border-color: #07383C; } /* Dark Teal */
+  .border-accent { border-color: #8EB4BA; } /* Frosted Blue */
 }
+
