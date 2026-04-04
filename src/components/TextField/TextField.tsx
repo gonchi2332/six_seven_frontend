@@ -2,7 +2,7 @@ import React from 'react';
 
 interface TextFieldProps {
   label?: string;
-  value: string;
+  value?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   type?: 'text' | 'password' | 'email' | 'number'; 
