@@ -1,8 +1,9 @@
-import RegisterPage from "./pages/registerPage";
+import RegisterPage from "./pages/RegisterPage";
+import VerificationPage from "./pages/VerificationPage";
 function App() {
     return (
         <div className="App">
-            <RegisterPage />
+            <VerificationPage />
         </div>
     )
 }
