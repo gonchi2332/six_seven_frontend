@@ -103,7 +103,7 @@ const RegisterPage = () => {
 
         if(mailError || passwordError || confirmPasswordError) return;
         setIsLoading(true);
-        //ACA FALTA LA PUTA MADREEEE, NO QUIERO HACER BAAAACK xd
+        //Falta backend
     };
     //fondo
     const CONTAINER = "min-h-screen bg-main flex items-center stretch";
