@@ -14,7 +14,7 @@ const Button = ({
   type = 'button' 
 }: ButtonProps) => {
 
-  const baseStyles = "px-6 py-2 rounded-xl transition-all duration-200 font-nunito font-bold text-2xl w-fit cursor-pointer";
+  const BASE_STYLES = "px-6 py-2 rounded-xl transition-all duration-200 font-nunito font-bold text-2xl w-fit cursor-pointer";
 
   const variantStyles = {
     primary: "bg-secondary text-surface" ,
@@ -25,7 +25,7 @@ const Button = ({
     <button
       type={type}
       onClick={onClick}
-      className={`${baseStyles} ${variantStyles[variant]}`}
+      className={`${BASE_STYLES} ${variantStyles[variant]}`}
     >
       {children} 
     </button>
