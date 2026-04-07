@@ -1,4 +1,4 @@
-import RegisterPage from "./pages/registerPage"
+import RegisterPage from "./pages/registerPage";
 function App() {
     return (
         <div className="App">
