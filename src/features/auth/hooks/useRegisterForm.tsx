@@ -116,7 +116,7 @@ export const useRegisterForm = () => {
         
         setIsLoading(true);
         // Aquí va la llamada al backend cuando esté lista
-        console.log("Formulario válido", { email: formData.mail, password: formData.password });
+       
     };
 
     return {
