@@ -1,8 +1,6 @@
-import VerificationPopup from "./features/auth/components/VerificationPopup"
+import VerificationPage from "./pages/VerificationPage";
 
 function App() {
-    return (
-        <VerificationPopup />
-    )
+    return (<VerificationPage />);
 }
 export default App

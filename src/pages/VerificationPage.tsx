@@ -1,9 +1,9 @@
-import VerificationPopup from "../features/auth/components/VerificationPopup";
+import VerificationFlow from "../features/auth/components/EmailVerificationFlow";
 
 const VerificationPage = () => {
   return (
     <div>
-      <VerificationPopup />
+      <VerificationFlow />
     </div>
   );
 };
