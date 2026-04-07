@@ -1,6 +1,9 @@
-import VerificationPage from "./pages/VerificationPage";
-
+import RegisterPage from "./pages/registerPage";
 function App() {
-    return (<VerificationPage />);
+    return (
+        <div className="App">
+            <RegisterPage />
+        </div>
+    )
 }
 export default App
