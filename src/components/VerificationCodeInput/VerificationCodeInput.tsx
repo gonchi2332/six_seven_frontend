@@ -1,4 +1,4 @@
-import { useVerificationCode } from "../../hooks/useVerificationCode";
+import { useVerificationCode } from "../../features/auth/hooks/useVerificationCode";
 
 interface Props {
   length?: number;
@@ -8,7 +8,11 @@ interface Props {
 }
 
 const VerificationCodeInput = ({ length = 7, value, onChange, error = false }: Props) => {
-  const { inputsRef, handleChange } = useVerificationCode(length, value, onChange);
+ const { inputsRef, handleChange } = useVerificationCode(length, value, onChange);
+
+  const inputBaseStyles = "w-8 h-12 text-center text-[20px] font-nunito bg-transparent text-white caret-white outline-none";
+  const inputNormalStyles = "focus:ring-1 focus:ring-blue-500";
+  const inputErrorStyles = "text-red-400";
 
   return (
     <div className="flex justify-center mt-4">
@@ -21,7 +25,7 @@ const VerificationCodeInput = ({ length = 7, value, onChange, error = false }: P
             maxLength={1}
             value={value[i] || ""}
             onChange={(e) => handleChange(e.target.value, i)}
-            className={`w-8 h-12 text-center text-[20px] font-nunito bg-transparent text-white caret-white outline-none ${error ? "text-red-400" : ""}`}
+            className={`${inputBaseStyles} ${error ? inputErrorStyles : inputNormalStyles}`}
           />
         ))}
       </div>

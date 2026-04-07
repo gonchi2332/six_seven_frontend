@@ -1,4 +1,4 @@
-import VerificationFlow from "../features/auth/components/EmailVerificationFlow";
+import VerificationFlow from "../features/auth/components/EmailPasswordVerification/EmailVerificationFlow";
 
 const VerificationPage = () => {
   return (

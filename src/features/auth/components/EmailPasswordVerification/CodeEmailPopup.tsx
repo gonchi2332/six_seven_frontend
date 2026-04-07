@@ -1,6 +1,19 @@
 import { useState, useEffect } from "react";
-import Button from "../../../components/Button/Button";
-import VerificationCodeInput from "../../../components/VerificationCodeInput/VerificationCodeInput";
+import Button from "../../../../components/Button/Button";
+import VerificationCodeInput from "../../../../components/VerificationCodeInput/VerificationCodeInput";
+import {
+    VERIFICATION_CONTAINER,
+    VERIFICATION_CARD,
+    VERIFICATION_CONTENT,
+    VERIFICATION_ICON_WRAPPER,
+    VERIFICATION_TITLE,
+    VERIFICATION_DESCRIPTION,
+    VERIFICATION_LABEL,
+    VERIFICATION_TIMER,
+    VERIFICATION_CODE_WRAPPER,
+    VERIFICATION_ERROR_BOX,
+    VERIFICATION_BUTTONS_WRAPPER
+} from "./Verification.constats";
 
 type Mode = "verify" | "reset";
 
@@ -45,8 +58,6 @@ const VerificationPopup = ({ mode, onCodeExpired }: Props) => {
     setTimeLeft(60);
   };
 
-  //Comprobacion de estado , si es de error, de verificacion o recuperacion
-  //titulo,descripcion, icono y colores cambian segun el estado
   const title = error 
     ? "Error de Recuperacion"
     : mode === "verify"
@@ -66,34 +77,34 @@ const VerificationPopup = ({ mode, onCodeExpired }: Props) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
-      <div className="bg-primary rounded-2xl w-full max-w-sm shadow-2xl py-6 min-h-[540px] flex flex-col">
-        <div className="flex flex-col items-center px-10 gap-3">
-          <div className="w-20 h-20 flex items-center justify-center bg-black rounded-full shadow-lg border border-white/10">
+    <div className={VERIFICATION_CONTAINER}>
+      <div className={VERIFICATION_CARD}>
+        <div className={VERIFICATION_CONTENT}>
+          <div className={VERIFICATION_ICON_WRAPPER}>
             {error ? (
               <i className="fa-solid fa-circle-exclamation text-white text-5xl"></i>) : 
               (<i className="fa-solid fa-shield text-[#90DDF0] text-5xl"></i>)}
           </div>
 
-          <h2 className="text-3xl font-inter font-bold text-surface text-center">
+          <h2 className={VERIFICATION_TITLE}>
             {title}
           </h2>
 
-          <p className="text-surface text-center text-sm max-w-[210px] leading-relaxed font-inter">
+          <p className={VERIFICATION_DESCRIPTION}>
             {description}
           </p>
 
           {!error ? (
             <>
-              <span className="text-surface text-[24px] font-nunito">
+              <span className={VERIFICATION_LABEL}>
                 Ingresar Código
               </span>
 
-              <div className="text-surface text-sm font-mono bg-black/20 px-3 py-1 rounded-full">
+              <div className={VERIFICATION_TIMER}>
                 Tiempo restante: {formatTime(timeLeft)}
               </div>
 
-              <div className="-mt-4 mb-4"> 
+              <div className={VERIFICATION_CODE_WRAPPER}> 
                 <VerificationCodeInput
                     value={code}
                     onChange={setCode}
@@ -102,14 +113,14 @@ const VerificationPopup = ({ mode, onCodeExpired }: Props) => {
                 </div>
             </>
           ) : (
-            <div className="bg-white/10 border-l-4 border-red-400 rounded-lg p-5 flex items-center gap-2 text-surface text-sm">
+            <div className={VERIFICATION_ERROR_BOX}>
               <i className="fa-solid fa-circle-info"></i>
               <span>Por favor revisa que el codigo sea válido.</span>
             </div>
           )}
         </div>
 
-        <div className="flex flex-col items-center gap-3 px-10 w-full mt-auto">
+        <div className={VERIFICATION_BUTTONS_WRAPPER}>
           <Button variant="secondary" onClick={handleSubmit}>
             Verificar
           </Button>
