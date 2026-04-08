@@ -29,7 +29,7 @@ const useLogin = () => {
             alert("Login exitoso");
 
         } catch (err) {
-            setError("Correo contrasena incorrectas");
+            setError("Correo o contraseña incorrectas");
         } finally {
             setIsLoading(false);
         }
