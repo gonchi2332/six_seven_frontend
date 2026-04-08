@@ -8,7 +8,7 @@ import {
     TITLE,
     LINK_TEXT,
     LINK_ANCHOR
-} from "./RegisterForm.constats";
+} from "./RegisterForm.constans";
 
 const RegisterForm = () => {
     const {
