@@ -1,18 +1,8 @@
 import TextField from "../../../../components/TextField";
 import Button from "../../../../components/Button";
 import useLogin from "../../hooks/useLogin";
-import {
-    FORM,
-    FORM_SPACING,
-    EMAIL_WRAPPER,
-    PASSWORD_WRAPPER,
-    BUTTON_WRAPPER,
-    FOOTER_WRAPPER,
-    TITLE,
-    LINK_TEXT,
-    LINK_ANCHOR,
-    FORGOT_PASSWORD
-} from "./LoginForm.constants";
+
+
 const LoginForm = () => {
     const {
         email,
@@ -23,6 +13,17 @@ const LoginForm = () => {
         setPassword,
         handleSubmit
     } = useLogin();
+
+    const FORM = "h-full flex flex-col";
+    const FORM_SPACING = "flex flex-col flex-1 justify-center";
+    const FOOTER_WRAPPER = "text-center mt-auto pb-8";
+    const EMAIL_WRAPPER = "mt-8";
+    const PASSWORD_WRAPPER = "mt-4";
+    const BUTTON_WRAPPER = "flex justify-center mt-10";
+    const TITLE = "text-4xl font-regular text-center text-surface font-inter";
+    const LINK_TEXT = "text-center text-sm text-surface font-nunito";
+    const LINK_ANCHOR = "text-accent hover:text-accent/80 font-medium transition-colors font-nunito";
+    const FORGOT_PASSWORD = "block text-right text-sm text-accent hover:text-accent/80 transition-colors font-nunito cursor-pointer mt-1";
 
     return (
         <form onSubmit={handleSubmit} className={FORM}>

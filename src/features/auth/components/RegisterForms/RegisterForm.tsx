@@ -1,14 +1,7 @@
 import TextField from "../../../../components/TextField";
 import Button from "../../../../components/Button";
 import { useRegisterForm } from "../../hooks/useRegisterForm";
-import {
-    FIELD_WRAPPER,
-    BUTTON_WRAPPER,
-    FORM_SPACING,
-    TITLE,
-    LINK_TEXT,
-    LINK_ANCHOR
-} from "./RegisterForm.constans";
+
 
 const RegisterForm = () => {
     const {
@@ -24,6 +17,16 @@ const RegisterForm = () => {
         handleConfirmPasswordBlur,
         handleSubmit
     } = useRegisterForm();
+
+    const FIELD_WRAPPER = "w-full";
+    const BUTTON_WRAPPER = "flex justify-center";
+    const FORM_SPACING = "space-y-6";
+
+    const TITLE = "text-4xl font-regular text-left text-surface font-inter";
+    const LINK_TEXT = "text-center text-sm text-surface font-nunito";
+    const LINK_ANCHOR = "text-accent hover:text-accent/80 font-medium transition-colors font-nunito";
+
+
 
     return (
         <form onSubmit={handleSubmit}>
