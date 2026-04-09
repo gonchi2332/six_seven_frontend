@@ -1,4 +1,4 @@
-import Logo from "../../../../assets/pictureTis1.jpeg";
+import Logo from "./assets/pictureTis1.jpeg";
 
 const RegisterImage = () => {
     return (
