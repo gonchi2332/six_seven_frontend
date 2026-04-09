@@ -1,4 +1,4 @@
-import loginImage from "./login-image.jpg";
+import loginImage from "./assets/login-image.jpg";
 
 const LOGIN_IMAGE_STYLES = "w-full h-full object-cover";
 

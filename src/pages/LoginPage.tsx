@@ -1,5 +1,5 @@
 import LoginForm from "../features/auth/components/Login/LoginForm";
-import LoginImage from "../features/auth/components/LoginImage/LoginImage";
+import LoginImage from "../features/auth/components/Login/LoginImage/LoginImage";
 
 const CONTAINER = "h-screen bg-main flex overflow-hidden";
 const IMAGE_SECTION = "hidden lg:flex lg:w-1/2 h-full";
