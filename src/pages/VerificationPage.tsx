@@ -3,7 +3,7 @@ import VerificationFlow from "../features/auth/components/EmailPasswordVerificat
 const VerificationPage = () => {
   return (
     <div>
-      <VerificationFlow />
+      <VerificationFlow initialMode="verify" />
     </div>
   );
 };

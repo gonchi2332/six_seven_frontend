@@ -3,9 +3,15 @@ import VerificationPopup from './CodeEmailPopup';
 import ExpiredCodePopup from './ExpiredCodePopup';
 
 type PopupType = 'verification' | 'expired';
+type Mode = 'verify' | 'reset';
 
-const VerificationFlow = () => {
+type Props = {
+  initialMode?: Mode;
+};
+
+const VerificationFlow = ({ initialMode = 'verify' }: Props) => {
   const [currentPopup, setCurrentPopup] = useState<PopupType>('verification');
+  const [mode, setMode] = useState<Mode>(initialMode);
 
   const handleCodeExpired = () => {
     setCurrentPopup('expired');
@@ -18,13 +24,13 @@ const VerificationFlow = () => {
   return (
     <>
       {currentPopup === 'verification' && (
-        <VerificationPopup 
-          mode="verify"
+        <VerificationPopup
+          mode={mode}
           onCodeExpired={handleCodeExpired}
         />
       )}
       {currentPopup === 'expired' && (
-        <ExpiredCodePopup 
+        <ExpiredCodePopup
           onResendCode={handleResendCode}
         />
       )}

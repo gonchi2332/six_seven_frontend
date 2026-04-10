@@ -1,19 +1,17 @@
 import { useState, useEffect } from "react";
 import Button from "../../../../components/Button/Button";
 import VerificationCodeInput from "../../../../components/VerificationCodeInput/VerificationCodeInput";
-import {
-    VERIFICATION_CONTAINER,
-    VERIFICATION_CARD,
-    VERIFICATION_CONTENT,
-    VERIFICATION_ICON_WRAPPER,
-    VERIFICATION_TITLE,
-    VERIFICATION_DESCRIPTION,
-    VERIFICATION_LABEL,
-    VERIFICATION_TIMER,
-    VERIFICATION_CODE_WRAPPER,
-    VERIFICATION_ERROR_BOX,
-    VERIFICATION_BUTTONS_WRAPPER
-} from "./Verification.constats";
+
+const VERIFICATION_CONTAINER = "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6";
+const VERIFICATION_CARD = "bg-primary rounded-2xl w-full max-w-sm shadow-2xl py-6 min-h-[540px] flex flex-col";
+const VERIFICATION_CONTENT = "flex flex-col items-center px-10 gap-3";
+const VERIFICATION_ICON_WRAPPER = "w-20 h-20 flex items-center justify-center bg-black rounded-full shadow-lg border border-white/10";
+const VERIFICATION_TITLE = "text-[24px] md:text-3xl font-inter font-bold text-surface text-center";
+const VERIFICATION_DESCRIPTION = "text-[18px] font-nunito font-normal text-surface text-center max-w-[260px] leading-relaxed";
+const VERIFICATION_LABEL = "text-[18px] md:text-[24px] text-surface font-nunito";
+const VERIFICATION_CODE_WRAPPER = "-mt-4 mb-4";
+const VERIFICATION_ERROR_BOX = "bg-white/10 border-l-4 border-red-400 rounded-lg p-5 flex items-center gap-2 text-surface text-sm";
+const VERIFICATION_BUTTONS_WRAPPER = "flex flex-col items-center gap-3 w-[260px] mx-auto mt-auto";
 
 type Mode = "verify" | "reset";
 
@@ -27,7 +25,7 @@ const MOCK_CODE = "1234567";
 const VerificationPopup = ({ mode, onCodeExpired }: Props) => {
   const [code, setCode] = useState<string[]>(Array(5).fill(""));
   const [error, setError] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(10);
 
   useEffect(() => {
     if (timeLeft === 0) {
@@ -55,26 +53,20 @@ const VerificationPopup = ({ mode, onCodeExpired }: Props) => {
   const handleResend = () => {
     setCode(Array(7).fill(""));
     setError(false);
-    setTimeLeft(60);
+    setTimeLeft(10);
   };
 
-  const title = error 
+  const title = error
     ? "Error de Recuperacion"
     : mode === "verify"
     ? "Confirmación de Correo Electronico"
     : "Reestablecer Contraseña";
 
-  const description = error 
+  const description = error
     ? "Los datos registrados no coinciden con los criterios de seguridad"
-     : mode === "verify"
+    : mode === "verify"
     ? "Hemos enviado un código de verificación a tu correo."
     : "Hemos enviado un código para restablecer tu contraseña a tu correo.";
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
 
   return (
     <div className={VERIFICATION_CONTAINER}>
@@ -82,35 +74,29 @@ const VerificationPopup = ({ mode, onCodeExpired }: Props) => {
         <div className={VERIFICATION_CONTENT}>
           <div className={VERIFICATION_ICON_WRAPPER}>
             {error ? (
-              <i className="fa-solid fa-circle-exclamation text-white text-5xl"></i>) : 
-              (<i className="fa-solid fa-shield text-[#90DDF0] text-5xl"></i>)}
+              <i className="fa-solid fa-circle-exclamation text-white text-5xl"></i>
+            ) : (
+              <i className="fa-solid fa-shield text-[#90DDF0] text-5xl"></i>
+            )}
           </div>
 
-          <h2 className={VERIFICATION_TITLE}>
+          <h2 className={`${VERIFICATION_TITLE} max-w-[240px]`}>
             {title}
           </h2>
 
-          <p className={VERIFICATION_DESCRIPTION}>
-            {description}
-          </p>
+          <p className={VERIFICATION_DESCRIPTION}>{description}</p>
 
           {!error ? (
             <>
-              <span className={VERIFICATION_LABEL}>
-                Ingresar Código
-              </span>
+              <span className={VERIFICATION_LABEL}>Ingresar Código</span>
 
-              <div className={VERIFICATION_TIMER}>
-                Tiempo restante: {formatTime(timeLeft)}
-              </div>
-
-              <div className={VERIFICATION_CODE_WRAPPER}> 
+              <div className={VERIFICATION_CODE_WRAPPER}>
                 <VerificationCodeInput
-                    value={code}
-                    onChange={setCode}
-                    error={error}
+                  value={code}
+                  onChange={setCode}
+                  error={error}
                 />
-                </div>
+              </div>
             </>
           ) : (
             <div className={VERIFICATION_ERROR_BOX}>
@@ -121,14 +107,14 @@ const VerificationPopup = ({ mode, onCodeExpired }: Props) => {
         </div>
 
         <div className={VERIFICATION_BUTTONS_WRAPPER}>
-          <Button variant="secondary" onClick={handleSubmit}>
-            Verificar
+          <Button variant="secondary" onClick={handleSubmit} fullWidth>
+            {error ? "Reintentar" : "Verificar"}
           </Button>
-          <Button variant="primary" onClick={handleResend}>
-            Reenviar Codigo
+
+          <Button variant="primary" onClick={handleResend} fullWidth>
+            {error ? "Contactar Soporte" : "Reenviar Codigo"}
           </Button>
         </div>
-
       </div>
     </div>
   );
