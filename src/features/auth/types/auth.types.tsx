@@ -1,17 +1,27 @@
 export interface RegisterFormData {
-    mail: string;
+    name: string;
+    paternalLastName: string;
+    maternalLastName?: string;
+    username: string;
     password: string;
     confirmPassword: string;
+
 }
 
 export interface RegisterFormErrors {
-    mail: string;
+    name: string;
+    paternalLastName: string;
+    maternalLastName?: string;
+    username: string;
     password: string;
     confirmPassword: string;
 }
 
 export interface RegisterFormTouched {
-    mail: boolean;
+    name: boolean;
+    paternalLastName: boolean;
+    maternalLastName?: boolean;
+    username: boolean;
     password: boolean;
     confirmPassword: boolean;
 }

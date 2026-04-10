@@ -3,19 +3,28 @@ import type { RegisterFormData, RegisterFormErrors, RegisterFormTouched } from '
 
 export const useRegisterForm = () => {
     const [formData, setFormData] = useState<RegisterFormData>({
-        mail: "",
+        name: "",
+        paternalLastName: "",
+        maternalLastName: "",
+        username: "",
         password: "",
         confirmPassword: ""
     });
 
     const [errors, setErrors] = useState<RegisterFormErrors>({
-        mail: "",
+        name: "",
+        paternalLastName: "",
+        maternalLastName: "",
+        username: "",
         password: "",
         confirmPassword: ""
     });
 
     const [touched, setTouched] = useState<RegisterFormTouched>({
-        mail: false,
+        name: false,
+        paternalLastName: false,
+        maternalLastName: false,
+        username: false,
         password: false,
         confirmPassword: false
     });
@@ -23,10 +32,8 @@ export const useRegisterForm = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     // Validaciones
-    const validateMail = (mail: string): string => {
-        if (!mail) return "El correo es requerido";
-        const mailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!mailRegex.test(mail)) return "El correo no es válido";
+    const validateName = (name: string): string => {
+        if (!name) return "El nombre es requerido";
         return "";
     };
 
@@ -41,24 +48,82 @@ export const useRegisterForm = () => {
         if (password !== confirm) return "Las contraseñas no coinciden";
         return "";
     };
+    const validatePaternalLastName = (paternalName:string)=>{
+        if(!paternalName) return "el apellido paterno es requerido"
+        if(!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(paternalName)) return "Solo letras y espacios";
+        return ""
+    }
+    const validateMaternalLastName = (maternalName:string) =>{
+        if(!maternalName) return ""
+        if(!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(maternalName)) return "Solo letras y espacios";
+        return ""
+    }
+    const validateUsername = (username:string)=>{
+        if(!username) return "el nombre de usuario es obligatorio"
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) return "Solo letras, números y guión bajo";
+        return ""
+    }
 
     // Handlers
-    const handleMailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setFormData(prev => ({ ...prev, mail: value }));
-        if (touched.mail) {
-            const error = validateMail(value);
-            setErrors(prev => ({ ...prev, mail: error }));
+        const handleFieldChange = (
+        field: keyof RegisterFormData,
+        value: string
+    ) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+        
+        if (touched[field]) {
+            let error = "";
+            switch (field) {
+                case "name":
+                    error = validateName(value);
+                    break;
+                case "paternalLastName":
+                    error = validatePaternalLastName(value);
+                    break;
+                case "maternalLastName":
+                    error = validateMaternalLastName(value);
+                    break;
+                case "username":
+                    error = validateUsername(value);
+                    break;
+                case "password":
+                    error = validatePassword(value);
+                    break;
+                case "confirmPassword":
+                    error = validateConfirmPassword(formData.password, value);
+                    break;
+            }
+            setErrors(prev => ({ ...prev, [field]: error }));
         }
+    };
+
+    // Handlers específicos (para mantener compatibilidad)
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        handleFieldChange("name", e.target.value);
+    };
+
+    const handlePaternalLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        handleFieldChange("paternalLastName", e.target.value);
+    };
+
+    const handleMaternalLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        handleFieldChange("maternalLastName", e.target.value);
+    };
+
+    const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        handleFieldChange("username", e.target.value);
     };
 
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setFormData(prev => ({ ...prev, password: value }));
+        
         if (touched.password) {
             const error = validatePassword(value);
             setErrors(prev => ({ ...prev, password: error }));
         }
+        
+        // Re-validar confirmPassword si ya estaba tocado
         if (touched.confirmPassword && formData.confirmPassword) {
             const confirmError = validateConfirmPassword(value, formData.confirmPassword);
             setErrors(prev => ({ ...prev, confirmPassword: confirmError }));
@@ -68,17 +133,19 @@ export const useRegisterForm = () => {
     const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setFormData(prev => ({ ...prev, confirmPassword: value }));
+        
         if (touched.confirmPassword) {
             const error = validateConfirmPassword(formData.password, value);
             setErrors(prev => ({ ...prev, confirmPassword: error }));
         }
     };
 
-    const handleMailBlur = () => {
-        if (!touched.mail) {
-            setTouched(prev => ({ ...prev, mail: true }));
-            const error = validateMail(formData.mail);
-            setErrors(prev => ({ ...prev, mail: error }));
+    //blur handlers
+    const handleNameBlur = () => {
+        if (!touched.name) {
+            setTouched(prev => ({ ...prev, name: true }));
+            const error = validateName(formData.name);
+            setErrors(prev => ({ ...prev, name: error }));
         }
     };
 
@@ -97,22 +164,58 @@ export const useRegisterForm = () => {
             setErrors(prev => ({ ...prev, confirmPassword: error }));
         }
     };
+    const handlePaternalLastNameBlur = () => {
+        if (!touched.paternalLastName) {
+            setTouched(prev => ({ ...prev, paternalLastName: true }));
+            const error = validatePaternalLastName(formData.paternalLastName);
+            setErrors(prev => ({ ...prev, paternalLastName: error }));
+        }
+    };
+
+    const handleMaternalLastNameBlur = () => {
+        if (!touched.maternalLastName) {
+            setTouched(prev => ({ ...prev, maternalLastName: true }));
+            const error = validateMaternalLastName(formData.maternalLastName!);
+            setErrors(prev => ({ ...prev, maternalLastName: error }));
+        }
+    };
+    const handleUsernameBlur = () => {
+        if (!touched.username) {
+            setTouched(prev => ({ ...prev, username: true }));
+            const error = validateUsername(formData.username!);
+            setErrors(prev => ({ ...prev, username: error }));
+        }
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setTouched({ mail: true, password: true, confirmPassword: true });
+        setTouched({ 
+            name: true, 
+            password: true,
+            confirmPassword: true,
+            paternalLastName: true,
+            maternalLastName: true,
+            username: true
+        });
         
-        const mailError = validateMail(formData.mail);
+        const nameError = validateName(formData.name);
         const passwordError = validatePassword(formData.password);
         const confirmPasswordError = validateConfirmPassword(formData.password, formData.confirmPassword);
+        const paternalLastNameError = validatePaternalLastName(formData.paternalLastName);
+        const maternalLastNameError = validateMaternalLastName(formData.maternalLastName!);
+        const usernameError = validateUsername(formData.username);
+
 
         setErrors({
-            mail: mailError,
+            name: nameError,
+            paternalLastName: paternalLastNameError,
+            maternalLastName: maternalLastNameError,
+            username: usernameError,
             password: passwordError,
             confirmPassword: confirmPasswordError
         });
 
-        if (mailError || passwordError || confirmPasswordError) return;
+        if (nameError || passwordError || confirmPasswordError || paternalLastNameError || maternalLastNameError || usernameError) return;
         
         setIsLoading(true);
         // Aquí va la llamada al backend cuando esté lista
@@ -124,12 +227,18 @@ export const useRegisterForm = () => {
         errors,
         touched,
         isLoading,
-        handleMailChange,
+        handleNameChange,
         handlePasswordChange,
         handleConfirmPasswordChange,
-        handleMailBlur,
+        handlePaternalLastNameChange,
+        handleMaternalLastNameChange,
+        handleUsernameChange,
+        handleNameBlur,
         handlePasswordBlur,
         handleConfirmPasswordBlur,
+        handlePaternalLastNameBlur,
+        handleMaternalLastNameBlur,
+        handleUsernameBlur,
         handleSubmit
     };
 };
