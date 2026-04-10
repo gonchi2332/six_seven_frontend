@@ -31,7 +31,8 @@ const RegisterForm = () => {
  const TWO_COLUMNS = "grid grid-cols-1 md:grid-cols-2 gap-5"; 
  const TOP_SECTION = "w-full"; 
 // Tipografía
- const TITLE = "text-5xl font-light text-left text-surface font-inter mb-6";  
+ const TITLE = "text-3xl lg:text-5xl font-regular text-left text-surface font-inter mb-6";
+
  const LINK_TEXT = "text-center text-sm text-surface font-nunito mt-6";
  const LINK_ANCHOR = "text-accent hover:text-accent/80 font-medium transition-colors font-nunito"
   

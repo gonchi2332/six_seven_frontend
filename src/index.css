@@ -28,6 +28,10 @@
   .bg-secondary { background-color: #07383C; }
   .text-secondary { color: #07383C; }
 
+  /*terciario*/
+  .bg-tertiary { background-color: #0C1A1B; }
+  .text-tertiary { color: #0C1A1B; }
+
   /* Acento (Frosted Blue) */
   .bg-accent { background-color: #8EB4BA; }
   .text-accent { color: #8EB4BA; }
