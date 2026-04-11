@@ -25,16 +25,17 @@ const RegisterForm = () => {
     } = useRegisterForm();
 
     // Layout
- const FORM_SPACING = "flex flex-col gap-6";  
- const FIELD_WRAPPER = "w-full";
- const BUTTON_WRAPPER = "flex justify-center mt-6";  
- const TWO_COLUMNS = "grid grid-cols-1 md:grid-cols-2 gap-5"; 
- const TOP_SECTION = "w-full"; 
-// Tipografía
- const TITLE = "text-5xl font-light text-left text-surface font-inter mb-6";  
- const LINK_TEXT = "text-center text-sm text-surface font-nunito mt-6";
- const LINK_ANCHOR = "text-accent hover:text-accent/80 font-medium transition-colors font-nunito"
-  
+    const FORM_SPACING = "flex flex-col gap-6";  
+    const FIELD_WRAPPER = "w-full";
+    const BUTTON_WRAPPER = "flex justify-center mt-6";  
+    const TWO_COLUMNS = "grid grid-cols-1 md:grid-cols-2 gap-5"; 
+    const TOP_SECTION = "w-full"; 
+    // Tipografía
+    const TITLE = "text-3xl lg:text-5xl font-regular text-left text-surface font-inter mb-6";
+
+    const LINK_TEXT = "text-center text-sm text-surface font-nunito mt-6";
+    const LINK_ANCHOR = "text-accent hover:text-accent/80 font-medium transition-colors font-nunito"
+
     return (
         <form onSubmit={handleSubmit} className={TOP_SECTION}>
             <div className={FORM_SPACING}>
