@@ -7,7 +7,7 @@ interface Props {
   error?: boolean;
 }
 
-const VerificationCodeInput = ({ length = 7, value, onChange, error = false }: Props) => {
+const VerificationCodeInput = ({ length = 8, value, onChange, error = false }: Props) => {
  const { inputsRef, handleChange } = useVerificationCode(length, value, onChange);
 
   const inputBaseStyles = "w-8 h-12 text-center text-[20px] font-nunito bg-transparent text-white caret-white outline-none";
