@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Button from "../../../../components/Button/Button";
 import VerificationCodeInput from "../../../../components/VerificationCodeInput/VerificationCodeInput";
 
@@ -9,64 +9,51 @@ const VERIFICATION_ICON_WRAPPER = "w-20 h-20 flex items-center justify-center bg
 const VERIFICATION_TITLE = "text-[24px] md:text-3xl font-inter font-bold text-surface text-center";
 const VERIFICATION_DESCRIPTION = "text-[18px] font-nunito font-normal text-surface text-center max-w-[260px] leading-relaxed";
 const VERIFICATION_LABEL = "text-[18px] md:text-[24px] text-surface font-nunito";
-const VERIFICATION_CODE_WRAPPER = "-mt-4 mb-4";
+const VERIFICATION_CODE_WRAPPER = "-mt-4 mb-1 flex flex-col items-center";
 const VERIFICATION_ERROR_BOX = "bg-white/10 border-l-4 border-red-400 rounded-lg p-5 flex items-center gap-2 text-surface text-sm";
-const VERIFICATION_BUTTONS_WRAPPER = "flex flex-col items-center gap-3 w-[260px] mx-auto mt-auto";
+const VERIFICATION_BUTTONS_WRAPPER = "flex flex-col items-center gap-3 w-[260px] mx-auto mt-auto pt-4";
+const CODE_HINT = "text-red-300 text-sm mt-1 mb-4 text-left w-fit self-start";
 
-type Mode = "verify" | "reset";
+const MOCK_CODE = "12345678";
 
 interface Props {
-  mode: Mode;
-  onCodeExpired?: () => void;
+  onSuccess?: () => void;
 }
 
-const MOCK_CODE = "1234567";
-
-const VerificationPopup = ({ mode, onCodeExpired }: Props) => {
-  const [code, setCode] = useState<string[]>(Array(5).fill(""));
+const VerificationPopup = ({ onSuccess }: Props) => {
+  const [code, setCode] = useState<string[]>(Array(8).fill(""));
   const [error, setError] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(10);
 
-  useEffect(() => {
-    if (timeLeft === 0) {
-      onCodeExpired?.();
+  const joinedCode = code.join("");
+  const isComplete = joinedCode.length === 8;
+
+  const handleSubmit = () => {
+    if (!isComplete) return;
+
+    if (error) {
+      setError(false);
+      setCode(Array(8).fill(""));
       return;
     }
 
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [timeLeft, onCodeExpired]);
-
-  const handleSubmit = () => {
-    const joinedCode = code.join("");
     if (joinedCode !== MOCK_CODE) {
       setError(true);
       return;
     }
+
     setError(false);
-    alert("Codigo ingresado correctamente");
+    onSuccess?.();
   };
 
-  const handleResend = () => {
-    setCode(Array(7).fill(""));
-    setError(false);
-    setTimeLeft(10);
-  };
+  const handleResend = () => {};
 
   const title = error
-    ? "Error de Recuperacion"
-    : mode === "verify"
-    ? "Confirmación de Correo Electronico"
-    : "Reestablecer Contraseña";
+    ? "Error de verificación"
+    : "Verificación de identidad";
 
   const description = error
     ? "Los datos registrados no coinciden con los criterios de seguridad"
-    : mode === "verify"
-    ? "Hemos enviado un código de verificación a tu correo."
-    : "Hemos enviado un código para restablecer tu contraseña a tu correo.";
+    : "Hemos enviado un código de verificación a tu correo";
 
   return (
     <div className={VERIFICATION_CONTAINER}>
@@ -96,23 +83,33 @@ const VerificationPopup = ({ mode, onCodeExpired }: Props) => {
                   onChange={setCode}
                   error={error}
                 />
+
+                {!isComplete && (
+                  <p className={CODE_HINT}>
+                    El código debe tener 8 dígitos
+                  </p>
+                )}
               </div>
             </>
           ) : (
             <div className={VERIFICATION_ERROR_BOX}>
               <i className="fa-solid fa-circle-info"></i>
-              <span>Por favor revisa que el codigo sea válido.</span>
+              <span>Por favor revisa que el código sea válido.</span>
             </div>
           )}
         </div>
 
         <div className={VERIFICATION_BUTTONS_WRAPPER}>
-          <Button variant="secondary" onClick={handleSubmit} fullWidth>
+          <Button
+            variant="secondary"
+            onClick={handleSubmit}
+            fullWidth
+          >
             {error ? "Reintentar" : "Verificar"}
           </Button>
 
           <Button variant="primary" onClick={handleResend} fullWidth>
-            {error ? "Contactar Soporte" : "Reenviar Codigo"}
+            {error ? "Contactar Soporte" : "Reenviar Código"}
           </Button>
         </div>
       </div>
