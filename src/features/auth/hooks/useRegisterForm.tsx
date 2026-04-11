@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { RegisterFormData, RegisterFormErrors, RegisterFormTouched } from '../types/auth.types';
+import { registerUser, registerPersonalInfo } from '../api';   
 
 export const useRegisterForm = () => {
     const [formData, setFormData] = useState<RegisterFormData>({
@@ -30,15 +31,18 @@ export const useRegisterForm = () => {
     });
 
     const [isLoading, setIsLoading] = useState(false);
+    const [serverError, setServerError] = useState<string>("");  
 
     // Validaciones
     const validateName = (name: string): string => {
         if (!name) return "El nombre es requerido";
+        if(!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(name)) return "Solo letras y espacios";
         return "";
     };
 
     const validatePassword = (password: string): string => {
         if (!password) return "La contraseña es requerida";
+        
         if (password.length < 8) return "La contraseña debe tener al menos 8 caracteres";
         return "";
     };
@@ -65,7 +69,7 @@ export const useRegisterForm = () => {
     }
 
     // Handlers
-        const handleFieldChange = (
+    const handleFieldChange = (
         field: keyof RegisterFormData,
         value: string
     ) => {
@@ -97,7 +101,7 @@ export const useRegisterForm = () => {
         }
     };
 
-    // Handlers específicos (para mantener compatibilidad)
+    // Handlers específicos
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         handleFieldChange("name", e.target.value);
     };
@@ -123,7 +127,6 @@ export const useRegisterForm = () => {
             setErrors(prev => ({ ...prev, password: error }));
         }
         
-        // Re-validar confirmPassword si ya estaba tocado
         if (touched.confirmPassword && formData.confirmPassword) {
             const confirmError = validateConfirmPassword(value, formData.confirmPassword);
             setErrors(prev => ({ ...prev, confirmPassword: confirmError }));
@@ -140,7 +143,7 @@ export const useRegisterForm = () => {
         }
     };
 
-    //blur handlers
+    // Blur handlers
     const handleNameBlur = () => {
         if (!touched.name) {
             setTouched(prev => ({ ...prev, name: true }));
@@ -187,8 +190,10 @@ export const useRegisterForm = () => {
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {  
         e.preventDefault();
+        setServerError("");  
+        
         setTouched({ 
             name: true, 
             password: true,
@@ -205,7 +210,6 @@ export const useRegisterForm = () => {
         const maternalLastNameError = validateMaternalLastName(formData.maternalLastName!);
         const usernameError = validateUsername(formData.username);
 
-
         setErrors({
             name: nameError,
             paternalLastName: paternalLastNameError,
@@ -215,11 +219,61 @@ export const useRegisterForm = () => {
             confirmPassword: confirmPasswordError
         });
 
-        if (nameError || passwordError || confirmPasswordError || paternalLastNameError || maternalLastNameError || usernameError) return;
+        if (nameError || 
+            passwordError ||
+            confirmPasswordError ||
+            paternalLastNameError ||
+            maternalLastNameError || 
+            usernameError
+        ) return;
         
         setIsLoading(true);
-        // Aquí va la llamada al backend cuando esté lista
-       
+    
+        // CONEXIÓN CON EL BACKEND
+        /*revisar todo esto, se esta manejando de formas raras el error de 
+        registro de usuario duplicado
+        */
+         try {
+        
+        const response = await registerUser({
+            username: formData.username,
+            password: formData.password,
+            names: formData.name,
+            paternalSurname: formData.paternalLastName
+        });
+        
+        const token = response.token;
+        
+        if (formData.maternalLastName) {
+            await registerPersonalInfo({
+                phone: 0, 
+                maternalSurname: formData.maternalLastName,
+                address: "", 
+                residenceCountryId: 1, 
+                contactEmail: "" 
+            }, token);
+        }
+        } catch (error: any) {
+        
+            const errorMessage = error.message?.toLowerCase() || "";
+            
+            //revisar aca, aca esta lo raro
+            if (errorMessage.includes("username") || errorMessage.includes("ya existe")) {
+                setErrors(prev => ({ 
+                    ...prev, 
+                    username: "Este nombre de usuario ya está en uso" 
+                }));
+                setTouched(prev => ({ ...prev, username: true }));
+            } else {
+                setErrors(prev => ({ 
+                    ...prev, 
+                    username: error.message || "Error al registrar" 
+                }));
+                setTouched(prev => ({ ...prev, username: true }));
+            }
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return {
@@ -227,6 +281,7 @@ export const useRegisterForm = () => {
         errors,
         touched,
         isLoading,
+        serverError,  
         handleNameChange,
         handlePasswordChange,
         handleConfirmPasswordChange,
