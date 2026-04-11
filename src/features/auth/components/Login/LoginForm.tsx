@@ -15,25 +15,26 @@ const LoginForm = () => {
     } = useLogin();
 
     const FORM = "h-full flex flex-col";
-    const FORM_SPACING = "flex flex-col flex-1 justify-center";
-    const FOOTER_WRAPPER = "text-center mt-auto pb-8";
-    const EMAIL_WRAPPER = "mt-8";
-    const PASSWORD_WRAPPER = "mt-4";
-    const BUTTON_WRAPPER = "flex justify-center mt-10";
+    const FORM_SPACING = "flex flex-col flex-1";
+    const FOOTER_WRAPPER = "text-center mt-8";
+    const USERNAME_WRAPPER = "mt-20";
+    const PASSWORD_WRAPPER = "mt-16";
+    const BUTTON_WRAPPER = "flex justify-center mt-28";
     const TITLE = "text-4xl font-regular text-center text-surface font-inter";
     const LINK_TEXT = "text-center text-sm text-surface font-nunito";
     const LINK_ANCHOR = "text-accent hover:text-accent/80 font-medium transition-colors font-nunito";
-    const FORGOT_PASSWORD = "block text-right text-sm text-accent hover:text-accent/80 transition-colors font-nunito cursor-pointer mt-1";
+    const FORGOT_PASSWORD = "block text-right text-sm text-accent hover:text-accent/80 transition-colors font-nunito cursor-pointer mt-8";
 
     return (
         <form onSubmit={handleSubmit} className={FORM}>
             <div className={FORM_SPACING}>
-                <h1 className={TITLE}>
-                    Bienvenido de vuelta
-                </h1>
-                <div className={EMAIL_WRAPPER}>
+                <div className={TITLE}>
+                    <h1>Bienvenido de</h1>
+                    <h1>vuelta</h1>
+                </div>
+                <div className={USERNAME_WRAPPER}>
                     <TextField
-                        label="Correo electrónico"
+                        label="Nombre de Usuario"
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
