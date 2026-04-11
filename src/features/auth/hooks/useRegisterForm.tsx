@@ -34,11 +34,13 @@ export const useRegisterForm = () => {
     // Validaciones
     const validateName = (name: string): string => {
         if (!name) return "El nombre es requerido";
+        if(!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(name)) return "Solo letras y espacios";
         return "";
     };
 
     const validatePassword = (password: string): string => {
         if (!password) return "La contraseña es requerida";
+        
         if (password.length < 8) return "La contraseña debe tener al menos 8 caracteres";
         return "";
     };
