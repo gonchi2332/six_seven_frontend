@@ -1,38 +1,46 @@
-import { useState } from 'react';
-import VerificationPopup from './CodeEmailPopup';
-import ExpiredCodePopup from './ExpiredCodePopup';
+import { useState } from "react";
+import EmailInputPopup from "./EmailInputPopup";
+import VerificationPopup from "./CodeEmailPopup";
+import ResetPasswordPopup from "./ChangePassword";
 
-type PopupType = 'verification' | 'expired';
-type Mode = 'verify' | 'reset';
+type Step = "email" | "verification" | "reset";
+type Mode = "verify" | "recovery";
 
 type Props = {
   initialMode?: Mode;
 };
 
-const VerificationFlow = ({ initialMode = 'verify' }: Props) => {
-  const [currentPopup, setCurrentPopup] = useState<PopupType>('verification');
-  const [mode, setMode] = useState<Mode>(initialMode);
+const VerificationFlow = ({ initialMode = "verify" }: Props) => {
+  const [step, setStep] = useState<Step>("email");
+  const [mode] = useState<Mode>(initialMode);
 
-  const handleCodeExpired = () => {
-    setCurrentPopup('expired');
+  const handleEmailSubmit = () => {
+    setStep("verification");
   };
 
-  const handleResendCode = () => {
-    setCurrentPopup('verification');
+  const handleCodeSuccess = () => {
+    if (mode === "recovery") {
+      setStep("reset");
+    }
   };
 
   return (
     <>
-      {currentPopup === 'verification' && (
-        <VerificationPopup
+      {step === "email" && (
+        <EmailInputPopup
           mode={mode}
-          onCodeExpired={handleCodeExpired}
+          onSubmit={handleEmailSubmit}
         />
       )}
-      {currentPopup === 'expired' && (
-        <ExpiredCodePopup
-          onResendCode={handleResendCode}
+
+      {step === "verification" && (
+        <VerificationPopup
+          onSuccess={handleCodeSuccess}
         />
+      )}
+
+      {step === "reset" && (
+        <ResetPasswordPopup />
       )}
     </>
   );
