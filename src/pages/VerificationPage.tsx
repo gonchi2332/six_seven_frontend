@@ -1,11 +1,12 @@
-import VerificationFlow from "../features/auth/components/EmailPasswordVerification/EmailVerificationFlow";
+import EmailVerificationFlow from "../features/auth/components/EmailPasswordVerification/EmailVerificationFlow";
 
 const VerificationPage = () => {
   return (
     <div>
-      <VerificationFlow initialMode="verify" />
+      <EmailVerificationFlow initialMode="verify" />
     </div>
   );
 };
+
 
 export default VerificationPage;
