@@ -2,9 +2,21 @@ import TextField from "../../../components/TextField";
 import Button from "../../../components/Button";
 import PopUpCard from "../../../components/PopUpCard";
 import { useState } from "react";
+import ImageUpload from "../../UploadFile/components/uploadFile";
+
+interface FormData {
+  firstName: string;
+  lastNamePaternal: string;
+  lastNameMaternal: string;
+  address: string;
+  email: string;
+  phone: string;
+  country: string;
+  profileImage: File | null; 
+}
 
 const EditPersonalInfoCard = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastNamePaternal: "",
     lastNameMaternal: "",
@@ -12,9 +24,10 @@ const EditPersonalInfoCard = () => {
     email: "",
     phone: "",
     country: "",
+    profileImage: null, 
   });
 
-  const handleChange = (field: string, value: string) => {
+  const handleChange = (field: keyof FormData, value: string | File | null) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -22,11 +35,13 @@ const EditPersonalInfoCard = () => {
   };
 
   const handleAcept = () => {
-    //apartado para backend
+    // apartado para backend
   };
+
   const handleCancel = () => {
-    //apartado para backend
+    // apartado para backend
   };
+
   return (
     <div>
       <PopUpCard title={"Editar Perfil"}>
@@ -93,8 +108,13 @@ const EditPersonalInfoCard = () => {
                 placeholder="Ej: Bolivia"
                 className="w-full"
               />
-              {/* espacios vacios para que el input no se estire mucho, si se anaden mas botones borrar estos */}
-              <div className="hidden md:block"></div>
+              {/* Aquí integramos el componente pasándole el callback */}
+              <div className="flex flex-col gap-2">
+                <span className="mb-1 text-xl font-inter text-white">Imagen de perfil:</span>
+                <ImageUpload 
+                  onImageSelect={(file) => handleChange("profileImage", file)} 
+                />
+              </div>
               <div className="hidden md:block"></div>
             </div>
           </div>
