@@ -6,13 +6,15 @@ interface PersonalInfoPayload {
   contactEmail: string;
 }
 
+const API_URL = import.meta.env.API_URL ;
+
 export const registerPersonalInfo = async (payload: PersonalInfoPayload) => {
   const token = localStorage.getItem("auth_token");
 
   const response = await fetch(
-    "https://six-seven-backend.onrender.com/api/v1/register/users/personal-info",
+    `${API_URL}/v1/register/users/personal-info`,
     {
-      method: "POST",
+      method: "POST", 
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
