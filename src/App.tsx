@@ -3,7 +3,7 @@ import VerificationPage from "./pages/VerificationPage";
 function App() {
     return (
         <div className="App">
-            <VerificationPage />
+            <RegisterPage />
         </div>
     )
 }

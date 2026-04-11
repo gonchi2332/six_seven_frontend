@@ -5,7 +5,7 @@ const RegisterImage = () => {
         <img
             src={Logo}
             alt="Imagen de fondo"
-            className="w-full h-full object-cover"
+            className="w-full h-full"
         />
     );
 };
