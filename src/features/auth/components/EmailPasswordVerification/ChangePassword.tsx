@@ -13,6 +13,9 @@ const INPUT = "w-full bg-black rounded-lg px-4 py-3 pr-12 text-white placeholder
 const EYE_ICON = "absolute right-3 top-1/2 -translate-y-1/2 text-white/60 cursor-pointer";
 const ERROR_TEXT = "text-red-300 drop-shadow-sm text-sm mb-2";
 const BUTTONS_WRAPPER = "flex flex-col items-center gap-3 w-[260px] mt-6";
+const SHIELD_ICON = "fa-solid fa-shield text-[#90DDF0] text-6xl";
+const EYE_OPEN_ICON = "fa-solid fa-eye";
+const EYE_CLOSE_ICON = "fa-solid fa-eye-slash";
 
 const ResetPasswordPopup = () => {
   const [password, setPassword] = useState("");
@@ -27,19 +30,22 @@ const ResetPasswordPopup = () => {
     <div className={VERIFICATION_CONTAINER}>
       <div className={VERIFICATION_CARD}>
         <div className={VERIFICATION_ICON_WRAPPER}>
-          <i className="fa-solid fa-shield text-[#90DDF0] text-6xl"></i>
+          <i className={SHIELD_ICON}></i>
         </div>
 
         <h2 className={VERIFICATION_TITLE}>
           Reestablecimiento de Contraseña
         </h2>
-        
+
         <p className={VERIFICATION_DESCRIPTION}>
           Ingrese y confirme su nueva contraseña
         </p>
 
         <div className={INPUT_WRAPPER}>
-          <label className={LABEL}>Nueva Contraseña</label>
+          <label className={LABEL}>
+            Nueva Contraseña
+          </label>
+
           <div className={INPUT_CONTAINER}>
             <input
               type={showPassword ? "text" : "password"}
@@ -47,11 +53,13 @@ const ResetPasswordPopup = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+
             <i
-              className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"} ${EYE_ICON}`}
+              className={`${showPassword ? EYE_CLOSE_ICON : EYE_OPEN_ICON} ${EYE_ICON}`}
               onClick={() => setShowPassword(!showPassword)}
             ></i>
           </div>
+
           {!isPasswordValid && password.length > 0 && (
             <p className={ERROR_TEXT}>
               La contraseña debe tener mínimo 8 caracteres
@@ -60,7 +68,10 @@ const ResetPasswordPopup = () => {
         </div>
 
         <div className={INPUT_WRAPPER}>
-          <label className={LABEL}>Confirmar Contraseña</label>
+          <label className={LABEL}>
+            Confirmar Contraseña
+          </label>
+
           <div className={INPUT_CONTAINER}>
             <input
               type={showConfirmPassword ? "text" : "password"}
@@ -68,11 +79,13 @@ const ResetPasswordPopup = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
+
             <i
-              className={`fa-solid ${showConfirmPassword ? "fa-eye-slash" : "fa-eye"} ${EYE_ICON}`}
+              className={`${showConfirmPassword ? EYE_CLOSE_ICON : EYE_OPEN_ICON} ${EYE_ICON}`}
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             ></i>
           </div>
+
           {confirmPassword.length > 0 && !isMatch && (
             <p className={ERROR_TEXT}>
               Las contraseñas deben ser iguales

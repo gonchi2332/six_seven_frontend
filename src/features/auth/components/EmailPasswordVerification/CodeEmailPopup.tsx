@@ -6,13 +6,16 @@ const VERIFICATION_CONTAINER = "fixed inset-0 bg-black/60 flex items-center just
 const VERIFICATION_CARD = "bg-primary rounded-2xl w-full max-w-sm shadow-2xl py-6 min-h-[540px] flex flex-col";
 const VERIFICATION_CONTENT = "flex flex-col items-center px-10 gap-3";
 const VERIFICATION_ICON_WRAPPER = "w-20 h-20 flex items-center justify-center bg-black rounded-full shadow-lg border border-white/10";
-const VERIFICATION_TITLE = "text-[24px] md:text-3xl font-inter font-bold text-surface text-center";
+const VERIFICATION_TITLE = "text-[24px] md:text-3xl font-inter font-bold text-surface text-center max-w-[240px]";
 const VERIFICATION_DESCRIPTION = "text-[18px] font-nunito font-normal text-surface text-center max-w-[260px] leading-relaxed";
 const VERIFICATION_LABEL = "text-[18px] md:text-[24px] text-surface font-nunito";
 const VERIFICATION_CODE_WRAPPER = "-mt-4 mb-1 flex flex-col items-center";
 const VERIFICATION_ERROR_BOX = "bg-white/10 border-l-4 border-red-400 rounded-lg p-5 flex items-center gap-2 text-surface text-sm";
 const VERIFICATION_BUTTONS_WRAPPER = "flex flex-col items-center gap-3 w-[260px] mx-auto mt-auto pt-4";
 const CODE_HINT = "text-red-300 text-sm mt-1 mb-4 text-left w-fit self-start";
+const ICON_ERROR = "fa-solid fa-circle-exclamation text-white text-5xl";
+const ICON_SUCCESS = "fa-solid fa-shield text-[#90DDF0] text-5xl";
+const ICON_INFO = "fa-solid fa-circle-info";
 
 const MOCK_CODE = "12345678";
 
@@ -61,21 +64,25 @@ const VerificationPopup = ({ onSuccess }: Props) => {
         <div className={VERIFICATION_CONTENT}>
           <div className={VERIFICATION_ICON_WRAPPER}>
             {error ? (
-              <i className="fa-solid fa-circle-exclamation text-white text-5xl"></i>
+              <i className={ICON_ERROR}></i>
             ) : (
-              <i className="fa-solid fa-shield text-[#90DDF0] text-5xl"></i>
+              <i className={ICON_SUCCESS}></i>
             )}
           </div>
 
-          <h2 className={`${VERIFICATION_TITLE} max-w-[240px]`}>
+          <h2 className={VERIFICATION_TITLE}>
             {title}
           </h2>
 
-          <p className={VERIFICATION_DESCRIPTION}>{description}</p>
+          <p className={VERIFICATION_DESCRIPTION}>
+            {description}
+          </p>
 
           {!error ? (
             <>
-              <span className={VERIFICATION_LABEL}>Ingresar Código</span>
+              <span className={VERIFICATION_LABEL}>
+                Ingresar Código
+              </span>
 
               <div className={VERIFICATION_CODE_WRAPPER}>
                 <VerificationCodeInput
@@ -93,8 +100,10 @@ const VerificationPopup = ({ onSuccess }: Props) => {
             </>
           ) : (
             <div className={VERIFICATION_ERROR_BOX}>
-              <i className="fa-solid fa-circle-info"></i>
-              <span>Por favor revisa que el código sea válido.</span>
+              <i className={ICON_INFO}></i>
+              <span>
+                Por favor revisa que el código sea válido.
+              </span>
             </div>
           )}
         </div>
@@ -108,7 +117,11 @@ const VerificationPopup = ({ onSuccess }: Props) => {
             {error ? "Reintentar" : "Verificar"}
           </Button>
 
-          <Button variant="primary" onClick={handleResend} fullWidth>
+          <Button
+            variant="primary"
+            onClick={handleResend}
+            fullWidth
+          >
             {error ? "Contactar Soporte" : "Reenviar Código"}
           </Button>
         </div>
