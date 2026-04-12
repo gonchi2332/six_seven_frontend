@@ -7,7 +7,7 @@ interface Props {
   error?: boolean;
 }
 
-const VerificationCodeInput = ({ length = 7, value, onChange, error = false }: Props) => {
+const VerificationCodeInput = ({ length = 8, value, onChange, error = false }: Props) => {
  const { inputsRef, handleChange } = useVerificationCode(length, value, onChange);
 
   const inputBaseStyles = "w-8 h-12 text-center text-[20px] font-nunito bg-transparent text-white caret-white outline-none";
@@ -16,7 +16,7 @@ const VerificationCodeInput = ({ length = 7, value, onChange, error = false }: P
 
   return (
     <div className="flex justify-center mt-4">
-      <div className="flex bg-black rounded-xl overflow-hidden">
+      <div className="flex bg-black rounded-xl overflow-hidden w-[260px] justify-between px-2">
         {Array.from({ length }).map((_, i) => (
           <input
             key={i}

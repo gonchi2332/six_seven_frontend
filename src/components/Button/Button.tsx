@@ -5,13 +5,15 @@ interface ButtonProps {
   variant?: 'primary' | 'secondary';
   onClick?: () => void;
   type?: 'button' | 'submit';
+  fullWidth?: boolean;
 }
 
 const Button = ({
   children, 
   variant = 'primary',
   onClick, 
-  type = 'button' 
+  type = 'button', 
+  fullWidth = false
 }: ButtonProps) => {
 
   const BASE_STYLES = "px-6 py-2 rounded-xl transition-all duration-200 font-nunito font-bold text-2xl w-fit cursor-pointer";
@@ -25,7 +27,7 @@ const Button = ({
     <button
       type={type}
       onClick={onClick}
-      className={`${BASE_STYLES} ${variantStyles[variant]}`}
+      className={`${BASE_STYLES} ${variantStyles[variant]} ${fullWidth ? "w-full" : "w-fit"}`}
     >
       {children} 
     </button>

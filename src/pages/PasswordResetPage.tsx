@@ -1,12 +1,12 @@
 import EmailVerificationFlow from "../features/auth/components/EmailPasswordVerification/EmailVerificationFlow";
 
-const VerificationPage = () => {
+const PasswordResetPage = () => {
   return (
     <div>
-      <EmailVerificationFlow initialMode="verify" />
+      <EmailVerificationFlow initialMode="recovery" />
     </div>
   );
 };
 
 
-export default VerificationPage;
+export default PasswordResetPage;
