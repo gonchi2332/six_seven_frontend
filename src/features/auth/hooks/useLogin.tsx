@@ -19,14 +19,13 @@ const useLogin = () => {
         try {
             const data = await login({ username, password });
             authLogin(data.token, data.user);
-            navigate("/home");
+            navigate("/dashboard");
         } catch (err) {
             setError(err instanceof Error ? err.message : "Error inesperado");
         } finally {
             setIsLoading(false);
         }
 
-        console.log("entro " + username + " " + password);
     };
 
     return {
