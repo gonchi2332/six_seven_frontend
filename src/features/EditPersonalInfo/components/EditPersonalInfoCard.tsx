@@ -4,6 +4,8 @@ import PopUpCard from "../../../components/PopUpCard";
 import ImageUpload from "../../UploadFile/components/uploadFile";
 import { useCountries } from "../../../hooks/useCountries";
 import { useProfileForm } from "../../../hooks/useProfileFormRegex";
+import { usePersonalInfo } from "../../../hooks/useProfileFormForm";
+import { usePersonalInfoSubmit } from "../../../hooks/usePersonalInfoSubmit";
 
 const STYLES = {
   FORM_WRAPPER: "flex flex-col gap-6 px-8",
@@ -22,16 +24,34 @@ interface EditPersonalInfoCardProps {
 
 const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
   const { countries, isLoading } = useCountries();
-  const { formData, errors, handleChange, validateForm } = useProfileForm();
+  const { formData, errors, handleChange, validateForm, setInitialData } = useProfileForm();
+  const { isLoadingData, loadError } = usePersonalInfo(setInitialData);
+  const { handleSubmit, isSubmitting, submitError, submitSuccess } = usePersonalInfoSubmit();
 
-  const handleAcept = () => {
+  const handleAcept = async () => {
     if (!validateForm()) return;
-    // apartado para backend
+    await handleSubmit(formData);
   };
 
   const handleCancel = () => {
     onClose?.();
   };
+
+  if (isLoadingData) {
+    return (
+      <PopUpCard title="Datos Personales">
+        <p className="text-white text-center py-10">Cargando información...</p>
+      </PopUpCard>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <PopUpCard title="Datos Personales">
+        <p className="text-red-400 text-center py-10">{loadError}</p>
+      </PopUpCard>
+    );
+  }
 
   return (
     <div>
@@ -108,9 +128,9 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                   <option value="" disabled className="text-gray-400 hidden">
                     {isLoading ? "Cargando países..." : "Ej: Bolivia"}
                   </option>
-                  {countries.map((countryName, index) => (
-                    <option key={index} value={countryName} className="text-black">
-                      {countryName}
+                  {countries.map((country) => (
+                    <option key={country} value={country} className="text-black">
+                      {country}
                     </option>
                   ))}
                 </select>
@@ -125,14 +145,23 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
 
               <div className="hidden md:block" />
             </div>
+
+            {submitError && (
+              <p className="text-red-400 text-sm font-inter">{submitError}</p>
+            )}
+            {submitSuccess && (
+              <p className="text-green-400 text-sm font-inter">
+                Información actualizada correctamente.
+              </p>
+            )}
           </div>
 
           <div className={STYLES.FOOTER}>
             <Button variant="secondary" onClick={handleCancel}>
               Cancelar
             </Button>
-            <Button variant="primary" onClick={handleAcept}>
-              Aceptar
+            <Button variant="primary" onClick={handleAcept} disabled={isSubmitting}>
+              {isSubmitting ? "Guardando..." : "Aceptar"}
             </Button>
           </div>
         </div>

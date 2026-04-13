@@ -1,32 +1,52 @@
-interface PersonalInfoPayload {
-  phone: number;
-  maternalSurname: string;
-  address: string;
-  residenceCountryId: number;
-  contactEmail: string;
+export interface PersonalInfoResponse {
+  username: string;
+  state: string;
+  phone: string | null;
+  names: string;
+  paternal_surname: string;
+  maternal_surname: string | null;
+  address: string | null;
+  name: string | null;
+  contact_email: string | null;
+  profile_picture: string | null;
 }
 
-const API_URL = import.meta.env.API_URL ;
+const API_URL = import.meta.env.VITE_API_URL;
 
-export const registerPersonalInfo = async (payload: PersonalInfoPayload) => {
-  const token = localStorage.getItem("auth_token");
+export const getPersonalInfo = async (username: string): Promise<PersonalInfoResponse> => {
+  const token = localStorage.getItem("token");
 
   const response = await fetch(
-    `${API_URL}/v1/register/users/personal-info`,
+    `${API_URL}/api/v1/register/users/personal-info?username=${username}`,
     {
-      method: "POST", 
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Authorization ${token}`,
       },
-      body: JSON.stringify(payload),
     }
   );
 
   const data = await response.json();
-
   if (!response.ok || !data.success) {
-    throw new Error(data.message || "Error al registrar la información personal");
+    throw new Error(data.message || "Error al obtener la información personal");
+  }
+
+  return data.userPersonalInfo;
+};
+
+export const updatePersonalInfo = async (formData: FormData) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${API_URL}/api/v1/register/users/personal-info`, {
+    method: "POST",
+    headers: {
+      Authorization: `Authorization ${token}`,
+    },
+    body: formData,
+  });
+
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Error al actualizar la información personal");
   }
 
   return data;
