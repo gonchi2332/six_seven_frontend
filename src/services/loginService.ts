@@ -4,6 +4,8 @@ interface LoginPayload {
 }
 
 interface LoginResponse {
+    success: boolean;
+    message: string;
     user: {
         id: number;
         username: string;
@@ -14,12 +16,12 @@ interface LoginResponse {
     };
     token: string;
 }
-
+console.log("URL de la API:", import.meta.env.VITE_API_URL);
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const login = async (payload: LoginPayload): Promise<LoginResponse> => {
     const response = await fetch(
-        `${API_URL}/v1/auth/users/login`,
+        `${API_URL}/api/v1/auth/users/login`,
         {
             method: "POST",
             headers: {
@@ -35,7 +37,6 @@ export const login = async (payload: LoginPayload): Promise<LoginResponse> => {
         throw new Error(data.message || "Error al iniciar sesión");
     }
 
-    localStorage.setItem("auth_token", data.token);
 
     return data;
 };

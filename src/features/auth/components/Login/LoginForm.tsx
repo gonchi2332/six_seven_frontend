@@ -4,15 +4,16 @@ import useLogin from "../../hooks/useLogin";
 
 const LoginForm = () => {
     const {
-        email,
+        username,
         password,
         error,
         isLoading,
-        setEmail,
+        setUsername,
         setPassword,
         handleSubmit
     } = useLogin();
 
+    // Estilos Tailwind
     const FORM = "h-full flex flex-col";
     const FORM_SPACING = "flex flex-col flex-1 gap-6";
     const FIELD_WRAPPER = "w-full";
@@ -34,9 +35,9 @@ const LoginForm = () => {
                 <div className={FIELD_WRAPPER}>
                     <TextField
                         label="Nombre de Usuario"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        type="text"
+                        value={username} // Vinculado a username
+                        onChange={(e) => setUsername(e.target.value)} // Vinculado a setUsername
                         error={error ?? ""}
                         disabled={isLoading}
                     />
@@ -45,7 +46,7 @@ const LoginForm = () => {
                 <div className={FIELD_WRAPPER}>
                     <TextField
                         label="Contraseña"
-                        type="password"
+                        type="password" // Cambiado a 'password' para ocultar los caracteres
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         disabled={isLoading}

@@ -1,35 +1,27 @@
 import { useState } from "react";
-
-const mockLogin = (email: string, password: string) => {
-    return new Promise<void>((resolve, reject) => {
-        setTimeout(() => {
-            if (email === "admin@test.com" && password === "123456") {
-                resolve();
-            } else {
-                reject(new Error("Credenciales incorrectas"));
-            }
-        }, 1500);
-    });
-};
-
+import { useNavigate } from "react-router-dom";
+import { login } from "../../../services/loginService";
+import { useAuthContext } from "../../../context/AuthContext";
 
 const useLogin = () => {
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [rememberMe, setRememberMe] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const { login: authLogin } = useAuthContext();
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
         setError(null);
+        setIsLoading(true);
         try {
-            await mockLogin(email, password);
-            alert("Login exitoso");
-
+            const data = await login({ username, password });
+            authLogin(data.token, data.user);
+            navigate("/dashboard");
         } catch (err) {
-            setError("Correo o contraseña incorrectas");
+            setError(err instanceof Error ? err.message : "Error inesperado");
         } finally {
             setIsLoading(false);
         }
@@ -37,17 +29,19 @@ const useLogin = () => {
     };
 
     return {
-        email,
-        setEmail,
+        username,
         password,
-        setPassword,
-        rememberMe,
-        setRememberMe,
-        isLoading,
         error,
-        handleSubmit
+        isLoading,
+        setUsername,
+        setPassword,
+        handleSubmit,
     };
-
 };
 
 export default useLogin;
+
+
+
+
+

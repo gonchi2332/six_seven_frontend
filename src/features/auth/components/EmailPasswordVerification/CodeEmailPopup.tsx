@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Button from "../../../../components/Button/Button";
 import VerificationCodeInput from "../../../../components/VerificationCodeInput/VerificationCodeInput";
+import { useNavigate } from "react-router-dom";
+
 
 const VERIFICATION_CONTAINER = "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6";
 const VERIFICATION_CARD = "bg-primary rounded-2xl w-full max-w-sm shadow-2xl py-6 min-h-[540px] flex flex-col";
@@ -20,114 +22,118 @@ const ICON_INFO = "fa-solid fa-circle-info";
 const MOCK_CODE = "12345678";
 
 interface Props {
-  onSuccess?: () => void;
+    onSuccess?: () => void;
 }
 
 const VerificationPopup = ({ onSuccess }: Props) => {
-  const [code, setCode] = useState<string[]>(Array(8).fill(""));
-  const [error, setError] = useState(false);
+    const [code, setCode] = useState<string[]>(Array(8).fill(""));
+    const [error, setError] = useState(false);
 
-  const joinedCode = code.join("");
-  const isComplete = joinedCode.length === 8;
+    const joinedCode = code.join("");
+    const isComplete = joinedCode.length === 8;
 
-  const handleSubmit = () => {
-    if (!isComplete) return;
 
-    if (error) {
-      setError(false);
-      setCode(Array(8).fill(""));
-      return;
-    }
+    const navigate = useNavigate();
 
-    if (joinedCode !== MOCK_CODE) {
-      setError(true);
-      return;
-    }
+    const handleSubmit = () => {
+        if (!isComplete) return;
 
-    setError(false);
-    onSuccess?.();
-  };
+        if (error) {
+            setError(false);
+            setCode(Array(8).fill(""));
+            return;
+        }
 
-  const handleResend = () => {};
+        if (joinedCode !== MOCK_CODE) {
+            setError(true);
+            return;
+        }
 
-  const title = error
-    ? "Error de verificación"
-    : "Verificación de identidad";
+        setError(false);
+        onSuccess?.();
+        navigate("/dashboard");
+    };
 
-  const description = error
-    ? "Los datos registrados no coinciden con los criterios de seguridad"
-    : "Hemos enviado un código de verificación a tu correo";
+    const handleResend = () => { };
 
-  return (
-    <div className={VERIFICATION_CONTAINER}>
-      <div className={VERIFICATION_CARD}>
-        <div className={VERIFICATION_CONTENT}>
-          <div className={VERIFICATION_ICON_WRAPPER}>
-            {error ? (
-              <i className={ICON_ERROR}></i>
-            ) : (
-              <i className={ICON_SUCCESS}></i>
-            )}
-          </div>
+    const title = error
+        ? "Error de verificación"
+        : "Verificación de identidad";
 
-          <h2 className={VERIFICATION_TITLE}>
-            {title}
-          </h2>
+    const description = error
+        ? "Los datos registrados no coinciden con los criterios de seguridad"
+        : "Hemos enviado un código de verificación a tu correo";
 
-          <p className={VERIFICATION_DESCRIPTION}>
-            {description}
-          </p>
+    return (
+        <div className={VERIFICATION_CONTAINER}>
+            <div className={VERIFICATION_CARD}>
+                <div className={VERIFICATION_CONTENT}>
+                    <div className={VERIFICATION_ICON_WRAPPER}>
+                        {error ? (
+                            <i className={ICON_ERROR}></i>
+                        ) : (
+                            <i className={ICON_SUCCESS}></i>
+                        )}
+                    </div>
 
-          {!error ? (
-            <>
-              <span className={VERIFICATION_LABEL}>
-                Ingresar Código
-              </span>
+                    <h2 className={VERIFICATION_TITLE}>
+                        {title}
+                    </h2>
 
-              <div className={VERIFICATION_CODE_WRAPPER}>
-                <VerificationCodeInput
-                  value={code}
-                  onChange={setCode}
-                  error={error}
-                />
+                    <p className={VERIFICATION_DESCRIPTION}>
+                        {description}
+                    </p>
 
-                {!isComplete && (
-                  <p className={CODE_HINT}>
-                    El código debe tener 8 dígitos
-                  </p>
-                )}
-              </div>
-            </>
-          ) : (
-            <div className={VERIFICATION_ERROR_BOX}>
-              <i className={ICON_INFO}></i>
-              <span>
-                Por favor revisa que el código sea válido.
-              </span>
+                    {!error ? (
+                        <>
+                            <span className={VERIFICATION_LABEL}>
+                                Ingresar Código
+                            </span>
+
+                            <div className={VERIFICATION_CODE_WRAPPER}>
+                                <VerificationCodeInput
+                                    value={code}
+                                    onChange={setCode}
+                                    error={error}
+                                />
+
+                                {!isComplete && (
+                                    <p className={CODE_HINT}>
+                                        El código debe tener 8 dígitos
+                                    </p>
+                                )}
+                            </div>
+                        </>
+                    ) : (
+                        <div className={VERIFICATION_ERROR_BOX}>
+                            <i className={ICON_INFO}></i>
+                            <span>
+                                Por favor revisa que el código sea válido.
+                            </span>
+                        </div>
+                    )}
+                </div>
+
+                <div className={VERIFICATION_BUTTONS_WRAPPER}>
+                    <Button
+                        variant="secondary"
+                        onClick={handleSubmit}
+                        fullWidth
+                    >
+                        {error ? "Reintentar" : "Verificar"}
+                    </Button>
+
+                    <Button
+                        variant="primary"
+                        onClick={handleResend}
+                        fullWidth
+                    >
+                        {error ? "Contactar Soporte" : "Reenviar Código"}
+                    </Button>
+                </div>
             </div>
-          )}
         </div>
-
-        <div className={VERIFICATION_BUTTONS_WRAPPER}>
-          <Button
-            variant="secondary"
-            onClick={handleSubmit}
-            fullWidth
-          >
-            {error ? "Reintentar" : "Verificar"}
-          </Button>
-
-          <Button
-            variant="primary"
-            onClick={handleResend}
-            fullWidth
-          >
-            {error ? "Contactar Soporte" : "Reenviar Código"}
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default VerificationPopup;
