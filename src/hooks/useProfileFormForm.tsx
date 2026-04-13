@@ -1,30 +1,53 @@
-import { useState } from "react";
-import { registerPersonalInfo } from "../services/personalInfoService";
-import type { FormData } from "../hooks/useProfileFormRegex"; 
+import { useEffect, useState } from "react";
+import { getPersonalInfo } from "../services/personalInfoService";
+import type { FormData } from "./useProfileFormRegex";
 
-export const usePersonalInfoSubmit = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
+const getUsernameFromToken = (): string => {
+  const token = localStorage.getItem("token");
+  if (!token) return "";
 
-  const handleSubmit = async (formData: FormData, residenceCountryId: number) => {
-    setIsSubmitting(true);
-    setSubmitError(null);
+  try {
+    const payload = token.split(".")[1] || "";
+    const decoded = JSON.parse(atob(payload));
+    return decoded.username ?? decoded.sub ?? "";
+  } catch {
+    return "";
+  }
+};
 
-    try {
-      await registerPersonalInfo({
-        phone: Number(formData.phone),
-        maternalSurname: formData.lastNameMaternal,
-        address: formData.address,
-        residenceCountryId,
-        contactEmail: formData.email,
-      });
-      console.log("Info registrada correctamente");
-    } catch (error: any) {
-      setSubmitError(error.message);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+export const usePersonalInfo = (
+  setInitialData: (data: Partial<FormData>) => void
+) => {
+  const [isLoadingData, setIsLoadingData] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
-  return { handleSubmit, isSubmitting, submitError };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const username = getUsernameFromToken();
+
+        if (!username) throw new Error("No se encontró el usuario");
+
+        const info = await getPersonalInfo(username);
+
+        setInitialData({
+          firstName: info.names ?? "",
+          lastNamePaternal: info.paternal_surname ?? "",
+          lastNameMaternal: info.maternal_surname ?? "",
+          address: info.address ?? "",
+          email: info.contact_email ?? "",
+          phone: info.phone ? String(info.phone) : "",
+          country: info.name ?? "",
+        });
+      } catch (err: any) {
+        setLoadError(err.message);
+      } finally {
+        setIsLoadingData(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return { isLoadingData, loadError };
 };
