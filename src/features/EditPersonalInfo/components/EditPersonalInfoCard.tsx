@@ -5,7 +5,10 @@ import ImageUpload from "../../UploadFile/components/uploadFile";
 import { useCountries } from "../../../hooks/useCountries";
 import { useProfileForm } from "../../../hooks/useProfileFormRegex"; 
 
-const EditPersonalInfoCard = () => {
+interface EditPersonalInfoCardProps {
+  onClose?: () => void;
+}
+const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
   const { countries, isLoading } = useCountries();
   const { formData, errors, handleChange, validateForm } = useProfileForm();
 
@@ -17,7 +20,7 @@ const EditPersonalInfoCard = () => {
     // apartado para backend
   };
   const handleCancel = () => {
-    // apartado para backend
+    onClose?.();
   };
 
   return (
@@ -30,9 +33,9 @@ const EditPersonalInfoCard = () => {
                 label="Nombre(s)*:"
                 value={formData.firstName}
                 onChange={(e) => handleChange("firstName", e.target.value)}
-                placeholder="Ej: Juan Dominic"
                 error={errors.firstName}
                 className="w-full"
+                disabled={true} 
               />
               <TextField
                 label="Apellido Paterno*:"
@@ -40,9 +43,9 @@ const EditPersonalInfoCard = () => {
                   handleChange("lastNamePaternal", e.target.value)
                 }
                 value={formData.lastNamePaternal}
-                placeholder="Ej: Pérez"
                 error={errors.lastNamePaternal}
                 className="w-full"
+                disabled={true}
               />
               <TextField
                 label="Apellido Materno:"
@@ -50,9 +53,9 @@ const EditPersonalInfoCard = () => {
                 onChange={(e) =>
                   handleChange("lastNameMaternal", e.target.value)
                 }
-                placeholder="Ej: Sanchez"
                 error={errors.lastNameMaternal}
                 className="w-full"
+                disabled={true} 
               />
             </div>
 
