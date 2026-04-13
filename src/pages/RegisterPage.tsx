@@ -5,7 +5,7 @@ import RegisterImage from "../features/auth/components/RegisterForms/RegisterIma
 const PAGE_CONTAINER = "min-h-screen bg-main flex flex-col";
 
 // Barra superior (solo visible en mobile)
-const TOP_BAR = "lg:hidden bg-secondary px-6 py-3";  // ← px-6 = 24px laterales
+const TOP_BAR = "lg:hidden bg-tertiary px-6 py-3";  // ← px-6 = 24px laterales
 const TOP_BAR_TITLE = "text-surface font-nunito font-bold text-lg";
 
 // Contenido principal con scroll
@@ -16,7 +16,7 @@ const FLEX_LAYOUT = "flex flex-col lg:flex-row min-h-full";
 
 // Sección de imagen - MOBILE: centrada con márgenes, DESKTOP: sin márgenes
 const IMAGE_SECTION = "lg:w-1/2 flex justify-center lg:block mt-8 lg:mt-0";  // ← mt-8 = 32px separación
-const IMAGE_WRAPPER = "w-[150px] h-[150px] lg:w-full lg:h-full mx-auto lg:mx-0";
+const IMAGE_WRAPPER = "w-[250px] h-[250px] lg:w-full lg:h-full mx-auto lg:mx-0";
 
 // Sección de formulario
 const FORM_SECTION = "lg:w-1/2 flex items-center justify-center py-6 lg:p-6";  // ← py-6 vertical, sin laterales porque ya los tiene el padre

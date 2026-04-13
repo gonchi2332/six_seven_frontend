@@ -50,7 +50,7 @@ const LoginForm = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         disabled={isLoading}
                     />
-                    <a href="/forgot-password" className={FORGOT_PASSWORD}>
+                    <a href="/changePassword" className={FORGOT_PASSWORD}>
                         ¿Olvidaste tu contraseña?
                     </a>
                 </div>
