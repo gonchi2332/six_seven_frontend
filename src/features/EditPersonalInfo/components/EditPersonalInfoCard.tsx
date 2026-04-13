@@ -3,60 +3,70 @@ import Button from "../../../components/Button";
 import PopUpCard from "../../../components/PopUpCard";
 import ImageUpload from "../../UploadFile/components/uploadFile";
 import { useCountries } from "../../../hooks/useCountries";
-import { useProfileForm } from "../../../hooks/useProfileFormRegex"; 
+import { useProfileForm } from "../../../hooks/useProfileFormRegex";
 
-const EditPersonalInfoCard = () => {
+const STYLES = {
+  FORM_WRAPPER: "flex flex-col gap-6 px-8",
+  GRID_3: "grid grid-cols-1 md:grid-cols-3 gap-4",
+  INPUT_LABEL: "mb-1 text-xl font-inter text-white",
+  SELECT: "w-full px-4 py-2 border rounded-xl outline-none transition-all duration-200 bg-white font-nunito disabled:cursor-not-allowed border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500",
+  SELECT_PLACEHOLDER: "text-gray-400",
+  SELECT_VALUE: "text-black",
+  IMAGE_WRAPPER: "flex flex-col gap-2",
+  FOOTER: "flex flex-row justify-end items-center gap-4 mt-10 pt-6 px-8",
+};
+
+interface EditPersonalInfoCardProps {
+  onClose?: () => void;
+}
+
+const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
   const { countries, isLoading } = useCountries();
   const { formData, errors, handleChange, validateForm } = useProfileForm();
 
   const handleAcept = () => {
-    if (!validateForm()) {
-      // si existen errores
-      return;
-    }
+    if (!validateForm()) return;
     // apartado para backend
   };
+
   const handleCancel = () => {
-    // apartado para backend
+    onClose?.();
   };
 
   return (
     <div>
-      <PopUpCard title={"Datos Personales"}>
+      <PopUpCard title="Datos Personales">
         <div>
-          <div className="flex flex-col gap-6 px-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className={STYLES.FORM_WRAPPER}>
+
+            <div className={STYLES.GRID_3}>
               <TextField
                 label="Nombre(s)*:"
                 value={formData.firstName}
                 onChange={(e) => handleChange("firstName", e.target.value)}
-                placeholder="Ej: Juan Dominic"
                 error={errors.firstName}
                 className="w-full"
+                disabled
               />
               <TextField
                 label="Apellido Paterno*:"
-                onChange={(e) =>
-                  handleChange("lastNamePaternal", e.target.value)
-                }
                 value={formData.lastNamePaternal}
-                placeholder="Ej: Pérez"
+                onChange={(e) => handleChange("lastNamePaternal", e.target.value)}
                 error={errors.lastNamePaternal}
                 className="w-full"
+                disabled
               />
               <TextField
                 label="Apellido Materno:"
                 value={formData.lastNameMaternal}
-                onChange={(e) =>
-                  handleChange("lastNameMaternal", e.target.value)
-                }
-                placeholder="Ej: Sanchez"
+                onChange={(e) => handleChange("lastNameMaternal", e.target.value)}
                 error={errors.lastNameMaternal}
                 className="w-full"
+                disabled
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className={STYLES.GRID_3}>
               <TextField
                 label="Dirección:"
                 value={formData.address}
@@ -70,30 +80,29 @@ const EditPersonalInfoCard = () => {
                 onChange={(e) => handleChange("email", e.target.value)}
                 placeholder="Ej: juan@ejemplo.com"
                 type="email"
-                error={errors.email} 
+                error={errors.email}
                 className="w-full"
               />
               <TextField
                 label="Teléfono:"
                 value={formData.phone}
                 onChange={(e) => handleChange("phone", e.target.value)}
-                placeholder="Ej: +591 77123456" 
+                placeholder="Ej: +591 77123456"
                 type="text"
                 error={errors.phone}
                 className="w-full"
               />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+            <div className={STYLES.GRID_3}>
               <div className="flex flex-col justify-start">
-                <label className="mb-1 text-xl font-inter text-white">
-                  País de residencia:
-                </label>
+                <label className={STYLES.INPUT_LABEL}>País de residencia:</label>
                 <select
                   value={formData.country}
                   onChange={(e) => handleChange("country", e.target.value)}
                   disabled={isLoading}
-                  className={`w-full px-4 py-2 border rounded-xl outline-none transition-all duration-200 bg-white font-nunito disabled:cursor-not-allowed border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${
-                    formData.country === "" ? "text-gray-400" : "text-black"
+                  className={`${STYLES.SELECT} ${
+                    formData.country === "" ? STYLES.SELECT_PLACEHOLDER : STYLES.SELECT_VALUE
                   }`}
                 >
                   <option value="" disabled className="text-gray-400 hidden">
@@ -107,16 +116,18 @@ const EditPersonalInfoCard = () => {
                 </select>
               </div>
 
-              <div className="flex flex-col gap-2">
-                <span className="mb-1 text-xl font-inter text-white">Imagen de perfil:</span>
-                <ImageUpload 
-                  onImageSelect={(file) => handleChange("profileImage", file)} 
+              <div className={STYLES.IMAGE_WRAPPER}>
+                <span className={STYLES.INPUT_LABEL}>Imagen de perfil:</span>
+                <ImageUpload
+                  onImageSelect={(file) => handleChange("profileImage", file)}
                 />
               </div>
-              <div className="hidden md:block"></div>
+
+              <div className="hidden md:block" />
             </div>
           </div>
-          <div className="flex flex-row justify-end items-center gap-4 mt-10 pt-6 px-8">
+
+          <div className={STYLES.FOOTER}>
             <Button variant="secondary" onClick={handleCancel}>
               Cancelar
             </Button>
