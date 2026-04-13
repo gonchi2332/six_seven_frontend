@@ -2,8 +2,14 @@ import { useState } from 'react';
 import type { RegisterFormData, RegisterFormErrors, RegisterFormTouched } from '../types/auth.types';
 import { registerUser, registerPersonalInfo } from '../api';
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../../../context/AuthContext';
+
+
+
 
 export const useRegisterForm = () => {
+
+    const { login: authLogin } = useAuthContext();
 
     const navigate = useNavigate();
 
@@ -257,6 +263,7 @@ export const useRegisterForm = () => {
                     contactEmail: ""
                 }, token);
             }
+            authLogin(token);
             navigate("/verification");
         } catch (error: any) {
 
