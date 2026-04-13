@@ -1,6 +1,7 @@
 import TextField from "../../../../components/TextField";
 import Button from "../../../../components/Button";
 import { useRegisterForm } from "../../hooks/useRegisterForm";
+import { useAuthContext } from "../../../../context/AuthContext";
 
 
 const RegisterForm = () => {
@@ -25,11 +26,11 @@ const RegisterForm = () => {
     } = useRegisterForm();
 
     // Layout
-    const FORM_SPACING = "flex flex-col gap-6";  
+    const FORM_SPACING = "flex flex-col gap-6";
     const FIELD_WRAPPER = "w-full";
-    const BUTTON_WRAPPER = "flex justify-center mt-6";  
-    const TWO_COLUMNS = "grid grid-cols-1 md:grid-cols-2 gap-5"; 
-    const TOP_SECTION = "w-full"; 
+    const BUTTON_WRAPPER = "flex justify-center mt-6";
+    const TWO_COLUMNS = "grid grid-cols-1 md:grid-cols-2 gap-5";
+    const TOP_SECTION = "w-full";
     // Tipografía
     const TITLE = "text-3xl lg:text-5xl font-regular text-left text-surface font-inter mb-6";
 
@@ -38,7 +39,8 @@ const RegisterForm = () => {
 
     return (
         <form onSubmit={handleSubmit} className={TOP_SECTION}>
-            <div className={FORM_SPACING}>
+            <
+                div className={FORM_SPACING}>
                 <h1 className={TITLE}>
                     Empieza a construir tu Portafolio
                 </h1>

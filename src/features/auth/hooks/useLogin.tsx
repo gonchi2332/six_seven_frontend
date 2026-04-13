@@ -18,7 +18,7 @@ const useLogin = () => {
         setIsLoading(true);
         try {
             const data = await login({ username, password });
-            authLogin(data.token, data.user);
+            authLogin(data.token);
             navigate("/dashboard");
         } catch (err) {
             setError(err instanceof Error ? err.message : "Error inesperado");
