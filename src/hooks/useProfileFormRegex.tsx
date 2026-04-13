@@ -25,11 +25,14 @@ export const useProfileForm = () => {
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
 
+  const setInitialData = (data: Partial<FormData>) => {
+    setFormData((prev) => ({ ...prev, ...data }));
+  };
+
   const handleChange = (field: keyof FormData, value: string | File | null) => {
     const newErrors = { ...errors };
-
     if (typeof value === "string") {
-      if (field === "firstName" || field === "lastNamePaternal" || field === "lastNameMaternal") {
+      if (["firstName", "lastNamePaternal", "lastNameMaternal"].includes(field)) {
         const spanishLettersRegex = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]*$/;
         if (!spanishLettersRegex.test(value)) {
           newErrors[field] = "Solo se permiten letras y espacios";
@@ -37,7 +40,6 @@ export const useProfileForm = () => {
           delete newErrors[field];
         }
       }
-
       if (field === "email") {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (value.length > 0 && !emailRegex.test(value)) {
@@ -46,7 +48,6 @@ export const useProfileForm = () => {
           delete newErrors[field];
         }
       }
-
       if (field === "phone") {
         const phoneRegex = /^[\+]?[0-9\s]*$/;
         if (!phoneRegex.test(value)) {
@@ -56,17 +57,11 @@ export const useProfileForm = () => {
         }
       }
     }
-
     setErrors(newErrors);
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const validateForm = () => {
-    return Object.keys(errors).length === 0;
-  };
+  const validateForm = () => Object.keys(errors).length === 0;
 
-  return { formData, errors, handleChange, validateForm };
+  return { formData, errors, handleChange, validateForm, setInitialData };
 };
