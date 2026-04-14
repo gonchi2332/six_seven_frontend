@@ -105,25 +105,25 @@ const EmailInputPopup = ({ onSubmit, onCancel, mode = "verify" }: Props) => {
 
                     {!isValidEmail && touched && (
                         <p className={EMAIL_ERROR}>
-                            El correo debe ser válido
+                            El correo electronico debe ser válido
                         </p>
                     )}
                 </div>
-
-                <div className={USERNAME_INPUT_WRAPPER}>
-                    <label className={USERNAME_LABEL}>
-                        Nombre de Usuario
-                    </label>
-                    <input
-                        type="text"
-                        placeholder="Tu nombre de usuario"
-                        className={USERNAME_INPUT}
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        onBlur={() => setTouched(true)}
-                    />
-                </div>
-
+                {mode === "recovery" && (
+                    <div className={USERNAME_INPUT_WRAPPER}>
+                        <label className={USERNAME_LABEL}>
+                            Nombre de Usuario
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Tu nombre de usuario"
+                            className={USERNAME_INPUT}
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            onBlur={() => setTouched(true)}
+                        />
+                    </div>
+                )}
                 <div className={EMAIL_BUTTONS_WRAPPER}>
                     <Button
                         variant="secondary"
