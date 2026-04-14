@@ -6,10 +6,14 @@ const LoginForm = () => {
     const {
         username,
         password,
-        error,
+        errors,
+        touched,
+        serverError,
         isLoading,
-        setUsername,
-        setPassword,
+        handleUsernameChange,
+        handlePasswordChange,
+        handleUsernameBlur,
+        handlePasswordBlur,
         handleSubmit
     } = useLogin();
 
@@ -32,29 +36,36 @@ const LoginForm = () => {
                     Bienvenido de vuelta
                 </h1>
 
-                <div className={FIELD_WRAPPER}>
+                <div onBlur={handleUsernameBlur} className={FIELD_WRAPPER}>
                     <TextField
                         label="Nombre de Usuario"
                         type="text"
-                        value={username} // Vinculado a username
-                        onChange={(e) => setUsername(e.target.value)} // Vinculado a setUsername
-                        error={error ?? ""}
+                        value={username}
+                        onChange={handleUsernameChange}
+                        error={touched.username ? errors.username : ""}
                         disabled={isLoading}
                     />
                 </div>
 
-                <div className={FIELD_WRAPPER}>
+                <div onBlur={handlePasswordBlur} className={FIELD_WRAPPER}>
                     <TextField
                         label="Contraseña"
-                        type="password" // Cambiado a 'password' para ocultar los caracteres
+                        type="password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={handlePasswordChange}
+                        error={touched.password ? errors.password : ""}
                         disabled={isLoading}
                     />
                     <a href="/changePassword" className={FORGOT_PASSWORD}>
                         ¿Olvidaste tu contraseña?
                     </a>
                 </div>
+
+                {serverError && (
+                    <p className="text-red-300 drop-shadow-sm text-sm text-center">
+                        {serverError}
+                    </p>
+                )}
 
                 <div className={BUTTON_WRAPPER}>
                     <Button type="submit" variant="primary">

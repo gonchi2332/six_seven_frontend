@@ -47,7 +47,7 @@ const TextField = ({
       />
       
       {error && (
-        <span className="mt-1 text-xs text-red-600 font-medium">
+        <span className="mt-1 text-xs text-red-600 font-medium self-end">
           {error}
         </span>
       )}
