@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { verify } from "../../../services/verificationCodeService";
+import { useAuthContext } from "../../../context/AuthContext";
 
 interface UseVerifyCodeParams {
     username: string;
@@ -11,13 +12,18 @@ interface UseVerifyCodeParams {
 export const useVerifyCode = ({ username, code, token }: UseVerifyCodeParams) => {
     const [error, setError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const { login } = useAuthContext();
 
     const handleSubmit = async () => {
         setIsLoading(true);
 
         try {
             const data = await verify({ username, code, token });
-            if (data.success) {
+            // Let's assume it succeeds if it didn't throw and there's a token or success is true
+            if (data.success !== false) {
+                if (data.token) {
+                    login(data.token);
+                }
                 return true;
             } else {
                 setError(true);

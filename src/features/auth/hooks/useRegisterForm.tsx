@@ -264,6 +264,7 @@ export const useRegisterForm = () => {
                 }, token);
             }
             authLogin(token);
+            localStorage.setItem("username", formData.username);
             navigate("/verification");
         } catch (error: any) {
 

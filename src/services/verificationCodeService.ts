@@ -11,8 +11,9 @@ interface SendCodeParams {
 }
 
 interface VerifyResponse {
-    success: boolean;
+    success?: boolean;
     message: string;
+    token?: string;
 }
 const API_URL = import.meta.env.VITE_API_URL;
 

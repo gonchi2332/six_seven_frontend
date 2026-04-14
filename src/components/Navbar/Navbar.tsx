@@ -1,6 +1,6 @@
-const Navbar = () =>{
+const Navbar = () => {
     const NAVBAR = "w-full bg-secondary p-4 text-white font-inter font-bold text-xl"
-    return(
+    return (
         //TODO: cambiar el nombre estatico por el que nos daran en los endpoints
         //TODO: cambiar la imagen estatica por la que nos daran en los endpoints
         <nav className={NAVBAR}>
