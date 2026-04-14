@@ -1,6 +1,8 @@
 import TextField from "../../../../components/TextField";
 import Button from "../../../../components/Button";
 import useLogin from "../../hooks/useLogin";
+import { useState } from "react";
+import EmailVerificationFlow from "../../components/EmailPasswordVerification/EmailVerificationFlow";
 
 const LoginForm = () => {
     const {
@@ -12,6 +14,7 @@ const LoginForm = () => {
         setPassword,
         handleSubmit
     } = useLogin();
+    const [showRecovery, setShowRecovery] = useState(false);
 
     // Estilos Tailwind
     const FORM = "h-full flex flex-col";
@@ -26,6 +29,7 @@ const LoginForm = () => {
     const FORGOT_PASSWORD = "block text-right text-sm text-accent hover:text-accent/80 transition-colors font-nunito cursor-pointer";
 
     return (
+        <>
         <form onSubmit={handleSubmit} className={FORM}>
             <div className={FORM_SPACING}>
                 <h1 className={TITLE}>
@@ -51,9 +55,13 @@ const LoginForm = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         disabled={isLoading}
                     />
-                    <a href="/changePassword" className={FORGOT_PASSWORD}>
+                    <button
+                        type="button"
+                        onClick={() => setShowRecovery(true)}
+                        className={FORGOT_PASSWORD}
+                    >
                         ¿Olvidaste tu contraseña?
-                    </a>
+                    </button>
                 </div>
 
                 <div className={BUTTON_WRAPPER}>
@@ -70,6 +78,24 @@ const LoginForm = () => {
                 </a>
             </p>
         </form>
+          {showRecovery && (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+        onClick={() => setShowRecovery(false)}
+      >
+        <div
+          className="bg-white rounded-2xl p-6 shadow-xl max-w-md w-full"
+          onClick={(e) => e.stopPropagation()}
+        >
+            <EmailVerificationFlow
+                initialMode="recovery"
+                onClose={() => setShowRecovery(false)}
+            />
+        </div>
+      </div>
+    )}
+  </>
+        
     );
 };
 

@@ -8,9 +8,10 @@ type Mode = "verify" | "recovery";
 
 type Props = {
   initialMode?: Mode;
+  onClose?: () => void;
 };
 
-const VerificationFlow = ({ initialMode = "verify" }: Props) => {
+const VerificationFlow = ({ initialMode = "verify", onClose }: Props) => {
   const [step, setStep] = useState<Step>("email");
   const [mode] = useState<Mode>(initialMode);
 
@@ -30,6 +31,7 @@ const VerificationFlow = ({ initialMode = "verify" }: Props) => {
         <EmailInputPopup
           mode={mode}
           onSubmit={handleEmailSubmit}
+          onCancel={onClose}
         />
       )}
 
