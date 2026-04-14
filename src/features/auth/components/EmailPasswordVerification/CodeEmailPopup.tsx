@@ -1,8 +1,8 @@
-import { useState } from "react";
 import Button from "../../../../components/Button/Button";
 import VerificationCodeInput from "../../../../components/VerificationCodeInput/VerificationCodeInput";
-import { useNavigate } from "react-router-dom";
+import { useVerifyRecoveryCode } from "../../hooks/useVerifyCode";
 
+import { useAuthContext } from "../../../../context/AuthContext";
 
 const VERIFICATION_CONTAINER = "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6";
 const VERIFICATION_CARD = "bg-primary rounded-2xl w-full max-w-sm shadow-2xl py-6 min-h-[540px] flex flex-col";
@@ -19,50 +19,28 @@ const ICON_ERROR = "fa-solid fa-circle-exclamation text-white text-5xl";
 const ICON_SUCCESS = "fa-solid fa-shield text-[#90DDF0] text-5xl";
 const ICON_INFO = "fa-solid fa-circle-info";
 
-const MOCK_CODE = "12345678";
-
 interface Props {
+    username: string;
     onSuccess?: () => void;
 }
 
-const VerificationPopup = ({ onSuccess }: Props) => {
-    const [code, setCode] = useState<string[]>(Array(8).fill(""));
-    const [error, setError] = useState(false);
+const VerificationPopup = ({ username, onSuccess }: Props) => {
 
-    const joinedCode = code.join("");
-    const isComplete = joinedCode.length === 8;
-
-
-    const navigate = useNavigate();
-
-    const handleSubmit = () => {
-        if (!isComplete) return;
-
-        if (error) {
-            setError(false);
-            setCode(Array(8).fill(""));
-            return;
-        }
-
-        if (joinedCode !== MOCK_CODE) {
-            setError(true);
-            return;
-        }
-
-        setError(false);
-        onSuccess?.();
-        navigate("/dashboard");
-    };
+    const {
+        token
+    } = useAuthContext();
+    const {
+        code,
+        setCode,
+        error,
+        isLoading,
+        isComplete,
+        title,
+        description,
+        handleSubmit,
+    } = useVerifyRecoveryCode({ username, token, onSuccess });
 
     const handleResend = () => { };
-
-    const title = error
-        ? "Error de verificación"
-        : "Verificación de identidad";
-
-    const description = error
-        ? "Los datos registrados no coinciden con los criterios de seguridad"
-        : "Hemos enviado un código de verificación a tu correo";
 
     return (
         <div className={VERIFICATION_CONTAINER}>
@@ -119,14 +97,16 @@ const VerificationPopup = ({ onSuccess }: Props) => {
                         variant="secondary"
                         onClick={handleSubmit}
                         fullWidth
+                        disabled={isLoading || !isComplete}
                     >
-                        {error ? "Reintentar" : "Verificar"}
+                        {isLoading ? "Verificando..." : error ? "Reintentar" : "Verificar"}
                     </Button>
 
                     <Button
                         variant="primary"
                         onClick={handleResend}
                         fullWidth
+                        disabled={isLoading}
                     >
                         {error ? "Contactar Soporte" : "Reenviar Código"}
                     </Button>
