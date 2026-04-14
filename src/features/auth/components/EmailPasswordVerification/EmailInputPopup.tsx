@@ -3,6 +3,7 @@ import Button from "../../../../components/Button/Button";
 
 
 import { useSendVerificationCode } from "../../hooks/useSendVerificationCode";
+import { useSendRecoveryCode } from "../../hooks/useRecoveryCode";
 import { useAuthContext } from "../../../../context/AuthContext";
 
 
@@ -25,7 +26,7 @@ const USERNAME_LABEL = "text-[16px] font-inter font-normal text-surface mb-1.5 b
 const USERNAME_INPUT = "w-full bg-black rounded-lg px-3 py-2.5 text-[#FFFFFF] placeholder:text-white/40 outline-none mb-1 text-[15px]";
 
 interface Props {
-    onSubmit?: (username: string) => void;
+    onSubmit?: (username: string, email: string) => void;
     onCancel?: () => void;
     mode?: "verify" | "recovery";
 }
@@ -47,16 +48,19 @@ const EmailInputPopup = ({ onSubmit, onCancel, mode = "verify" }: Props) => {
 
     const { token } = useAuthContext();
 
-    const {
-        handleSend
-    } = useSendVerificationCode({ username, mail: email, token });
+    const sendVerifyHooks = useSendVerificationCode({ username, mail: email, token });
+    const sendRecoveryHooks = useSendRecoveryCode({ username, email });
+
+    const activeSendHook = mode === "recovery" ? sendRecoveryHooks : sendVerifyHooks;
+
+    const { handleSend } = activeSendHook;
 
 
 
     const handleSubmit = () => {
         setTouched(true);
         if (!isValidEmail) return;
-        onSubmit?.(username);
+        onSubmit?.(username, email);
         handleSend();
     };
 

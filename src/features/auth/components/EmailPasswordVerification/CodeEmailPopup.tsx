@@ -1,6 +1,9 @@
+import { useState } from "react";
 import Button from "../../../../components/Button/Button";
 import VerificationCodeInput from "../../../../components/VerificationCodeInput/VerificationCodeInput";
-import { useVerifyRecoveryCode } from "../../hooks/useVerifyCode";
+import { useVerifyCode } from "../../hooks/useVerifyCode";
+import { useSendVerificationCode } from "../../hooks/useSendVerificationCode";
+import { useSendRecoveryCode, useVerifyRecoveryCode } from "../../hooks/useRecoveryCode";
 
 import { useAuthContext } from "../../../../context/AuthContext";
 
@@ -21,26 +24,61 @@ const ICON_INFO = "fa-solid fa-circle-info";
 
 interface Props {
     username: string;
-    onSuccess?: () => void;
+    email: string;
+    mode: "verify" | "recovery";
+    onSuccess?: (code: string) => void;
 }
 
-const VerificationPopup = ({ username, onSuccess }: Props) => {
+const VerificationPopup = ({ username, email, mode, onSuccess }: Props) => {
 
     const {
         token
     } = useAuthContext();
+
+    const [codeArray, setCodeArray] = useState<string[]>(Array(8).fill(""));
+    const code = codeArray.join("");
+    const isComplete = code.length === 8;
+
+    const verifyHooks = useVerifyCode({ username, code, token });
+    const recoveryHooks = useVerifyRecoveryCode({ username, code });
+    const activeVerifyHook = mode === "recovery" ? recoveryHooks : verifyHooks;
+
+    const sendVerifyHooks = useSendVerificationCode({ username, mail: email, token });
+    const sendRecoveryHooks = useSendRecoveryCode({ username, email });
+    const activeSendHook = mode === "recovery" ? sendRecoveryHooks : sendVerifyHooks;
+
+    const { handleSend } = activeSendHook;
+
     const {
-        code,
-        setCode,
         error,
         isLoading,
-        isComplete,
         title,
         description,
         handleSubmit,
-    } = useVerifyRecoveryCode({ username, token, onSuccess });
+        resetError
+    } = activeVerifyHook;
 
-    const handleResend = () => { };
+    const handleAction = async () => {
+        if (!isComplete && !error) return;
+
+        if (error) {
+            resetError();
+            setCodeArray(Array(8).fill(""));
+            return;
+        }
+
+        const success = await handleSubmit();
+        if (success) {
+            onSuccess?.(code);
+        } else {
+            setCodeArray(Array(8).fill(""));
+        }
+    };
+
+    const handleResend = () => {
+        handleSend();
+    };
+
 
     return (
         <div className={VERIFICATION_CONTAINER}>
@@ -70,8 +108,8 @@ const VerificationPopup = ({ username, onSuccess }: Props) => {
 
                             <div className={VERIFICATION_CODE_WRAPPER}>
                                 <VerificationCodeInput
-                                    value={code}
-                                    onChange={setCode}
+                                    value={codeArray}
+                                    onChange={setCodeArray}
                                     error={error}
                                 />
 
@@ -95,9 +133,9 @@ const VerificationPopup = ({ username, onSuccess }: Props) => {
                 <div className={VERIFICATION_BUTTONS_WRAPPER}>
                     <Button
                         variant="secondary"
-                        onClick={handleSubmit}
+                        onClick={handleAction}
                         fullWidth
-                        disabled={isLoading || !isComplete}
+                        disabled={isLoading || (!isComplete && !error)}
                     >
                         {isLoading ? "Verificando..." : error ? "Reintentar" : "Verificar"}
                     </Button>

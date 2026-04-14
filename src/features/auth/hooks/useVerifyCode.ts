@@ -1,64 +1,49 @@
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { verify } from "../../../services/verificationCodeService";
 
-interface UseVerifyRecoveryCodeParams {
+interface UseVerifyCodeParams {
     username: string;
-    token?: string | null;
-    onSuccess?: () => void;
+    code: string;
+    token: string | null;
 }
 
-export const useVerifyRecoveryCode = ({ username, token, onSuccess }: UseVerifyRecoveryCodeParams) => {
-    const navigate = useNavigate();
-    const [code, setCode] = useState<string[]>(Array(8).fill(""));
+export const useVerifyCode = ({ username, code, token }: UseVerifyCodeParams) => {
     const [error, setError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const joinedCode = code.join("");
-    const isComplete = joinedCode.length === 8;
-
     const handleSubmit = async () => {
-        if (!isComplete) return;
-
-        if (error) {
-            setError(false);
-            setCode(Array(8).fill(""));
-            return;
-        }
-
         setIsLoading(true);
 
         try {
-            const data = await verify({ username, code: joinedCode, token });
+            const data = await verify({ username, code, token });
             if (data.success) {
-                onSuccess?.();
-                navigate("/reset-password");
+                return true;
             } else {
                 setError(true);
-                setCode(Array(8).fill(""));
+                return false;
             }
         } catch {
             setError(true);
-            setCode(Array(8).fill(""));
+            return false;
         } finally {
             setIsLoading(false);
         }
     };
 
-    const title = error ? "Código inválido" : "Recuperación de contraseña";
+    const resetError = () => setError(false);
+
+    const title = error ? "Código inválido" : "Verificación de cuenta";
     const description = error
         ? "El código ingresado no es válido o ha expirado."
-        : "Ingresa el código de recuperación enviado a tu correo";
+        : "Ingresa el código de verificación enviado a tu correo";
 
     return {
-        code,
-        setCode,
         error,
         isLoading,
-        isComplete,
         title,
         description,
         handleSubmit,
+        resetError
     };
 };

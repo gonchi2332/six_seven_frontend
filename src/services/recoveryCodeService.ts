@@ -9,6 +9,12 @@ interface VerifyCodeParams {
     code: string;
 }
 
+interface ResetPasswordParams {
+    username: string;
+    newPassword: string;
+    code: string;
+}
+
 interface ForgotPasswordResponse {
     result: boolean;
     messageState: string;
@@ -58,6 +64,24 @@ export const verifyRecoveryCode = async ({ username, code }: VerifyCodeParams): 
 
     if (!response.ok) {
         throw new Error(data.error ?? "Error al verificar el código");
+    }
+
+    return data;
+};
+
+export const resetPassword = async ({ username, newPassword, code }: ResetPasswordParams) => {
+    const response = await fetch(`${API_URL}/api/v1/auth/users/reset-password`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password: newPassword, code }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.message ?? data.error ?? "Error al restablecer la contraseña");
     }
 
     return data;

@@ -1,83 +1,63 @@
-
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { requestRecoveryCode, verifyRecoveryCode } from "../../../services/recoveryCodeService"
+import { requestRecoveryCode, verifyRecoveryCode } from "../../../services/recoveryCodeService";
 
-type Step = "request" | "verify";
-
-interface UseForgotPasswordParams {
+interface UseSendRecoveryCodeParams {
     username: string;
     email: string;
 }
 
-export const useRecoveryCode = ({ username, email }: UseForgotPasswordParams) => {
-    const navigate = useNavigate();
-    const [step, setStep] = useState<Step>("request");
-    const [code, setCode] = useState<string[]>(Array(8).fill(""));
+export const useSendRecoveryCode = ({ username, email }: UseSendRecoveryCodeParams) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState(false);
 
-    const joinedCode = code.join("");
-    const isComplete = joinedCode.length === 8;
-
-    const handleRequestCode = async () => {
+    const handleSend = async () => {
         setIsLoading(true);
-        setError(null);
-
+        setError(false);
         try {
-            const data = await requestRecoveryCode({ username, email });
-            if (data.result) {
-                setStep("verify");
-            }
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "Error al solicitar el código");
+            await requestRecoveryCode({ username, email });
+        } catch {
+            setError(true);
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleVerifyCode = async () => {
-        if (!isComplete) return;
+    return { isLoading, error, handleSend };
+};
 
+interface UseVerifyRecoveryParams {
+    username: string;
+    code: string;
+}
+
+export const useVerifyRecoveryCode = ({ username, code }: UseVerifyRecoveryParams) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(false);
+
+    const handleSubmit = async () => {
         setIsLoading(true);
-        setError(null);
-
         try {
-            const data = await verifyRecoveryCode({ username, code: joinedCode });
+            const data = await verifyRecoveryCode({ username, code });
             if (data.success) {
-                navigate("/reset-password");
+                return true;
             } else {
-                setError(data.message);
-                setCode(Array(8).fill(""));
+                setError(true);
+                return false;
             }
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "Error al verificar el código");
-            setCode(Array(8).fill(""));
+        } catch {
+            setError(true);
+            return false;
         } finally {
             setIsLoading(false);
         }
     };
 
-    const title = {
-        request: "Recuperar contraseña",
-        verify: error ? "Código inválido" : "Verificar código",
-    }[step];
+    const resetError = () => setError(false);
 
-    const description = {
-        request: error ?? "Ingresa tu usuario y correo para recibir un código de recuperación",
-        verify: error ?? "Ingresa el código de recuperación enviado a tu correo",
-    }[step];
+    const title = error ? "Código inválido" : "Recuperación de contraseña";
+    const description = error
+        ? "El código ingresado no es válido o ha expirado."
+        : "Ingresa el código de recuperación enviado a tu correo";
 
-    return {
-        step,
-        code,
-        setCode,
-        isLoading,
-        isComplete,
-        error,
-        title,
-        description,
-        handleRequestCode,
-        handleVerifyCode,
-    };
+    return { isLoading, error, title, description, handleSubmit, resetError };
 };
