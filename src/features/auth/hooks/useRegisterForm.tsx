@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { RegisterFormData, RegisterFormErrors, RegisterFormTouched } from '../types/auth.types';
-import { registerUser, registerPersonalInfo } from '../api';
+import { registerUser } from '../api';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../context/AuthContext';
 
@@ -249,20 +249,12 @@ export const useRegisterForm = () => {
                 username: formData.username,
                 password: formData.password,
                 names: formData.name,
-                paternalSurname: formData.paternalLastName
+                paternalSurname: formData.paternalLastName,
+                maternalSurname: formData.maternalLastName
             });
 
             const token = response.token;
 
-            if (formData.maternalLastName) {
-                await registerPersonalInfo({
-                    phone: 0,
-                    maternalSurname: formData.maternalLastName,
-                    address: "",
-                    residenceCountryId: 1,
-                    contactEmail: ""
-                }, token);
-            }
             authLogin(token);
             localStorage.setItem("username", formData.username);
             navigate("/verification");
