@@ -19,7 +19,12 @@ const useLogin = () => {
         try {
             const data = await login({ username, password });
             authLogin(data.token);
-            navigate("/dashboard");
+            
+            if (data.user.state.toUpperCase() === "UNVERIFIED") {
+                navigate("/verification");
+            } else {
+                navigate("/dashboard");
+            }
         } catch (err) {
             setError(err instanceof Error ? err.message : "Error inesperado");
         } finally {
