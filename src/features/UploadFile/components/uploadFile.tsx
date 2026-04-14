@@ -1,8 +1,9 @@
-import React, { useState, type ChangeEvent, type MouseEvent } from "react";
+import React, { useState, type ChangeEvent, type MouseEvent, useEffect } from "react";
 
 interface ImageUploadProps {
   onImageSelect: (file: File | null) => void;
   maxSizeMB?: number;
+  initialImageUrl?: string | null; 
 }
 
 const MAX_SIZE_MB = 2;
@@ -10,9 +11,16 @@ const MAX_SIZE_MB = 2;
 const ImageUpload: React.FC<ImageUploadProps> = ({
   onImageSelect,
   maxSizeMB = MAX_SIZE_MB,
+  initialImageUrl,
 }) => {
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(initialImageUrl ?? null);
   const [sizeError, setSizeError] = useState(false);
+
+  useEffect(() => {
+    if (initialImageUrl) {
+      setPreviewUrl(initialImageUrl);
+    }
+  }, [initialImageUrl]);
 
   const labelBase =
     "group relative flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors overflow-hidden";

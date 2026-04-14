@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getPersonalInfo } from "../services/personalInfoService";
 import type { FormData } from "./useProfileFormRegex";
+import { parseProfilePicture } from "../services/decodeBase64";
 
 const getUsernameFromToken = (): string => {
   const token = localStorage.getItem("token");
@@ -38,6 +39,7 @@ export const usePersonalInfo = (
           email: info.contact_email ?? "",
           phone: info.phone ? String(info.phone) : "",
           country: info.name ?? "",
+          profileImageUrl: parseProfilePicture(info.profile_picture) ?? null,
         });
       } catch (err: any) {
         setLoadError(err.message);
