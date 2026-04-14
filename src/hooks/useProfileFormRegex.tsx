@@ -9,6 +9,7 @@ export interface FormData {
   phone: string;
   country: string;
   profileImage: File | null;
+  profileImageUrl: string | null;
 }
 
 export const useProfileForm = () => {
@@ -21,6 +22,7 @@ export const useProfileForm = () => {
     phone: "",
     country: "",
     profileImage: null,
+    profileImageUrl: null,
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
