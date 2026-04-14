@@ -256,6 +256,7 @@ export const useRegisterForm = () => {
             const token = response.token;
 
             authLogin(token);
+            localStorage.setItem("username", formData.username);
             navigate("/verification");
         } catch (error: any) {
 

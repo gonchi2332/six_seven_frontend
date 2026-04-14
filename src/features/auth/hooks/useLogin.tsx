@@ -10,7 +10,7 @@ const useLogin = () => {
     const [errors, setErrors] = useState({ username: "", password: "" });
     const [touched, setTouched] = useState({ username: false, password: false });
     const [serverError, setServerError] = useState<string>("");
-    
+
     const [isLoading, setIsLoading] = useState(false);
 
     const { login: authLogin } = useAuthContext();
@@ -54,11 +54,11 @@ const useLogin = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         setTouched({ username: true, password: true });
         const userErr = validateUsername(username);
         const passErr = validatePassword(password);
-        
+
         setErrors({ username: userErr, password: passErr });
         setServerError("");
 
@@ -68,7 +68,8 @@ const useLogin = () => {
         try {
             const data = await login({ username, password });
             authLogin(data.token);
-            
+            localStorage.setItem("username", username);
+
             if (data.user.state.toUpperCase() === "UNVERIFIED") {
                 navigate("/verification");
             } else {
@@ -77,20 +78,19 @@ const useLogin = () => {
         } catch (err) {
             const msg = err instanceof Error ? err.message : "Error inesperado";
             const lowerMsg = msg.toLowerCase();
-            
+
             // Map backend error messages to inputs intuitively
-            if (lowerMsg.includes("cannot read properties of undefined") || lowerMsg.includes("reading 'profile_picture'")) {
-                setErrors(prev => ({ ...prev, username: "Usuario inválido" }));
-            } else if (lowerMsg.includes("usuario")) {
-                setErrors(prev => ({ ...prev, username: "Usuario inválido" }));
-            } else if (
-                lowerMsg.includes("contraseña") || 
-                lowerMsg.includes("password") || 
-                lowerMsg.includes("credenciales") || 
+            if (
+                lowerMsg.includes("cannot read properties of undefined") ||
+                lowerMsg.includes("reading 'profile_picture'") ||
+                lowerMsg.includes("usuario") ||
+                lowerMsg.includes("contraseña") ||
+                lowerMsg.includes("password") ||
+                lowerMsg.includes("credenciales") ||
                 lowerMsg.includes("incorrecto") ||
                 lowerMsg.includes("iniciar sesi")
             ) {
-                setErrors(prev => ({ ...prev, password: "Contraseña inválida" }));
+                setErrors(prev => ({ ...prev, username: "Usuario o contraseña inválida", password: "" }));
             } else {
                 setServerError(msg);
             }
