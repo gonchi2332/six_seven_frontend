@@ -140,6 +140,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                 <span className={STYLES.INPUT_LABEL}>Imagen de perfil:</span>
                 <ImageUpload
                   onImageSelect={(file) => handleChange("profileImage", file)}
+                  initialImageUrl={formData.profileImageUrl ?? null}
                 />
               </div>
 
