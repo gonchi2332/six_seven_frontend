@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "../../../../components/Button/Button";
 
 
@@ -32,6 +33,7 @@ interface Props {
 }
 
 const EmailInputPopup = ({ onSubmit, onCancel, mode = "verify" }: Props) => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [touched, setTouched] = useState(false);
     const [username, setUsername] = useState("");
@@ -41,7 +43,7 @@ const EmailInputPopup = ({ onSubmit, onCancel, mode = "verify" }: Props) => {
     const title =
         mode === "recovery"
             ? "Recuperación de cuenta"
-            : "Verificación de Correo Electrónico";
+            : "Verificación de Identidad";
 
     const description =
         "Ingrese una dirección de correo válida.";
@@ -62,6 +64,14 @@ const EmailInputPopup = ({ onSubmit, onCancel, mode = "verify" }: Props) => {
         if (!isValidEmail) return;
         onSubmit?.(username, email);
         handleSend();
+    };
+
+    const handleCancel = () => {
+        if (onCancel) {
+            onCancel();
+        } else {
+            navigate("/login");
+        }
     };
 
     return (
@@ -125,7 +135,7 @@ const EmailInputPopup = ({ onSubmit, onCancel, mode = "verify" }: Props) => {
 
                     <Button
                         variant="primary"
-                        onClick={onCancel}
+                        onClick={handleCancel}
                         fullWidth
                     >
                         Cancelar
