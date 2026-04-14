@@ -2,10 +2,22 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../../../../components/Button/Button";
 
-
 import { useSendVerificationCode } from "../../hooks/useSendVerificationCode";
 import { useSendRecoveryCode } from "../../hooks/useRecoveryCode";
 import { useAuthContext } from "../../../../context/AuthContext";
+
+const getUsernameFromToken = (): string => {
+  const token = localStorage.getItem("token");
+  if (!token) return "";
+  try {
+    const part = token.split(".").at(1);
+    if (!part) return "";
+    const payload = JSON.parse(atob(part));
+    return payload.username ?? "";
+  } catch {
+    return "";
+  }
+};
 
 
 
@@ -36,7 +48,9 @@ const EmailInputPopup = ({ onSubmit, onCancel, mode = "verify" }: Props) => {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [touched, setTouched] = useState(false);
-    const [username, setUsername] = useState("");
+    const [username, setUsername] = useState(
+        mode === "verify" ? getUsernameFromToken() : ""
+    );
 
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
