@@ -3,6 +3,7 @@ export interface RegisterRequest {
     password: string;
     names: string;
     paternalSurname: string;
+    maternalSurname?: string;
 }
 
 export interface RegisterResponse {
@@ -14,18 +15,8 @@ export interface RegisterResponse {
     token: string;
 }
 
-export interface PersonalInfoRequest {
-    phone: number;
-    maternalSurname: string;
-    address: string;
-    residenceCountryId: number;
-    contactEmail: string;
-}
 
-export interface PersonalInfoResponse {
-    success: boolean;
-    message: string;
-}
+
 
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://six-seven-backend.onrender.com';
@@ -50,24 +41,3 @@ export const registerUser = async (
     return response.json();
 };
 
-// Paso 2: Registrar información personal (incluye apellido materno)
-export const registerPersonalInfo = async (
-    data: PersonalInfoRequest,
-    token: string
-): Promise<PersonalInfoResponse> => {
-    const response = await fetch(`${API_URL}/api/v1/register/users/personal-info`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Error al registrar información personal');
-    }
-
-    return response.json();
-};
