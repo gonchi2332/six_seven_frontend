@@ -35,7 +35,7 @@ export const registerUser = async (
 
     if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || 'Error al registrar usuario');
+        throw new Error(error.message || 'El nombre de usuario ya está en uso');
     }
 
     return response.json();

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 import Button from "../../../../components/Button/Button";
 
 const EMAIL_CONTAINER = "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6";
@@ -23,6 +24,7 @@ interface Props {
 }
 
 const EmailInputPopup = ({ onSubmit, onCancel, mode = "verify" }: Props) => {
+  const navigate = useNavigate(); // Hook de navegación
   const [email, setEmail] = useState("");
   const [touched, setTouched] = useState(false);
   const [username, setUsername] = useState("");
@@ -41,6 +43,14 @@ const EmailInputPopup = ({ onSubmit, onCancel, mode = "verify" }: Props) => {
     setTouched(true);
     if (!isValidEmail) return;
     onSubmit?.();
+  };
+
+  const handleCancel = () => {
+    if (onCancel) {
+      onCancel(); 
+    } else {
+      navigate("/login"); 
+    }
   };
 
   return (
@@ -104,7 +114,7 @@ const EmailInputPopup = ({ onSubmit, onCancel, mode = "verify" }: Props) => {
 
           <Button
             variant="primary"
-            onClick={onCancel}
+            onClick={handleCancel} // Usa handleCancel en lugar de onCancel directamente
             fullWidth
           >
             Cancelar
