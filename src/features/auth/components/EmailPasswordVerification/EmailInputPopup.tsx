@@ -4,7 +4,7 @@ import Button from "../../../../components/Button/Button";
 const EMAIL_CONTAINER = "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6";
 const EMAIL_CARD = "bg-primary rounded-2xl w-full max-w-md shadow-2xl py-5 flex flex-col items-center px-8";
 const EMAIL_ICON_WRAPPER = "w-20 h-20 flex items-center justify-center bg-black rounded-full shadow-lg border border-white/10 mb-3";
-const EMAIL_TITLE = "text-[22px] md:text-2xl font-inter font-bold text-surface text-center max-w-[320px] mb-2";
+const EMAIL_TITLE = "text-[22px] md:text-3xl font-inter font-bold text-surface text-center max-w-[320px] mb-2";
 const EMAIL_DESCRIPTION = "text-[16px] font-nunito font-normal text-surface text-center max-w-[300px] leading-relaxed mb-4";
 const EMAIL_INPUT_WRAPPER = "w-[280px]";
 const EMAIL_LABEL = "text-[16px] font-inter font-normal text-surface mb-1.5 block text-left";
@@ -32,7 +32,7 @@ const EmailInputPopup = ({ onSubmit, onCancel, mode = "verify" }: Props) => {
   const title =
     mode === "recovery"
       ? "Recuperación de cuenta"
-      : "Verificación de Correo Electrónico";
+      : "Verificación de Identidad";
 
   const description =
     "Ingrese una dirección de correo válida.";

@@ -1,7 +1,6 @@
 import TextField from "../../../../components/TextField";
 import Button from "../../../../components/Button";
 import { useRegisterForm } from "../../hooks/useRegisterForm";
-import { useAuthContext } from "../../../../context/AuthContext";
 
 
 const RegisterForm = () => {
@@ -47,7 +46,7 @@ const RegisterForm = () => {
 
                 <div onBlur={handleNameBlur} className={FIELD_WRAPPER}>
                     <TextField
-                        label="Nombre*"
+                        label="Nombre(s)*"
                         type="text"
                         value={formData.name}
                         onChange={handleNameChange}
