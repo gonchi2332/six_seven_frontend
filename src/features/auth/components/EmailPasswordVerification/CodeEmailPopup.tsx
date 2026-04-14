@@ -110,7 +110,7 @@ const VerificationPopup = ({ username, email, mode, onSuccess }: Props) => {
                                 <VerificationCodeInput
                                     value={codeArray}
                                     onChange={setCodeArray}
-                                    error={error}
+                                    error={!!error}
                                 />
 
                                 {!isComplete && (
