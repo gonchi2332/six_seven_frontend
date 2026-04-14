@@ -1,8 +1,11 @@
 import { useState } from "react";
 import Button from "../../../../components/Button/Button";
 import VerificationCodeInput from "../../../../components/VerificationCodeInput/VerificationCodeInput";
-import { useNavigate } from "react-router-dom";
+import { useVerifyCode } from "../../hooks/useVerifyCode";
+import { useSendVerificationCode } from "../../hooks/useSendVerificationCode";
+import { useSendRecoveryCode, useVerifyRecoveryCode } from "../../hooks/useRecoveryCode";
 
+import { useAuthContext } from "../../../../context/AuthContext";
 
 const VERIFICATION_CONTAINER = "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6";
 const VERIFICATION_CARD = "bg-primary rounded-2xl w-full max-w-sm shadow-2xl py-6 min-h-[540px] flex flex-col";
@@ -19,50 +22,63 @@ const ICON_ERROR = "fa-solid fa-circle-exclamation text-white text-5xl";
 const ICON_SUCCESS = "fa-solid fa-shield text-[#90DDF0] text-5xl";
 const ICON_INFO = "fa-solid fa-circle-info";
 
-const MOCK_CODE = "12345678";
-
 interface Props {
-    onSuccess?: () => void;
+    username: string;
+    email: string;
+    mode: "verify" | "recovery";
+    onSuccess?: (code: string) => void;
 }
 
-const VerificationPopup = ({ onSuccess }: Props) => {
-    const [code, setCode] = useState<string[]>(Array(8).fill(""));
-    const [error, setError] = useState(false);
+const VerificationPopup = ({ username, email, mode, onSuccess }: Props) => {
 
-    const joinedCode = code.join("");
-    const isComplete = joinedCode.length === 8;
+    const {
+        token
+    } = useAuthContext();
 
+    const [codeArray, setCodeArray] = useState<string[]>(Array(8).fill(""));
+    const code = codeArray.join("");
+    const isComplete = code.length === 8;
 
-    const navigate = useNavigate();
+    const verifyHooks = useVerifyCode({ username, code, token });
+    const recoveryHooks = useVerifyRecoveryCode({ username, code });
+    const activeVerifyHook = mode === "recovery" ? recoveryHooks : verifyHooks;
 
-    const handleSubmit = () => {
-        if (!isComplete) return;
+    const sendVerifyHooks = useSendVerificationCode({ username, mail: email, token });
+    const sendRecoveryHooks = useSendRecoveryCode({ username, email });
+    const activeSendHook = mode === "recovery" ? sendRecoveryHooks : sendVerifyHooks;
+
+    const { handleSend } = activeSendHook;
+
+    const {
+        error,
+        isLoading,
+        title,
+        description,
+        handleSubmit,
+        resetError
+    } = activeVerifyHook;
+
+    const handleAction = async () => {
+        if (!isComplete && !error) return;
 
         if (error) {
-            setError(false);
-            setCode(Array(8).fill(""));
+            resetError();
+            setCodeArray(Array(8).fill(""));
             return;
         }
 
-        if (joinedCode !== MOCK_CODE) {
-            setError(true);
-            return;
+        const success = await handleSubmit();
+        if (success) {
+            onSuccess?.(code);
+        } else {
+            setCodeArray(Array(8).fill(""));
         }
-
-        setError(false);
-        onSuccess?.();
-        navigate("/dashboard");
     };
 
-    const handleResend = () => { };
+    const handleResend = () => {
+        handleSend();
+    };
 
-    const title = error
-        ? "Error de verificación"
-        : "Verificación de identidad";
-
-    const description = error
-        ? "Los datos registrados no coinciden con los criterios de seguridad"
-        : "Hemos enviado un código de verificación a tu correo";
 
     return (
         <div className={VERIFICATION_CONTAINER}>
@@ -92,8 +108,8 @@ const VerificationPopup = ({ onSuccess }: Props) => {
 
                             <div className={VERIFICATION_CODE_WRAPPER}>
                                 <VerificationCodeInput
-                                    value={code}
-                                    onChange={setCode}
+                                    value={codeArray}
+                                    onChange={setCodeArray}
                                     error={error}
                                 />
 
@@ -117,16 +133,18 @@ const VerificationPopup = ({ onSuccess }: Props) => {
                 <div className={VERIFICATION_BUTTONS_WRAPPER}>
                     <Button
                         variant="secondary"
-                        onClick={handleSubmit}
+                        onClick={handleAction}
                         fullWidth
+                        disabled={isLoading || (!isComplete && !error)}
                     >
-                        {error ? "Reintentar" : "Verificar"}
+                        {isLoading ? "Verificando..." : error ? "Reintentar" : "Verificar"}
                     </Button>
 
                     <Button
                         variant="primary"
                         onClick={handleResend}
                         fullWidth
+                        disabled={isLoading}
                     >
                         {error ? "Contactar Soporte" : "Reenviar Código"}
                     </Button>
