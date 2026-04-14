@@ -23,7 +23,7 @@ export const verify = async ({ username, code, token }: VerifyParams): Promise<V
 
     const headers: HeadersInit = {};
     if (token) {
-        headers["Authorization"] = `Authorization ${token}`;
+        headers["Authorization"] = `Bearer ${token}`;
     }
 
     const response = await fetch(url, {
@@ -45,7 +45,7 @@ export const sendVerificationCode = async ({ username, targetMail, token }: Send
 
     const headers: HeadersInit = {};
     if (token) {
-        headers["Authorization"] = `Authorization ${token}`;
+        headers["Authorization"] = `Bearer ${token}`;
     }
 
     const response = await fetch(url, {

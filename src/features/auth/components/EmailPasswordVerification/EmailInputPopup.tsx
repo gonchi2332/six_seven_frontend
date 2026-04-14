@@ -2,10 +2,22 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../../../../components/Button/Button";
 
-
 import { useSendVerificationCode } from "../../hooks/useSendVerificationCode";
 import { useSendRecoveryCode } from "../../hooks/useRecoveryCode";
 import { useAuthContext } from "../../../../context/AuthContext";
+
+const getUsernameFromToken = (): string => {
+  const token = localStorage.getItem("token");
+  if (!token) return "";
+  try {
+    const part = token.split(".").at(1);
+    if (!part) return "";
+    const payload = JSON.parse(atob(part));
+    return payload.username ?? "";
+  } catch {
+    return "";
+  }
+};
 
 
 
@@ -36,7 +48,9 @@ const EmailInputPopup = ({ onSubmit, onCancel, mode = "verify" }: Props) => {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [touched, setTouched] = useState(false);
-    const [username, setUsername] = useState("");
+    const [username, setUsername] = useState(
+        mode === "verify" ? getUsernameFromToken() : ""
+    );
 
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -55,15 +69,17 @@ const EmailInputPopup = ({ onSubmit, onCancel, mode = "verify" }: Props) => {
 
     const activeSendHook = mode === "recovery" ? sendRecoveryHooks : sendVerifyHooks;
 
-    const { handleSend } = activeSendHook;
+    const { handleSend, error: sendError, isLoading } = activeSendHook;
 
 
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         setTouched(true);
         if (!isValidEmail) return;
-        onSubmit?.(username, email);
-        handleSend();
+        const success = await handleSend();
+        if (success) {
+            onSubmit?.(username, email);
+        }
     };
 
     const handleCancel = () => {
@@ -124,13 +140,19 @@ const EmailInputPopup = ({ onSubmit, onCancel, mode = "verify" }: Props) => {
                         />
                     </div>
                 )}
+                {sendError && (
+                    <p className={EMAIL_ERROR} style={{ textAlign: "center", marginBottom: "0.5rem" }}>
+                        {sendError}
+                    </p>
+                )}
                 <div className={EMAIL_BUTTONS_WRAPPER}>
                     <Button
                         variant="secondary"
                         onClick={handleSubmit}
                         fullWidth
+                        disabled={isLoading}
                     >
-                        Añadir
+                        {isLoading ? "Enviando..." : "Añadir"}
                     </Button>
 
                     <Button

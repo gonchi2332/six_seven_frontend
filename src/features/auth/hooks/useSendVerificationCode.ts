@@ -11,22 +11,24 @@ interface UseSendVerificationCodeParams {
 
 export const useSendVerificationCode = ({ username, mail, token }: UseSendVerificationCodeParams) => {
     const navigate = useNavigate();
-    const [error, setError] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleSend = async () => {
-        setError(false);
+    const handleSend = async (): Promise<boolean> => {
+        setError(null);
         setIsLoading(true);
 
         try {
             const data = await sendVerificationCode({ username, targetMail: mail, token });
             if (data.success) {
-                navigate("/verification");
+                return true;
             } else {
-                setError(true);
+                setError(data.message ?? "Error al enviar el código");
+                return false;
             }
-        } catch {
-            setError(true);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Error al enviar el código");
+            return false;
         } finally {
             setIsLoading(false);
         }

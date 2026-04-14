@@ -8,15 +8,17 @@ interface UseSendRecoveryCodeParams {
 
 export const useSendRecoveryCode = ({ username, email }: UseSendRecoveryCodeParams) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    const handleSend = async () => {
+    const handleSend = async (): Promise<boolean> => {
         setIsLoading(true);
-        setError(false);
+        setError(null);
         try {
             await requestRecoveryCode({ username, email });
-        } catch {
-            setError(true);
+            return true;
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Error al enviar el código");
+            return false;
         } finally {
             setIsLoading(false);
         }
@@ -32,7 +34,7 @@ interface UseVerifyRecoveryParams {
 
 export const useVerifyRecoveryCode = ({ username, code }: UseVerifyRecoveryParams) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = async () => {
         setIsLoading(true);
@@ -41,22 +43,22 @@ export const useVerifyRecoveryCode = ({ username, code }: UseVerifyRecoveryParam
             if (data.success) {
                 return true;
             } else {
-                setError(true);
+                setError(data.message ?? "Código inválido");
                 return false;
             }
-        } catch {
-            setError(true);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Código inválido");
             return false;
         } finally {
             setIsLoading(false);
         }
     };
 
-    const resetError = () => setError(false);
+    const resetError = () => setError(null);
 
     const title = error ? "Código inválido" : "Recuperación de contraseña";
     const description = error
-        ? "El código ingresado no es válido o ha expirado."
+        ? error
         : "Ingresa el código de recuperación enviado a tu correo";
 
     return { isLoading, error, title, description, handleSubmit, resetError };

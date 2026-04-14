@@ -10,7 +10,7 @@ interface UseVerifyCodeParams {
 }
 
 export const useVerifyCode = ({ username, code, token }: UseVerifyCodeParams) => {
-    const [error, setError] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const { login } = useAuthContext();
 
@@ -19,29 +19,28 @@ export const useVerifyCode = ({ username, code, token }: UseVerifyCodeParams) =>
 
         try {
             const data = await verify({ username, code, token });
-            // Let's assume it succeeds if it didn't throw and there's a token or success is true
             if (data.success !== false) {
                 if (data.token) {
                     login(data.token);
                 }
                 return true;
             } else {
-                setError(true);
+                setError(data.message ?? "Código inválido");
                 return false;
             }
-        } catch {
-            setError(true);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Código inválido");
             return false;
         } finally {
             setIsLoading(false);
         }
     };
 
-    const resetError = () => setError(false);
+    const resetError = () => setError(null);
 
     const title = error ? "Código inválido" : "Verificación de cuenta";
     const description = error
-        ? "El código ingresado no es válido o ha expirado."
+        ? error
         : "Ingresa el código de verificación enviado a tu correo";
 
     return {
