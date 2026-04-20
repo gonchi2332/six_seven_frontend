@@ -1,8 +1,35 @@
 import { useState } from 'react';
-import type { RegisterFormData, RegisterFormErrors, RegisterFormTouched } from '../types/auth.types';
-import { registerUser } from '../api';
+import { registerUser } from '../../../services/registerFormService';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../context/AuthContext';
+interface RegisterFormData {
+name: string;
+paternalLastName: string;
+username: string;
+password: string;
+confirmPassword: string;
+mail: string;
+
+}
+
+interface RegisterFormErrors {
+name: string;
+paternalLastName: string;
+username: string;
+password: string;
+confirmPassword: string;
+mail: string;
+}
+
+interface RegisterFormTouched {
+name: boolean;
+paternalLastName: boolean;
+username: boolean;
+password: boolean;
+confirmPassword: boolean;
+mail: boolean;
+}
+
 
 
 
