@@ -9,14 +9,23 @@ type Mode = "verify" | "recovery";
 
 type Props = {
     initialMode?: Mode;
+    initialStep?: Step;
+    initialUsername?: string;
+    initialEmail?: string;
     onClose?: () => void;
 };
 
-const VerificationFlow = ({ initialMode = "verify", onClose }: Props) => {
-    const [step, setStep] = useState<Step>("email");
+const VerificationFlow = ({ 
+    initialMode = "verify", 
+    initialStep = "email",
+    initialUsername = "",
+    initialEmail = "",
+    onClose 
+}: Props) => {
+    const [step, setStep] = useState<Step>(initialStep);
     const [mode] = useState<Mode>(initialMode);
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState(initialUsername);
+    const [email, setEmail] = useState(initialEmail);
     const [verifiedCode, setVerifiedCode] = useState("");
     const navigate = useNavigate();
 

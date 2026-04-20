@@ -34,7 +34,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 
 export const requestRecoveryCode = async ({ username, email }: ForgotPasswordParams): Promise<ForgotPasswordResponse> => {
-    const response = await fetch(`${API_URL}/api/v1/auth/users/forgot-password`, {
+    const response = await fetch(`${API_URL}/api/v2/auth/users/forgot-password`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -52,7 +52,7 @@ export const requestRecoveryCode = async ({ username, email }: ForgotPasswordPar
 };
 
 export const verifyRecoveryCode = async ({ username, code }: VerifyCodeParams): Promise<VerifyCodeResponse> => {
-    const response = await fetch(`${API_URL}/api/v1/auth/users/verify-code`, {
+    const response = await fetch(`${API_URL}/api/v2/auth/users/verify-code`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

@@ -2,8 +2,8 @@ export interface RegisterRequest {
     username: string;
     password: string;
     names: string;
-    paternalSurname: string;
-    maternalSurname?: string;
+    firstSurname: string;
+    mainRegistrationEmail: string;
 }
 
 export interface RegisterResponse {
@@ -15,17 +15,13 @@ export interface RegisterResponse {
     token: string;
 }
 
-
-
-
-
-const API_URL = import.meta.env.VITE_API_URL || 'https://six-seven-backend.onrender.com';
+const API_URL = import.meta.env.VITE_API_URL 
 
 // Paso 1: Registrar credenciales
 export const registerUser = async (
     data: RegisterRequest
 ): Promise<RegisterResponse> => {
-    const response = await fetch(`${API_URL}/api/v1/auth/users/credentials-info`, {
+    const response = await fetch(`${API_URL}/api/v2/auth/users/credentials-info`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
