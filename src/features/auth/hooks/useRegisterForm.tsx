@@ -256,7 +256,7 @@ export const useRegisterForm = () => {
 
             authLogin(token);
             localStorage.setItem("username", formData.username);
-            navigate("/verification");
+            navigate("/verification", { state: { email: formData.mail, username: formData.username, codeSent: true } });
         } catch (error: any) {
 
             const errorMessage = error.message?.toLowerCase() || "";
