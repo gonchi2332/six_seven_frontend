@@ -2,8 +2,8 @@ export interface RegisterRequest {
     username: string;
     password: string;
     names: string;
-    paternalSurname: string;
-    maternalSurname?: string;
+    firstSurname: string;
+    mainRegistrationEmail: string;
 }
 
 export interface RegisterResponse {
@@ -15,11 +15,7 @@ export interface RegisterResponse {
     token: string;
 }
 
-
-
-
-
-const API_URL = import.meta.env.VITE_API_URL || 'https://six-seven-backend.onrender.com';
+const API_URL = import.meta.env.VITE_API_URL 
 
 // Paso 1: Registrar credenciales
 export const registerUser = async (

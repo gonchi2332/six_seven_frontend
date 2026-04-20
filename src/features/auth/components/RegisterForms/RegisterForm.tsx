@@ -13,14 +13,14 @@ const RegisterForm = () => {
         handlePasswordChange,
         handleConfirmPasswordChange,
         handlePaternalLastNameChange,
-        handleMaternalLastNameChange,
         handleUsernameChange,
+        handleMailChange,
         handleNameBlur,
         handlePasswordBlur,
         handleConfirmPasswordBlur,
         handlePaternalLastNameBlur,
-        handleMaternalLastNameBlur,
         handleUsernameBlur,
+        handleMailBlur,
         handleSubmit
     } = useRegisterForm();
 
@@ -28,7 +28,6 @@ const RegisterForm = () => {
     const FORM_SPACING = "flex flex-col gap-6";
     const FIELD_WRAPPER = "w-full";
     const BUTTON_WRAPPER = "flex justify-center mt-6";
-    const TWO_COLUMNS = "grid grid-cols-1 md:grid-cols-2 gap-5";
     const TOP_SECTION = "w-full";
     // Tipografía
     const TITLE = "text-3xl lg:text-5xl font-regular text-left text-surface font-inter mb-6";
@@ -54,28 +53,17 @@ const RegisterForm = () => {
                         disabled={isLoading}
                     />
                 </div>
-                <div className={TWO_COLUMNS}>
-                    <div onBlur={handlePaternalLastNameBlur} className={FIELD_WRAPPER}>
-                        <TextField
-                            label="Apellido paterno*"
-                            type="text"
-                            value={formData.paternalLastName}
-                            onChange={handlePaternalLastNameChange}
-                            error={touched.paternalLastName ? errors.paternalLastName : ""}
-                            disabled={isLoading}
-                        />
-                    </div>
-                    <div onBlur={handleMaternalLastNameBlur} className={FIELD_WRAPPER}>
-                        <TextField
-                            label="Apellido materno"
-                            type="text"
-                            value={formData.maternalLastName}
-                            onChange={handleMaternalLastNameChange}
-                            error={touched.maternalLastName ? errors.maternalLastName : ""}
-                            disabled={isLoading}
-                        />
-                    </div>
+                <div onBlur={handlePaternalLastNameBlur} className={FIELD_WRAPPER}>
+                    <TextField
+                        label="Primer Apellido*"
+                        type="text"
+                        value={formData.paternalLastName}
+                        onChange={handlePaternalLastNameChange}
+                        error={touched.paternalLastName ? errors.paternalLastName : ""}
+                        disabled={isLoading}
+                    />
                 </div>
+                    
                 <div onBlur={handleUsernameBlur} className={FIELD_WRAPPER}>
                     <TextField
                         label="Nombre de usuario*"
@@ -105,6 +93,16 @@ const RegisterForm = () => {
                         value={formData.confirmPassword}
                         onChange={handleConfirmPasswordChange}
                         error={touched.confirmPassword ? errors.confirmPassword : ""}
+                        disabled={isLoading}
+                    />
+                </div>
+                <div onBlur={handleMailBlur} className={FIELD_WRAPPER}>
+                    <TextField
+                        label="Correo electrónico*"
+                        type="email"
+                        value={formData.mail}
+                        onChange={handleMailChange}
+                        error={touched.mail ? errors.mail : ""}
                         disabled={isLoading}
                     />
                 </div>

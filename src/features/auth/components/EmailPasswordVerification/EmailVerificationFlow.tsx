@@ -33,7 +33,7 @@ const VerificationFlow = ({ initialMode = "verify", onClose }: Props) => {
         if (mode === "recovery") {
             setStep("reset");
         } else if (mode === "verify") {
-            navigate("/dashboard");
+            navigate("/login");
         }
     };
     //console.log(username);

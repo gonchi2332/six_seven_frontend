@@ -16,28 +16,28 @@ export const useRegisterForm = () => {
     const [formData, setFormData] = useState<RegisterFormData>({
         name: "",
         paternalLastName: "",
-        maternalLastName: "",
         username: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
+        mail:""
     });
 
     const [errors, setErrors] = useState<RegisterFormErrors>({
         name: "",
         paternalLastName: "",
-        maternalLastName: "",
         username: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
+        mail: ""
     });
 
     const [touched, setTouched] = useState<RegisterFormTouched>({
         name: false,
         paternalLastName: false,
-        maternalLastName: false,
         username: false,
         password: false,
-        confirmPassword: false
+        confirmPassword: false,
+        mail: false
     });
 
     const [isLoading, setIsLoading] = useState(false);
@@ -67,14 +67,14 @@ export const useRegisterForm = () => {
         if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(paternalName)) return "Solo letras y espacios";
         return ""
     }
-    const validateMaternalLastName = (maternalName: string) => {
-        if (!maternalName) return ""
-        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(maternalName)) return "Solo letras y espacios";
-        return ""
-    }
     const validateUsername = (username: string) => {
         if (!username) return "el nombre de usuario es obligatorio"
         if (!/^[a-zA-Z0-9_]+$/.test(username)) return "Solo letras, números y guión bajo";
+        return ""
+    }
+    const validateMail = (mail: string) => {
+        if (!mail) return "el correo es obligatorio"
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) return "Correo no válido";
         return ""
     }
 
@@ -94,9 +94,6 @@ export const useRegisterForm = () => {
                 case "paternalLastName":
                     error = validatePaternalLastName(value);
                     break;
-                case "maternalLastName":
-                    error = validateMaternalLastName(value);
-                    break;
                 case "username":
                     error = validateUsername(value);
                     break;
@@ -105,6 +102,9 @@ export const useRegisterForm = () => {
                     break;
                 case "confirmPassword":
                     error = validateConfirmPassword(formData.password, value);
+                    break;
+                case "mail":
+                    error = validateMail(value);
                     break;
             }
             setErrors(prev => ({ ...prev, [field]: error }));
@@ -120,14 +120,13 @@ export const useRegisterForm = () => {
         handleFieldChange("paternalLastName", e.target.value);
     };
 
-    const handleMaternalLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        handleFieldChange("maternalLastName", e.target.value);
-    };
-
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         handleFieldChange("username", e.target.value);
     };
 
+    const handleMailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        handleFieldChange("mail", e.target.value);
+    };
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setFormData(prev => ({ ...prev, password: value }));
@@ -161,6 +160,13 @@ export const useRegisterForm = () => {
             setErrors(prev => ({ ...prev, name: error }));
         }
     };
+    const handleMailBlur = () => {
+        if (!touched.mail) {
+            setTouched(prev => ({ ...prev, mail: true }));
+            const error = validateMail(formData.mail!);
+            setErrors(prev => ({ ...prev, mail: error }));
+        }
+    };
 
     const handlePasswordBlur = () => {
         if (!touched.password) {
@@ -185,13 +191,6 @@ export const useRegisterForm = () => {
         }
     };
 
-    const handleMaternalLastNameBlur = () => {
-        if (!touched.maternalLastName) {
-            setTouched(prev => ({ ...prev, maternalLastName: true }));
-            const error = validateMaternalLastName(formData.maternalLastName!);
-            setErrors(prev => ({ ...prev, maternalLastName: error }));
-        }
-    };
     const handleUsernameBlur = () => {
         if (!touched.username) {
             setTouched(prev => ({ ...prev, username: true }));
@@ -209,32 +208,32 @@ export const useRegisterForm = () => {
             password: true,
             confirmPassword: true,
             paternalLastName: true,
-            maternalLastName: true,
-            username: true
+            username: true,
+            mail: true
         });
 
         const nameError = validateName(formData.name);
         const passwordError = validatePassword(formData.password);
         const confirmPasswordError = validateConfirmPassword(formData.password, formData.confirmPassword);
         const paternalLastNameError = validatePaternalLastName(formData.paternalLastName);
-        const maternalLastNameError = validateMaternalLastName(formData.maternalLastName!);
         const usernameError = validateUsername(formData.username);
+        const mailError = validateMail(formData.mail!);
 
         setErrors({
             name: nameError,
             paternalLastName: paternalLastNameError,
-            maternalLastName: maternalLastNameError,
             username: usernameError,
             password: passwordError,
-            confirmPassword: confirmPasswordError
+            confirmPassword: confirmPasswordError,
+            mail: mailError
         });
 
         if (nameError ||
             passwordError ||
             confirmPasswordError ||
             paternalLastNameError ||
-            maternalLastNameError ||
-            usernameError
+            usernameError||
+            mailError
         ) return;
 
         setIsLoading(true);
@@ -249,8 +248,8 @@ export const useRegisterForm = () => {
                 username: formData.username,
                 password: formData.password,
                 names: formData.name,
-                paternalSurname: formData.paternalLastName,
-                maternalSurname: formData.maternalLastName
+                firstSurname: formData.paternalLastName,
+                mainRegistrationEmail: formData.mail
             });
 
             const token = response.token;
@@ -291,14 +290,14 @@ export const useRegisterForm = () => {
         handlePasswordChange,
         handleConfirmPasswordChange,
         handlePaternalLastNameChange,
-        handleMaternalLastNameChange,
         handleUsernameChange,
+        handleMailChange,
         handleNameBlur,
         handlePasswordBlur,
         handleConfirmPasswordBlur,
         handlePaternalLastNameBlur,
-        handleMaternalLastNameBlur,
         handleUsernameBlur,
+        handleMailBlur,
         handleSubmit
     };
 };
