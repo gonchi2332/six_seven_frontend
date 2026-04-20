@@ -17,7 +17,7 @@ export const getPersonalInfo = async (username: string): Promise<PersonalInfoRes
   const token = localStorage.getItem("token");
 
   const response = await fetch(
-    `${API_URL}/api/v1/register/users/personal-info?username=${username}`,
+    `${API_URL}/api/v2/register/users/personal-info?username=${username}`,
     {
       headers: {
         Authorization: `Authorization ${token}`,

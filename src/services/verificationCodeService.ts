@@ -19,7 +19,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 
 export const verify = async ({ username, code, token }: VerifyParams): Promise<VerifyResponse> => {
-    const url = `${API_URL}/api/v1/verification/users/compare-verification-code?username=${username}&currentCode=${code}`;
+    const url = `${API_URL}/api/v2/verification/users/compare-verification-code?username=${username}&currentCode=${code}`;
 
     const headers: HeadersInit = {};
     if (token) {
@@ -41,7 +41,7 @@ export const verify = async ({ username, code, token }: VerifyParams): Promise<V
 };
 
 export const sendVerificationCode = async ({ username, targetMail, token }: SendCodeParams): Promise<VerifyResponse> => {
-    const url = `${API_URL}/api/v1/verification/users/verification-code?username=${username}&targetMail=${targetMail}`;
+    const url = `${API_URL}/api/v2/verification/users/verification-code?username=${username}&targetMail=${targetMail}`;
 
     const headers: HeadersInit = {};
     if (token) {

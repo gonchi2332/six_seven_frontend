@@ -21,7 +21,7 @@ const API_URL = import.meta.env.VITE_API_URL
 export const registerUser = async (
     data: RegisterRequest
 ): Promise<RegisterResponse> => {
-    const response = await fetch(`${API_URL}/api/v1/auth/users/credentials-info`, {
+    const response = await fetch(`${API_URL}/api/v2/auth/users/credentials-info`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
