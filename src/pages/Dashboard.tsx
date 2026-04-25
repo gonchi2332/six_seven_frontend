@@ -1,4 +1,5 @@
 import Navbar from "../components/Navbar/Navbar";
+import LinkedIn from "../features/LinkedIn/LinkedIn";
 import PersonalInfo from "./PersonalInfo";
 
 const STYLES = {
@@ -12,6 +13,9 @@ const Dashboard = () => {
       <Navbar />
       <div className={STYLES.CONTENT}>
         <PersonalInfo />
+      </div>
+      <div className={STYLES.CONTENT}>
+        <LinkedIn/>
       </div>
     </div>
   );
