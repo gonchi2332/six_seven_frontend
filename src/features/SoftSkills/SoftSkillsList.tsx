@@ -1,0 +1,106 @@
+import { useState } from 'react';
+import { useSoftSkills } from '../../hooks/userSoftSkills';
+import SoftSkillItem from './SoftSkillItem';
+import SoftSkillModal from './SoftSkillModal';
+
+const styles = {
+    container: "flex flex-col gap-3",
+    header: "flex justify-between items-center mb-2",
+    title: "text-xl font-semibold text-surface font-inter",
+    empty: "text-surface/50 text-center py-8 font-nunito",
+    loading: "text-surface/50 text-center py-8 font-nunito",
+    error: "text-red-500 text-center py-8 font-nunito bg-red-500/10 rounded-xl",
+    addButton: "w-10 h-10 rounded-xl bg-primary text-surface hover:bg-primary/90 transition-colors flex items-center justify-center text-2xl font-bold",
+};
+
+const SoftSkillsList = () => {
+    const { skills, isLoading, error, addSkill, editSkill, removeSkill, reloadSkills } = useSoftSkills();
+    const [modalOpen, setModalOpen] = useState(false);
+    const [editingSkill, setEditingSkill] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleAdd = () => {
+        setEditingSkill(null);
+        setModalOpen(true);
+    };
+
+    const handleEdit = (name: string) => {
+        setEditingSkill(name);
+        setModalOpen(true);
+    };
+
+    const handleDelete = async (name: string) => {
+        if (confirm(`¿Estás seguro de eliminar la habilidad "${name}"?`)) {
+            setIsSubmitting(true);
+            try {
+                await removeSkill(name);
+            } finally {
+                setIsSubmitting(false);
+            }
+        }
+    };
+
+    const handleSave = async (newName: string, oldName?: string) => {
+        setIsSubmitting(true);
+        try {
+            if (oldName) {
+                await editSkill(oldName, newName);
+            } else {
+                await addSkill(newName);
+            }
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    if (isLoading) {
+        return <div className={styles.loading}>Cargando habilidades blandas...</div>;
+    }
+
+    if (error) {
+        return (
+            <div className={styles.error}>
+                <p>{error}</p>
+                <button onClick={reloadSkills} className="mt-2 text-accent underline">Reintentar</button>
+            </div>
+        );
+    }
+
+    return (
+        <>
+            <div className={styles.container}>
+                <div className={styles.header}>
+                    <h2 className={styles.title}>Habilidades Blandas</h2>
+                    <button onClick={handleAdd} className={styles.addButton} title="Agregar" disabled={isSubmitting}>
+                        +
+                    </button>
+                </div>
+
+                {skills.length === 0 ? (
+                    <div className={styles.empty}>
+                        No hay habilidades blandas aún. ¡Agrega una!
+                    </div>
+                ) : (
+                    skills.map((skill, index) => (
+                        <SoftSkillItem
+                            key={index}
+                            skillName={skill.name}
+                            onEdit={handleEdit}
+                            onDelete={handleDelete}
+                        />
+                    ))
+                )}
+            </div>
+
+            <SoftSkillModal
+                isOpen={modalOpen}
+                onClose={() => setModalOpen(false)}
+                onSave={handleSave}
+                initialName={editingSkill || ''}
+                isEditing={!!editingSkill}
+            />
+        </>
+    );
+};
+
+export default SoftSkillsList;
