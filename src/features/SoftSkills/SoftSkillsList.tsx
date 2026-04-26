@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useSoftSkills } from '../../hooks/userSoftSkills';
 import SoftSkillItem from './SoftSkillItem';
 import SoftSkillModal from './SoftSkillModal';
+import ConfirmModal from './ConfirmModal';
 
 const styles = {
     container: "flex flex-col gap-3",
@@ -12,35 +13,49 @@ const styles = {
     error: "text-red-500 text-center py-8 font-nunito bg-red-500/10 rounded-xl",
     addButton: "w-10 h-10 rounded-xl bg-primary text-surface hover:bg-primary/90 transition-colors flex items-center justify-center text-2xl font-bold",
 };
-
 const SoftSkillsList = () => {
-    const { skills, isLoading, error, addSkill, editSkill, removeSkill, reloadSkills } = useSoftSkills();
+    const { skills, isLoading, addSkill, editSkill, removeSkill } = useSoftSkills();
     const [modalOpen, setModalOpen] = useState(false);
     const [editingSkill, setEditingSkill] = useState<string | null>(null);
+    const [modalError, setModalError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    // Estado para el modal de confirmación
+    const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+    const [skillToDelete, setSkillToDelete] = useState<string | null>(null);
 
     const handleAdd = () => {
         setEditingSkill(null);
+        setModalError(null);
         setModalOpen(true);
     };
 
     const handleEdit = (name: string) => {
         setEditingSkill(name);
+        setModalError(null);
         setModalOpen(true);
     };
 
-    const handleDelete = async (name: string) => {
-        if (confirm(`¿Estás seguro de eliminar la habilidad "${name}"?`)) {
-            setIsSubmitting(true);
-            try {
-                await removeSkill(name);
-            } finally {
-                setIsSubmitting(false);
-            }
+    const handleDeleteClick = (name: string) => {
+        setSkillToDelete(name);
+        setConfirmModalOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!skillToDelete) return;
+        
+        setIsSubmitting(true);
+        try {
+            await removeSkill(skillToDelete);
+            setConfirmModalOpen(false);
+            setSkillToDelete(null);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     const handleSave = async (newName: string, oldName?: string) => {
+        setModalError(null);
         setIsSubmitting(true);
         try {
             if (oldName) {
@@ -48,6 +63,9 @@ const SoftSkillsList = () => {
             } else {
                 await addSkill(newName);
             }
+            setModalOpen(false);
+        } catch (err: any) {
+            setModalError(err.message || 'Error al guardar la habilidad');
         } finally {
             setIsSubmitting(false);
         }
@@ -55,15 +73,6 @@ const SoftSkillsList = () => {
 
     if (isLoading) {
         return <div className={styles.loading}>Cargando habilidades blandas...</div>;
-    }
-
-    if (error) {
-        return (
-            <div className={styles.error}>
-                <p>{error}</p>
-                <button onClick={reloadSkills} className="mt-2 text-accent underline">Reintentar</button>
-            </div>
-        );
     }
 
     return (
@@ -86,18 +95,34 @@ const SoftSkillsList = () => {
                             key={index}
                             skillName={skill.name}
                             onEdit={handleEdit}
-                            onDelete={handleDelete}
+                            onDelete={handleDeleteClick}
                         />
                     ))
                 )}
             </div>
 
+            {/* Modal para agregar/editar */}
             <SoftSkillModal
                 isOpen={modalOpen}
                 onClose={() => setModalOpen(false)}
                 onSave={handleSave}
                 initialName={editingSkill || ''}
                 isEditing={!!editingSkill}
+                error={modalError}
+                isSubmitting={isSubmitting}
+            />
+
+            {/* Modal de confirmación para eliminar */}
+            <ConfirmModal
+                isOpen={confirmModalOpen}
+                onClose={() => {
+                    setConfirmModalOpen(false);
+                    setSkillToDelete(null);
+                }}
+                onConfirm={handleConfirmDelete}
+                title="Eliminar habilidad"
+                message={`¿Estás seguro de que deseas eliminar la habilidad "${skillToDelete}"?`}
+                isLoading={isSubmitting}
             />
         </>
     );

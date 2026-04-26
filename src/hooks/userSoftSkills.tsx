@@ -15,6 +15,13 @@ export const useSoftSkills = () => {
     const getUsername = (): string | null => {
         return localStorage.getItem('username');
     };
+    
+    const validateSkillName = (skillname: string | null): string => {
+        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(skillname || '')) return "Solo letras y espacios";
+        if (skillname && skillname.length > 50) return "Máximo 50 caracteres";
+
+        return '';
+    };
 
     // Cargar habilidades blandas desde el backend
     const loadSkills = async () => {
@@ -44,6 +51,14 @@ export const useSoftSkills = () => {
     // Agregar habilidad blanda
     const addSkill = async (skillName: string): Promise<void> => {
         setError(null);
+
+
+         const validationError = validateSkillName(skillName);
+        if (validationError) {
+            setError(validationError);
+            throw new Error(validationError);
+        }
+
         try {
             await createSoftSkill({ skillName });
             // Recargar lista después de agregar
@@ -58,6 +73,11 @@ export const useSoftSkills = () => {
     const editSkill = async (oldSkillName: string, newSkillName: string): Promise<void> => {
         setError(null);
         if (oldSkillName === newSkillName) return;
+         const validationError = validateSkillName(newSkillName);
+        if (validationError) {
+            setError(validationError);
+            throw new Error(validationError);
+        }
         try {
             await updateSoftSkill({ oldSkillName, newSkillName });
             await loadSkills();
@@ -87,5 +107,6 @@ export const useSoftSkills = () => {
         editSkill,
         removeSkill,
         reloadSkills: loadSkills,
+        validateSkillName
     };
 };
