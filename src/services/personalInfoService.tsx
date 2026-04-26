@@ -1,12 +1,12 @@
 export interface PersonalInfoResponse {
   username: string;
   state: string;
-  phone: string | null;
+  phone_number: string | null;
   names: string;
-  paternal_surname: string;
-  maternal_surname: string | null;
-  address: string | null;
-  name: string | null;
+  first_surname: string;
+  second_surname: string | null;
+  residence_city_name: string | null;
+  residence_country_name: string | null;
   contact_email: string | null;
   profile_picture: string | null;
 }
@@ -14,39 +14,36 @@ export interface PersonalInfoResponse {
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const getPersonalInfo = async (username: string): Promise<PersonalInfoResponse> => {
-  const token = localStorage.getItem("token");
-
   const response = await fetch(
     `${API_URL}/api/v2/register/users/personal-info?username=${username}`,
     {
+      method: "GET",
       headers: {
-        Authorization: `Authorization ${token}`,
+        'Content-Type': 'application/json'
       },
     }
   );
 
   const data = await response.json();
   if (!response.ok || !data.success) {
-    throw new Error(data.message || "Error al obtener la información personal");
+    throw new Error(data.message || "Error al obtener la información");
   }
-
-  return data.userPersonalInfo;
+  return data.userPersonalInfo; 
 };
 
 export const updatePersonalInfo = async (formData: FormData) => {
-  const token = localStorage.getItem("token");
-
-  const response = await fetch(`${API_URL}/api/v1/register/users/personal-info`, {
-    method: "POST",
+  const token = localStorage.getItem("token")?.trim();
+  const response = await fetch(`${API_URL}/api/v2/register/users/personal-info`, {
+    method: "PUT",
     headers: {
-      Authorization: `Authorization ${token}`,
+      'Authorization': `Bearer ${token}`,
     },
     body: formData,
   });
 
   const data = await response.json();
-  if (!response.ok || !data.success) {
-    throw new Error(data.message || "Error al actualizar la información personal");
+  if (!response.ok) {
+    throw new Error(data.message || "Error al actualizar");
   }
 
   return data;
