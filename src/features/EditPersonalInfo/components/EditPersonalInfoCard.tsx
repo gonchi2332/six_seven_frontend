@@ -70,17 +70,17 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
               />
               <TextField
                 label="Apellido Paterno*:"
-                value={formData.lastNamePaternal}
-                onChange={(e) => handleChange("lastNamePaternal", e.target.value)}
-                error={errors.lastNamePaternal}
+                value={formData.firstSurname}
+                onChange={(e) => handleChange("firstSurname", e.target.value)}
+                error={errors.firstSurname}
                 className="w-full"
                 disabled
               />
               <TextField
                 label="Apellido Materno:"
-                value={formData.lastNameMaternal}
-                onChange={(e) => handleChange("lastNameMaternal", e.target.value)}
-                error={errors.lastNameMaternal}
+                value={formData.secondSurname}
+                onChange={(e) => handleChange("secondSurname", e.target.value)}
+                error={errors.secondSurname}
                 className="w-full"
                 disabled
               />
@@ -88,11 +88,12 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
 
             <div className={STYLES.GRID_3}>
               <TextField
-                label="Dirección:"
-                value={formData.address}
-                onChange={(e) => handleChange("address", e.target.value)}
-                placeholder="Ej: Av. San Martin 123"
+                label="Ciudad:"
+                value={formData.city}
+                onChange={(e) => handleChange("city", e.target.value)}
+                error={errors.city}
                 className="w-full"
+                placeholder="Ej: Av. San Martin 123"
               />
               <TextField
                 label="Correo de contacto:"
