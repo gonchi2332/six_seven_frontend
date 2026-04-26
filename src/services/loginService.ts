@@ -7,16 +7,16 @@ interface LoginResponse {
     success: boolean;
     message: string;
     user: {
-        id: number;
         username: string;
         hashed_password: string;
         state: string;
-        names: string;
-        paternal_surname: string;
+        first_surname: string;
+        profile_surname: string;
+        profilePicture: string;
     };
+    profilePicture: string;
     token: string;
 }
-console.log("URL de la API:", import.meta.env.VITE_API_URL);
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const login = async (payload: LoginPayload): Promise<LoginResponse> => {
@@ -40,3 +40,4 @@ export const login = async (payload: LoginPayload): Promise<LoginResponse> => {
 
     return data;
 };
+
