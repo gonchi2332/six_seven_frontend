@@ -1,5 +1,6 @@
 import Navbar from "../components/Navbar/Navbar";
 import PersonalInfo from "./PersonalInfo";
+import SoftSkillPage from "./SoftSkill";
 
 const STYLES = {
   WRAPPER: "flex flex-col items-center bg-main h-screen",
@@ -12,6 +13,9 @@ const Dashboard = () => {
       <Navbar />
       <div className={STYLES.CONTENT}>
         <PersonalInfo />
+      </div>
+      <div className={STYLES.CONTENT}>
+        <SoftSkillPage />
       </div>
     </div>
   );
