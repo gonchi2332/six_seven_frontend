@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar/Navbar";
 import LinkedIn from "../features/LinkedIn/LinkedIn";
 import PersonalInfo from "./PersonalInfo";
+import SoftSkillPage from "./SoftSkill";
 
 const STYLES = {
   WRAPPER: "flex flex-col items-center bg-main h-screen",
@@ -16,6 +17,9 @@ const Dashboard = () => {
       </div>
       <div className={STYLES.CONTENT}>
         <LinkedIn/>
+      </div>
+       <div className={STYLES.CONTENT}>
+        <SoftSkillPage />
       </div>
     </div>
   );
