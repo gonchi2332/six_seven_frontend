@@ -23,7 +23,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   }, [initialImageUrl]);
 
   const labelBase =
-    "group relative flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors overflow-hidden";
+    "group relative flex flex-col items-center justify-center w-full h-28 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors overflow-hidden";
 
   const styles = {
     LABEL: `${labelBase} ${
