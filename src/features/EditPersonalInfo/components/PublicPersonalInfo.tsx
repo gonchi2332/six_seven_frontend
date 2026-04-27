@@ -47,7 +47,7 @@ const PublicPersonalInfo = () => {
           
           {data.email && (
             <p className={STYLES.DETAILS}>
-              <span className="text-accent text-xl">Email:</span>
+              <span className="text-accent text-xl">Correo electronico:</span>
               <a href={`mailto:${data.email}`} className="hover:text-accent transition-colors">
                 {data.email}
               </a>
