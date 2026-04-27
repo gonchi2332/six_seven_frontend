@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSoftSkills } from '../../hooks/userSoftSkills';
-import SoftSkillItem from './SoftSkillItem';
+import { SoftSkillItem } from './SoftSkillItem';
 import SoftSkillModal from './SoftSkillModal';
 import ConfirmModal from './ConfirmModal';
 

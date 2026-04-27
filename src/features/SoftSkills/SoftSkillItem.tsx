@@ -10,7 +10,7 @@ const styles = {
     buttons: "flex gap-2",
 };
 
-const SoftSkillItem = ({ skillName, onEdit, onDelete }: SoftSkillItemProps) => {
+export const SoftSkillItem = ({ skillName, onEdit, onDelete }: SoftSkillItemProps) => {
     return (
         <div className={styles.container}>
             <span className={styles.name}>{skillName}</span>
@@ -38,4 +38,9 @@ const SoftSkillItem = ({ skillName, onEdit, onDelete }: SoftSkillItemProps) => {
     );
 };
 
-export default SoftSkillItem;
+
+export const PublicSoftSkillItem = ({ skillName }: { skillName: string }) => (
+    <div className={styles.container}>
+        <span className={styles.name}>{skillName}</span>
+    </div>
+);
