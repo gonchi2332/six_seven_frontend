@@ -1,6 +1,5 @@
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { sendVerificationCode } from "../../../services/verificationCodeService";
 
 interface UseSendVerificationCodeParams {
@@ -10,7 +9,6 @@ interface UseSendVerificationCodeParams {
 }
 
 export const useSendVerificationCode = ({ username, mail, token }: UseSendVerificationCodeParams) => {
-    const navigate = useNavigate();
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 

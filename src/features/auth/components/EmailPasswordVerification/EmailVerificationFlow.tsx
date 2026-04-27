@@ -15,12 +15,12 @@ type Props = {
     onClose?: () => void;
 };
 
-const VerificationFlow = ({ 
-    initialMode = "verify", 
+const VerificationFlow = ({
+    initialMode = "verify",
     initialStep = "email",
     initialUsername = "",
     initialEmail = "",
-    onClose 
+    onClose
 }: Props) => {
     const [step, setStep] = useState<Step>(initialStep);
     const [mode] = useState<Mode>(initialMode);
@@ -45,7 +45,6 @@ const VerificationFlow = ({
             navigate("/login");
         }
     };
-    //console.log(username);
     return (
         <>
             {step === "email" && (
