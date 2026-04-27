@@ -110,3 +110,27 @@ export const useSoftSkills = () => {
         validateSkillName
     };
 };
+
+export const usePublicSoftSkills = (username: string | undefined) => {
+    const [skills, setSkills] = useState<SoftSkill[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const load = async () => {
+            if (!username) return;
+            setIsLoading(true);
+            try {
+                const data = await getSoftSkills(username);
+                setSkills(data);
+            } catch (err: any) {
+                setError(err.message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        load();
+    }, [username]);
+
+    return { skills, isLoading, error };
+};
