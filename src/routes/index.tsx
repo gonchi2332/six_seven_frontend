@@ -5,8 +5,7 @@ import RegisterPage from "../pages/RegisterPage";
 import VerificationPage from "../pages/VerificationPage";
 import PasswordResetPage from "../pages/PasswordResetPage";
 import Dashboard from "../pages/Dashboard";
-
-
+import AdditionalInfoPage from "../pages/AdditionalInfoPage";
 
 
 const Router = () => {
@@ -20,6 +19,7 @@ const Router = () => {
                 <Route path="/verification" element={<VerificationPage />} />
                 <Route path="/changePassword" element={<PasswordResetPage />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/add" element={<AdditionalInfoPage />} />
             </Routes>
         </BrowserRouter>
     );
