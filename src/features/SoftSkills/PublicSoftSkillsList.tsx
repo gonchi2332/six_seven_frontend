@@ -3,10 +3,9 @@ import { usePublicSoftSkills } from "../../hooks/userSoftSkills";
 import { PublicSoftSkillItem } from "./SoftSkillItem";
 
 const STYLES = {
-  // Cambiamos flex-wrap por flex-col para que los hijos se apilen verticalmente
   WRAPPER: "bg-background flex flex-col w-full",
-  // Quitamos el max-w-md para que ocupe todo el ancho del Dashboard y ponemos w-full
-  CONTENT: "w-full flex flex-col gap-3 mt-4", 
+  TITLE: "text-2xl font-bold text-surface font-inter mb-6", // Igualamos el margen del título
+  CONTENT: "w-full flex flex-col gap-3", // Quitamos el mt-4 y confiamos en el gap
   EMPTY: "text-surface/50 text-center py-10 font-nunito",
   LOADING: "text-surface/50 text-center py-10 font-nunito",
 };
@@ -17,8 +16,7 @@ const PublicSoftSkillsList = () => {
 
   return (
     <div className={STYLES.WRAPPER}>
-        <h2 className="text-2xl font-bold text-surface">Habilidades Blandas</h2>
-        
+        <h2 className={STYLES.TITLE}>Habilidades Blandas</h2> {/* Usamos la clase TITLE */}
         <div className={STYLES.CONTENT}>
             {isLoading && <p className={STYLES.LOADING}>Cargando habilidades...</p>}
             
