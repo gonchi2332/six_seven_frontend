@@ -3,31 +3,31 @@ import { registerUser } from '../../../services/registerFormService';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../context/AuthContext';
 interface RegisterFormData {
-name: string;
-paternalLastName: string;
-username: string;
-password: string;
-confirmPassword: string;
-mail: string;
+    name: string;
+    paternalLastName: string;
+    username: string;
+    password: string;
+    confirmPassword: string;
+    mail: string;
 
 }
 
 interface RegisterFormErrors {
-name: string;
-paternalLastName: string;
-username: string;
-password: string;
-confirmPassword: string;
-mail: string;
+    name: string;
+    paternalLastName: string;
+    username: string;
+    password: string;
+    confirmPassword: string;
+    mail: string;
 }
 
 interface RegisterFormTouched {
-name: boolean;
-paternalLastName: boolean;
-username: boolean;
-password: boolean;
-confirmPassword: boolean;
-mail: boolean;
+    name: boolean;
+    paternalLastName: boolean;
+    username: boolean;
+    password: boolean;
+    confirmPassword: boolean;
+    mail: boolean;
 }
 
 
@@ -88,19 +88,19 @@ export const useRegisterForm = () => {
         if (password !== confirm) return "Las contraseñas no coinciden";
         return "";
     };
-    
+
     const validatePaternalLastName = (paternalName: string) => {
         if (!paternalName) return "El apellido paterno es requerido";
         if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(paternalName)) return "Solo letras y espacios";
         return "";
     }
-    
+
     const validateUsername = (username: string) => {
         if (!username) return "El nombre de usuario es obligatorio";
         if (!/^[a-zA-Z0-9_]+$/.test(username)) return "Solo letras, números y guión bajo";
         return "";
     }
-    
+
     const validateMail = (mail: string) => {
         if (!mail) return "El correo es obligatorio";
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) return "Correo no válido";
@@ -156,7 +156,7 @@ export const useRegisterForm = () => {
     const handleMailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         handleFieldChange("mail", e.target.value);
     };
-    
+
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setFormData(prev => ({ ...prev, password: value }));
@@ -190,7 +190,7 @@ export const useRegisterForm = () => {
             setErrors(prev => ({ ...prev, name: error }));
         }
     };
-    
+
     const handleMailBlur = () => {
         if (!touched.mail) {
             setTouched(prev => ({ ...prev, mail: true }));
@@ -214,7 +214,7 @@ export const useRegisterForm = () => {
             setErrors(prev => ({ ...prev, confirmPassword: error }));
         }
     };
-    
+
     const handlePaternalLastNameBlur = () => {
         if (!touched.paternalLastName) {
             setTouched(prev => ({ ...prev, paternalLastName: true }));
@@ -283,7 +283,7 @@ export const useRegisterForm = () => {
             });
 
             const token = response.token;
-            
+
             authLogin(token);
             localStorage.setItem("username", formData.username);
 
@@ -296,34 +296,34 @@ export const useRegisterForm = () => {
                     targetMail: formData.mail,
                     token: token
                 });
-                
-                
+
+
                 // Redirigir a página de verificación
-                navigate("/verification", { 
-                    state: { 
-                        email: formData.mail, 
-                        username: formData.username, 
-                        codeSent: true 
-                    } 
+                navigate("/verification", {
+                    state: {
+                        email: formData.mail,
+                        username: formData.username,
+                        codeSent: true
+                    }
                 });
-                
+
             } catch (verificationError: any) {
-                
-                navigate("/verification", { 
-                    state: { 
-                        email: formData.mail, 
-                        username: formData.username, 
+
+                navigate("/verification", {
+                    state: {
+                        email: formData.mail,
+                        username: formData.username,
                         codeSent: false,
                         error: verificationError.message || "Error al enviar código"
-                    } 
+                    }
                 });
             }
-            
+
         } catch (error: any) {
-            
-            
+
+
             const errorMessage = error.message?.toLowerCase() || "";
-            
+
             if (errorMessage.includes("username") || errorMessage.includes("ya existe")) {
                 setErrors(prev => ({
                     ...prev,
