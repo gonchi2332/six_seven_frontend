@@ -6,15 +6,15 @@ import { getSoftSkills,
 import type { SoftSkill } from '../services/softSkillService';
 
 
+import { useAuthContext } from '../context/AuthContext';
+
+
 export const useSoftSkills = () => {
+    const { username } = useAuthContext();
     const [skills, setSkills] = useState<SoftSkill[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Obtener username del localStorage (se guarda al hacer login)
-    const getUsername = (): string | null => {
-        return localStorage.getItem('username');
-    };
     
     const validateSkillName = (skillname: string | null): string => {
         if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(skillname || '')) return "Solo letras y espacios";
@@ -25,14 +25,14 @@ export const useSoftSkills = () => {
 
     // Cargar habilidades blandas desde el backend
     const loadSkills = async () => {
-        setIsLoading(true);
-        setError(null);
-        const username = getUsername();
         if (!username) {
-            setError('Usuario no identificado');
+            setSkills([]);
             setIsLoading(false);
             return;
         }
+        
+        setIsLoading(true);
+        setError(null);
         try {
             const data = await getSoftSkills(username);
             setSkills(data);
@@ -46,7 +46,7 @@ export const useSoftSkills = () => {
 
     useEffect(() => {
         loadSkills();
-    }, []);
+    }, [username]);
 
     // Agregar habilidad blanda
     const addSkill = async (skillName: string): Promise<void> => {
