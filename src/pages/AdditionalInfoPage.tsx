@@ -3,8 +3,10 @@ import AdditionalInfoModal from "../features/AddOptionalInfo/components/Addition
 
 
 const AdditionalInfoPage = () => {
+
+    const MODAL_SIZE = "fixed inset-0 flex items-center justify-center bg-black/40 z-50";
     return (
-        <div>
+        <div className={MODAL_SIZE}>
             <AdditionalInfoModal />
         </div>
     );
