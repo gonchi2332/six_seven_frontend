@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar/Navbar";
 import LinkedIn from "../features/LinkedIn/LinkedIn";
 import PersonalInfo from "./PersonalInfo";
+import SkillsList from "../features/skills/components/SkillsList";
 import SoftSkillPage from "./SoftSkill";
 
 const STYLES = {
@@ -14,6 +15,7 @@ const Dashboard = () => {
       <Navbar />
       <div className={STYLES.CONTENT}>
         <PersonalInfo />
+        <SkillsList />
       </div>
       <div className={STYLES.CONTENT}>
         <LinkedIn/>
