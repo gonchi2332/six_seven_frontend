@@ -21,7 +21,7 @@ const Router = () => {
                 <Route path="/changePassword" element={<PasswordResetPage />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/add" element={<AdditionalInfoPage />} />
-                <Route path="/view/:username" element={<PublicDashboard />}/>
+                <Route path="/ver/:username" element={<PublicDashboard />}/>
             </Routes>
         </BrowserRouter>
     );
