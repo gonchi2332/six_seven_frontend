@@ -42,7 +42,11 @@ const VerificationFlow = ({
         if (mode === "recovery") {
             setStep("reset");
         } else if (mode === "verify") {
-            navigate("/login");
+            if (onClose) {
+                onClose();
+            } else {
+                navigate("/login");
+            }
         }
     };
     return (

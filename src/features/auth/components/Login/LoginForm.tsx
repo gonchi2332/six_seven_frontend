@@ -4,12 +4,8 @@ import useLogin from "../../hooks/useLogin";
 import { useState } from "react";
 import EmailVerificationFlow from "../../components/EmailPasswordVerification/EmailVerificationFlow";
 import CodeEmailPopup from "../EmailPasswordVerification/CodeEmailPopup";
-
-
-
+import { useNavigate } from "react-router-dom";
 import useEmail from "../../../../hooks/useGetEmail";
-
-
 
 const LoginForm = () => {
     const {
@@ -18,6 +14,7 @@ const LoginForm = () => {
         errors,
         touched,
         showVerified,
+        setShowVerified,
         serverError,
         isLoading,
         handleUsernameChange,
@@ -27,8 +24,7 @@ const LoginForm = () => {
         handleSubmit
     } = useLogin();
 
-
-
+    const navigate = useNavigate();
     const { email } = useEmail();
     const [showRecovery, setShowRecovery] = useState(false);
 
@@ -101,11 +97,14 @@ const LoginForm = () => {
                 </p>
             </form>
             {showVerified && (
-
                 <CodeEmailPopup
                     username={username}
                     email={email}
                     mode={"verify"}
+                    onSuccess={() => {
+                        setShowVerified(false);
+                        navigate("/dashboard");
+                    }}
                 />
             )}
 

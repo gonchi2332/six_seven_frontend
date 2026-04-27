@@ -14,10 +14,10 @@ const VERIFICATION_ICON_WRAPPER = "w-20 h-20 flex items-center justify-center bg
 const VERIFICATION_TITLE = "text-[24px] md:text-3xl font-inter font-bold text-surface text-center max-w-[240px]";
 const VERIFICATION_DESCRIPTION = "text-[18px] font-nunito font-normal text-surface text-center max-w-[260px] leading-relaxed";
 const VERIFICATION_LABEL = "text-[18px] md:text-[24px] text-surface font-nunito";
-const VERIFICATION_CODE_WRAPPER = "-mt-4 mb-1 flex flex-col items-center";
+const VERIFICATION_CODE_WRAPPER = "mb-1 flex flex-col items-center w-full";
 const VERIFICATION_ERROR_BOX = "bg-white/10 border-l-4 border-red-400 rounded-lg p-5 flex items-center gap-2 text-surface text-sm";
 const VERIFICATION_BUTTONS_WRAPPER = "flex flex-col items-center gap-3 w-[260px] mx-auto mt-auto pt-4";
-const CODE_HINT = "text-red-300 text-sm mt-1 mb-4 text-left w-fit self-start";
+const CODE_HINT = "text-red-300 text-sm mt-1 mb-4 text-center w-full";
 const ICON_ERROR = "fa-solid fa-circle-exclamation text-white text-5xl";
 const ICON_SUCCESS = "fa-solid fa-shield text-[#90DDF0] text-5xl";
 const ICON_INFO = "fa-solid fa-circle-info";
@@ -35,8 +35,7 @@ const VerificationPopup = ({ username, email, mode, onSuccess }: Props) => {
         token
     } = useAuthContext();
 
-    const [codeArray, setCodeArray] = useState<string[]>(Array(8).fill(""));
-    const code = codeArray.join("");
+    const [code, setCode] = useState("");
     const isComplete = code.length === 8;
 
     const verifyHooks = useVerifyCode({ username, code, token });
@@ -63,7 +62,7 @@ const VerificationPopup = ({ username, email, mode, onSuccess }: Props) => {
 
         if (error) {
             resetError();
-            setCodeArray(Array(8).fill(""));
+            setCode("");
             return;
         }
 
@@ -71,7 +70,7 @@ const VerificationPopup = ({ username, email, mode, onSuccess }: Props) => {
         if (success) {
             onSuccess?.(code);
         } else {
-            setCodeArray(Array(8).fill(""));
+            setCode("");
         }
     };
 
@@ -108,8 +107,8 @@ const VerificationPopup = ({ username, email, mode, onSuccess }: Props) => {
 
                             <div className={VERIFICATION_CODE_WRAPPER}>
                                 <VerificationCodeInput
-                                    value={codeArray}
-                                    onChange={setCodeArray}
+                                    value={code}
+                                    onChange={setCode}
                                     error={!!error}
                                 />
 

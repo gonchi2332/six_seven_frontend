@@ -1,33 +1,32 @@
-import { useVerificationCode } from "../../features/auth/hooks/useVerificationCode";
-
 interface Props {
   length?: number;
-  value: string[];
-  onChange: (value: string[]) => void;
+  value: string;
+  onChange: (value: string) => void;
   error?: boolean;
 }
 
 const VerificationCodeInput = ({ length = 8, value, onChange, error = false }: Props) => {
- const { inputsRef, handleChange } = useVerificationCode(length, value, onChange);
 
-  const inputBaseStyles = "w-8 h-12 text-center text-[20px] font-nunito bg-transparent text-white caret-white outline-none";
-  const inputNormalStyles = "focus:ring-1 focus:ring-blue-500";
-  const inputErrorStyles = "text-red-400";
+  const inputBaseStyles = "w-full h-12 text-center text-[24px] tracking-[0.5em] font-nunito bg-black text-white caret-white outline-none rounded-xl";
+  const inputNormalStyles = "focus:ring-1 focus:ring-blue-500 border border-white/10";
+  const inputErrorStyles = "border border-red-500 text-red-400";
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.replace(/[^0-9]/g, "").slice(0, length);
+    onChange(val);
+  };
 
   return (
-    <div className="flex justify-center mt-4">
-      <div className="flex bg-black rounded-xl overflow-hidden w-[260px] justify-between px-2">
-        {Array.from({ length }).map((_, i) => (
-          <input
-            key={i}
-            ref={(el) => { inputsRef.current[i] = el; }}
-            type="text"
-            maxLength={1}
-            value={value[i] || ""}
-            onChange={(e) => handleChange(e.target.value, i)}
-            className={`${inputBaseStyles} ${error ? inputErrorStyles : inputNormalStyles}`}
-          />
-        ))}
+    <div className="flex justify-center mt-4 w-full">
+      <div className="w-[260px]">
+        <input
+          type="text"
+          maxLength={length}
+          value={value}
+          onChange={handleChange}
+          className={`${inputBaseStyles} ${error ? inputErrorStyles : inputNormalStyles}`}
+          placeholder="00000000"
+        />
       </div>
     </div>
   );
