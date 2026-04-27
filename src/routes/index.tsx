@@ -6,6 +6,7 @@ import VerificationPage from "../pages/VerificationPage";
 import PasswordResetPage from "../pages/PasswordResetPage";
 import Dashboard from "../pages/Dashboard";
 import AdditionalInfoPage from "../pages/AdditionalInfoPage";
+import PublicDashboard from "../pages/PublicDashboard";
 
 
 const Router = () => {
@@ -20,6 +21,7 @@ const Router = () => {
                 <Route path="/changePassword" element={<PasswordResetPage />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/add" element={<AdditionalInfoPage />} />
+                <Route path="/view/:username" element={<PublicDashboard />}/>
             </Routes>
         </BrowserRouter>
     );
