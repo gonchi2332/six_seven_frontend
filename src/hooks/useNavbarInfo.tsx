@@ -1,29 +1,21 @@
 // hooks/useNavbarInfo.ts
 import { useEffect, useState } from "react";
 import { getPersonalInfo, type PersonalInfoResponse } from "../services/personalInfoService";
-
-const getUsernameFromToken = (): string => {
-  const token = localStorage.getItem("token");
-  if (!token) return "";
-  try {
-    const part = token.split(".").at(1);
-    if (!part) return "";
-    const payload = JSON.parse(atob(part));
-    return payload.username ?? "";
-  } catch {
-    return "";
-  }
-};
+import { useAuthContext } from "../context/AuthContext";
 
 export const useNavbarInfo = () => {
+  const { username } = useAuthContext();
   const [userInfo, setUserInfo] = useState<PersonalInfoResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!username) {
+        setUserInfo(null);
+        setIsLoading(false);
+        return;
+      }
       try {
-        const username = getUsernameFromToken();
-        if (!username) return;
         const info = await getPersonalInfo(username);
         setUserInfo(info);
       } catch {
@@ -33,7 +25,7 @@ export const useNavbarInfo = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [username]);
 
   return { userInfo, isLoading };
 };

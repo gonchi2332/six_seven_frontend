@@ -2,9 +2,9 @@ import { useState } from "react";
 
 export interface FormData {
   firstName: string;
-  lastNamePaternal: string;
-  lastNameMaternal: string;
-  address: string;
+  firstSurname: string;
+  secondSurname: string;
+  city: string;
   email: string;
   phone: string;
   country: string;
@@ -15,9 +15,9 @@ export interface FormData {
 export const useProfileForm = () => {
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
-    lastNamePaternal: "",
-    lastNameMaternal: "",
-    address: "",
+    firstSurname: "",
+    secondSurname: "",
+    city: "",
     email: "",
     phone: "",
     country: "",
@@ -34,7 +34,7 @@ export const useProfileForm = () => {
   const handleChange = (field: keyof FormData, value: string | File | null) => {
     const newErrors = { ...errors };
     if (typeof value === "string") {
-      if (["firstName", "lastNamePaternal", "lastNameMaternal"].includes(field)) {
+      if (["firstName", "firstSurname", "secondSurname"].includes(field)) {
         const spanishLettersRegex = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]*$/;
         if (!spanishLettersRegex.test(value)) {
           newErrors[field] = "Solo se permiten letras y espacios";

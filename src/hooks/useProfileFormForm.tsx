@@ -29,16 +29,18 @@ export const usePersonalInfo = (
 
         if (!username) throw new Error("No se encontró el usuario");
 
+        // Dentro de usePersonalInfo (useEffect)
         const info = await getPersonalInfo(username);
 
+        // Asegúrate de que estas llaves coincidan EXACTAMENTE con PersonalInfoResponse
         setInitialData({
           firstName: info.names ?? "",
-          lastNamePaternal: info.paternal_surname ?? "",
-          lastNameMaternal: info.maternal_surname ?? "",
-          address: info.address ?? "",
+          firstSurname: info.first_surname ?? "",     // API usa first_surname
+          secondSurname: info.second_surname ?? "",    // API usa second_surname
+          city: info.residence_city_name ?? "",        // API usa residence_city_name
           email: info.contact_email ?? "",
-          phone: info.phone ? String(info.phone) : "",
-          country: info.name ?? "",
+          phone: info.phone_number ? String(info.phone_number) : "", // API usa phone_number
+          country: info.residence_country_name ?? "",  // API usa residence_country_name
           profileImageUrl: parseProfilePicture(info.profile_picture) ?? null,
         });
       } catch (err: any) {

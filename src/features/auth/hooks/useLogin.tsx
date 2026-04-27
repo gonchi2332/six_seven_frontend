@@ -1,7 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { login } from "../../../services/loginService";
 import { useAuthContext } from "../../../context/AuthContext";
+import { useSendVerificationCode } from "./useSendVerificationCode";
+import useEmail from "../../../hooks/useGetEmail";
+import { useNavigate } from "react-router-dom";
+
+
 
 const useLogin = () => {
     const [username, setUsername] = useState("");
@@ -12,9 +16,14 @@ const useLogin = () => {
     const [serverError, setServerError] = useState<string>("");
 
     const [isLoading, setIsLoading] = useState(false);
-
-    const { login: authLogin } = useAuthContext();
     const navigate = useNavigate();
+
+    const [showVerified, setShowVerified] = useState(false);
+
+
+    const { login: authLogin, token } = useAuthContext();
+    const { email } = useEmail();
+
 
     const validateUsername = (value: string) => {
         if (!value) return "El nombre de usuario es obligatorio";
@@ -52,6 +61,7 @@ const useLogin = () => {
         setErrors(prev => ({ ...prev, password: validatePassword(password) }));
     };
 
+    const { handleSend } = useSendVerificationCode({ username, mail: email, token });
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -68,18 +78,19 @@ const useLogin = () => {
         try {
             const data = await login({ username, password });
             authLogin(data.token);
-            localStorage.setItem("username", username);
 
             if (data.user.state.toUpperCase() === "UNVERIFIED") {
-                navigate("/verification");
+                setShowVerified(true);
+                handleSend();
             } else {
                 navigate("/dashboard");
             }
+
+
         } catch (err) {
             const msg = err instanceof Error ? err.message : "Error inesperado";
             const lowerMsg = msg.toLowerCase();
 
-            // Map backend error messages to inputs intuitively
             if (
                 lowerMsg.includes("cannot read properties of undefined") ||
                 lowerMsg.includes("reading 'profile_picture'") ||
@@ -104,6 +115,8 @@ const useLogin = () => {
         password,
         errors,
         touched,
+        showVerified,
+        setShowVerified,
         serverError,
         isLoading,
         handleUsernameChange,

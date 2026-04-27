@@ -8,7 +8,7 @@ import { usePersonalInfo } from "../../../hooks/useProfileFormForm";
 import { usePersonalInfoSubmit } from "../../../hooks/usePersonalInfoSubmit";
 
 const STYLES = {
-  FORM_WRAPPER: "flex flex-col gap-6 px-8",
+  FORM_WRAPPER: "flex flex-col gap-6 px-8 ",
   GRID_3: "grid grid-cols-1 md:grid-cols-3 gap-4",
   INPUT_LABEL: "mb-1 text-xl font-inter text-white",
   SELECT: "w-full px-4 py-2 border rounded-xl outline-none transition-all duration-200 bg-white font-nunito disabled:cursor-not-allowed border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500",
@@ -39,7 +39,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
 
   if (isLoadingData) {
     return (
-      <PopUpCard title="Datos Personales">
+      <PopUpCard title="Datos Personales" >
         <p className="text-white text-center py-10">Cargando información...</p>
       </PopUpCard>
     );
@@ -47,7 +47,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
 
   if (loadError) {
     return (
-      <PopUpCard title="Datos Personales">
+      <PopUpCard title="Datos Personales" >
         <p className="text-red-400 text-center py-10">{loadError}</p>
       </PopUpCard>
     );
@@ -66,33 +66,34 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                 onChange={(e) => handleChange("firstName", e.target.value)}
                 error={errors.firstName}
                 className="w-full"
-                disabled
+                
               />
               <TextField
                 label="Apellido Paterno*:"
-                value={formData.lastNamePaternal}
-                onChange={(e) => handleChange("lastNamePaternal", e.target.value)}
-                error={errors.lastNamePaternal}
+                value={formData.firstSurname}
+                onChange={(e) => handleChange("firstSurname", e.target.value)}
+                error={errors.firstSurname}
                 className="w-full"
-                disabled
+                
               />
               <TextField
                 label="Apellido Materno:"
-                value={formData.lastNameMaternal}
-                onChange={(e) => handleChange("lastNameMaternal", e.target.value)}
-                error={errors.lastNameMaternal}
+                value={formData.secondSurname}
+                onChange={(e) => handleChange("secondSurname", e.target.value)}
+                error={errors.secondSurname}
                 className="w-full"
-                disabled
+                
               />
             </div>
 
             <div className={STYLES.GRID_3}>
               <TextField
-                label="Dirección:"
-                value={formData.address}
-                onChange={(e) => handleChange("address", e.target.value)}
-                placeholder="Ej: Av. San Martin 123"
+                label="Ciudad:"
+                value={formData.city}
+                onChange={(e) => handleChange("city", e.target.value)}
+                error={errors.city}
                 className="w-full"
+                placeholder="Ej: Av. San Martin 123"
               />
               <TextField
                 label="Correo de contacto:"

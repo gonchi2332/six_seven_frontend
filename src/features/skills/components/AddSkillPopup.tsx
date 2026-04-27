@@ -2,45 +2,52 @@ import Button from "../../../components/Button";
 import TextField from "../../../components/TextField";
 import PopUpCard from "../../../components/PopUpCard";
 import SkillLevelSelector from "./SkillLevelSelector";
-import { useSkillForm } from "../hooks/useSkillForm";
+import { useSkillForm } from "../../../hooks/useSkillForm";
 
 const OVERLAY = "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 z-50";
 const FORM_WRAPPER = "flex flex-col gap-4 px-6 sm:px-8 pb-2";
 const LABEL = "text-[18px] font-nunito text-surface";
 const BUTTONS_WRAPPER = "flex gap-4 justify-center mt-2 px-6 sm:px-8";
+const SERVER_ERROR = "mx-6 sm:mx-8 mb-2 p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center";
 
 interface Props {
-  onSubmit: (name: string, level: number) => void;
+  onSubmit: (name: string, level: number) => Promise<void>;
   onClose: () => void;
+  serverError?: string | null;
+  isSubmitting?: boolean;
 }
 
-const AddSkillPopup = ({ onSubmit, onClose }: Props) => {
-  const { name, setName, level, setLevel, touched, isValid, handleSubmit, handleCancel } =
+const AddSkillPopup = ({ onSubmit, onClose, serverError, isSubmitting = false }: Props) => {
+  const { name, setName, level, setLevel, nameError, handleSubmit, handleCancel } =
     useSkillForm({ onSubmit, onClose });
 
   return (
     <div className={OVERLAY}>
       <div className="w-full max-w-xs sm:max-w-sm">
         <PopUpCard title="Añadir Habilidad">
+          {serverError && <div className={SERVER_ERROR}>{serverError}</div>}
           <div className={FORM_WRAPPER}>
             <TextField
               label="Nombre de la habilidad:"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="HTML, React..."
-              error={!isValid && touched ? "El nombre es requerido" : undefined}
+              disabled={isSubmitting}
             />
+            {nameError && (
+              <p className="text-red-300 text-sm text-left w-full">{nameError}</p>
+            )}
             <div>
               <p className={LABEL}>Porcentaje de conocimiento:</p>
               <SkillLevelSelector value={level} onChange={setLevel} />
             </div>
           </div>
           <div className={BUTTONS_WRAPPER}>
-            <Button variant="primary" onClick={handleCancel} fullWidth>
+            <Button variant="primary" onClick={handleCancel} fullWidth disabled={isSubmitting}>
               Cancelar
             </Button>
-            <Button variant="secondary" onClick={handleSubmit} fullWidth>
-              Aceptar
+            <Button variant="secondary" onClick={handleSubmit} fullWidth disabled={isSubmitting}>
+              {isSubmitting ? "Guardando..." : "Aceptar"}
             </Button>
           </div>
         </PopUpCard>
