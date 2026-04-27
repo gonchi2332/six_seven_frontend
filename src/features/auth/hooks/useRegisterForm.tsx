@@ -285,7 +285,6 @@ export const useRegisterForm = () => {
             const token = response.token;
             
             authLogin(token);
-            localStorage.setItem("username", formData.username);
 
             // ============================================
             // PASO 2: Enviar código de verificación al email
