@@ -83,7 +83,7 @@ const useLogin = () => {
                 setShowVerified(true);
                 handleSend();
             } else {
-                navigate("/dashboard");
+                navigate("/additional-info");
             }
 
 
