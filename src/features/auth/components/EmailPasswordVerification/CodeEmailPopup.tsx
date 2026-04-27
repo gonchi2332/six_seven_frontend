@@ -24,7 +24,7 @@ const ICON_INFO = "fa-solid fa-circle-info";
 
 interface Props {
     username: string;
-    email: string;
+    email?: string;
     mode: "verify" | "recovery";
     onSuccess?: (code: string) => void;
 }
@@ -43,8 +43,8 @@ const VerificationPopup = ({ username, email, mode, onSuccess }: Props) => {
     const recoveryHooks = useVerifyRecoveryCode({ username, code });
     const activeVerifyHook = mode === "recovery" ? recoveryHooks : verifyHooks;
 
-    const sendVerifyHooks = useSendVerificationCode({ username, mail: email, token });
-    const sendRecoveryHooks = useSendRecoveryCode({ username, email });
+    const sendVerifyHooks = useSendVerificationCode({ username, mail: email ?? "", token });
+    const sendRecoveryHooks = useSendRecoveryCode({ username });
     const activeSendHook = mode === "recovery" ? sendRecoveryHooks : sendVerifyHooks;
 
     const { handleSend } = activeSendHook;

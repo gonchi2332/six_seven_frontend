@@ -1,7 +1,6 @@
 
 interface ForgotPasswordParams {
     username: string;
-    email: string;
 }
 
 interface VerifyCodeParams {
@@ -18,6 +17,7 @@ interface ResetPasswordParams {
 interface ForgotPasswordResponse {
     result: boolean;
     messageState: string;
+    verificationMails: [string, string[]];
 }
 
 interface VerifyCodeResponse {
@@ -33,13 +33,12 @@ interface ErrorResponse {
 const API_URL = import.meta.env.VITE_API_URL;
 
 
-export const requestRecoveryCode = async ({ username, email }: ForgotPasswordParams): Promise<ForgotPasswordResponse> => {
-    const response = await fetch(`${API_URL}/api/v2/auth/users/forgot-password`, {
+export const requestRecoveryCode = async ({ username }: ForgotPasswordParams): Promise<ForgotPasswordResponse> => {
+    const response = await fetch(`${API_URL}/api/v2/auth/users/forgot-password?username=${username}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, email }),
     });
 
     const data: ForgotPasswordResponse | ErrorResponse = await response.json();
@@ -70,7 +69,7 @@ export const verifyRecoveryCode = async ({ username, code }: VerifyCodeParams): 
 };
 
 export const resetPassword = async ({ username, newPassword, code }: ResetPasswordParams) => {
-    const response = await fetch(`${API_URL}/api/v1/auth/users/reset-password`, {
+    const response = await fetch(`${API_URL}/api/v2/auth/users/reset-password`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",

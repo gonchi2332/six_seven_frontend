@@ -4,6 +4,7 @@ import EmailInputPopup from "./EmailInputPopup";
 import VerificationPopup from "./CodeEmailPopup";
 import ResetPasswordPopup from "./ChangePassword";
 
+
 type Step = "email" | "verification" | "reset";
 type Mode = "verify" | "recovery";
 
@@ -11,7 +12,6 @@ type Props = {
     initialMode?: Mode;
     initialStep?: Step;
     initialUsername?: string;
-    initialEmail?: string;
     onClose?: () => void;
 };
 
@@ -19,19 +19,21 @@ const VerificationFlow = ({
     initialMode = "verify",
     initialStep = "email",
     initialUsername = "",
-    initialEmail = "",
     onClose
 }: Props) => {
     const [step, setStep] = useState<Step>(initialStep);
     const [mode] = useState<Mode>(initialMode);
     const [username, setUsername] = useState(initialUsername);
-    const [email, setEmail] = useState(initialEmail);
     const [verifiedCode, setVerifiedCode] = useState("");
     const navigate = useNavigate();
+    const [email, setEmail] = useState("");
 
-    const handleEmailSubmit = (submittedUsername: string, submittedEmail: string) => {
+
+
+
+    const handleEmailSubmit = (submittedUsername: string, recoveryEmail: string) => {
         setUsername(submittedUsername);
-        setEmail(submittedEmail);
+        setEmail(recoveryEmail);
         setStep("verification");
     };
 
@@ -45,11 +47,11 @@ const VerificationFlow = ({
             navigate("/login");
         }
     };
+
     return (
         <>
             {step === "email" && (
                 <EmailInputPopup
-                    mode={mode}
                     onSubmit={handleEmailSubmit}
                     onCancel={onClose}
                 />
