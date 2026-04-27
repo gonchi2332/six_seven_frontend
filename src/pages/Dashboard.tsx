@@ -4,7 +4,7 @@ import PersonalInfo from "./PersonalInfo";
 import SoftSkillPage from "./SoftSkill";
 
 const STYLES = {
-  WRAPPER: "flex flex-col items-center bg-main h-screen",
+  WRAPPER: "min-h-screen bg-main flex flex-col",
   CONTENT: "w-full p-6",
 };
 
