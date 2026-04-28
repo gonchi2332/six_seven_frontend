@@ -41,7 +41,7 @@ const EditSkillPopup = ({ skill, onSubmit, onClose, serverError, isSubmitting = 
           {serverError && <div className={SERVER_ERROR}>{serverError}</div>}
           <div className={FORM_WRAPPER}>
             <div className={FIELD_WRAPPER}>
-              <p className={FIELD_LABEL}>Nombre de la habilidad:<span className={REQUIRED}>*</span></p>
+              <p className={FIELD_LABEL}>Nombre de la habilidad:*<span className={REQUIRED}>*</span></p>
               <TextField
                 label=""
                 value={name}
