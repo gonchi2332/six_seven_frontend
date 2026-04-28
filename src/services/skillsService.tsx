@@ -54,3 +54,12 @@ export const deleteSkill = async (skillName: string) => {
     throw new Error(data.message ?? "Error al eliminar habilidad");
   }
 };
+
+export const fetchSkillsPublic = async (username: string) => {
+  const res = await fetch(`${BASE_URL}/hard-skills?username=${username}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" } 
+  });
+  if (!res.ok) throw new Error("Error al obtener habilidades públicas");
+  return res.json();
+};

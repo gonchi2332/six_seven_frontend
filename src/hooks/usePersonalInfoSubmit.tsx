@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { updatePersonalInfo } from "../services/personalInfoService";
 import type { FormData as ProfileFormData } from "./useProfileFormRegex";
+import { useNavigate } from "react-router-dom";
+
 
 export const usePersonalInfoSubmit = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [submitSuccess, setSubmitSuccess] = useState(false);
+
+    const navigate = useNavigate();
 
     const handleSubmit = async (profileData: ProfileFormData) => {
         setIsSubmitting(true);
@@ -30,6 +34,7 @@ export const usePersonalInfoSubmit = () => {
             setSubmitError(error.message);
         } finally {
             setIsSubmitting(false);
+            navigate("/dashboard");
         }
     };
 

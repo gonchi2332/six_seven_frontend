@@ -1,30 +1,41 @@
+import { useParams } from "react-router-dom"; // Importamos para obtener el username
 import Navbar from "../components/Navbar/Navbar";
 import PublicSoftSkillsList from "../features/SoftSkills/PublicSoftSkillsList";
 import PublicPersonalInfo from "../features/EditPersonalInfo/components/PublicPersonalInfo";
 import PublicLinkedIn from "../features/LinkedIn/PublicLinkedIn";
-import Header from "../components/Header/Header";
+import PublicHardSkillsList from "../features/skills/components/PublicHardSkillsList";
 
 const STYLES = {
   WRAPPER: "min-h-screen bg-main flex flex-col",
-  CONTENT: "w-full p-6", // Respetamos exactamente tu padding del dashboard privado
+  CONTENT: "w-full p-6",
+  // Grid para poner componentes lado a lado
+  GRID_CONTAINER: "grid grid-cols-1 lg:grid-cols-2 gap-8 w-full"
 };
 
 const PublicDashboard = () => {
+  // Obtenemos el username para pasárselo al Navbar
+  const { username } = useParams<{ username: string }>();
+
   return (
     <div className={STYLES.WRAPPER}>
-      <Navbar isPublic={true} />
+      {/* Navbar con el nombre del dueño del portafolio */}
+      <Navbar isPublic={true} ownerName={username} />
 
-      {/* Sección: Información Personal */}
+      {/* 1. Sección: Información Personal (Ancho completo) */}
       <div className={STYLES.CONTENT}>
-        <Header title='Información Personal' />
         <PublicPersonalInfo />
       </div>
 
-      {/* Sección: Habilidades Blandas */}
+      {/* 2. Sección: Habilidades (Lado a lado en pantallas grandes) */}
       <div className={STYLES.CONTENT}>
-        <PublicSoftSkillsList />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start"> 
+          {/* items-start es clave para que si una lista es más corta, no intente centrarse verticalmente */}
+          <PublicHardSkillsList />
+          <PublicSoftSkillsList />
+        </div>
       </div>
-      {/* Sección: LinkedIn */}
+
+      {/* 3. Sección: LinkedIn (Ancho completo o al final) */}
       <div className={STYLES.CONTENT}>
         <PublicLinkedIn />
       </div>
