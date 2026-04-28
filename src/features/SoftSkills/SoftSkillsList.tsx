@@ -8,13 +8,14 @@ const styles = {
     container: "flex flex-col gap-3",
     header: "flex justify-between items-center mb-2",
     title: "text-xl font-semibold text-surface font-inter",
-    empty: "text-surface/50 text-center py-8 font-nunito",
+    empty: "text-surface text-center py-8 font-nunito",
     loading: "text-surface/50 text-center py-8 font-nunito",
     error: "text-red-500 text-center py-8 font-nunito bg-red-500/10 rounded-xl",
+    success: "text-green-300 font-nunito text-sm py-1",
     addButton: "w-10 h-10 rounded-xl bg-primary text-surface hover:bg-primary/90 transition-colors flex items-center justify-center text-2xl font-bold",
 };
 const SoftSkillsList = () => {
-    const { skills, isLoading, addSkill, editSkill, removeSkill } = useSoftSkills();
+    const { skills, isLoading, successMessage, addSkill, editSkill, removeSkill } = useSoftSkills();
     const [modalOpen, setModalOpen] = useState(false);
     const [editingSkill, setEditingSkill] = useState<string | null>(null);
     const [modalError, setModalError] = useState<string | null>(null);
@@ -84,6 +85,8 @@ const SoftSkillsList = () => {
                         +
                     </button>
                 </div>
+
+                {successMessage && <p className={styles.success}>{successMessage}</p>}
 
                 {skills.length === 0 ? (
                     <div className={styles.empty}>
