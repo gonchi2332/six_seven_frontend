@@ -4,7 +4,6 @@ import EmailInputPopup from "./EmailInputPopup";
 import VerificationPopup from "./CodeEmailPopup";
 import ResetPasswordPopup from "./ChangePassword";
 
-
 type Step = "email" | "verification" | "reset";
 type Mode = "verify" | "recovery";
 
@@ -28,8 +27,13 @@ const VerificationFlow = ({
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
 
-
-
+    const handleClose = () => {
+        if (onClose) {
+            onClose();
+        } else {
+            navigate("/login");
+        }
+    };
 
     const handleEmailSubmit = (submittedUsername: string, recoveryEmail: string) => {
         setUsername(submittedUsername);
@@ -44,11 +48,7 @@ const VerificationFlow = ({
         if (mode === "recovery") {
             setStep("reset");
         } else if (mode === "verify") {
-            if (onClose) {
-                onClose();
-            } else {
-                navigate("/login");
-            }
+            handleClose();
         }
     };
 
@@ -57,7 +57,7 @@ const VerificationFlow = ({
             {step === "email" && (
                 <EmailInputPopup
                     onSubmit={handleEmailSubmit}
-                    onCancel={onClose}
+                    onCancel={handleClose}
                 />
             )}
             {step === "verification" && (
@@ -66,10 +66,15 @@ const VerificationFlow = ({
                     email={email}
                     mode={mode}
                     onSuccess={handleCodeSuccess}
+                    onClose={handleClose}
                 />
             )}
             {step === "reset" && (
-                <ResetPasswordPopup username={username} code={verifiedCode} />
+                <ResetPasswordPopup
+                    username={username}
+                    code={verifiedCode}
+                    onClose={handleClose}
+                />
             )}
         </>
     );

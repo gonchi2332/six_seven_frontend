@@ -4,7 +4,6 @@ import VerificationCodeInput from "../../../../components/VerificationCodeInput/
 import { useVerifyCode } from "../../hooks/useVerifyCode";
 import { useSendVerificationCode } from "../../hooks/useSendVerificationCode";
 import { useSendRecoveryCode, useVerifyRecoveryCode } from "../../hooks/useRecoveryCode";
-
 import { useAuthContext } from "../../../../context/AuthContext";
 
 const VERIFICATION_CONTAINER = "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6";
@@ -21,21 +20,30 @@ const CODE_HINT = "text-red-300 text-sm mt-1 mb-4 text-center w-full";
 const ICON_ERROR = "fa-solid fa-circle-exclamation text-white text-5xl";
 const ICON_SUCCESS = "fa-solid fa-shield text-[#90DDF0] text-5xl";
 const ICON_INFO = "fa-solid fa-circle-info";
+const RESEND_CONFIRMATION = "text-green-300 text-normal text-center w-full";
+const EMAIL_HINT = "text-surface text-sm font-nunito text-center";
+
+const censorEmail = (email: string): string => {
+    const [local, domain] = email.split("@");
+    if (!local || !domain) return email;
+    const visible = local.slice(0, 4);
+    const censored = "*".repeat(4);
+    return `${visible}${censored}@${domain}`;
+};
 
 interface Props {
     username: string;
     email?: string;
     mode: "verify" | "recovery";
     onSuccess?: (code: string) => void;
+    onClose?: () => void;
 }
 
-const VerificationPopup = ({ username, email, mode, onSuccess }: Props) => {
-
-    const {
-        token
-    } = useAuthContext();
+const VerificationPopup = ({ username, email, mode, onSuccess, onClose }: Props) => {
+    const { token } = useAuthContext();
 
     const [code, setCode] = useState("");
+    const [resent, setResent] = useState(false);
     const isComplete = code.length === 8;
 
     const verifyHooks = useVerifyCode({ username, code, token });
@@ -48,24 +56,15 @@ const VerificationPopup = ({ username, email, mode, onSuccess }: Props) => {
 
     const { handleSend } = activeSendHook;
 
-    const {
-        error,
-        isLoading,
-        title,
-        description,
-        handleSubmit,
-        resetError
-    } = activeVerifyHook;
+    const { error, isLoading, title, description, handleSubmit, resetError } = activeVerifyHook;
 
     const handleAction = async () => {
         if (!isComplete && !error) return;
-
         if (error) {
             resetError();
             setCode("");
             return;
         }
-
         const success = await handleSubmit();
         if (success) {
             onSuccess?.(code);
@@ -76,8 +75,9 @@ const VerificationPopup = ({ username, email, mode, onSuccess }: Props) => {
 
     const handleResend = () => {
         handleSend();
+        setResent(true);
+        setTimeout(() => setResent(false), 4000);
     };
-
 
     return (
         <div className={VERIFICATION_CONTAINER}>
@@ -99,6 +99,12 @@ const VerificationPopup = ({ username, email, mode, onSuccess }: Props) => {
                         {description}
                     </p>
 
+                    {email && (
+                        <p className={EMAIL_HINT}>
+                            Código enviado a: {censorEmail(email)}
+                        </p>
+                    )}
+
                     {!error ? (
                         <>
                             <span className={VERIFICATION_LABEL}>
@@ -111,7 +117,6 @@ const VerificationPopup = ({ username, email, mode, onSuccess }: Props) => {
                                     onChange={setCode}
                                     error={!!error}
                                 />
-
                                 {!isComplete && (
                                     <p className={CODE_HINT}>
                                         El código debe tener 8 dígitos
@@ -130,6 +135,12 @@ const VerificationPopup = ({ username, email, mode, onSuccess }: Props) => {
                 </div>
 
                 <div className={VERIFICATION_BUTTONS_WRAPPER}>
+                    {resent && (
+                        <p className={RESEND_CONFIRMATION}>
+                            Código de verificación reenviado
+                        </p>
+                    )}
+
                     <Button
                         variant="secondary"
                         onClick={handleAction}
@@ -145,7 +156,15 @@ const VerificationPopup = ({ username, email, mode, onSuccess }: Props) => {
                         fullWidth
                         disabled={isLoading}
                     >
-                        {error ? "Contactar Soporte" : "Reenviar Código"}
+                        Reenviar Código
+                    </Button>
+
+                    <Button
+                        variant="primary"
+                        onClick={onClose}
+                        fullWidth
+                    >
+                        Cancelar
                     </Button>
                 </div>
             </div>
