@@ -72,18 +72,18 @@ const useLogin = () => {
         try {
             const data = await login({ username, password });
             authLogin(data.token);
-            console.log("ESTADO DEL USUARIO:", data.user.state);
+        
 
             if (data.user.state.toUpperCase() === "UNVERIFIED") {
                 let freshEmail = "";
-                console.log("ESTADO: UNVERIFIED, obteniendo email...");
+
                 try {
                     const emailData = await getEmail({ token: data.token });
-                    console.log("EMAIL DATA:", JSON.stringify(emailData));
+  
                     freshEmail = emailData.email;
                     setUserEmail(freshEmail);
                 } catch (e) {
-                    console.log("ERROR getEmail:", e);
+                   
                     setUserEmail("");
                 }
 

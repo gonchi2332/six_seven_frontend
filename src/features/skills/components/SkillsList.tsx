@@ -42,7 +42,7 @@ const SkillsList = () => {
       await addSkill(name, level);
       setShowAdd(false);
     } catch (err: any) {
-      console.log(err);
+    
       setModalError(err?.message || JSON.stringify(err) || "Error al guardar");
       throw err; 
     }finally {
@@ -57,7 +57,7 @@ const SkillsList = () => {
       await editSkill(id, name, level);
       setEditingSkill(null);
     } catch (err: any) {
-      console.log(err);
+  
       setModalError(err?.message || JSON.stringify(err) || "Error al guardar");
       throw err; 
     }finally {

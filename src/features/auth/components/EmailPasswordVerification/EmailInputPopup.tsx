@@ -39,7 +39,7 @@ const EmailInputPopup = ({ onSubmit, onCancel }: Props) => {
         const { success, email: mail } = await handleSend();
         if (success) {
             onSubmit?.(username, mail ?? "");
-            console.log("EMAIL ANTES DE SUBMIT:", mail);
+          
         }
     };
 
