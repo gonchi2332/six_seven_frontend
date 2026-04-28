@@ -30,9 +30,6 @@ const AdditionalInfoModal = ({ onClose }: AdditionalInfoModalProps) => {
         onClose?.();
     };
 
-    const handleCancel = () => {
-        onClose?.();
-    };
 
     return (
         <div>
@@ -98,9 +95,6 @@ const AdditionalInfoModal = ({ onClose }: AdditionalInfoModalProps) => {
                     </div>
 
                     <div className={STYLES.FOOTER}>
-                        <Button variant="secondary" onClick={handleCancel}>
-                            Cancelar
-                        </Button>
                         <Button variant="primary" onClick={handleAcept} disabled={isSubmitting}>
                             {isSubmitting ? "Guardando..." : "Aceptar"}
                         </Button>
