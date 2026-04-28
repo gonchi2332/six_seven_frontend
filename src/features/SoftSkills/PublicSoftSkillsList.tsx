@@ -6,7 +6,7 @@ const STYLES = {
   WRAPPER: "bg-background flex flex-col w-full",
   TITLE: "text-2xl font-bold text-surface font-inter mb-6", // Igualamos el margen del título
   CONTENT: "w-full flex flex-col gap-3", // Quitamos el mt-4 y confiamos en el gap
-  EMPTY: "text-surface/50 text-center py-10 font-nunito",
+  EMPTY: "text-surface text-center py-10 font-nunito",
   LOADING: "text-surface/50 text-center py-10 font-nunito",
 };
 
