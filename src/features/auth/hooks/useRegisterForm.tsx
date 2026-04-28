@@ -5,7 +5,7 @@ import { useAuthContext } from '../../../context/AuthContext';
 interface RegisterFormData {
     name: string;
     paternalLastName: string;
-    secondSurename: string;
+    secondSurname: string;
     username: string;
     password: string;
     confirmPassword: string;
@@ -16,7 +16,7 @@ interface RegisterFormData {
 interface RegisterFormErrors {
     name: string;
     paternalLastName: string;
-    secondSurename: string;
+    secondSurname: string;
     username: string;
     password: string;
     confirmPassword: string;
@@ -26,7 +26,7 @@ interface RegisterFormErrors {
 interface RegisterFormTouched {
     name: boolean;
     paternalLastName: boolean;
-    secondSurename: boolean;
+    secondSurname: boolean;
     username: boolean;
     password: boolean;
     confirmPassword: boolean;
@@ -46,7 +46,7 @@ export const useRegisterForm = () => {
     const [formData, setFormData] = useState<RegisterFormData>({
         name: "",
         paternalLastName: "",
-        secondSurename: "",
+        secondSurname: "",
         username: "",
         password: "",
         confirmPassword: "",
@@ -56,7 +56,7 @@ export const useRegisterForm = () => {
     const [errors, setErrors] = useState<RegisterFormErrors>({
         name: "",
         paternalLastName: "",
-        secondSurename: "",
+        secondSurname: "",
         username: "",
         password: "",
         confirmPassword: "",
@@ -66,7 +66,7 @@ export const useRegisterForm = () => {
     const [touched, setTouched] = useState<RegisterFormTouched>({
         name: false,
         paternalLastName: false,
-        secondSurename: false,
+        secondSurname: false,
         username: false,
         password: false,
         confirmPassword: false,
@@ -101,9 +101,9 @@ export const useRegisterForm = () => {
         return "";
     }
 
-    const validateSecondSurename = (secondSurename: string) => {
-        if (!secondSurename) return ""; // Opcional
-        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(secondSurename)) return "Solo letras y espacios";
+    const validatesecondSurname = (secondSurname: string) => {
+        if (!secondSurname) return ""; // Opcional
+        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(secondSurname)) return "Solo letras y espacios";
         return "";
     }
 
@@ -135,8 +135,8 @@ export const useRegisterForm = () => {
                 case "paternalLastName":
                     error = validatePaternalLastName(value);
                     break;
-                case "secondSurename":
-                    error = validateSecondSurename(value);
+                case "secondSurname":
+                    error = validatesecondSurname(value);
                     break;
                 case "username":
                     error = validateUsername(value);
@@ -164,8 +164,8 @@ export const useRegisterForm = () => {
         handleFieldChange("paternalLastName", e.target.value);
     };
 
-    const handleSecondSurenameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        handleFieldChange("secondSurename", e.target.value);
+    const handlesecondSurnameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        handleFieldChange("secondSurname", e.target.value);
     };
 
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -242,11 +242,11 @@ export const useRegisterForm = () => {
         }
     };
 
-    const handleSecondSurenameBlur = () => {
-        if (!touched.secondSurename) {
-            setTouched(prev => ({ ...prev, secondSurename: true }));
-            const error = validateSecondSurename(formData.secondSurename);
-            setErrors(prev => ({ ...prev, secondSurename: error }));
+    const handlesecondSurnameBlur = () => {
+        if (!touched.secondSurname) {
+            setTouched(prev => ({ ...prev, secondSurname: true }));
+            const error = validatesecondSurname(formData.secondSurname);
+            setErrors(prev => ({ ...prev, secondSurname: error }));
         }
     };
 
@@ -267,7 +267,7 @@ export const useRegisterForm = () => {
             password: true,
             confirmPassword: true,
             paternalLastName: true,
-            secondSurename: true,
+            secondSurname: true,
             username: true,
             mail: true
         });
@@ -276,14 +276,14 @@ export const useRegisterForm = () => {
         const passwordError = validatePassword(formData.password);
         const confirmPasswordError = validateConfirmPassword(formData.password, formData.confirmPassword);
         const paternalLastNameError = validatePaternalLastName(formData.paternalLastName);
-        const secondSurenameError = validateSecondSurename(formData.secondSurename);
+        const secondSurnameError = validatesecondSurname(formData.secondSurname);
         const usernameError = validateUsername(formData.username);
         const mailError = validateMail(formData.mail!);
 
         setErrors({
             name: nameError,
             paternalLastName: paternalLastNameError,
-            secondSurename: secondSurenameError,
+            secondSurname: secondSurnameError,
             username: usernameError,
             password: passwordError,
             confirmPassword: confirmPasswordError,
@@ -294,7 +294,7 @@ export const useRegisterForm = () => {
             passwordError ||
             confirmPasswordError ||
             paternalLastNameError ||
-            secondSurenameError ||
+            secondSurnameError ||
             usernameError ||
             mailError
         ) return;
@@ -310,7 +310,7 @@ export const useRegisterForm = () => {
                 password: formData.password,
                 names: formData.name,
                 firstSurname: formData.paternalLastName,
-                secondSurename: formData.secondSurename,
+                secondSurname: formData.secondSurname,
                 mainRegistrationEmail: formData.mail,
 
             };
@@ -390,14 +390,14 @@ export const useRegisterForm = () => {
         handlePasswordChange,
         handleConfirmPasswordChange,
         handlePaternalLastNameChange,
-        handleSecondSurenameChange,
+        handlesecondSurnameChange,
         handleUsernameChange,
         handleMailChange,
         handleNameBlur,
         handlePasswordBlur,
         handleConfirmPasswordBlur,
         handlePaternalLastNameBlur,
-        handleSecondSurenameBlur,
+        handlesecondSurnameBlur,
         handleUsernameBlur,
         handleMailBlur,
         handleSubmit
