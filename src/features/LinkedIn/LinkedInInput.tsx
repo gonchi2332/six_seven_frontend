@@ -32,12 +32,13 @@ function LinkedInCard({ onSuccess, onClose, initialValue = '' }: Props) {
         onChange={(e) => setInput(e.target.value)}
       />
       <div className='flex gap-4 w-full'>
-        <Button onClick={handleAccept}>
-          {initialValue ? 'Actualizar' : 'Vincular'}
-        </Button>
         <Button variant='secondary' onClick={onClose} >
           Cancelar
         </Button>
+        <Button onClick={handleAccept}>
+          {initialValue ? 'Actualizar' : 'Vincular'}
+        </Button>
+        
       </div>
     </div>
   );
