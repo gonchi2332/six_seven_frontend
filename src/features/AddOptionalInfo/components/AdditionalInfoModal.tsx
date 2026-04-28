@@ -27,9 +27,6 @@ const AdditionalInfoModal = ({ onClose }: AdditionalInfoModalProps) => {
     const handleAcept = async () => {
         if (!validateForm()) return;
         await handleSubmit(formData);
-    };
-
-    const handleCancel = () => {
         onClose?.();
     };
 
@@ -39,15 +36,6 @@ const AdditionalInfoModal = ({ onClose }: AdditionalInfoModalProps) => {
             <PopUpCard title="Datos Personales">
                 <div>
                     <div className={STYLES.FORM_WRAPPER}>
-
-                        <TextField
-                            label="Apellido:"
-                            value={formData.secondSurname}
-                            onChange={(e) => handleChange("secondSurname", e.target.value)}
-                            error={errors.secondSurname}
-                            className="w-full"
-                        />
-
                         <TextField
                             label="Ciudad:"
                             value={formData.city}
@@ -107,9 +95,6 @@ const AdditionalInfoModal = ({ onClose }: AdditionalInfoModalProps) => {
                     </div>
 
                     <div className={STYLES.FOOTER}>
-                        <Button variant="secondary" onClick={handleCancel}>
-                            Cancelar
-                        </Button>
                         <Button variant="primary" onClick={handleAcept} disabled={isSubmitting}>
                             {isSubmitting ? "Guardando..." : "Aceptar"}
                         </Button>

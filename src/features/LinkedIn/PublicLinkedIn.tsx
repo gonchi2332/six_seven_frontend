@@ -11,13 +11,10 @@ const STYLES = {
 
 const PublicLinkedIn = () => {
   const { username } = useParams<{ username: string }>();
-  // Usamos tu hook existente pasándole el username de la URL
   const { linkedinUser, isLoading } = useLinkedin(username || "");
 
   if (isLoading) return <p className="text-white/50">Cargando LinkedIn...</p>;
-  
-  // Si el usuario no tiene LinkedIn, simplemente no mostramos nada 
-  // o un mensaje sutil (tú eliges)
+
   if (!linkedinUser) return null;
 
   return (

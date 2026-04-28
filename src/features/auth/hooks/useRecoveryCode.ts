@@ -10,17 +10,17 @@ export const useSendRecoveryCode = ({ username }: UseSendRecoveryCodeParams) => 
     const [error, setError] = useState<string | null>(null);
     const [email, setEmail] = useState<string | null>(null);
 
-
-    const handleSend = async (): Promise<boolean> => {
+    const handleSend = async (): Promise<{ success: boolean; email: string | null }> => {
         setIsLoading(true);
         setError(null);
         try {
             const data = await requestRecoveryCode({ username });
-            setEmail(data.verificationMails[0]);
-            return true;
+            const recoveryEmail = data.verificationMails[0];
+            setEmail(recoveryEmail);
+            return { success: true, email: recoveryEmail };
         } catch (err) {
             setError(err instanceof Error ? err.message : "Error al enviar el código");
-            return false;
+            return { success: false, email: null };
         } finally {
             setIsLoading(false);
         }

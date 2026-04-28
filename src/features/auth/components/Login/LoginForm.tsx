@@ -103,11 +103,13 @@ const LoginForm = () => {
                     mode={"verify"}
                     onSuccess={() => {
                         setShowVerified(false);
-                        navigate("/dashboard");
+                        navigate("/additional-info");
                     }}
                     onClose={() => setShowVerified(false)}
                 />
-            )}
+
+            )
+            }
 
             {showRecovery && (
                 <EmailVerificationFlow
