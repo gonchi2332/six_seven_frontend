@@ -4,6 +4,8 @@ import { useAuthContext } from "../../../context/AuthContext";
 import { sendVerificationCode } from "../../../services/verificationCodeService";
 import { getEmail } from "../../../services/getemail";
 import { useNavigate } from "react-router-dom";
+import { getPersonalInfo } from "../../../services/personalInfoService";
+
 
 const useLogin = () => {
     const [username, setUsername] = useState("");
@@ -72,18 +74,18 @@ const useLogin = () => {
         try {
             const data = await login({ username, password });
             authLogin(data.token);
-        
+
 
             if (data.user.state.toUpperCase() === "UNVERIFIED") {
                 let freshEmail = "";
 
                 try {
                     const emailData = await getEmail({ token: data.token });
-  
+
                     freshEmail = emailData.email;
                     setUserEmail(freshEmail);
                 } catch (e) {
-                   
+
                     setUserEmail("");
                 }
 
@@ -94,7 +96,16 @@ const useLogin = () => {
 
                 setShowVerified(true);
             } else {
-                navigate("/dashboard");
+                try {
+                    const info = await getPersonalInfo(username);
+                    if (info.is_new === true) {
+                        navigate("/additional-info");
+                    } else {
+                        navigate("/dashboard");
+                    }
+                } catch {
+                    navigate("/");
+                }
             }
         } catch (err) {
             const msg = err instanceof Error ? err.message : "Error inesperado";

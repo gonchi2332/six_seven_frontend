@@ -27,19 +27,18 @@ const AdditionalInfoModal = ({ onClose }: AdditionalInfoModalProps) => {
     const handleAcept = async () => {
         if (!validateForm()) return;
         await handleSubmit(formData);
+        onClose?.();
     };
 
     const handleCancel = () => {
         onClose?.();
     };
 
-
     return (
         <div>
             <PopUpCard title="Datos Personales">
                 <div>
                     <div className={STYLES.FORM_WRAPPER}>
-
                         <TextField
                             label="Apellido:"
                             value={formData.secondSurname}
@@ -47,7 +46,6 @@ const AdditionalInfoModal = ({ onClose }: AdditionalInfoModalProps) => {
                             error={errors.secondSurname}
                             className="w-full"
                         />
-
                         <TextField
                             label="Ciudad:"
                             value={formData.city}
