@@ -22,9 +22,10 @@ const EYE_CLOSE_ICON = "fa-solid fa-eye-slash";
 interface Props {
     username?: string;
     code?: string;
+    onClose?: () => void;
 }
 
-const ResetPasswordPopup = ({ username, code }: Props) => {
+const ResetPasswordPopup = ({ username, code, onClose }: Props) => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -56,7 +57,7 @@ const ResetPasswordPopup = ({ username, code }: Props) => {
                 </div>
 
                 <h2 className={VERIFICATION_TITLE}>
-                    Reestablecimiento de Contraseña
+                    Restablecimiento de Contraseña
                 </h2>
 
                 <p className={VERIFICATION_DESCRIPTION}>
@@ -129,6 +130,14 @@ const ResetPasswordPopup = ({ username, code }: Props) => {
                         disabled={!isPasswordValid || !isMatch || password.length === 0 || isLoading}
                     >
                         {isLoading ? "Guardando..." : "Guardar"}
+                    </Button>
+
+                    <Button
+                        variant="primary"
+                        fullWidth
+                        onClick={onClose}
+                    >
+                        Cancelar
                     </Button>
                 </div>
             </div>

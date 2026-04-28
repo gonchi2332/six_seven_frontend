@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { login } from "../../../services/loginService";
 import { useAuthContext } from "../../../context/AuthContext";
-import { useSendVerificationCode } from "./useSendVerificationCode";
-import useEmail from "../../../hooks/useGetEmail";
+import { sendVerificationCode } from "../../../services/verificationCodeService";
+import { getEmail } from "../../../services/getemail";
 import { useNavigate } from "react-router-dom";
-
-
 
 const useLogin = () => {
     const [username, setUsername] = useState("");
@@ -16,14 +14,11 @@ const useLogin = () => {
     const [serverError, setServerError] = useState<string>("");
 
     const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
-
     const [showVerified, setShowVerified] = useState(false);
+    const [userEmail, setUserEmail] = useState("");
 
-
-    const { login: authLogin, token } = useAuthContext();
-    const { email } = useEmail();
-
+    const navigate = useNavigate();
+    const { login: authLogin } = useAuthContext();
 
     const validateUsername = (value: string) => {
         if (!value) return "El nombre de usuario es obligatorio";
@@ -61,7 +56,6 @@ const useLogin = () => {
         setErrors(prev => ({ ...prev, password: validatePassword(password) }));
     };
 
-    const { handleSend } = useSendVerificationCode({ username, mail: email, token });
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -78,15 +72,30 @@ const useLogin = () => {
         try {
             const data = await login({ username, password });
             authLogin(data.token);
+            console.log("ESTADO DEL USUARIO:", data.user.state);
 
             if (data.user.state.toUpperCase() === "UNVERIFIED") {
+                let freshEmail = "";
+                console.log("ESTADO: UNVERIFIED, obteniendo email...");
+                try {
+                    const emailData = await getEmail({ token: data.token });
+                    console.log("EMAIL DATA:", JSON.stringify(emailData));
+                    freshEmail = emailData.email;
+                    setUserEmail(freshEmail);
+                } catch (e) {
+                    console.log("ERROR getEmail:", e);
+                    setUserEmail("");
+                }
+
+                try {
+                    await sendVerificationCode({ username, targetMail: freshEmail, token: data.token });
+                } catch {
+                }
+
                 setShowVerified(true);
-                handleSend();
             } else {
                 navigate("/dashboard");
             }
-
-
         } catch (err) {
             const msg = err instanceof Error ? err.message : "Error inesperado";
             const lowerMsg = msg.toLowerCase();
@@ -119,6 +128,7 @@ const useLogin = () => {
         setShowVerified,
         serverError,
         isLoading,
+        userEmail,
         handleUsernameChange,
         handlePasswordChange,
         handleUsernameBlur,
