@@ -53,6 +53,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
     );
   }
 
+  const isFormIncomplete = !formData.firstName?.trim() || !formData.firstSurname?.trim();
   return (
     <div>
       <PopUpCard title="Datos Personales">
@@ -69,7 +70,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                 
               />
               <TextField
-                label="Apellido Paterno*:"
+                label="Primer Apellido*:"
                 value={formData.firstSurname}
                 onChange={(e) => handleChange("firstSurname", e.target.value)}
                 error={errors.firstSurname}
@@ -77,7 +78,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                 
               />
               <TextField
-                label="Apellido Materno:"
+                label="Segundo Apellido:"
                 value={formData.secondSurname}
                 onChange={(e) => handleChange("secondSurname", e.target.value)}
                 error={errors.secondSurname}
@@ -162,7 +163,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
             <Button variant="secondary" onClick={handleCancel}>
               Cancelar
             </Button>
-            <Button variant="primary" onClick={handleAcept} disabled={isSubmitting}>
+            <Button variant="primary" onClick={handleAcept} disabled={isSubmitting || isFormIncomplete || isSubmitting}>
               {isSubmitting ? "Guardando..." : "Aceptar"}
             </Button>
           </div>
