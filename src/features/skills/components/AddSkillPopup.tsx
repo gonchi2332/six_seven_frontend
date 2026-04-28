@@ -51,7 +51,7 @@ const AddSkillPopup = ({ onSubmit, onClose, serverError, isSubmitting = false }:
             <Button variant="secondary" onClick={handleCancel} fullWidth disabled={isSubmitting}>
               Cancelar
             </Button>
-            <Button variant="primary" onClick={handleSubmit} fullWidth disabled={isSubmitting}>
+            <Button variant="primary" onClick={handleSubmit} fullWidth disabled={isSubmitting || !name.trim()}>
               {isSubmitting ? "Guardando..." : "Aceptar"}
             </Button>
           </div>

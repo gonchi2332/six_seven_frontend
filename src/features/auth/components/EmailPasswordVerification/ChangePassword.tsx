@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Button from "../../../../components/Button/Button";
 import { useResetPassword } from "../../hooks/useResetPassword";
 
@@ -18,20 +17,29 @@ const BUTTONS_WRAPPER = "flex flex-col items-center gap-3 w-[260px] mt-6";
 const SHIELD_ICON = "fa-solid fa-shield text-[#90DDF0] text-6xl";
 const EYE_OPEN_ICON = "fa-solid fa-eye";
 const EYE_CLOSE_ICON = "fa-solid fa-eye-slash";
+const EMAIL_HINT = "text-surface text-sm font-nunito text-center mb-2";
+
+const censorEmail = (email: string): string => {
+    const [local, domain] = email.split("@");
+    if (!local || !domain) return email;
+    const visible = local.slice(0, 4);
+    const censored = "*".repeat(4);
+    return `${visible}${censored}@${domain}`;
+};
 
 interface Props {
     username?: string;
     code?: string;
+    email?: string;
     onClose?: () => void;
 }
 
-const ResetPasswordPopup = ({ username, code, onClose }: Props) => {
+const ResetPasswordPopup = ({ username, code, email, onClose }: Props) => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const { isLoading, error, handleResetPassword } = useResetPassword();
-    const navigate = useNavigate();
 
     const isPasswordValid = password.length >= 8;
     const isMatch = password === confirmPassword;
@@ -41,10 +49,10 @@ const ResetPasswordPopup = ({ username, code, onClose }: Props) => {
             if (username && code) {
                 const success = await handleResetPassword(username, password, code);
                 if (success) {
-                    navigate("/dashboard");
+                    onClose?.();
                 }
             } else {
-                navigate("/dashboard");
+                onClose?.();
             }
         }
     };
@@ -64,6 +72,12 @@ const ResetPasswordPopup = ({ username, code, onClose }: Props) => {
                     Ingrese y confirme su nueva contraseña
                 </p>
 
+                {email && (
+                    <p className={EMAIL_HINT}>
+                        Código enviado a: {censorEmail(email)}
+                    </p>
+                )}
+
                 {error && (
                     <p className={ERROR_TEXT} style={{ textAlign: "center", marginBottom: "1rem" }}>
                         {error}
@@ -74,7 +88,6 @@ const ResetPasswordPopup = ({ username, code, onClose }: Props) => {
                     <label className={LABEL}>
                         Nueva Contraseña
                     </label>
-
                     <div className={INPUT_CONTAINER}>
                         <input
                             type={showPassword ? "text" : "password"}
@@ -82,13 +95,11 @@ const ResetPasswordPopup = ({ username, code, onClose }: Props) => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
-
                         <i
                             className={`${showPassword ? EYE_CLOSE_ICON : EYE_OPEN_ICON} ${EYE_ICON}`}
                             onClick={() => setShowPassword(!showPassword)}
                         ></i>
                     </div>
-
                     {!isPasswordValid && password.length > 0 && (
                         <p className={ERROR_TEXT}>
                             La contraseña debe tener mínimo 8 caracteres
@@ -100,7 +111,6 @@ const ResetPasswordPopup = ({ username, code, onClose }: Props) => {
                     <label className={LABEL}>
                         Confirmar Contraseña
                     </label>
-
                     <div className={INPUT_CONTAINER}>
                         <input
                             type={showConfirmPassword ? "text" : "password"}
@@ -108,13 +118,11 @@ const ResetPasswordPopup = ({ username, code, onClose }: Props) => {
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                         />
-
                         <i
                             className={`${showConfirmPassword ? EYE_CLOSE_ICON : EYE_OPEN_ICON} ${EYE_ICON}`}
                             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                         ></i>
                     </div>
-
                     {confirmPassword.length > 0 && !isMatch && (
                         <p className={ERROR_TEXT}>
                             Las contraseñas deben ser iguales
@@ -131,7 +139,6 @@ const ResetPasswordPopup = ({ username, code, onClose }: Props) => {
                     >
                         {isLoading ? "Guardando..." : "Guardar"}
                     </Button>
-
                     <Button
                         variant="primary"
                         fullWidth
