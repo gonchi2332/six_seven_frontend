@@ -107,7 +107,9 @@ const LoginForm = () => {
                     }}
                     onClose={() => setShowVerified(false)}
                 />
-            )}
+
+            )
+            }
 
             {showRecovery && (
                 <EmailVerificationFlow
