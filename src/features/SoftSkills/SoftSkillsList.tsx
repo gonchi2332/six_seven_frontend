@@ -21,7 +21,6 @@ const SoftSkillsList = () => {
     const [modalError, setModalError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     
-    // Estado para el modal de confirmación
     const [confirmModalOpen, setConfirmModalOpen] = useState(false);
     const [skillToDelete, setSkillToDelete] = useState<string | null>(null);
 
@@ -104,7 +103,6 @@ const SoftSkillsList = () => {
                 )}
             </div>
 
-            {/* Modal para agregar/editar */}
             <SoftSkillModal
                 isOpen={modalOpen}
                 onClose={() => setModalOpen(false)}
@@ -115,7 +113,6 @@ const SoftSkillsList = () => {
                 isSubmitting={isSubmitting}
             />
 
-            {/* Modal de confirmación para eliminar */}
             <ConfirmModal
                 isOpen={confirmModalOpen}
                 onClose={() => {
