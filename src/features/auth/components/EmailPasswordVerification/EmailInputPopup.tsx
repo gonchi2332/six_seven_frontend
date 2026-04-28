@@ -36,10 +36,10 @@ const EmailInputPopup = ({ onSubmit, onCancel }: Props) => {
     const { handleSend, email, error, isLoading } = useSendRecoveryCode({ username });
 
     const handleSubmit = async () => {
-        const success = await handleSend();
-        console.log("EMAIL ANTES DE SUBMIT:", email);
+        const { success, email: mail } = await handleSend();
         if (success) {
-            onSubmit?.(username, email ?? "");
+            onSubmit?.(username, mail ?? "");
+            console.log("EMAIL ANTES DE SUBMIT:", mail);
         }
     };
 

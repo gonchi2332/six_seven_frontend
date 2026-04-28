@@ -36,7 +36,6 @@ const VerificationFlow = ({
     };
 
     const handleEmailSubmit = (submittedUsername: string, recoveryEmail: string) => {
-        console.log("EMAIL EN FLOW:", recoveryEmail);
         setUsername(submittedUsername);
         setEmail(recoveryEmail);
         setStep("verification");
