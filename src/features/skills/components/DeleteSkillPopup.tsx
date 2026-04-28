@@ -20,10 +20,10 @@ const DeleteSkillPopup = ({ skillName, onConfirm, onClose }: Props) => {
             ¿Estás seguro que quieres eliminar esta habilidad?
           </p>
           <div className={BUTTONS_WRAPPER}>
-            <Button variant="primary" onClick={onClose} fullWidth>
+            <Button variant="secondary" onClick={onClose} fullWidth>
               Cancelar
             </Button>
-            <Button variant="secondary" onClick={onConfirm} fullWidth>
+            <Button variant="primary" onClick={onConfirm} fullWidth>
               Aceptar
             </Button>
           </div>

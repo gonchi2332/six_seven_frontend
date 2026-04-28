@@ -5,7 +5,6 @@ import { useState } from "react";
 import EmailVerificationFlow from "../../components/EmailPasswordVerification/EmailVerificationFlow";
 import CodeEmailPopup from "../EmailPasswordVerification/CodeEmailPopup";
 import { useNavigate } from "react-router-dom";
-import useEmail from "../../../../hooks/useGetEmail";
 
 const LoginForm = () => {
     const {
@@ -17,6 +16,7 @@ const LoginForm = () => {
         setShowVerified,
         serverError,
         isLoading,
+        userEmail,
         handleUsernameChange,
         handlePasswordChange,
         handleUsernameBlur,
@@ -25,7 +25,6 @@ const LoginForm = () => {
     } = useLogin();
 
     const navigate = useNavigate();
-    const { email } = useEmail();
     const [showRecovery, setShowRecovery] = useState(false);
 
     const FORM = "h-full flex flex-col";
@@ -96,19 +95,19 @@ const LoginForm = () => {
                     </a>
                 </p>
             </form>
+
             {showVerified && (
                 <CodeEmailPopup
                     username={username}
-                    email={email}
+                    email={userEmail}
                     mode={"verify"}
                     onSuccess={() => {
                         setShowVerified(false);
                         navigate("/dashboard");
                     }}
+                    onClose={() => setShowVerified(false)}
                 />
             )}
-
-
 
             {showRecovery && (
                 <EmailVerificationFlow
@@ -117,7 +116,6 @@ const LoginForm = () => {
                 />
             )}
         </>
-
     );
 };
 
