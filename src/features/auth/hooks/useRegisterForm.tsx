@@ -360,7 +360,7 @@ export const useRegisterForm = () => {
 
             const errorMessage = error.message?.toLowerCase() || "";
 
-            if (errorMessage.includes("username") || errorMessage.includes("ya existe")) {
+            if (errorMessage.includes("username") || errorMessage.includes("ya existe") || errorMessage.includes("en uso")) {
                 setErrors(prev => ({
                     ...prev,
                     username: "Este nombre de usuario ya está en uso"
