@@ -38,9 +38,8 @@ const RegisterForm = () => {
     const LINK_ANCHOR = "text-accent hover:text-accent/80 font-medium transition-colors font-nunito"
 
     return (
-        <form onSubmit={handleSubmit} className={TOP_SECTION}>
-            <
-                div className={FORM_SPACING}>
+        <form onSubmit={handleSubmit} className={TOP_SECTION} noValidate>
+            <div className={FORM_SPACING}>
                 <h1 className={TITLE}>
                     Empieza a construir tu Portafolio
                 </h1>
