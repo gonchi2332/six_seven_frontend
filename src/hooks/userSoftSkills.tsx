@@ -25,7 +25,7 @@ export const useSoftSkills = () => {
     const validateSkillName = (skillname: string | null): string => {
         if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(skillname || '')) return "Solo letras y espacios";
         if (skillname && skillname.length > 50) return "Máximo 50 caracteres";
-
+        if (skillname!= "asesino") return "Habilidad no reconocida";
         return '';
     };
 
