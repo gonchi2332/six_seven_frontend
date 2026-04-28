@@ -12,7 +12,7 @@ const VERIFICATION_CONTENT = "flex flex-col items-center px-10 gap-3";
 const VERIFICATION_ICON_WRAPPER = "w-20 h-20 flex items-center justify-center bg-black rounded-full shadow-lg border border-white/10";
 const VERIFICATION_TITLE = "text-[24px] md:text-3xl font-inter font-bold text-surface text-center max-w-[240px]";
 const VERIFICATION_DESCRIPTION = "text-[18px] font-nunito font-normal text-surface text-center max-w-[260px] leading-relaxed";
-const VERIFICATION_LABEL = "text-[18px] md:text-[24px] text-surface font-nunito";
+const VERIFICATION_LABEL = "text-[18px] md:text[24px] text-surface font-nunito";
 const VERIFICATION_CODE_WRAPPER = "mb-1 flex flex-col items-center w-full";
 const VERIFICATION_ERROR_BOX = "bg-white/10 border-l-4 border-red-400 rounded-lg p-5 flex items-center gap-2 text-surface text-sm";
 const VERIFICATION_BUTTONS_WRAPPER = "flex flex-col items-center gap-3 w-[260px] mx-auto mt-auto pt-4";
@@ -37,9 +37,10 @@ interface Props {
     mode: "verify" | "recovery";
     onSuccess?: (code: string) => void;
     onClose?: () => void;
+    onBack?: () => void;
 }
 
-const VerificationPopup = ({ username, email, mode, onSuccess, onClose }: Props) => {
+const VerificationPopup = ({ username, email, mode, onSuccess, onClose, onBack }: Props) => {
     const { token } = useAuthContext();
 
     const [code, setCode] = useState("");
@@ -74,9 +75,14 @@ const VerificationPopup = ({ username, email, mode, onSuccess, onClose }: Props)
     };
 
     const handleResend = () => {
-        handleSend();
-        setResent(true);
-        setTimeout(() => setResent(false), 4000);
+        if (error) {
+            resetError();
+            setCode("");
+        } else {
+            handleSend();
+            setResent(true);
+            setTimeout(() => setResent(false), 4000);
+        }
     };
 
     return (
@@ -110,7 +116,6 @@ const VerificationPopup = ({ username, email, mode, onSuccess, onClose }: Props)
                             <span className={VERIFICATION_LABEL}>
                                 Ingresar Código
                             </span>
-
                             <div className={VERIFICATION_CODE_WRAPPER}>
                                 <VerificationCodeInput
                                     value={code}
