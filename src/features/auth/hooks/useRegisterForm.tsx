@@ -96,7 +96,7 @@ export const useRegisterForm = () => {
     };
 
     const validatePaternalLastName = (paternalName: string) => {
-        if (!paternalName) return "El apellido paterno es requerido";
+        if (!paternalName) return "El primer apellido es requerido";
         if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(paternalName)) return "Solo letras y espacios";
         return "";
     }

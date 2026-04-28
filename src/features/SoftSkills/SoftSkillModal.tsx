@@ -86,7 +86,7 @@ const SoftSkillModal = ({
                     <form onSubmit={handleSubmit}>
                         <div className={styles.formWrapper}>
                             <TextField
-                                label="Nombre de la habilidad:"
+                                label="Nombre de la habilidad:*"
                                 value={name}
                                 onChange={handleNameChange}
                                 placeholder="Ej: Comunicación asertiva"

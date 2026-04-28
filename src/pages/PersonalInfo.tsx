@@ -64,7 +64,7 @@ const PersonalInfo = () => {
 
                             <div className="mt-6 pt-6 border-t border-white/5">
                                 <Button onClick={() => setIsOpen(true)} variant="primary">
-                                    Editar Información
+                                    Modificar Información
                                 </Button>
                             </div>
                         </div>
