@@ -24,7 +24,7 @@ const DeleteSkillPopup = ({ skillName, onConfirm, onClose }: Props) => {
               Cancelar
             </Button>
             <Button variant="primary" onClick={onConfirm} fullWidth>
-              Aceptar
+              Eliminar
             </Button>
           </div>
         </PopUpCard>

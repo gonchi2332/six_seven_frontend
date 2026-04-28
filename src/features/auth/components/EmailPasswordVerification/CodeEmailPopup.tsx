@@ -21,13 +21,13 @@ const ICON_ERROR = "fa-solid fa-circle-exclamation text-white text-5xl";
 const ICON_SUCCESS = "fa-solid fa-shield text-[#90DDF0] text-5xl";
 const ICON_INFO = "fa-solid fa-circle-info";
 const RESEND_CONFIRMATION = "text-green-300 text-normal text-center w-full";
-const EMAIL_HINT = "text-surface/70 text-sm font-nunito text-center";
+const EMAIL_HINT = "text-surface text-sm font-nunito text-center";
 
 const censorEmail = (email: string): string => {
     const [local, domain] = email.split("@");
     if (!local || !domain) return email;
     const visible = local.slice(0, 4);
-    const censored = "*".repeat(Math.max(local.length - 4, 3));
+    const censored = "*".repeat(4);
     return `${visible}${censored}@${domain}`;
 };
 
@@ -40,7 +40,6 @@ interface Props {
 }
 
 const VerificationPopup = ({ username, email, mode, onSuccess, onClose }: Props) => {
-    console.log("EMAIL RECIBIDO:", email); // temporal
     const { token } = useAuthContext();
 
     const [code, setCode] = useState("");
@@ -57,24 +56,15 @@ const VerificationPopup = ({ username, email, mode, onSuccess, onClose }: Props)
 
     const { handleSend } = activeSendHook;
 
-    const {
-        error,
-        isLoading,
-        title,
-        description,
-        handleSubmit,
-        resetError
-    } = activeVerifyHook;
+    const { error, isLoading, title, description, handleSubmit, resetError } = activeVerifyHook;
 
     const handleAction = async () => {
         if (!isComplete && !error) return;
-
         if (error) {
             resetError();
             setCode("");
             return;
         }
-
         const success = await handleSubmit();
         if (success) {
             onSuccess?.(code);
@@ -111,7 +101,7 @@ const VerificationPopup = ({ username, email, mode, onSuccess, onClose }: Props)
 
                     {email && (
                         <p className={EMAIL_HINT}>
-                            Código enviado a: <span className="text-surface font-medium">{censorEmail(email)}</span>
+                            Código enviado a: {censorEmail(email)}
                         </p>
                     )}
 
@@ -127,7 +117,6 @@ const VerificationPopup = ({ username, email, mode, onSuccess, onClose }: Props)
                                     onChange={setCode}
                                     error={!!error}
                                 />
-
                                 {!isComplete && (
                                     <p className={CODE_HINT}>
                                         El código debe tener 8 dígitos

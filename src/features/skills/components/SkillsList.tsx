@@ -10,7 +10,7 @@ const styles = {
   container: "flex flex-col gap-3",
   header: "flex justify-between items-center mb-2",
   title: "text-xl font-semibold text-surface font-inter",
-  empty: "text-surface/50 text-center py-8 font-nunito",
+  empty: "text-surface text-center py-8 font-nunito",
   loading: "text-surface/50 text-center py-8 font-nunito",
   error: "text-red-500 text-center py-8 font-nunito bg-red-500/10 rounded-xl",
   success: "text-green-300 font-nunito text-sm py-1",

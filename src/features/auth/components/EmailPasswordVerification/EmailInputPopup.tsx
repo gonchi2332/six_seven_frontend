@@ -14,13 +14,13 @@ const ICON = "fa-regular fa-user text-white text-5xl";
 const INPUT_WRAPPER = "w-[280px]";
 const LABEL = "text-[16px] font-inter font-normal text-surface mb-1.5 block text-left";
 const INPUT = "w-full bg-black rounded-lg px-3 py-2.5 text-[#FFFFFF] placeholder:text-white/40 outline-none mb-1 text-[15px]";
-const EMAIL_HINT = "text-surface/70 text-sm font-nunito text-center mt-1 mb-2";
+const EMAIL_HINT = "text-surface text-base font-nunito text-center mt-1 mb-2";
 
 const censorEmail = (email: string): string => {
     const [local, domain] = email.split("@");
     if (!local || !domain) return email;
     const visible = local.slice(0, 4);
-    const censored = "*".repeat(Math.max(local.length - 4, 3));
+    const censored = "*".repeat(4);
     return `${visible}${censored}@${domain}`;
 };
 
@@ -80,7 +80,7 @@ const EmailInputPopup = ({ onSubmit, onCancel }: Props) => {
 
                 {email && (
                     <p className={EMAIL_HINT}>
-                        Se enviará un código a: <span className="text-surface font-medium">{censorEmail(email)}</span>
+                        Se enviará un código a: {censorEmail(email)}
                     </p>
                 )}
 
