@@ -1,8 +1,8 @@
-import { useState } from "react"; // Para el feedback visual de "Copiado"
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { parseProfilePicture } from "../../services/decodeBase64";
 import { useNavbarInfo } from "../../hooks/useNavbarInfo";
-import { Copy, Check } from "lucide-react"; // Opcional: iconos para mejorar la UI
+import { Copy, Check } from "lucide-react";
 
 const defAvatar = "/defAvatar.png";
 

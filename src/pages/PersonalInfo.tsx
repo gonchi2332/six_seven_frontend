@@ -36,7 +36,6 @@ const PersonalInfo = () => {
               <span className={STYLES.LABEL}>Ubicación y Contacto</span>
               
               <div className={STYLES.GRID}>
-                {/* Ciudad y País usando tus tipos exactos */}
                 <p className={STYLES.DETAILS}>
                   <span className="text-accent text-xl">Ubicacion:</span>
                   <span>
@@ -46,13 +45,11 @@ const PersonalInfo = () => {
                   </span>
                 </p>
                 
-                {/* Email de contacto */}
                 <p className={STYLES.DETAILS}>
                   <span className="text-accent text-xl">Correo electronico:</span>
                   <span>{userInfo?.contact_email || "Correo no configurado"}</span>
                 </p>
 
-                {/* Teléfono */}
                 <p className={STYLES.DETAILS}>
                   <span className="text-accent text-xl">Telefono:</span>
                   <span>{userInfo?.phone_number || "Sin teléfono registrado"}</span>
