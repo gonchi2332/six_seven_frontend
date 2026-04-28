@@ -68,7 +68,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
               {copied ? (
                 <><Check size={16} /> ¡Copiado!</>
               ) : (
-                <><Copy size={16} /> Copiar Link Público</>
+                <><Copy size={16} /> Copiar Enlace Público</>
               )}
             </button>
           )}

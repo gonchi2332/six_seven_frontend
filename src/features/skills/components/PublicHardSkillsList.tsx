@@ -13,12 +13,14 @@ const styles = {
   barActive: "h-full flex-1 rounded-sm bg-[#90DDF0] transition-all duration-500",
   barInactive: "h-full flex-1 rounded-sm bg-white/10",
 };
-
 const PublicHardSkillsList = () => {
   const { username } = useParams<{ username: string }>();
   const { skills, isLoading } = usePublicHardSkills(username);
 
   if (isLoading) return <p className="text-white/50 italic font-nunito">Cargando habilidades...</p>;
+  if (!skills || skills.length === 0) {
+    return null;
+  }
 
   return (
     <div className={styles.container}>
@@ -30,7 +32,6 @@ const PublicHardSkillsList = () => {
             <div className={styles.left}>
               <span className={styles.name}>{skill.name}</span>
               
-              {/* Este div ahora crecerá hasta el borde derecho */}
               <div className={styles.barsWrapper}>
                 {Array.from({ length: TOTAL_BARS }).map((_, i) => (
                   <div
