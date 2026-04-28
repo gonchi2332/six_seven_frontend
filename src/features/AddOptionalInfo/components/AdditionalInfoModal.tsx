@@ -40,13 +40,6 @@ const AdditionalInfoModal = ({ onClose }: AdditionalInfoModalProps) => {
                 <div>
                     <div className={STYLES.FORM_WRAPPER}>
                         <TextField
-                            label="Apellido:"
-                            value={formData.secondSurname}
-                            onChange={(e) => handleChange("secondSurname", e.target.value)}
-                            error={errors.secondSurname}
-                            className="w-full"
-                        />
-                        <TextField
                             label="Ciudad:"
                             value={formData.city}
                             onChange={(e) => handleChange("city", e.target.value)}
