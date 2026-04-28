@@ -20,8 +20,8 @@ const Router = () => {
                 <Route path="/verification" element={<VerificationPage />} />
                 <Route path="/changePassword" element={<PasswordResetPage />} />
                 <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/add" element={<AdditionalInfoPage />} />
-                <Route path="/ver/:username" element={<PublicDashboard />}/>
+                <Route path="/additional-info" element={<AdditionalInfoPage />} />
+                <Route path="/ver/:username" element={<PublicDashboard />} />
             </Routes>
         </BrowserRouter>
     );

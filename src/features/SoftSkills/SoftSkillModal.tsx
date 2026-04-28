@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import Button from '../../components/Button';
 import TextField from '../../components/TextField';
-import {useSoftSkills} from "../../hooks/userSoftSkills";
-
-
+import PopUpCard from '../../components/PopUpCard';
+import { useSoftSkills } from "../../hooks/userSoftSkills";
 
 interface SoftSkillModalProps {
     isOpen: boolean;
@@ -16,11 +15,10 @@ interface SoftSkillModalProps {
 }
 
 const styles = {
-    overlay: "fixed inset-0 bg-black/50 flex items-center justify-center z-50",
-    modal: "bg-primary rounded-2xl p-6 w-full max-w-md mx-4",
-    title: "text-2xl font-bold text-surface font-inter mb-4",
-    serverError: "mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center",
-    buttonContainer: "flex gap-3 mt-6",
+    overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 z-50",
+    serverError: "mx-6 sm:mx-8 mb-2 p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center",
+    formWrapper: "flex flex-col gap-4 px-6 sm:px-8 pb-2",
+    buttonContainer: "flex gap-4 justify-center mt-2 px-6 sm:px-8 pb-6",
 };
 
 const SoftSkillModal = ({ 
@@ -35,6 +33,7 @@ const SoftSkillModal = ({
     const [name, setName] = useState('');
     const [localError, setLocalError] = useState<string | null>(null);
     const { validateSkillName } = useSoftSkills();
+
     useEffect(() => {
         if (isOpen) {
             setName(initialName);
@@ -74,51 +73,50 @@ const SoftSkillModal = ({
     const isDisabled = isSubmitting || !name.trim() || !!localError;
 
     return (
-        <div className={styles.overlay} onClick={onClose}>
-            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                <h2 className={styles.title}>
-                    {isEditing ? 'Editar Habilidad Blanda' : 'Agregar Habilidad Blanda'}
-                </h2>
-                
-                {/* Error del servidor dentro del modal */}
-                {serverError && (
-                    <div className={styles.serverError}>
-                        {serverError}
-                    </div>
-                )}
-                
-                <form onSubmit={handleSubmit}>
-                    <TextField
-                        label="Nombre de la habilidad"
-                        value={name}
-                        onChange={handleNameChange}
-                        placeholder="Ej: Comunicación asertiva"
-                        type="text"
-                        error={localError || undefined}
-                        maxLength={50}
-                        disabled={isSubmitting}
-                        className="w-full"
-                    />
-                    <div className={styles.buttonContainer}>
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            onClick={onClose}
-                            fullWidth
-                            disabled={isSubmitting}
-                        >
-                            Cancelar
-                        </Button>
-                        <Button
-                            type="submit"
-                            variant="primary"
-                            disabled={isDisabled}
-                            fullWidth
-                        >
-                            {isSubmitting ? 'Guardando...' : 'Guardar'}
-                        </Button>
-                    </div>
-                </form>
+        <div className={styles.overlay}>
+            <div className="w-full max-w-xs sm:max-w-sm">
+                <PopUpCard title={isEditing ? 'Editar Habilidad' : 'Añadir Habilidad'}>
+                    {/* Error del servidor dentro del modal */}
+                    {serverError && (
+                        <div className={styles.serverError}>
+                            {serverError}
+                        </div>
+                    )}
+                    
+                    <form onSubmit={handleSubmit}>
+                        <div className={styles.formWrapper}>
+                            <TextField
+                                label="Nombre de la habilidad:"
+                                value={name}
+                                onChange={handleNameChange}
+                                placeholder="Ej: Comunicación asertiva"
+                                type="text"
+                                error={localError || undefined}
+                                maxLength={50}
+                                disabled={isSubmitting}
+                            />
+                        </div>
+                        <div className={styles.buttonContainer}>
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={onClose}
+                                fullWidth
+                                disabled={isSubmitting}
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                type="submit"
+                                variant="primary"
+                                disabled={isDisabled}
+                                fullWidth
+                            >
+                                {isSubmitting ? 'Guardando...' : 'Aceptar'}
+                            </Button>
+                        </div>
+                    </form>
+                </PopUpCard>
             </div>
         </div>
     );

@@ -13,12 +13,14 @@ const RegisterForm = () => {
         handlePasswordChange,
         handleConfirmPasswordChange,
         handlePaternalLastNameChange,
+        handleSecondSurenameChange,
         handleUsernameChange,
         handleMailChange,
         handleNameBlur,
         handlePasswordBlur,
         handleConfirmPasswordBlur,
         handlePaternalLastNameBlur,
+        handleSecondSurenameBlur,
         handleUsernameBlur,
         handleMailBlur,
         handleSubmit
@@ -36,9 +38,8 @@ const RegisterForm = () => {
     const LINK_ANCHOR = "text-accent hover:text-accent/80 font-medium transition-colors font-nunito"
 
     return (
-        <form onSubmit={handleSubmit} className={TOP_SECTION}>
-            <
-                div className={FORM_SPACING}>
+        <form onSubmit={handleSubmit} className={TOP_SECTION} noValidate>
+            <div className={FORM_SPACING}>
                 <h1 className={TITLE}>
                     Empieza a construir tu Portafolio
                 </h1>
@@ -63,7 +64,16 @@ const RegisterForm = () => {
                         disabled={isLoading}
                     />
                 </div>
-                    
+                <div onBlur={handleSecondSurenameBlur} className={FIELD_WRAPPER}>
+                    <TextField
+                        label="Segundo Apellido"
+                        type="text"
+                        value={formData.secondSurename}
+                        onChange={handleSecondSurenameChange}
+                        error={touched.secondSurename ? errors.secondSurename : ""}
+                        disabled={isLoading}
+                    />
+                </div>
                 <div onBlur={handleUsernameBlur} className={FIELD_WRAPPER}>
                     <TextField
                         label="Nombre de usuario*"

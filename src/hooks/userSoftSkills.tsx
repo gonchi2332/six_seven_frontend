@@ -14,6 +14,12 @@ export const useSoftSkills = () => {
     const [skills, setSkills] = useState<SoftSkill[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+    const showSuccess = (msg: string) => {
+        setSuccessMessage(msg);
+        setTimeout(() => setSuccessMessage(null), 3000);
+    };
 
     
     const validateSkillName = (skillname: string | null): string => {
@@ -63,6 +69,7 @@ export const useSoftSkills = () => {
             await createSoftSkill({ skillName });
             // Recargar lista después de agregar
             await loadSkills();
+            showSuccess("Habilidad registrada correctamente");
         } catch (err: any) {
             setError(err.message || 'Error al agregar la habilidad');
             throw err;
@@ -81,6 +88,7 @@ export const useSoftSkills = () => {
         try {
             await updateSoftSkill({ oldSkillName, newSkillName });
             await loadSkills();
+            showSuccess("Habilidad modificada correctamente");
         } catch (err: any) {
             setError(err.message || 'Error al modificar la habilidad');
             throw err;
@@ -103,6 +111,7 @@ export const useSoftSkills = () => {
         skills,
         isLoading,
         error,
+        successMessage,
         addSkill,
         editSkill,
         removeSkill,

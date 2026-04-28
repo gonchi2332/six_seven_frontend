@@ -3,18 +3,20 @@ import { requestRecoveryCode, verifyRecoveryCode } from "../../../services/recov
 
 interface UseSendRecoveryCodeParams {
     username: string;
-    email: string;
 }
 
-export const useSendRecoveryCode = ({ username, email }: UseSendRecoveryCodeParams) => {
+export const useSendRecoveryCode = ({ username }: UseSendRecoveryCodeParams) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [email, setEmail] = useState<string | null>(null);
+
 
     const handleSend = async (): Promise<boolean> => {
         setIsLoading(true);
         setError(null);
         try {
-            await requestRecoveryCode({ username, email });
+            const data = await requestRecoveryCode({ username });
+            setEmail(data.verificationMails[0]);
             return true;
         } catch (err) {
             setError(err instanceof Error ? err.message : "Error al enviar el código");
@@ -24,7 +26,7 @@ export const useSendRecoveryCode = ({ username, email }: UseSendRecoveryCodePara
         }
     };
 
-    return { isLoading, error, handleSend };
+    return { isLoading, email, error, handleSend };
 };
 
 interface UseVerifyRecoveryParams {

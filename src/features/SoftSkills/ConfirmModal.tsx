@@ -1,4 +1,5 @@
 import Button from '../../components/Button';
+import PopUpCard from '../../components/PopUpCard';
 
 interface ConfirmModalProps {
     isOpen: boolean;
@@ -10,11 +11,9 @@ interface ConfirmModalProps {
 }
 
 const styles = {
-    overlay: "fixed inset-0 bg-black/50 flex items-center justify-center z-50",
-    modal: "bg-primary rounded-2xl p-6 w-full max-w-md mx-4",
-    title: "text-2xl font-bold text-surface font-inter mb-2",
-    message: "text-surface font-nunito mb-6",
-    buttonContainer: "flex gap-3",
+    overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 z-50",
+    message: "text-[18px] font-nunito text-surface text-center px-6 sm:px-8 pb-4",
+    buttonContainer: "flex gap-4 justify-center mt-2 px-6 sm:px-8 pb-6",
 };
 
 const ConfirmModal = ({ 
@@ -28,30 +27,31 @@ const ConfirmModal = ({
     if (!isOpen) return null;
 
     return (
-        <div className={styles.overlay} onClick={onClose}>
-            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                <h2 className={styles.title}>{title}</h2>
-                <p className={styles.message}>{message}</p>
-                <div className={styles.buttonContainer}>
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        onClick={onClose}
-                        fullWidth
-                        disabled={isLoading}
-                    >
-                        Cancelar
-                    </Button>
-                    <Button
-                        type="button"
-                        variant="primary"
-                        onClick={onConfirm}
-                        fullWidth
-                        disabled={isLoading}
-                    >
-                        {isLoading ? 'Eliminando...' : 'Eliminar'}
-                    </Button>
-                </div>
+        <div className={styles.overlay}>
+            <div className="w-full max-w-xs sm:max-w-sm">
+                <PopUpCard title={title}>
+                    <p className={styles.message}>{message}</p>
+                    <div className={styles.buttonContainer}>
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            onClick={onClose}
+                            fullWidth
+                            disabled={isLoading}
+                        >
+                            Cancelar
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="primary"
+                            onClick={onConfirm}
+                            fullWidth
+                            disabled={isLoading}
+                        >
+                            {isLoading ? 'Eliminando...' : 'Eliminar'}
+                        </Button>
+                    </div>
+                </PopUpCard>
             </div>
         </div>
     );
