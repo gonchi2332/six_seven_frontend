@@ -3,7 +3,7 @@ export interface RegisterRequest {
     password: string;
     names: string;
     firstSurname: string;
-    secondSurename?: string;
+    secondSurname?: string;
     mainRegistrationEmail: string;
 }
 

@@ -47,11 +47,6 @@ function LinkedIn() {
       ) : (
         <div className={STYLES.BADGE_CONTAINER}>
           <LinkedInBadge username={linkedinUser} />
-          <button 
-            onClick={() => setShowModal(true)}
-            className={STYLES.LINK_BUTTON}>
-            Actualizar perfil
-          </button>
         </div>
       )}
 

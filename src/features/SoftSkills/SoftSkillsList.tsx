@@ -124,7 +124,7 @@ const SoftSkillsList = () => {
                 }}
                 onConfirm={handleConfirmDelete}
                 title="Eliminar habilidad"
-                message={`¿Estás seguro de que deseas eliminar la habilidad "${skillToDelete}"?`}
+                message={`¿Estás seguro de que deseas eliminar la habilidad?`}
                 isLoading={isSubmitting}
             />
         </>
