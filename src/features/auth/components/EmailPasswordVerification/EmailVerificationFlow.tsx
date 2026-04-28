@@ -24,8 +24,8 @@ const VerificationFlow = ({
     const [mode] = useState<Mode>(initialMode);
     const [username, setUsername] = useState(initialUsername);
     const [verifiedCode, setVerifiedCode] = useState("");
-    const navigate = useNavigate();
     const [email, setEmail] = useState("");
+    const navigate = useNavigate();
 
     const handleClose = () => {
         if (onClose) {
@@ -36,6 +36,7 @@ const VerificationFlow = ({
     };
 
     const handleEmailSubmit = (submittedUsername: string, recoveryEmail: string) => {
+        console.log("EMAIL EN FLOW:", recoveryEmail);
         setUsername(submittedUsername);
         setEmail(recoveryEmail);
         setStep("verification");
@@ -49,6 +50,12 @@ const VerificationFlow = ({
             setStep("reset");
         } else if (mode === "verify") {
             handleClose();
+        }
+    };
+
+    const handleBack = () => {
+        if (mode === "recovery") {
+            setStep("email");
         }
     };
 
@@ -67,12 +74,14 @@ const VerificationFlow = ({
                     mode={mode}
                     onSuccess={handleCodeSuccess}
                     onClose={handleClose}
+                    onBack={mode === "recovery" ? handleBack : undefined}
                 />
             )}
             {step === "reset" && (
                 <ResetPasswordPopup
                     username={username}
                     code={verifiedCode}
+                    email={email}
                     onClose={handleClose}
                 />
             )}
