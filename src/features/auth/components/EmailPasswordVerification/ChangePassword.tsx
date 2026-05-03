@@ -65,7 +65,7 @@ const ResetPasswordPopup = ({ username, code, email, onClose }: Props) => {
                 </div>
 
                 <h2 className={VERIFICATION_TITLE}>
-                    Restablecimiento de Contraseña
+                    Recuperacion de Contraseña
                 </h2>
 
                 <p className={VERIFICATION_DESCRIPTION}>
