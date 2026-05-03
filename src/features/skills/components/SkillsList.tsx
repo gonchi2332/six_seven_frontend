@@ -1,140 +1,128 @@
-import { useState } from "react";
 import SkillBar from "./SkillBar";
 import AddSkillPopup from "./AddSkillPopup";
 import EditSkillPopup from "./EditSkillPopup";
 import DeleteSkillPopup from "./DeleteSkillPopup";
-import { useSkills } from "../../../hooks/useSkills";
-import type { Skill } from "../types/skill.types";
+import useSkillsList from "../../../hooks/useSkillsList";
 
 const styles = {
-  container: "flex flex-col gap-3",
-  header: "flex justify-between items-center mb-2",
-  title: "text-xl font-semibold text-surface font-inter",
-  empty: "text-surface text-center py-8 font-nunito",
-  loading: "text-surface/50 text-center py-8 font-nunito",
-  error: "text-red-500 text-center py-8 font-nunito bg-red-500/10 rounded-xl",
-  success: "text-green-300 font-nunito text-sm py-1",
-  addButton: "w-10 h-10 rounded-xl bg-primary text-surface hover:bg-primary/90 transition-colors flex items-center justify-center text-2xl font-bold",
+    wrapper: "flex flex-col gap-4",
+    header: "flex items-center justify-between",
+    title: "text-xl font-bold font-inter text-surface",
+    addBtn: "px-4 py-2 rounded-xl bg-primary text-white text-sm font-nunito font-semibold transition-all hover:brightness-110 active:scale-95",
+    list: "flex flex-col gap-3",
+    empty: "text-surface/50 font-nunito text-sm text-center py-6",
+    error: "p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center",
+    success: "p-3 rounded-xl bg-primary/10 border border-primary text-primary text-sm font-nunito text-center",
+    paginationWrapper: "flex items-center justify-center gap-4 pt-3",
+    paginationBtn: "w-10 h-10 rounded-xl border border-white text-white flex items-center justify-center transition-all duration-200 hover:scale-105 hover:shadow-md active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed",
+    paginationLabel: "text-[14px] font-nunito text-surface/70",
 };
 
 const SkillsList = () => {
-  const { skills, isLoading, error, successMessage, addSkill, editSkill, deleteSkill } = useSkills();
-  const [showAdd, setShowAdd] = useState(false);
-  const [editingSkill, setEditingSkill] = useState<Skill | null>(null);
-  const [deletingSkill, setDeletingSkill] = useState<Skill | null>(null);
-  const [modalError, setModalError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+    const {
+        skills,
+        isLoading,
+        error,
+        successMessage,
+        paginated,
+        totalPages,
+        currentPage,
+        setCurrentPage,
+        showAdd,
+        setShowAdd,
+        editTarget,
+        setEditTarget,
+        deleteTarget,
+        setDeleteTarget,
+        serverError,
+        isSubmitting,
+        handleAdd,
+        handleEdit,
+        handleDelete,
+    } = useSkillsList();
 
-  const handleAdd = () => {
-    setModalError(null);
-    setShowAdd(true);
-  };
+    return (
+        <div className={styles.wrapper}>
+            <div className={styles.header}>
+                <h2 className={styles.title}>Habilidades Técnicas</h2>
+                <button type="button" className={styles.addBtn} onClick={() => setShowAdd(true)}>
+                    Agregar
+                </button>
+            </div>
 
-  const handleEdit = (skill: Skill) => {
-    setModalError(null);
-    setEditingSkill(skill);
-  };
+            {error && <p className={styles.error}>{error}</p>}
+            {successMessage && <p className={styles.success}>{successMessage}</p>}
 
-  const handleSaveAdd = async (name: string, level: number) => {
-    setModalError(null);
-    setIsSubmitting(true);
-    try {
-      await addSkill(name, level);
-      setShowAdd(false);
-    } catch (err: any) {
-    
-      setModalError(err?.message || JSON.stringify(err) || "Error al guardar");
-      throw err; 
-    }finally {
-      setIsSubmitting(false);
-    }
-  };
+            {isLoading ? (
+                <p className={styles.empty}>Cargando...</p>
+            ) : skills.length === 0 ? (
+                <p className={styles.empty}>No tienes habilidades registradas.</p>
+            ) : (
+                <>
+                    <div className={styles.list}>
+                        {paginated.map((skill) => (
+                            <SkillBar
+                                key={skill.id}
+                                skill={skill}
+                                onEdit={() => setEditTarget(skill)}
+                                onDelete={() => setDeleteTarget(skill)}
+                            />
+                        ))}
+                    </div>
 
-  const handleSaveEdit = async (id: string, name: string, level: number) => {
-    setModalError(null);
-    setIsSubmitting(true);
-    try {
-      await editSkill(id, name, level);
-      setEditingSkill(null);
-    } catch (err: any) {
-  
-      setModalError(err?.message || JSON.stringify(err) || "Error al guardar");
-      throw err; 
-    }finally {
-          setIsSubmitting(false);
-        }
-      };
+                    {totalPages > 1 && (
+                        <div className={styles.paginationWrapper}>
+                            <button
+                                type="button"
+                                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                                disabled={currentPage === 1}
+                                className={styles.paginationBtn}
+                            >
+                                ‹
+                            </button>
+                            <span className={styles.paginationLabel}>
+                                {currentPage} / {totalPages}
+                            </span>
+                            <button
+                                type="button"
+                                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                                disabled={currentPage === totalPages}
+                                className={styles.paginationBtn}
+                            >
+                                ›
+                            </button>
+                        </div>
+                    )}
+                </>
+            )}
 
-  const handleConfirmDelete = async () => {
-    if (!deletingSkill) return;
-    setIsSubmitting(true);
-    try {
-      await deleteSkill(deletingSkill.id);
-      setDeletingSkill(null);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+            {showAdd && (
+                <AddSkillPopup
+                    onSubmit={handleAdd}
+                    onClose={() => setShowAdd(false)}
+                    isSubmitting={isSubmitting}
+                />
+            )}
 
-  if (isLoading) {
-    return <div className={styles.loading}>Cargando habilidades técnicas...</div>;
-  }
+            {editTarget && (
+                <EditSkillPopup
+                    skill={editTarget}
+                    onSubmit={handleEdit}
+                    onClose={() => setEditTarget(null)}
+                    serverError={serverError}
+                    isSubmitting={isSubmitting}
+                />
+            )}
 
-  return (
-    <>
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <h2 className={styles.title}>Habilidades Técnicas</h2>
-          <button onClick={handleAdd} className={styles.addButton} title="Agregar">
-            +
-          </button>
+            {deleteTarget && (
+                <DeleteSkillPopup
+                    skillName={deleteTarget.name}
+                    onConfirm={handleDelete}
+                    onClose={() => setDeleteTarget(null)}
+                />
+            )}
         </div>
-
-        {successMessage && <p className={styles.success}>{successMessage}</p>}
-        {error && <div className={styles.error}>{error}</div>}
-
-        {!error && skills.length === 0 ? (
-          <div className={styles.empty}>No hay habilidades técnicas aún. ¡Agrega una!</div>
-        ) : (
-          skills.map((skill) => (
-            <SkillBar
-              key={skill.id}
-              skill={skill}
-              onEdit={handleEdit}
-              onDelete={setDeletingSkill}
-            />
-          ))
-        )}
-      </div>
-
-      {showAdd && (
-        <AddSkillPopup
-          onSubmit={handleSaveAdd}
-          onClose={() => setShowAdd(false)}
-          serverError={modalError}
-          isSubmitting={isSubmitting}
-        />
-      )}
-
-      {editingSkill && (
-        <EditSkillPopup
-          skill={editingSkill}
-          onSubmit={handleSaveEdit}
-          onClose={() => setEditingSkill(null)}
-          serverError={modalError}
-          isSubmitting={isSubmitting}
-        />
-      )}
-
-      {deletingSkill && (
-        <DeleteSkillPopup
-          skillName={deletingSkill.name}
-          onConfirm={handleConfirmDelete}
-          onClose={() => setDeletingSkill(null)}
-        />
-      )}
-    </>
-  );
+    );
 };
 
 export default SkillsList;

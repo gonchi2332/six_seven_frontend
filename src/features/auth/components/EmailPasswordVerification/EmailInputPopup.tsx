@@ -59,7 +59,7 @@ const EmailInputPopup = ({ onSubmit, onCancel }: Props) => {
                 </div>
 
                 <h2 className={TITLE}>
-                    Recuperación de cuenta
+                    Recuperación de contraseña
                 </h2>
 
                 <p className={DESCRIPTION}>
