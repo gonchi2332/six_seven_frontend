@@ -10,20 +10,11 @@ const styles = {
     buttons: "flex gap-2",
 };
 
-export const SoftSkillItem = ({ skillName, onEdit, onDelete }: SoftSkillItemProps) => {
+export const SoftSkillItem = ({ skillName, onDelete }: SoftSkillItemProps) => {
     return (
         <div className={styles.container}>
             <span className={styles.name}>{skillName}</span>
             <div className={styles.buttons}>
-                <button
-                    onClick={() => onEdit(skillName)}
-                    className="text-accent hover:text-accent/80 transition-colors p-1"
-                    title="Editar"
-                >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                    </svg>
-                </button>
                 <button
                     onClick={() => onDelete(skillName)}
                     className="text-red-400 hover:text-red-300 transition-colors p-1"

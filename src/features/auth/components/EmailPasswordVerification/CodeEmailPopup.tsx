@@ -37,10 +37,9 @@ interface Props {
     mode: "verify" | "recovery";
     onSuccess?: (code: string) => void;
     onClose?: () => void;
-    onBack?: () => void;
 }
 
-const VerificationPopup = ({ username, email, mode, onSuccess, onClose, onBack }: Props) => {
+const VerificationPopup = ({ username, email, mode, onSuccess, onClose }: Props) => {
     const { token } = useAuthContext();
 
     const [code, setCode] = useState("");

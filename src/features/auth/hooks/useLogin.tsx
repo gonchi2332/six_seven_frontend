@@ -4,7 +4,7 @@ import { useAuthContext } from "../../../context/AuthContext";
 import { sendVerificationCode } from "../../../services/verificationCodeService";
 import { getEmail } from "../../../services/getemail";
 import { useNavigate } from "react-router-dom";
-import { getPersonalInfo } from "../../../services/personalInfoService";
+
 
 
 const useLogin = () => {
@@ -96,16 +96,7 @@ const useLogin = () => {
 
                 setShowVerified(true);
             } else {
-                try {
-                    const info = await getPersonalInfo(username);
-                    if (info.is_new === true) {
-                        navigate("/additional-info");
-                    } else {
-                        navigate("/dashboard");
-                    }
-                } catch {
-                    navigate("/");
-                }
+                navigate("/dashboard");
             }
         } catch (err) {
             const msg = err instanceof Error ? err.message : "Error inesperado";

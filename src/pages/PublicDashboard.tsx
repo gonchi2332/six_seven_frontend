@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"; // Importamos para obtener el username
 import Navbar from "../components/Navbar/Navbar";
 import PublicSoftSkillsList from "../features/SoftSkills/PublicSoftSkillsList";
-import PublicPersonalInfo from "../features/EditPersonalInfo/components/PublicPersonalInfo";
+import PublicPersonalInfo from "../features/PersonalInfo/EditPersonalInfo/PublicPersonalInfo";
 import PublicLinkedIn from "../features/LinkedIn/PublicLinkedIn";
 import PublicHardSkillsList from "../features/skills/components/PublicHardSkillsList";
 
