@@ -11,6 +11,7 @@ type Props = {
     initialMode?: Mode;
     initialStep?: Step;
     initialUsername?: string;
+    initialEmail?: string;
     onClose?: () => void;
 };
 
@@ -18,13 +19,14 @@ const VerificationFlow = ({
     initialMode = "verify",
     initialStep = "email",
     initialUsername = "",
+    initialEmail = "",
     onClose
 }: Props) => {
     const [step, setStep] = useState<Step>(initialStep);
     const [mode] = useState<Mode>(initialMode);
     const [username, setUsername] = useState(initialUsername);
     const [verifiedCode, setVerifiedCode] = useState("");
-    const [email, setEmail] = useState("");
+    const [email, setEmail] = useState(initialEmail || "");
     const navigate = useNavigate();
 
     const handleClose = () => {
@@ -52,12 +54,6 @@ const VerificationFlow = ({
         }
     };
 
-    const handleBack = () => {
-        if (mode === "recovery") {
-            setStep("email");
-        }
-    };
-
     return (
         <>
             {step === "email" && (
@@ -73,7 +69,6 @@ const VerificationFlow = ({
                     mode={mode}
                     onSuccess={handleCodeSuccess}
                     onClose={handleClose}
-                    onBack={mode === "recovery" ? handleBack : undefined}
                 />
             )}
             {step === "reset" && (

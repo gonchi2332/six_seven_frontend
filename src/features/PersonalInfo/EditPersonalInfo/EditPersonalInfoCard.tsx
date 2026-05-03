@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import TextField from "../../../components/TextField";
 import Button from "../../../components/Button";
 import PopUpCard from "../../../components/PopUpCard";
@@ -8,10 +9,10 @@ import { usePersonalInfo } from "../../../hooks/useProfileFormForm";
 import { usePersonalInfoSubmit } from "../../../hooks/usePersonalInfoSubmit";
 
 const STYLES = {
-  FORM_WRAPPER: "flex flex-col gap-6 px-8 ",
+  FORM_WRAPPER: "flex flex-col gap-6 px-8",
   GRID_3: "grid grid-cols-1 md:grid-cols-3 gap-4",
   INPUT_LABEL: "mb-1 text-xl font-inter text-white",
-  SELECT: "w-full px-4 py-2 border rounded-xl outline-none transition-all duration-200 bg-white font-nunito disabled:cursor-not-allowed border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500",
+  SELECT: "w-full px-4 py-2 border rounded-xl outline-none transition-all duration-200 bg-white font-nunito disabled:cursor-not-allowed disabled:opacity-50 border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500",
   SELECT_PLACEHOLDER: "text-gray-400",
   SELECT_VALUE: "text-black",
   IMAGE_WRAPPER: "flex flex-col gap-2",
@@ -28,6 +29,15 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
   const { isLoadingData, loadError } = usePersonalInfo(setInitialData);
   const { handleSubmit, isSubmitting, submitError, submitSuccess } = usePersonalInfoSubmit();
 
+  useEffect(() => {
+    if (submitSuccess) {
+      const timer = setTimeout(() => {
+        onClose?.();
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [submitSuccess, onClose]);
+
   const handleAcept = async () => {
     if (!validateForm()) return;
     await handleSubmit(formData);
@@ -37,9 +47,23 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
     onClose?.();
   };
 
+  // ============================================
+  // DETERMINAR QUÉ CAMPOS ESTÁN VACÍOS
+  // ============================================
+
+  const isEmptyField = (value: string | undefined | null): boolean => {
+    return !value || value.trim() === '';
+  };
+
+  // Campos obligatorios (siempre deshabilitados)
+  const isFirstNameEmpty = isEmptyField(formData.firstName);
+  const isFirstSurnameEmpty = isEmptyField(formData.firstSurname);
+  
+  
+
   if (isLoadingData) {
     return (
-      <PopUpCard title="Datos Personales" >
+      <PopUpCard title="Datos Personales">
         <p className="text-white text-center py-10">Cargando información...</p>
       </PopUpCard>
     );
@@ -47,19 +71,21 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
 
   if (loadError) {
     return (
-      <PopUpCard title="Datos Personales" >
+      <PopUpCard title="Datos Personales">
         <p className="text-red-400 text-center py-10">{loadError}</p>
       </PopUpCard>
     );
   }
 
-  const isFormIncomplete = !formData.firstName?.trim() || !formData.firstSurname?.trim();
+  // Botón de aceptar deshabilitado si hay campos obligatorios vacíos
+  const isFormIncomplete = isFirstNameEmpty || isFirstSurnameEmpty;
+
   return (
     <div>
       <PopUpCard title="Datos Personales">
         <div>
           <div className={STYLES.FORM_WRAPPER}>
-
+            {/* Fila 1: Nombres y apellidos */}
             <div className={STYLES.GRID_3}>
               <TextField
                 label="Nombre(s)*:"
@@ -83,10 +109,11 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                 onChange={(e) => handleChange("secondSurname", e.target.value)}
                 error={errors.secondSurname}
                 className="w-full"
-                
+                disabled={!formData.secondSurname}
               />
             </div>
 
+            {/* Fila 2: Ciudad, Correo, Teléfono */}
             <div className={STYLES.GRID_3}>
               <TextField
                 label="Ciudad:"
@@ -95,6 +122,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                 error={errors.city}
                 className="w-full"
                 placeholder="Ej: Av. San Martin 123"
+                disabled={!formData.city}
               />
               <TextField
                 label="Correo de contacto:"
@@ -104,6 +132,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                 type="email"
                 error={errors.email}
                 className="w-full"
+                disabled={!formData.email}
               />
               <TextField
                 label="Teléfono:"
@@ -113,16 +142,18 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                 type="text"
                 error={errors.phone}
                 className="w-full"
+                disabled={!formData.phone}
               />
             </div>
 
+            {/* Fila 3: País, Imagen, espacio */}
             <div className={STYLES.GRID_3}>
               <div className="flex flex-col justify-start">
                 <label className={STYLES.INPUT_LABEL}>País de residencia:</label>
                 <select
                   value={formData.country}
                   onChange={(e) => handleChange("country", e.target.value)}
-                  disabled={isLoading}
+                  disabled={isLoading || !formData.country}
                   className={`${STYLES.SELECT} ${
                     formData.country === "" ? STYLES.SELECT_PLACEHOLDER : STYLES.SELECT_VALUE
                   }`}
@@ -163,7 +194,11 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
             <Button variant="secondary" onClick={handleCancel}>
               Cancelar
             </Button>
-            <Button variant="primary" onClick={handleAcept} disabled={isSubmitting || isFormIncomplete || isSubmitting}>
+            <Button 
+              variant="primary" 
+              onClick={handleAcept} 
+              disabled={isSubmitting || isFormIncomplete}
+            >
               {isSubmitting ? "Guardando..." : "Aceptar"}
             </Button>
           </div>
