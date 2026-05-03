@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import type { Skill } from "../features/skills/types/skill.types";
-import { fetchSkills, postSkill, patchSkill, deleteSkill as apiDeleteSkill } from "../services/skillsService";
+import { fetchSkills, patchSkill, deleteSkill as apiDeleteSkill } from "../services/skillsService";
 
 export const useSkills = () => {
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -42,14 +42,9 @@ export const useSkills = () => {
     load();
   }, []);
 
-  const addSkill = async (name: string, level: number) => {
-    try {
-      await postSkill(name, level);
-      setSkills((prev) => [...prev, { id: name, name, level }]);
-      showSuccess("Habilidad registrada correctamente");
-    } catch (err: any) {
-      throw err;
-    }
+  const addSkill = (name: string, level: number) => {
+    setSkills((prev) => [...prev, { id: name, name, level }]);
+    showSuccess("Habilidad registrada correctamente");
   };
 
   const editSkill = async (id: string, name: string, level: number) => {
@@ -58,8 +53,8 @@ export const useSkills = () => {
       if (!original) return;
 
       if (original.name !== name) {
-        await postSkill(name, level); 
-        await apiDeleteSkill(original.name); 
+        await patchSkill(name, level);
+        await apiDeleteSkill(original.name);
       } else {
         await patchSkill(name, level);
       }
@@ -69,7 +64,7 @@ export const useSkills = () => {
       );
 
       showSuccess("Habilidad modificada correctamente");
-    } catch (err: any) {
+    } catch (err: unknown) {
       throw err;
     }
   };
@@ -78,7 +73,7 @@ export const useSkills = () => {
     try {
       await apiDeleteSkill(id);
       setSkills((prev) => prev.filter((s) => s.id !== id));
-    } catch (err: any) {
+    } catch (err: unknown) {
       throw err;
     }
   };
