@@ -7,6 +7,10 @@ import PasswordResetPage from "../pages/PasswordResetPage";
 import Dashboard from "../pages/Dashboard";
 import AdditionalInfoPage from "../pages/AdditionalInfoPage";
 import PublicDashboard from "../pages/PublicDashboard";
+import HardSkillsPage from "../pages/HardSkillsPage";
+import SoftSkillsPage from "../pages/SoftSkillsPage";
+import EducationPage from "../pages/EducationPage";
+
 
 
 const Router = () => {
@@ -22,6 +26,9 @@ const Router = () => {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/additional-info" element={<AdditionalInfoPage />} />
                 <Route path="/ver/:username" element={<PublicDashboard />} />
+                <Route path="/skills/hard" element={<HardSkillsPage />} />
+                <Route path="/skills/soft" element={<SoftSkillsPage />} />
+                <Route path="/education" element={<EducationPage />} />
             </Routes>
         </BrowserRouter>
     );
