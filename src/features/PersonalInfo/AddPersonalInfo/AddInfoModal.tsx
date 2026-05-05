@@ -31,9 +31,9 @@ interface AddInfoModalProps {
 const styles = {
     overlay: "fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto",
     container: "min-h-screen flex items-center justify-center p-4",
-    modal: "bg-surface rounded-2xl p-6 w-full max-w-md mx-auto",
-    title: "text-2xl font-bold text-main font-inter mb-4",
-    label: "block text-main font-nunito mb-1",
+    modal: "bg-primary rounded-2xl p-6 w-full max-w-md mx-auto",
+    title: "text-2xl font-bold text-surface font-inter mb-4",
+    label: "block text-surface font-nunito mb-1",
     select: "w-full px-4 py-2 rounded-xl border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary outline-none font-nunito bg-white",
     buttonContainer: "flex gap-3 mt-6",
 };

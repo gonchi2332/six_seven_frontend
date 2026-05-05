@@ -12,8 +12,8 @@ const styles = {
     overlay: "fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto",
     container: "min-h-screen flex items-center justify-center p-4",
     modal: "bg-surface rounded-2xl p-6 w-full max-w-md mx-auto",
-    title: "text-2xl font-bold text-main font-inter mb-4",
-    message: "text-main font-nunito mb-6",
+    title: "text-2xl font-bold text-surface font-inter mb-4",
+    message: "text-surface font-nunito mb-6",
     buttonContainer: "flex gap-3",
 };
 

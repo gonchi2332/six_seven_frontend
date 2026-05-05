@@ -1,18 +1,21 @@
 import { useState } from "react";
 
+// useProfileFormRegex.ts
 export interface FormData {
     is_new: boolean;
     firstName: string;
     firstSurname: string;
-    secondSurname: string;
-    city: string;
-    email: string;
-    phone: string;
-    country: string;
+    secondSurname?: string; // Opcional
+    city?: string;          // Opcional
+    email?: string;         // Opcional
+    phone?: string;         // Opcional
+    country?: string;       // Opcional
     profileImage: File | null;
     profileImageUrl: string | null;
 }
 
+// ... dentro del hook handleChange:
+// Asegúrate de que el valor se guarde tal cual (incluso si es undefined)
 export const useProfileForm = () => {
     const [formData, setFormData] = useState<FormData>({
         is_new: true,
@@ -34,6 +37,7 @@ export const useProfileForm = () => {
     };
 
     const handleChange = (field: keyof FormData, value: string | File | null) => {
+        setFormData((prev) => ({ ...prev, [field]: value }));
         const newErrors = { ...errors };
         if (typeof value === "string") {
             if (["firstName", "firstSurname", "secondSurname"].includes(field)) {

@@ -16,9 +16,7 @@ const getUsernameFromToken = (): string => {
     }
 };
 
-export const usePersonalInfo = (
-    setInitialData: (data: Partial<FormData>) => void
-) => {
+export const usePersonalInfo = (setInitialData: (data: Partial<FormData>) => void) => {
     const [isLoadingData, setIsLoadingData] = useState(true);
     const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -26,21 +24,21 @@ export const usePersonalInfo = (
         const fetchData = async () => {
             try {
                 const username = getUsernameFromToken();
-
                 if (!username) throw new Error("No se encontró el usuario");
 
-                // Dentro de usePersonalInfo (useEffect)
                 const info = await getPersonalInfo(username);
 
-                // Asegúrate de que estas llaves coincidan EXACTAMENTE con PersonalInfoResponse
+                // USAMOS || undefined: 
+                // Si el valor es null o "", se enviará como undefined, 
+                // permitiendo que el componente Card oculte el campo.
                 setInitialData({
-                    firstName: info.names ?? "",
-                    firstSurname: info.first_surname ?? "",     // API usa first_surname
-                    secondSurname: info.second_surname ?? "",    // API usa second_surname
-                    city: info.residence_city_name ?? "",        // API usa residence_city_name
-                    email: info.contact_email ?? "",
-                    phone: info.phone_number ? String(info.phone_number) : "", // API usa phone_number
-                    country: info.residence_country_name ?? "",  // API usa residence_country_name
+                    firstName: info.names || "",
+                    firstSurname: info.first_surname || "",
+                    secondSurname: info.second_surname || undefined,
+                    city: info.residence_city_name || undefined,
+                    email: info.contact_email || undefined,
+                    phone: info.phone_number ? String(info.phone_number) : undefined,
+                    country: info.residence_country_name || undefined,
                     profileImageUrl: parseProfilePicture(info.profile_picture) ?? null,
                 });
             } catch (err: any) {
@@ -49,7 +47,6 @@ export const usePersonalInfo = (
                 setIsLoadingData(false);
             }
         };
-
         fetchData();
     }, []);
 
