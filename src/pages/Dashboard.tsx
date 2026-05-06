@@ -1,4 +1,3 @@
-import Navbar from "../components/Navbar/Navbar";
 import LinkedIn from "../features/LinkedIn/LinkedIn";
 import PersonalInfo from "./PersonalInfo";
 import SkillsList from "../features/skills/components/SkillsList";
@@ -13,7 +12,6 @@ const STYLES = {
 const Dashboard = () => {
   return (
     <div className={STYLES.WRAPPER}>
-      <Navbar />
       <div className={STYLES.CONTENT}>
         <PersonalInfo />
       </div>

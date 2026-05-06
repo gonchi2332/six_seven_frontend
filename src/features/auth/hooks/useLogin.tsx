@@ -96,7 +96,7 @@ const useLogin = () => {
 
                 setShowVerified(true);
             } else {
-                navigate("/dashboard");
+                navigate("/info-personal");
             }
         } catch (err) {
             const msg = err instanceof Error ? err.message : "Error inesperado";
