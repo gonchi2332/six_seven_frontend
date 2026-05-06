@@ -5,23 +5,35 @@ import RegisterPage from "../pages/RegisterPage";
 import VerificationPage from "../pages/VerificationPage";
 import PasswordResetPage from "../pages/PasswordResetPage";
 import Dashboard from "../pages/Dashboard";
-import AdditionalInfoPage from "../pages/AdditionalInfoPage";
+import TechnicalSkills from "../pages/TechnicalSkills";
+import SoftSkills from "../pages/SoftSkills";
+import Projects from "../pages/Projects";
+import Education from "../pages/Education";
 import PublicDashboard from "../pages/PublicDashboard";
 
+import MainLayout from "../pages/MainLayout";
 
 const Router = () => {
-    //TODO: integrar dashboard luego de login(usuario verificado) o verificacion de cuenta @Arrick
+
     return (
         <BrowserRouter>
             <Routes>
+                {/* no comparten navbar */}
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
+                <Route path="/ver/:username" element={<PublicDashboard />} />
                 <Route path="/verification" element={<VerificationPage />} />
                 <Route path="/changePassword" element={<PasswordResetPage />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/additional-info" element={<AdditionalInfoPage />} />
-                <Route path="/ver/:username" element={<PublicDashboard />} />
+
+                {/*navbar compartido*/}
+                <Route element={<MainLayout />}>
+                    <Route path="/info-personal" element={<Dashboard />} />
+                    <Route path="/habilidades-tecnicas" element={<TechnicalSkills />} />
+                    <Route path="/habilidades-blandas" element={<SoftSkills />} />
+                    <Route path="/proyectos" element={<Projects />} />
+                    <Route path="/educacion" element={<Education />} />
+                </Route>
             </Routes>
         </BrowserRouter>
     );
