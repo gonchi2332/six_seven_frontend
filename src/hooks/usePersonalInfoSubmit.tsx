@@ -59,7 +59,7 @@ export const usePersonalInfoSubmit = () => {
 
             await updatePersonalInfo(formData);
             setSubmitSuccess(true);
-            navigate("/dashboard");
+            navigate("/info-personal");
         } catch (error: any) {
             setSubmitError(error.message);
         } finally {
