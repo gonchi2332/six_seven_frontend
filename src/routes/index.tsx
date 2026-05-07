@@ -12,6 +12,7 @@ import SoftSkillsPage from "../pages/SoftSkillsPage";
 import EducationPage from "../pages/EducationPage";
 
 import Experience from "../pages/WorkExperiencePage";
+import PersonalProjectsPage from "../pages/PersonalProjectsPage";
 
 import MainLayout from "../pages/MainLayout";
 
@@ -32,8 +33,8 @@ const Router = () => {
                     <Route path="/info-personal" element={<Dashboard />} />
                     <Route path="/habilidades-tecnicas" element={<HardSkillsPage />} />
                     <Route path="/habilidades-blandas" element={<SoftSkillsPage />} />
-                    <Route path="/proyectos" element={<Projects />} />
-                    <Route path="/educacion" element={<EducationPage/>} />
+                    <Route path="/proyectos" element={<PersonalProjectsPage />} />
+                    <Route path="/educacion" element={<EducationPage />} />
                     <Route path="/experiencia-laboral" element={<Experience />} />
                 </Route>
             </Routes>
