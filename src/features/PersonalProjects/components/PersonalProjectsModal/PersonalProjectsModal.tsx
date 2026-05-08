@@ -1,4 +1,4 @@
-// components/PersonalProjectsModal.tsx
+import { X } from "lucide-react";
 import type { CreateProjectPayload } from "../../services/personalProjectsService";
 import { useProjectForm } from "../../hooks/useProjectInfo";
 import { useCreateProject } from "../../hooks/useCreateProject";
@@ -21,7 +21,7 @@ const STYLES = {
     SELECT_PLACEHOLDER: "text-gray-400",
     SELECT_VALUE: "text-black",
     IMAGE_WRAPPER: "flex flex-col gap-2",
-    FOOTER: "flex flex-row justify-end items-center gap-4 mt-10 pt-6 px-8",
+    FOOTER: "flex gap-3 mt-10 pt-6 px-8 pb-2",
 };
 
 const STATUS_OPTIONS = ["En proceso", "Finalizado", "Cancelado"] as const;
@@ -45,107 +45,118 @@ const PersonalProjectsModal = ({ mode, initialData, onClose }: PersonalProjectsM
             }
             onClose();
         } catch {
-            // El error ya está capturado en serviceError
         }
     };
 
     return (
-        <div>
-            <PopUpCard title={isEditing ? "Editar Proyecto" : "Agregar Proyecto Personal"}>
-                <div className={STYLES.FORM_WRAPPER}>
-                    <div className={STYLES.TITLE}>
-                        <TextField
-                            label="Título"
-                            type="text"
-                            value={formData.name}
-                            onChange={(e) => handleChange("name", e.target.value)}
-                            error={errors.name}
-                        />
-                    </div>
-
-                    <TextField
-                        label="Descripción"
-                        type="text"
-                        value={formData.description}
-                        onChange={(e) => handleChange("description", e.target.value)}
-                        error={errors.description}
-                        className="[&_input]:h-24"
-                    />
-
-                    <div className={STYLES.DYNAMIC_GRID}>
-                        <div>
-                            <label className={STYLES.INPUT_LABEL}>Estado</label>
-                            <select
-                                className={`${STYLES.SELECT} ${formData.status ? STYLES.SELECT_VALUE : STYLES.SELECT_PLACEHOLDER}`}
-                                value={formData.status}
-                                onChange={(e) => handleChange("status", e.target.value as CreateProjectPayload["status"])}
-                            >
-                                {STATUS_OPTIONS.map((s) => (
-                                    <option key={s} value={s}>{s}</option>
-                                ))}
-                            </select>
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 overflow-y-auto">
+            <div className="max-w-2xl w-full relative">
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors z-10"
+                >
+                    <X size={22} />
+                </button>
+                <PopUpCard title={isEditing ? "Editar Proyecto" : "Agregar Proyecto Personal"}>
+                    <div className={STYLES.FORM_WRAPPER}>
+                        <div className={STYLES.TITLE}>
+                            <TextField
+                                label="Título"
+                                type="text"
+                                value={formData.name}
+                                onChange={(e) => handleChange("name", e.target.value)}
+                                error={errors.name}
+                            />
                         </div>
 
                         <TextField
-                            label="Temática"
+                            label="Descripción"
                             type="text"
-                            value={formData.topic}
-                            onChange={(e) => handleChange("topic", e.target.value)}
-                            error={errors.topic}
+                            value={formData.description}
+                            onChange={(e) => handleChange("description", e.target.value)}
+                            error={errors.description}
+                            className="[&_input]:h-24"
                         />
 
-                        <TextField
-                            label="Rol"
-                            type="text"
-                            value={formData.role}
-                            onChange={(e) => handleChange("role", e.target.value)}
-                            error={errors.role}
-                        />
+                        <div className={STYLES.DYNAMIC_GRID}>
+                            <div>
+                                <label className={STYLES.INPUT_LABEL}>Estado</label>
+                                <select
+                                    className={`${STYLES.SELECT} ${formData.status ? STYLES.SELECT_VALUE : STYLES.SELECT_PLACEHOLDER}`}
+                                    value={formData.status}
+                                    onChange={(e) => handleChange("status", e.target.value as CreateProjectPayload["status"])}
+                                >
+                                    {STATUS_OPTIONS.map((s) => (
+                                        <option key={s} value={s}>{s}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <TextField
+                                label="Temática"
+                                type="text"
+                                value={formData.topic}
+                                onChange={(e) => handleChange("topic", e.target.value)}
+                                error={errors.topic}
+                            />
+
+                            <TextField
+                                label="Rol"
+                                type="text"
+                                value={formData.role}
+                                onChange={(e) => handleChange("role", e.target.value)}
+                                error={errors.role}
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <TextField
+                                label="Enlace 1"
+                                type="text"
+                                value={formData.links[0]}
+                                onChange={(e) => handleLinkChange(0, e.target.value)}
+                                error={errors.link0}
+                            />
+                            <TextField
+                                label="Enlace 2 (opcional)"
+                                type="text"
+                                value={formData.links[1] ?? ""}
+                                onChange={(e) => handleLinkChange(1, e.target.value)}
+                                error={errors.link1}
+                            />
+                        </div>
+
+                        <div className={STYLES.IMAGE_WRAPPER}>
+                            <label className={STYLES.INPUT_LABEL}>
+                                Imagen de portada {isEditing && "(dejar vacío para mantener la actual)"}
+                            </label>
+                            <input
+                                type="file"
+                                accept=".jpg,.jpeg,.png"
+                                onChange={(e) => handleImageChange(e.target.files?.[0] ?? null)}
+                            />
+                            {errors.image && <p className="text-red-500 text-sm">{errors.image}</p>}
+                        </div>
+
+                        {serviceError && (
+                            <p className="text-red-500 text-sm">{serviceError}</p>
+                        )}
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <TextField
-                            label="Enlace 1"
-                            type="text"
-                            value={formData.links[0]}
-                            onChange={(e) => handleLinkChange(0, e.target.value)}
-                            error={errors.link0}
-                        />
-                        <TextField
-                            label="Enlace 2 (opcional)"
-                            type="text"
-                            value={formData.links[1] ?? ""}
-                            onChange={(e) => handleLinkChange(1, e.target.value)}
-                            error={errors.link1}
-                        />
+                    <div className={STYLES.FOOTER}>
+                        <div className="flex-1">
+                            <Button variant="secondary" onClick={onClose} disabled={isLoading} fullWidth>
+                                Cancelar
+                            </Button>
+                        </div>
+                        <div className="flex-1">
+                            <Button variant="primary" onClick={handleSubmit} disabled={isLoading} fullWidth>
+                                {isLoading ? "Guardando..." : isEditing ? "Guardar cambios" : "Agregar"}
+                            </Button>
+                        </div>
                     </div>
-
-                    <div className={STYLES.IMAGE_WRAPPER}>
-                        <label className={STYLES.INPUT_LABEL}>
-                            Imagen de portada {isEditing && "(dejar vacío para mantener la actual)"}
-                        </label>
-                        <input
-                            type="file"
-                            accept=".jpg,.jpeg,.png"
-                            onChange={(e) => handleImageChange(e.target.files?.[0] ?? null)}
-                        />
-                        {errors.image && <p className="text-red-500 text-sm">{errors.image}</p>}
-                    </div>
-
-                    {serviceError && (
-                        <p className="text-red-500 text-sm">{serviceError}</p>
-                    )}
-                </div>
-
-                <div className={STYLES.FOOTER}>
-                    <Button variant="secondary" onClick={onClose} disabled={isLoading}>
-                        Cancelar
-                    </Button>
-                    <Button variant="primary" onClick={handleSubmit} disabled={isLoading}>
-                        {isLoading ? "Guardando..." : isEditing ? "Guardar cambios" : "Agregar"}
-                    </Button>
-                </div>
-            </PopUpCard>
+                </PopUpCard>
+            </div>
         </div>
     );
 };

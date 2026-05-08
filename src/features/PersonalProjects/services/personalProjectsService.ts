@@ -8,6 +8,19 @@ export interface CreateProjectPayload {
     image: File | null;
 }
 
+export interface ProjectEntry {
+    id: string;
+    name: string;
+    description: string;
+    topic: string;
+    role: string;
+    status: "En proceso" | "Finalizado" | "Cancelado";
+    links: [string] | [string, string];
+    imageUrl: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
 interface CreateProjectResponse {
     success: boolean;
     message: string;
