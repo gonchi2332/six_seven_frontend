@@ -1,15 +1,19 @@
+// PersonalProjectsModal.tsx
 import { X, Plus, Trash2 } from "lucide-react";
-import type { CreateProjectPayload } from "../../services/personalProjectsService";
+import type { CreateProjectPayload, UpdateProjectPayload } from "../../services/personalProjectsService";
 import { useProjectForm } from "../../hooks/useProjectInfo";
-import { useCreateProject } from "../../hooks/useCreateProject";
 import TextField from "../../../../components/TextField";
 import Button from "../../../../components/Button";
 import PopUpCard from "../../../../components/PopUpCard";
 
 interface PersonalProjectsModalProps {
     mode: "create" | "edit";
+    projectId?: string;
     initialData?: Partial<CreateProjectPayload>;
     onClose: () => void;
+    onSubmit: (data: CreateProjectPayload | UpdateProjectPayload, id?: string) => Promise<void>;
+    isSubmitting?: boolean;
+    error?: string | null;
 }
 
 const STYLES = {
@@ -31,25 +35,44 @@ const STYLES = {
 
 const STATUS_OPTIONS = ["En proceso", "Finalizado", "Cancelado"] as const;
 
-const PersonalProjectsModal = ({ mode, initialData, onClose }: PersonalProjectsModalProps) => {
+const PersonalProjectsModal = ({
+    mode,
+    projectId,
+    initialData,
+    onClose,
+    onSubmit,
+    isSubmitting = false,
+    error: externalError
+}: PersonalProjectsModalProps) => {
     const isEditing = mode === "edit";
 
     const { formData, errors, handleChange, handleLinkChange, addLink, removeLink, handleImageChange, validateForm } =
         useProjectForm(initialData);
 
-    const { createProject, isLoading, error: serviceError } = useCreateProject();
-
     const handleSubmit = async () => {
         if (!validateForm()) return;
 
-        try {
-            if (isEditing) {
-                // await updateProject(formData);
-            } else {
-                await createProject(formData as CreateProjectPayload);
-            }
-            onClose();
-        } catch {
+        if (isEditing && projectId) {
+            const updatePayload: UpdateProjectPayload = {
+                description: formData.description,
+                topic: formData.topic,
+                role: formData.role,
+                status: formData.status,
+                links: formData.links,
+                image: formData.image,
+            };
+            await onSubmit(updatePayload, projectId);
+        } else {
+            const createPayload: CreateProjectPayload = {
+                name: formData.name,
+                description: formData.description,
+                topic: formData.topic,
+                role: formData.role,
+                status: formData.status,
+                links: formData.links,
+                image: formData.image,
+            };
+            await onSubmit(createPayload);
         }
     };
 
@@ -71,7 +94,11 @@ const PersonalProjectsModal = ({ mode, initialData, onClose }: PersonalProjectsM
                                 value={formData.name}
                                 onChange={(e) => handleChange("name", e.target.value)}
                                 error={errors.name}
+                                disabled={isEditing}
                             />
+                            {isEditing && (
+                                <p className="text-white/40 text-xs mt-1">El título no se puede editar</p>
+                            )}
                         </div>
 
                         <TextField
@@ -170,20 +197,20 @@ const PersonalProjectsModal = ({ mode, initialData, onClose }: PersonalProjectsM
                             {errors.image && <p className="text-red-500 text-sm">{errors.image}</p>}
                         </div>
 
-                        {serviceError && (
-                            <p className="text-red-500 text-sm">{serviceError}</p>
+                        {externalError && (
+                            <p className="text-red-500 text-sm">{externalError}</p>
                         )}
                     </div>
 
                     <div className={STYLES.FOOTER}>
                         <div className="flex-1">
-                            <Button variant="secondary" onClick={onClose} disabled={isLoading} fullWidth>
+                            <Button variant="secondary" onClick={onClose} disabled={isSubmitting} fullWidth>
                                 Cancelar
                             </Button>
                         </div>
                         <div className="flex-1">
-                            <Button variant="primary" onClick={handleSubmit} disabled={isLoading} fullWidth>
-                                {isLoading ? "Guardando..." : isEditing ? "Guardar cambios" : "Agregar"}
+                            <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting} fullWidth>
+                                {isSubmitting ? "Guardando..." : isEditing ? "Guardar cambios" : "Agregar"}
                             </Button>
                         </div>
                     </div>

@@ -1,11 +1,10 @@
-// pages/ProjectsPage.tsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, FolderGit2 } from "lucide-react";
+import { useProjects } from "../features/PersonalProjects/hooks/useProjects";
 import ProjectCard from "../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectCard";
 import ViewProjectPopup from "../features/PersonalProjects/components/PersonalProjectsModal/ViewProjectPopup";
 import PersonalProjectsModal from "../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectsModal";
-import { mockProjects } from "../mocks/projectsMock";
-import type { ProjectEntry } from "../features/PersonalProjects/services/personalProjectsService";
+import type { ProjectEntry, CreateProjectPayload, UpdateProjectPayload } from "../features/PersonalProjects/services/personalProjectsService";
 
 const PAGE_SIZE = 10;
 
@@ -28,16 +27,36 @@ const styles = {
     pagination: "flex items-center justify-center gap-1 sm:gap-2 pt-2",
     pageBtn: (active: boolean) => `w-8 h-8 sm:w-10 sm:h-10 rounded-lg font-nunito text-sm sm:text-base font-semibold transition-all ${active ? "bg-[#90DDF0] text-[#07393C]" : "border border-white/20 text-white/70 hover:border-[#90DDF0] hover:text-[#90DDF0]"}`,
     pageArrow: "w-8 h-8 sm:w-10 sm:h-10 rounded-lg border border-white/20 text-white/70 text-sm sm:text-base hover:border-[#90DDF0] hover:text-[#90DDF0] transition-colors disabled:opacity-30 disabled:cursor-not-allowed",
+    toastSuccess: "bg-green-500/10 border border-green-500 text-green-400 text-center py-2 px-4 rounded-xl font-nunito text-sm",
+    toastError: "bg-red-500/10 border border-red-500 text-red-400 text-center py-2 px-4 rounded-xl font-nunito text-sm",
 };
 
 const ProjectsPage = () => {
-    const [projects] = useState<ProjectEntry[]>(mockProjects);
+    const { projects, isLoading, error, successMessage, addProject, editProject, deleteProject } = useProjects();
     const [searchInput, setSearchInput] = useState("");
     const [activeSearch, setActiveSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [showAdd, setShowAdd] = useState(false);
     const [projectToView, setProjectToView] = useState<ProjectEntry | null>(null);
     const [projectToEdit, setProjectToEdit] = useState<ProjectEntry | null>(null);
+    const [localError, setLocalError] = useState<string | null>(null);
+    const [localSuccess, setLocalSuccess] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (successMessage) {
+            setLocalSuccess(successMessage);
+            const timer = setTimeout(() => setLocalSuccess(null), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [successMessage]);
+
+    useEffect(() => {
+        if (error) {
+            setLocalError(error);
+            const timer = setTimeout(() => setLocalError(null), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [error]);
 
     const handleSearch = () => {
         setActiveSearch(searchInput);
@@ -48,9 +67,33 @@ const ProjectsPage = () => {
         if (e.key === "Enter") handleSearch();
     };
 
-    const handleDelete = (project: ProjectEntry) => {
-        // TODO: Implementar lógica de eliminación
-        console.log("Eliminar proyecto:", project);
+    const handleAddProject = async (data: CreateProjectPayload) => {
+        await addProject(data);
+        setShowAdd(false);
+    };
+
+    const handleEditProject = async (data: UpdateProjectPayload, id: string) => {
+        await editProject(id, data);
+        setProjectToEdit(null);
+    };
+
+    const handleDeleteProject = async (project: ProjectEntry) => {
+        if (confirm(`¿Eliminar el proyecto "${project.name}"?`)) {
+            await deleteProject(project.id);
+            setProjectToView(null);
+        }
+    };
+
+    const transformProjectToPayload = (project: ProjectEntry): Partial<CreateProjectPayload> => {
+        return {
+            name: project.name,
+            description: project.description,
+            topic: project.topic,
+            role: project.role,
+            status: project.status,
+            links: project.links,
+            image: null,
+        };
     };
 
     const filtered = projects.filter((p) =>
@@ -92,7 +135,17 @@ const ProjectsPage = () => {
                             </div>
                         </div>
 
-                        {paginated.length === 0 ? (
+                        {(localError || error) && (
+                            <p className={styles.toastError}>{localError || error}</p>
+                        )}
+
+                        {(localSuccess || successMessage) && (
+                            <p className={styles.toastSuccess}>{localSuccess || successMessage}</p>
+                        )}
+
+                        {isLoading ? (
+                            <p className={styles.empty}>Cargando proyectos...</p>
+                        ) : paginated.length === 0 ? (
                             <div className={styles.empty}>
                                 {activeSearch ? (
                                     "No se encontraron proyectos."
@@ -161,6 +214,9 @@ const ProjectsPage = () => {
                 <PersonalProjectsModal
                     mode="create"
                     onClose={() => setShowAdd(false)}
+                    onSubmit={(data, _id) => handleAddProject(data as CreateProjectPayload)}
+                    isSubmitting={isLoading}
+                    error={error}
                 />
             )}
 
@@ -172,15 +228,19 @@ const ProjectsPage = () => {
                         setProjectToView(null);
                         setProjectToEdit(projectToView);
                     }}
-                    onDelete={() => handleDelete(projectToView)}
+                    onDelete={() => handleDeleteProject(projectToView)}
                 />
             )}
 
             {projectToEdit && (
                 <PersonalProjectsModal
                     mode="edit"
-                    initialData={projectToEdit}
+                    projectId={projectToEdit.id}
+                    initialData={transformProjectToPayload(projectToEdit)}
                     onClose={() => setProjectToEdit(null)}
+                    onSubmit={(data, id) => handleEditProject(data as UpdateProjectPayload, id!)}
+                    isSubmitting={isLoading}
+                    error={error}
                 />
             )}
         </div>
