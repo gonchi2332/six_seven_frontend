@@ -12,7 +12,7 @@ interface WorkExperienceDetailModalProps {
 const styles = {
     overlay: "fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto",
     container: "min-h-screen w-full flex items-center justify-center p-4",
-    modal: "bg-primary rounded-2xl w-full max-w-[700px] mx-auto overflow-hidden",
+    modal: "bg-primary rounded-2xl w-full max-w-[400px] mx-auto overflow-hidden",
     header: "relative flex items-center justify-center p-6 border-b border-accent/20",
     title: "text-2xl font-bold text-surface font-inter text-center",
     closeButton: "absolute right-6 text-gray-400 hover:text-gray-600 transition-colors text-2xl",
