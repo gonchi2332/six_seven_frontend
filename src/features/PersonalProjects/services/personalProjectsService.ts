@@ -1,10 +1,15 @@
+export interface Link {
+    label: string;
+    url: string;
+}
+
 export interface CreateProjectPayload {
     name: string;
     description: string;
     topic: string;
     role: string;
     status: "En proceso" | "Finalizado" | "Cancelado";
-    links: [string] | [string, string];
+    links: Link[];
     image: File | null;
 }
 
@@ -15,7 +20,7 @@ export interface ProjectEntry {
     topic: string;
     role: string;
     status: "En proceso" | "Finalizado" | "Cancelado";
-    links: [string] | [string, string];
+    links: Link[];
     imageUrl: string;
     createdAt: string;
     updatedAt: string;
@@ -27,7 +32,6 @@ interface CreateProjectResponse {
 }
 
 const API_URL = import.meta.env.VITE_API_URL;
-
 
 export const createProjectService = async (
     payload: CreateProjectPayload
@@ -44,10 +48,7 @@ export const createProjectService = async (
         formData.append("image", payload.image);
     }
 
-    const validLinks = payload.links.filter(link => link.trim() !== "");
-    validLinks.forEach((link) => {
-        formData.append("links", link);
-    });
+    formData.append("links", JSON.stringify(payload.links));
 
     const token = localStorage.getItem("token");
 
@@ -73,4 +74,22 @@ export const createProjectService = async (
     }
 
     return JSON.parse(responseText);
+};
+
+export const fetchProjectsService = async (): Promise<ProjectEntry[]> => {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(`${API_URL}/api/v1/portfolio/users/projects`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error("Error al obtener los proyectos");
+    }
+
+    const data = await response.json();
+    return data.projects;
 };

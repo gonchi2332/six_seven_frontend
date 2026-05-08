@@ -1,7 +1,8 @@
+// hooks/useProjectInfo.ts
 import { useState } from "react";
 import type { CreateProjectPayload } from "../services/personalProjectsService";
 
-type FormErrors = Partial<Record<keyof CreateProjectPayload | "link0" | "link1", string>>;
+type FormErrors = Partial<Record<keyof CreateProjectPayload | string, string>>;
 
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 const MAX_IMAGE_SIZE_MB = 2;
@@ -12,7 +13,7 @@ const INITIAL_FORM: CreateProjectPayload = {
     topic: "",
     role: "",
     status: "En proceso",
-    links: [""],
+    links: [{ label: "", url: "" }],
     image: null,
 };
 
@@ -20,7 +21,7 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>) => {
     const [formData, setFormData] = useState<CreateProjectPayload>({
         ...INITIAL_FORM,
         ...initialData,
-        links: initialData?.links || [""],
+        links: initialData?.links || [{ label: "", url: "" }],
     });
     const [errors, setErrors] = useState<FormErrors>({});
 
@@ -32,13 +33,34 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>) => {
         setErrors((prev) => ({ ...prev, [field]: undefined }));
     };
 
-    const handleLinkChange = (index: 0 | 1, value: string) => {
+    const handleLinkChange = (index: number, field: "label" | "url", value: string) => {
         setFormData((prev) => {
-            const updated = [...prev.links] as [string] | [string, string];
-            updated[index] = value;
+            const updated = [...prev.links];
+            if (!updated[index]) {
+                updated[index] = { label: "", url: "" };
+            }
+            updated[index] = { ...updated[index], [field]: value };
             return { ...prev, links: updated };
         });
-        setErrors((prev) => ({ ...prev, [`link${index}`]: undefined }));
+        setErrors((prev) => ({ ...prev, [`link${index}_${field}`]: undefined }));
+    };
+
+    const addLink = () => {
+        setFormData((prev) => ({
+            ...prev,
+            links: [...prev.links, { label: "", url: "" }]
+        }));
+    };
+
+    const removeLink = (index: number) => {
+        setFormData((prev) => ({
+            ...prev,
+            links: prev.links.filter((_, i) => i !== index)
+        }));
+        const newErrors = { ...errors };
+        delete newErrors[`link${index}_label`];
+        delete newErrors[`link${index}_url`];
+        setErrors(newErrors);
     };
 
     const handleImageChange = (file: File | null) => {
@@ -83,20 +105,21 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>) => {
         if (!formData.status)
             e.status = "Estado del proyecto inválido";
 
-        const validLinks = formData.links.filter(link => link.trim() !== "");
+        const validLinks = formData.links.filter(link => link.label.trim() !== "" && link.url.trim() !== "");
 
         if (validLinks.length === 0) {
-            e.link0 = "Al menos un enlace es requerido";
-        } else if (validLinks.length > 2) {
-            e.link0 = "Solo se permiten un máximo de 2 enlaces";
+            e.link0_label = "Al menos un enlace es requerido";
         } else {
-            const domainPattern = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/;
-            if (validLinks[0] && !domainPattern.test(validLinks[0])) {
-                e.link0 = `El enlace '${validLinks[0]}' no cumple con el formato válido (dominio.extension)`;
-            }
-            if (validLinks[1] && !domainPattern.test(validLinks[1])) {
-                e.link1 = `El enlace '${validLinks[1]}' no cumple con el formato válido (dominio.extension)`;
-            }
+            const urlPattern = /^https?:\/\/([\w-]+\.)+[\w-]+(\/[\w\-./?%&=]*)?$/;
+            formData.links.forEach((link, idx) => {
+                if (link.label.trim() && !link.url.trim()) {
+                    e[`link${idx}_url`] = "La URL es requerida";
+                } else if (link.url.trim() && !link.label.trim()) {
+                    e[`link${idx}_label`] = "El label es requerido";
+                } else if (link.label.trim() && link.url.trim() && !urlPattern.test(link.url)) {
+                    e[`link${idx}_url`] = "Debe ser una URL válida (ej: https://github.com/usuario)";
+                }
+            });
         }
 
         if (!formData.image)
@@ -107,12 +130,20 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>) => {
     };
 
     const setInitialData = (data: Partial<CreateProjectPayload>) => {
-        setFormData({ ...INITIAL_FORM, ...data, links: data.links || [""] });
+        setFormData({
+            ...INITIAL_FORM,
+            ...data,
+            links: data.links?.map(link => ({ label: link.label || "", url: link.url || "" })) || [{ label: "", url: "" }]
+        });
         setErrors({});
     };
 
     const reset = () => {
-        setFormData({ ...INITIAL_FORM, ...initialData, links: initialData?.links || [""] });
+        setFormData({
+            ...INITIAL_FORM,
+            ...initialData,
+            links: initialData?.links?.map(link => ({ label: link.label || "", url: link.url || "" })) || [{ label: "", url: "" }]
+        });
         setErrors({});
     };
 
@@ -121,6 +152,8 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>) => {
         errors,
         handleChange,
         handleLinkChange,
+        addLink,
+        removeLink,
         handleImageChange,
         validateForm,
         setInitialData,

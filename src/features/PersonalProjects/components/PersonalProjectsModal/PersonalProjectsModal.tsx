@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { X, Plus, Trash2 } from "lucide-react";
 import type { CreateProjectPayload } from "../../services/personalProjectsService";
 import { useProjectForm } from "../../hooks/useProjectInfo";
 import { useCreateProject } from "../../hooks/useCreateProject";
@@ -21,6 +21,11 @@ const STYLES = {
     SELECT_PLACEHOLDER: "text-gray-400",
     SELECT_VALUE: "text-black",
     IMAGE_WRAPPER: "flex flex-col gap-2",
+    LINKS_SECTION: "flex flex-col gap-3",
+    LINK_GROUP: "flex gap-3 items-start",
+    LINK_FIELDS: "flex-1 grid grid-cols-2 gap-3",
+    REMOVE_BTN: "mt-7 p-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors",
+    ADD_BTN: "flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#2C666E]/50 text-[#90DDF0] hover:bg-[#2C666E]/70 transition-colors font-nunito text-sm font-semibold mt-2",
     FOOTER: "flex gap-3 mt-10 pt-6 px-8 pb-2",
 };
 
@@ -29,7 +34,7 @@ const STATUS_OPTIONS = ["En proceso", "Finalizado", "Cancelado"] as const;
 const PersonalProjectsModal = ({ mode, initialData, onClose }: PersonalProjectsModalProps) => {
     const isEditing = mode === "edit";
 
-    const { formData, errors, handleChange, handleLinkChange, handleImageChange, validateForm } =
+    const { formData, errors, handleChange, handleLinkChange, addLink, removeLink, handleImageChange, validateForm } =
         useProjectForm(initialData);
 
     const { createProject, isLoading, error: serviceError } = useCreateProject();
@@ -50,7 +55,7 @@ const PersonalProjectsModal = ({ mode, initialData, onClose }: PersonalProjectsM
 
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 overflow-y-auto">
-            <div className="max-w-2xl w-full relative">
+            <div className="max-w-3xl w-full relative">
                 <button
                     onClick={onClose}
                     className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors z-10"
@@ -109,21 +114,48 @@ const PersonalProjectsModal = ({ mode, initialData, onClose }: PersonalProjectsM
                             />
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <TextField
-                                label="Enlace 1"
-                                type="text"
-                                value={formData.links[0]}
-                                onChange={(e) => handleLinkChange(0, e.target.value)}
-                                error={errors.link0}
-                            />
-                            <TextField
-                                label="Enlace 2 (opcional)"
-                                type="text"
-                                value={formData.links[1] ?? ""}
-                                onChange={(e) => handleLinkChange(1, e.target.value)}
-                                error={errors.link1}
-                            />
+                        <div className={STYLES.LINKS_SECTION}>
+                            <label className={STYLES.INPUT_LABEL}>Enlaces del proyecto</label>
+                            {formData.links.map((link, index) => (
+                                <div key={index} className={STYLES.LINK_GROUP}>
+                                    <div className={STYLES.LINK_FIELDS}>
+                                        <TextField
+                                            label="Label"
+                                            type="text"
+                                            value={link.label}
+                                            onChange={(e) => handleLinkChange(index, "label", e.target.value)}
+                                            error={errors[`link${index}_label`] as string}
+                                            placeholder="Ej: GitHub, Deploy, Demo"
+                                        />
+                                        <TextField
+                                            label="URL"
+                                            type="text"
+                                            value={link.url}
+                                            onChange={(e) => handleLinkChange(index, "url", e.target.value)}
+                                            error={errors[`link${index}_url`] as string}
+                                            placeholder="https://..."
+                                        />
+                                    </div>
+                                    {formData.links.length > 1 && (
+                                        <button
+                                            type="button"
+                                            onClick={() => removeLink(index)}
+                                            className={STYLES.REMOVE_BTN}
+                                            title="Eliminar enlace"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                    )}
+                                </div>
+                            ))}
+                            <button
+                                type="button"
+                                onClick={addLink}
+                                className={STYLES.ADD_BTN}
+                            >
+                                <Plus size={16} />
+                                Agregar otro enlace
+                            </button>
                         </div>
 
                         <div className={STYLES.IMAGE_WRAPPER}>
