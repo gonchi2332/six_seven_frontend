@@ -150,6 +150,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                                     value={startDate}
                                     onChange={(e) => setStartDate(e.target.value)}
                                     error={errors.startDate}
+                                    inputProps={{ max: new Date().toISOString().split('T')[0] }}
                                 />
                             </div>
                             
@@ -161,6 +162,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                                     onChange={(e) => setEndDate(e.target.value)}
                                     disabled={isCurrent}
                                     error={errors.endDate}
+                                    inputProps={{ max: new Date().toISOString().split('T')[0] }}
                                 />
                             </div>
                         </div>

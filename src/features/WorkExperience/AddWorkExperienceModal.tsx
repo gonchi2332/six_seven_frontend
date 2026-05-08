@@ -124,6 +124,7 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
                                     value={formData.startDate}
                                     onChange={(e) => handleStartDateChange(e.target.value)}
                                     error={errors.startDate}
+                                    inputProps={{ max: new Date().toISOString().split('T')[0] }}
                                 />
                             </div>
                             
@@ -135,6 +136,7 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
                                     onChange={(e) => handleEndDateChange(e.target.value)}
                                     error={errors.endDate}
                                     disabled={formData.isCurrent}
+                                    inputProps={{ max: new Date().toISOString().split('T')[0] }}
                                 />
                             </div>
                         </div>

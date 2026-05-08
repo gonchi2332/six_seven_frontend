@@ -10,6 +10,7 @@ interface TextFieldProps {
   maxLength?: number;
   className?: string;
   disabled?: boolean;
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
 const TextField = ({
@@ -22,6 +23,7 @@ const TextField = ({
   maxLength,
   className = '',
   disabled = false,
+  inputProps = {},
 }: TextFieldProps) => {
 
   const INPUT_BASE_STYLES = "w-full px-4 py-2 border rounded-xl outline-none transition-all duration-200 bg-white font-nunito disabled:cursor-not-allowed";
@@ -44,6 +46,7 @@ const TextField = ({
         placeholder={placeholder}
         maxLength={maxLength}
         disabled={disabled}
+        {...inputProps}
       />
 
       {error && (
