@@ -8,6 +8,7 @@ interface AddSkillPopupProps {
     onSubmit: (name: string, level: number) => void;
     onClose: () => void;
     isSubmitting?: boolean;
+    catalogSkills?: string[];
 }
 
 const styles = {
@@ -28,29 +29,13 @@ const styles = {
     checkboxLabel: (active: boolean) => `text-[16px] text-white font-nunito transition-all duration-200 ${active ? "text-white font-semibold" : "text-surface/70 group-hover:text-white"}`,
 };
 
-const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false }: AddSkillPopupProps) => {
+const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills = [] }: AddSkillPopupProps) => {
     const {
-        search,
-        suggestions,
-        showDropdown,
-        setShowDropdown,
-        isOther,
-        otherName,
-        level,
-        setLevel,
-        result,
-        inlineError,
-        hasFieldError,
-        loading,
-        containerRef,
-        isDisabled,
-        handleSearchChange,
-        handleSelectSuggestion,
-        handleToggleOther,
-        handleOtherNameChange,
-        handleConfirm,
-        handleResultClose,
-    } = useAddSkill(onSubmit, onClose);
+        search, suggestions, showDropdown, setShowDropdown, isOther, otherName,
+        level, setLevel, result, inlineError, hasFieldError, loading, containerRef,
+        isDisabled, handleSearchChange, handleSelectSuggestion, handleToggleOther,
+        handleOtherNameChange, handleConfirm, handleResultClose,
+    } = useAddSkill(onSubmit, onClose, catalogSkills);
 
     const getSearchInputClassName = () => {
         if (isOther) return `${styles.inputBase} ${styles.inputDisabled}`;
@@ -99,21 +84,11 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false }: AddSkillPopu
                             )}
                         </div>
 
-                        <button
-                            type="button"
-                            onClick={handleToggleOther}
-                            className={styles.checkboxWrapper}
-                        >
+                        <button type="button" onClick={handleToggleOther} className={styles.checkboxWrapper}>
                             <span className={styles.checkboxBox(isOther)}>
                                 {isOther && (
                                     <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-                                        <path
-                                            d="M1 4L4 7.5L10 1"
-                                            stroke="#000"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
+                                        <path d="M1 4L4 7.5L10 1" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                 )}
                             </span>
@@ -148,22 +123,10 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false }: AddSkillPopu
                     </div>
 
                     <div className={styles.buttonsWrapper}>
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            onClick={onClose}
-                            fullWidth
-                            disabled={loading || isSubmitting}
-                        >
+                        <Button type="button" variant="secondary" onClick={onClose} fullWidth disabled={loading || isSubmitting}>
                             Cancelar
                         </Button>
-                        <Button
-                            type="button"
-                            variant="primary"
-                            onClick={handleConfirm}
-                            fullWidth
-                            disabled={isDisabled || isSubmitting}
-                        >
+                        <Button type="button" variant="primary" onClick={handleConfirm} fullWidth disabled={isDisabled || isSubmitting}>
                             {loading ? "Verificando..." : isSubmitting ? "Guardando..." : "Confirmar"}
                         </Button>
                     </div>

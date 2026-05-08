@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
-import Navbar from "../components/Navbar/Navbar";
 import { useEducation } from "../hooks/useEducation";
 import EducationCard from "../features/Education/EducationCard";
 import EducationForm from "../features/Education/EducationForm";
@@ -11,7 +10,7 @@ import type { EducationEntry } from "../services/educationService";
 const PAGE_SIZE = 10;
 
 const styles = {
-    wrapper: "h-screen bg-main flex flex-col overflow-hidden",
+    wrapper: "flex-1 flex flex-col overflow-hidden",
     pageContent: "flex-1 flex items-start justify-center px-3 sm:px-6 py-1 overflow-y-auto",
     outerCard: "w-full max-w-[1400px] px-2 sm:px-6 lg:px-14 py-4 sm:py-8 flex flex-col",
     greenContainer: "rounded-2xl border border-[#2C666E] bg-[#07393C] px-3 sm:px-6 py-4 sm:py-6 flex flex-col gap-3 sm:gap-4",
@@ -56,7 +55,7 @@ const EducationPage = () => {
     };
 
     const filtered = entries.filter((e) =>
-    e.title.toLowerCase().includes(activeSearch.toLowerCase())
+        e.degree.toLowerCase().includes(activeSearch.toLowerCase())
     );
 
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -69,7 +68,7 @@ const EducationPage = () => {
             await addEntry(data);
             setShowAdd(false);
         } catch {
-            setFormError("Ocurrió un error al registrar la educación.");
+            setFormError("Ocurrió un error al registrar la experiencia académica.");
         } finally {
             setIsFormSubmitting(false);
         }
@@ -83,7 +82,7 @@ const EducationPage = () => {
             await editEntry(entryToEdit.id, data);
             setEntryToEdit(null);
         } catch {
-            setFormError("Ocurrió un error al modificar la educación.");
+            setFormError("Ocurrió un error al modificar la experiencia académica.");
         } finally {
             setIsFormSubmitting(false);
         }
@@ -105,13 +104,11 @@ const EducationPage = () => {
 
     return (
         <div className={styles.wrapper}>
-            <Navbar />
-
             <div className={styles.pageContent}>
                 <div className={styles.outerCard}>
                     <div className={styles.greenContainer}>
                         <div className={styles.header}>
-                            <h1 className={styles.title}>Educación</h1>
+                            <h1 className={styles.title}>Experiencia Académica</h1>
 
                             <div className={styles.searchRow}>
                                 <div className={styles.searchInputWrapper}>
@@ -147,7 +144,7 @@ const EducationPage = () => {
                             <p className={styles.loading}>Cargando...</p>
                         ) : paginated.length === 0 ? (
                             <p className={styles.empty}>
-                                {activeSearch ? "No se encontraron registros." : "No tienes registros de educación."}
+                                {activeSearch ? "No se encontraron registros." : "No tienes experiencias académicas registradas."}
                             </p>
                         ) : (
                             <div className={styles.listWrapper}>
@@ -227,7 +224,7 @@ const EducationPage = () => {
 
             {entryToDelete && (
                 <DeleteEducationPopup
-                    institution={entryToDelete.institution}
+                    degree={entryToDelete.degree}
                     onConfirm={handleDeleteConfirm}
                     onClose={() => setEntryToDelete(null)}
                     isSubmitting={isDeleting}

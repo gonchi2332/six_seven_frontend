@@ -1,7 +1,3 @@
-// ============================================
-// TIPOS
-// ============================================
-
 export interface SoftSkill {
     name: string;
 }
@@ -14,37 +10,36 @@ export interface DeleteSoftSkillDto {
     skillName: string;
 }
 
-const API_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/skills`;
 
-const getToken = (): string | null => {
-    return localStorage.getItem('token');
+const getToken = () => localStorage.getItem("token") ?? "";
+
+const authHeaders = () => ({
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${getToken()}`,
+});
+
+const jsonHeaders = () => ({
+    "Content-Type": "application/json",
+});
+
+export const getSoftSkills = async (username: string): Promise<SoftSkill[]> => {
+    const res = await fetch(`${BASE_URL}/users/soft-skills?username=${username}`, {
+        headers: jsonHeaders(),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message ?? "Error al obtener habilidades blandas");
+    return data.skills ?? [];
 };
 
-const getAuthHeaders = (): HeadersInit => {
-    const token = getToken();
-    const headers: HeadersInit = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = `Authorization ${token}`;
-    return headers;
+export const fetchCatalogSoftSkills = async (): Promise<string[]> => {
+    const res = await fetch(`${BASE_URL}/system/all-soft-skills`, {
+        headers: jsonHeaders(),
+    });
+    if (!res.ok) throw new Error("Error al obtener catálogo de habilidades blandas");
+    const data = await res.json();
+    return (data.data ?? []).map((s: { name: string }) => s.name);
 };
-
-const MOCK_SOFT_CATALOG = [
-    "comunicación", "trabajo en equipo", "liderazgo", "resolución de problemas",
-    "adaptabilidad", "creatividad", "empatía", "pensamiento crítico",
-    "gestión del tiempo", "proactividad", "responsabilidad", "negociación",
-    "inteligencia emocional", "toma de decisiones", "organización",
-];
-
-const BAD_WORDS = [
-    "mierda", "puta", "puto", "culo", "idiota", "estupido", "estúpido",
-    "pendejo", "cabron", "cabrón", "coño", "joder",
-];
-
-export const containsBadWordSoft = (text: string): boolean => {
-    const lower = text.toLowerCase();
-    return BAD_WORDS.some((word) => lower.includes(word));
-};
-
-export const getCatalogSoftSkills = (): string[] => MOCK_SOFT_CATALOG;
 
 export const getUserSoftSkillNames = async (username: string): Promise<string[]> => {
     try {
@@ -55,56 +50,68 @@ export const getUserSoftSkillNames = async (username: string): Promise<string[]>
     }
 };
 
-export const postSoftSkill = async (
-    skillName: string,
-    username: string
+export const postSoftSkillFromCatalog = async (skillName: string): Promise<void> => {
+    const res = await fetch(`${BASE_URL}/users/soft-skills`, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify({ skillName }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message ?? "Error al registrar habilidad blanda");
+};
+
+export const postNewSoftSkill = async (
+    skillName: string
 ): Promise<"success" | "not-found"> => {
-    if (containsBadWordSoft(skillName)) throw new Error("INAPPROPRIATE");
-
-    const userSkills = await getUserSoftSkillNames(username);
-    if (userSkills.includes(skillName.toLowerCase())) throw new Error("ALREADY_EXISTS");
-
-    const existsInCatalog = MOCK_SOFT_CATALOG.includes(skillName.toLowerCase());
-
-    // await createSoftSkill({ skillName });
-
-    return existsInCatalog ? "success" : "not-found";
+    const res = await fetch(`${BASE_URL}/users/new-soft-skill`, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify({ skillName }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+        if (data.message?.includes("inapropiado") || data.message?.includes("ofensivo")) {
+            throw new Error("INAPPROPRIATE");
+        }
+        if (data.message?.includes("ya tiene registrada")) {
+            throw new Error("ALREADY_EXISTS");
+        }
+        if (data.message?.includes("no corresponde")) {
+            return "not-found";
+        }
+        throw new Error(data.message ?? "Error al registrar habilidad blanda");
+    }
+    return "success";
 };
 
-export const getSoftSkills = async (username: string): Promise<SoftSkill[]> => {
-    // const response = await fetch(`${API_URL}/api/v1/skills/users/${username}/soft-skills`, {
-    //     method: 'GET',
-    //     headers: { 'Content-Type': 'application/json' },
-    // });
-    // const data = await response.json();
-    // if (!response.ok) throw new Error(data.message || 'Error al obtener habilidades blandas');
-    // if (data.success && Array.isArray(data.softSkills)) return data.softSkills;
-    // return [];
-    void username;
-    void API_URL;
-    return [];
-};
-
-export const createSoftSkill = async (data: CreateSoftSkillDto): Promise<void> => {
-    // const response = await fetch(`${API_URL}/api/v1/skills/users/soft-skills`, {
-    //     method: 'POST',
-    //     headers: getAuthHeaders(),
-    //     body: JSON.stringify(data),
-    // });
-    // const responseData = await response.json();
-    // if (!response.ok) throw new Error(responseData.message || 'Error al agregar la habilidad');
-    void data;
-    void getAuthHeaders;
+export const postSoftSkill = async (
+    skillName: string
+): Promise<"success" | "not-found"> => {
+    try {
+        await postSoftSkillFromCatalog(skillName);
+        return "success";
+    } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : "";
+        if (msg.includes("no existe")) {
+            return postNewSoftSkill(skillName);
+        }
+        if (msg.includes("ya tiene registrada")) {
+            throw new Error("ALREADY_EXISTS");
+        }
+        throw err;
+    }
 };
 
 export const deleteSoftSkill = async (data: DeleteSoftSkillDto): Promise<void> => {
-    // const response = await fetch(`${API_URL}/api/v1/skills/users/soft-skills`, {
-    //     method: 'DELETE',
-    //     headers: getAuthHeaders(),
-    //     body: JSON.stringify(data),
-    // });
-    // const responseData = await response.json();
-    // if (!response.ok) throw new Error(responseData.message || 'Error al eliminar la habilidad');
-    void data;
-    void getAuthHeaders;
+    const res = await fetch(`${BASE_URL}/users/soft-skills`, {
+        method: "DELETE",
+        headers: authHeaders(),
+        body: JSON.stringify(data),
+    });
+    const resData = await res.json();
+    if (!res.ok) throw new Error(resData.message ?? "Error al eliminar habilidad blanda");
+};
+
+export const createSoftSkill = async (data: CreateSoftSkillDto): Promise<void> => {
+    await postSoftSkillFromCatalog(data.skillName);
 };

@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
-import { getCatalogSoftSkills, postSoftSkill } from "../services/softSkillService";
+import { postSoftSkill, getUserSoftSkillNames } from "../services/softSkillService";
 import useClickOutside from "./useClickOutside";
-import type { SoftSkill } from "../services/softSkillService";
 
 export type SoftSkillResultType = "success" | "not-found";
 
@@ -9,10 +8,9 @@ const useAddSoftSkill = (
     onSubmit: (name: string) => void,
     onClose: () => void,
     username: string,
-    userSkills: SoftSkill[]
+    catalogSkills: string[] = []
 ) => {
     const [search, setSearch] = useState("");
-    const [allSkills] = useState<string[]>(getCatalogSoftSkills());
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [showDropdown, setShowDropdown] = useState(false);
     const [selectedName, setSelectedName] = useState<string | null>(null);
@@ -31,16 +29,15 @@ const useAddSoftSkill = (
         setHasFieldError(false);
     };
 
-    const isDuplicate = (name: string): boolean =>
-        userSkills.some((s) => s.name.toLowerCase() === name.toLowerCase());
-
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = e.target.value;
+        const val = e.target.value.slice(0, 50);
         setSearch(val);
         setSelectedName(null);
         clearError();
         if (val.trim()) {
-            setSuggestions(allSkills.filter((s) => s.toLowerCase().includes(val.toLowerCase())));
+            setSuggestions(
+                catalogSkills.filter((s) => s.toLowerCase().includes(val.toLowerCase()))
+            );
             setShowDropdown(true);
         } else {
             setSuggestions([]);
@@ -82,17 +79,20 @@ const useAddSoftSkill = (
         setLoading(true);
         clearError();
 
-        await new Promise((resolve) => setTimeout(resolve, 600));
-
         try {
-            if (isDuplicate(nameToSubmit)) {
-                setInlineError("Esta habilidad ya ha sido añadida anteriormente.");
-                setHasFieldError(true);
-                return;
+            if (!isOther) {
+                const userSkills = await getUserSoftSkillNames(username);
+                if (userSkills.includes(nameToSubmit.toLowerCase())) {
+                    setInlineError("Esta habilidad ya ha sido añadida anteriormente.");
+                    setHasFieldError(true);
+                    return;
+                }
             }
 
-            const outcome = await postSoftSkill(nameToSubmit, username);
-            onSubmit(nameToSubmit);
+            const outcome = await postSoftSkill(nameToSubmit);
+            if (outcome === "success") {
+                onSubmit(nameToSubmit);
+            }
             setResult(outcome);
         } catch (err: unknown) {
             const msg = err instanceof Error ? err.message : "";
@@ -123,14 +123,16 @@ const useAddSoftSkill = (
         suggestions,
         showDropdown,
         setShowDropdown,
+        selectedName,
         isOther,
         otherName,
         result,
         inlineError,
         hasFieldError,
         loading,
-        isDisabled,
         containerRef,
+        canConfirm,
+        isDisabled,
         handleSearchChange,
         handleSelectSuggestion,
         handleToggleOther,

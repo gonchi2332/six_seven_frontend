@@ -10,6 +10,7 @@ interface AddSoftSkillPopupProps {
     username: string;
     userSkills: SoftSkill[];
     isSubmitting?: boolean;
+    catalogSkills?: string[];
 }
 
 const styles = {
@@ -36,27 +37,22 @@ const styles = {
         }`,
 };
 
-const AddSoftSkillPopup = ({ onSubmit, onClose, username, userSkills, isSubmitting = false }: AddSoftSkillPopupProps) => {
+const AddSoftSkillPopup = ({
+    onSubmit,
+    onClose,
+    username,
+    userSkills,
+    isSubmitting = false,
+    catalogSkills = [],
+}: AddSoftSkillPopupProps) => {
     const {
-        search,
-        suggestions,
-        showDropdown,
-        setShowDropdown,
-        isOther,
-        otherName,
-        result,
-        inlineError,
-        hasFieldError,
-        loading,
-        isDisabled,
-        containerRef,
-        handleSearchChange,
-        handleSelectSuggestion,
-        handleToggleOther,
-        handleOtherNameChange,
-        handleConfirm,
-        handleResultClose,
-    } = useAddSoftSkill(onSubmit, onClose, username, userSkills);
+        search, suggestions, showDropdown, setShowDropdown, isOther, otherName,
+        result, inlineError, hasFieldError, loading, isDisabled, containerRef,
+        handleSearchChange, handleSelectSuggestion, handleToggleOther,
+        handleOtherNameChange, handleConfirm, handleResultClose,
+    } = useAddSoftSkill(onSubmit, onClose, username, catalogSkills);
+
+    void userSkills;
 
     const getSearchInputClassName = () => {
         if (isOther) return `${styles.inputBase} ${styles.inputDisabled}`;
@@ -105,21 +101,11 @@ const AddSoftSkillPopup = ({ onSubmit, onClose, username, userSkills, isSubmitti
                             )}
                         </div>
 
-                        <button
-                            type="button"
-                            onClick={handleToggleOther}
-                            className={styles.checkboxWrapper}
-                        >
+                        <button type="button" onClick={handleToggleOther} className={styles.checkboxWrapper}>
                             <span className={styles.checkboxBox(isOther)}>
                                 {isOther && (
                                     <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-                                        <path
-                                            d="M1 4L4 7.5L10 1"
-                                            stroke="#000"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
+                                        <path d="M1 4L4 7.5L10 1" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                 )}
                             </span>
@@ -147,22 +133,10 @@ const AddSoftSkillPopup = ({ onSubmit, onClose, username, userSkills, isSubmitti
                     </div>
 
                     <div className={styles.buttonsWrapper}>
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            onClick={onClose}
-                            fullWidth
-                            disabled={loading || isSubmitting}
-                        >
+                        <Button type="button" variant="secondary" onClick={onClose} fullWidth disabled={loading || isSubmitting}>
                             Cancelar
                         </Button>
-                        <Button
-                            type="button"
-                            variant="primary"
-                            onClick={handleConfirm}
-                            fullWidth
-                            disabled={isDisabled || isSubmitting}
-                        >
+                        <Button type="button" variant="primary" onClick={handleConfirm} fullWidth disabled={isDisabled || isSubmitting}>
                             {loading ? "Verificando..." : isSubmitting ? "Guardando..." : "Confirmar"}
                         </Button>
                     </div>

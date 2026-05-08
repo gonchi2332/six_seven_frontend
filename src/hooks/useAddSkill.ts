@@ -1,11 +1,14 @@
 import { useState, useRef } from "react";
 import type { ResultType } from "../features/skills/components/ResultPopup";
-import { getCatalogSkills, postSkill, getUserSkillNames } from "../services/skillsService";
+import { postSkill, getUserSkillNames } from "../services/skillsService";
 import useClickOutside from "./useClickOutside";
 
-const useAddSkill = (onSubmit: (name: string, level: number) => void, onClose: () => void) => {
+const useAddSkill = (
+    onSubmit: (name: string, level: number) => void,
+    onClose: () => void,
+    catalogSkills: string[] = []
+) => {
     const [search, setSearch] = useState("");
-    const [allSkills] = useState<string[]>(getCatalogSkills());
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [showDropdown, setShowDropdown] = useState(false);
     const [selectedName, setSelectedName] = useState<string | null>(null);
@@ -26,12 +29,12 @@ const useAddSkill = (onSubmit: (name: string, level: number) => void, onClose: (
     };
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = e.target.value;
+        const val = e.target.value.slice(0, 50);
         setSearch(val);
         setSelectedName(null);
         clearError();
         if (val.trim()) {
-            setSuggestions(allSkills.filter((s) => s.toLowerCase().includes(val.toLowerCase())));
+            setSuggestions(catalogSkills.filter((s) => s.toLowerCase().includes(val.toLowerCase())));
             setShowDropdown(true);
         } else {
             setSuggestions([]);
@@ -84,7 +87,9 @@ const useAddSkill = (onSubmit: (name: string, level: number) => void, onClose: (
             }
 
             const outcome = await postSkill(nameToSubmit, level);
-            onSubmit(nameToSubmit, level);
+            if (outcome === "success") {
+                onSubmit(nameToSubmit, level);
+            }
             setResult(outcome);
         } catch (err: unknown) {
             const msg = err instanceof Error ? err.message : "";

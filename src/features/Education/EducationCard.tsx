@@ -10,9 +10,9 @@ interface Props {
 const styles = {
     card: "flex flex-col justify-between p-3 sm:p-4 rounded-xl border border-white/10 bg-black/30 hover:border-[#90DDF0]/40 transition-all gap-3 min-h-[160px]",
     top: "flex flex-col gap-1",
-    institution: "text-white font-inter font-semibold text-[14px] sm:text-[15px] leading-tight line-clamp-2",
-    meta: "text-white/50 font-nunito text-[11px] sm:text-[12px]",
-    title: "text-white/70 font-nunito text-[12px] sm:text-[13px] line-clamp-2",
+    title: "text-white font-inter font-semibold text-[14px] sm:text-[15px] leading-tight line-clamp-2",
+    year: "text-white/50 font-nunito text-[11px] sm:text-[12px]",
+    degree: "text-white/70 font-nunito text-[12px] sm:text-[13px] line-clamp-2",
     buttons: "flex flex-wrap gap-1",
     btnVer: "px-2 py-1 rounded-lg border border-white/20 text-white font-nunito text-[11px] sm:text-xs hover:border-[#90DDF0] hover:text-[#90DDF0] transition-colors",
     btnModificar: "px-2 py-1 rounded-lg border border-white/20 text-white font-nunito text-[11px] sm:text-xs hover:border-[#90DDF0] hover:text-[#90DDF0] transition-colors",
@@ -27,9 +27,9 @@ const EducationCard = ({ entry, onView, onEdit, onDelete }: Props) => {
     return (
         <div className={styles.card}>
             <div className={styles.top}>
-                <span className={styles.institution}>{entry.institution}</span>
-                <span className={styles.meta}>{entry.degree} | {dateRange}</span>
-                <span className={styles.title}>{entry.title}</span>
+                <span className={styles.title}>{entry.degree}</span>
+                <span className={styles.year}>{dateRange}</span>
+                <span className={styles.degree}>{entry.academicLevel}</span>
             </div>
             <div className={styles.buttons}>
                 <button type="button" onClick={() => onView(entry)} className={styles.btnVer}>Ver</button>

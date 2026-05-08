@@ -5,10 +5,7 @@ import RegisterPage from "../pages/RegisterPage";
 import VerificationPage from "../pages/VerificationPage";
 import PasswordResetPage from "../pages/PasswordResetPage";
 import Dashboard from "../pages/Dashboard";
-import TechnicalSkills from "../pages/TechnicalSkills";
-import SoftSkills from "../pages/SoftSkills";
 import Projects from "../pages/Projects";
-import Education from "../pages/Education";
 import PublicDashboard from "../pages/PublicDashboard";
 import HardSkillsPage from "../pages/HardSkillsPage";
 import SoftSkillsPage from "../pages/SoftSkillsPage";
@@ -32,10 +29,10 @@ const Router = () => {
                 {/*navbar compartido*/}
                 <Route element={<MainLayout />}>
                     <Route path="/info-personal" element={<Dashboard />} />
-                    <Route path="/habilidades-tecnicas" element={<TechnicalSkills />} />
-                    <Route path="/habilidades-blandas" element={<SoftSkills />} />
+                    <Route path="/habilidades-tecnicas" element={<HardSkillsPage />} />
+                    <Route path="/habilidades-blandas" element={<SoftSkillsPage />} />
                     <Route path="/proyectos" element={<Projects />} />
-                    <Route path="/educacion" element={<Education />} />
+                    <Route path="/educacion" element={<EducationPage/>} />
                 </Route>
             </Routes>
         </BrowserRouter>

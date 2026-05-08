@@ -1,11 +1,16 @@
-import { useState, useEffect } from 'react';
-import { getSoftSkills, deleteSoftSkill } from '../services/softSkillService';
-import type { SoftSkill } from '../services/softSkillService';
-import { useAuthContext } from '../context/AuthContext';
+import { useState, useEffect } from "react";
+import {
+    getSoftSkills,
+    deleteSoftSkill,
+    fetchCatalogSoftSkills,
+} from "../services/softSkillService";
+import type { SoftSkill } from "../services/softSkillService";
+import { useAuthContext } from "../context/AuthContext";
 
 export const useSoftSkills = () => {
     const { username } = useAuthContext();
     const [skills, setSkills] = useState<SoftSkill[]>([]);
+    const [catalogSkills, setCatalogSkills] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -24,10 +29,14 @@ export const useSoftSkills = () => {
         setIsLoading(true);
         setError(null);
         try {
-            const data = await getSoftSkills(username);
+            const [data, catalog] = await Promise.all([
+                getSoftSkills(username),
+                fetchCatalogSoftSkills(),
+            ]);
             setSkills(data);
+            setCatalogSkills(catalog);
         } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : 'Error al cargar habilidades blandas');
+            setError(err instanceof Error ? err.message : "Error al cargar habilidades blandas");
             setSkills([]);
         } finally {
             setIsLoading(false);
@@ -48,14 +57,16 @@ export const useSoftSkills = () => {
         try {
             await deleteSoftSkill({ skillName });
             setSkills((prev) => prev.filter((s) => s.name !== skillName));
+            showSuccess("Habilidad eliminada correctamente");
         } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : 'Error al eliminar la habilidad');
+            setError(err instanceof Error ? err.message : "Error al eliminar la habilidad");
             throw err;
         }
     };
 
     return {
         skills,
+        catalogSkills,
         isLoading,
         error,
         successMessage,
@@ -79,7 +90,7 @@ export const usePublicSoftSkills = (username: string | undefined) => {
                 const data = await getSoftSkills(username);
                 setSkills(data);
             } catch (err: unknown) {
-                setError(err instanceof Error ? err.message : 'Error');
+                setError(err instanceof Error ? err.message : "Error");
             } finally {
                 setIsLoading(false);
             }
