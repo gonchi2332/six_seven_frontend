@@ -11,6 +11,7 @@ import HardSkillsPage from "../pages/HardSkillsPage";
 import SoftSkillsPage from "../pages/SoftSkillsPage";
 import EducationPage from "../pages/EducationPage";
 
+import Experience from "../pages/WorkExperiencePage";
 
 import MainLayout from "../pages/MainLayout";
 
@@ -33,6 +34,7 @@ const Router = () => {
                     <Route path="/habilidades-blandas" element={<SoftSkillsPage />} />
                     <Route path="/proyectos" element={<Projects />} />
                     <Route path="/educacion" element={<EducationPage/>} />
+                    <Route path="/experiencia-laboral" element={<Experience />} />
                 </Route>
             </Routes>
         </BrowserRouter>

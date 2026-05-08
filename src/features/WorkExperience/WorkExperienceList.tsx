@@ -6,10 +6,11 @@ import AddWorkExperienceModal from './AddWorkExperienceModal';
 import EditWorkExperienceModal from './EditWorkExperienceModal';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
 import type { WorkExperience } from '../../hooks/useWorkExperiences';
+import Header from '../../components/Header/Header';
 
 const styles = {
     container: "w-full",
-    header: "flex justify-between items-center mb-6",
+    header: "flex justify-between items-center mb-6 mt-8 gap-4",
     title: "text-2xl font-bold text-surface font-inter",
     addButton: "px-4 py-2 rounded-xl bg-primary text-white text-sm font-nunito font-semibold transition-all hover:brightness-110 active:scale-95",
     grid: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6",
@@ -77,8 +78,10 @@ const WorkExperienceList = () => {
         return (
             <div className={styles.container}>
                 <div className={styles.header}>
-                    <h2 className={styles.title}>Experiencia Laboral</h2>
-                    <button className={styles.addButton} disabled>Agregar</button>
+                    <Header title="Experiencia Laboral" />
+                    <button onClick={handleAdd} className={styles.addButton} title="Agregar">
+                        Agregar
+                    </button>
                 </div>
                 <div className={styles.grid}>
                     <div className={styles.loading}>Cargando experiencias...</div>
@@ -91,8 +94,10 @@ const WorkExperienceList = () => {
         return (
             <div className={styles.container}>
                 <div className={styles.header}>
-                    <h2 className={styles.title}>Experiencia Laboral</h2>
-                    <button onClick={handleAdd} className={styles.addButton}>Agregar</button>
+                    <Header title="Experiencia Laboral" />
+                    <button onClick={handleAdd} className={styles.addButton} title="Agregar">
+                        Agregar
+                    </button>
                 </div>
                 <div className={styles.grid}>
                     <div className={styles.error}>{error}</div>
@@ -105,7 +110,7 @@ const WorkExperienceList = () => {
         <>
             <div className={styles.container}>
                 <div className={styles.header}>
-                    <h2 className={styles.title}>Experiencia Laboral</h2>
+                    <Header title="Experiencia Laboral" />
                     <button onClick={handleAdd} className={styles.addButton} title="Agregar">
                         Agregar
                     </button>
