@@ -29,6 +29,7 @@ const NAV_TABS = [
   { name: "Perfil", path: "/info-personal" },
   { name: "Habilidades Técnicas", path: "/habilidades-tecnicas" },
   { name: "Habilidades Blandas", path: "/habilidades-blandas" },
+  { name: "Experiencia Laboral", path: "/experiencia-laboral" },
   { name: "Proyectos", path: "/proyectos" },
   { name: "Educación", path: "/educacion" },
 ];
