@@ -1,17 +1,16 @@
-import { useState, useEffect } from 'react';
-import { getSoftSkills, 
-        createSoftSkill, 
-        updateSoftSkill, 
-        deleteSoftSkill } from '../services/softSkillService';
-import type { SoftSkill } from '../services/softSkillService';
-
-
-import { useAuthContext } from '../context/AuthContext';
-
+import { useState, useEffect } from "react";
+import {
+    getSoftSkills,
+    deleteSoftSkill,
+    fetchCatalogSoftSkills,
+} from "../services/softSkillService";
+import type { SoftSkill } from "../services/softSkillService";
+import { useAuthContext } from "../context/AuthContext";
 
 export const useSoftSkills = () => {
     const { username } = useAuthContext();
     const [skills, setSkills] = useState<SoftSkill[]>([]);
+    const [catalogSkills, setCatalogSkills] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -21,29 +20,23 @@ export const useSoftSkills = () => {
         setTimeout(() => setSuccessMessage(null), 3000);
     };
 
-    
-    const validateSkillName = (skillname: string | null): string => {
-        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(skillname || '')) return "Solo letras y espacios";
-        if (skillname && skillname.length > 50) return "Máximo 50 caracteres";
-        if (skillname!= "asesino") return "Habilidad no reconocida";
-        return '';
-    };
-
-    // Cargar habilidades blandas desde el backend
     const loadSkills = async () => {
         if (!username) {
             setSkills([]);
             setIsLoading(false);
             return;
         }
-        
         setIsLoading(true);
         setError(null);
         try {
-            const data = await getSoftSkills(username);
+            const [data, catalog] = await Promise.all([
+                getSoftSkills(username),
+                fetchCatalogSoftSkills(),
+            ]);
             setSkills(data);
-        } catch (err: any) {
-            setError(err.message || 'Error al cargar habilidades blandas');
+            setCatalogSkills(catalog);
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : "Error al cargar habilidades blandas");
             setSkills([]);
         } finally {
             setIsLoading(false);
@@ -54,69 +47,33 @@ export const useSoftSkills = () => {
         loadSkills();
     }, [username]);
 
-    // Agregar habilidad blanda
-    const addSkill = async (skillName: string): Promise<void> => {
-        setError(null);
-
-
-         const validationError = validateSkillName(skillName);
-        if (validationError) {
-            setError(validationError);
-            throw new Error(validationError);
-        }
-
-        try {
-            await createSoftSkill({ skillName });
-            // Recargar lista después de agregar
-            await loadSkills();
-            showSuccess("Habilidad registrada correctamente");
-        } catch (err: any) {
-            setError(err.message || 'Error al agregar la habilidad');
-            throw err;
-        }
+    const addSkill = (name: string) => {
+        setSkills((prev) => [...prev, { name }]);
+        showSuccess("Habilidad registrada correctamente");
     };
 
-    // Actualizar habilidad blanda
-    const editSkill = async (oldSkillName: string, newSkillName: string): Promise<void> => {
-        setError(null);
-        if (oldSkillName === newSkillName) return;
-         const validationError = validateSkillName(newSkillName);
-        if (validationError) {
-            setError(validationError);
-            throw new Error(validationError);
-        }
-        try {
-            await updateSoftSkill({ oldSkillName, newSkillName });
-            await loadSkills();
-            showSuccess("Habilidad modificada correctamente");
-        } catch (err: any) {
-            setError(err.message || 'Error al modificar la habilidad');
-            throw err;
-        }
-    };
-
-    // Eliminar habilidad blanda
     const removeSkill = async (skillName: string): Promise<void> => {
         setError(null);
         try {
             await deleteSoftSkill({ skillName });
-            await loadSkills();
-        } catch (err: any) {
-            setError(err.message || 'Error al eliminar la habilidad');
+            setSkills((prev) => prev.filter((s) => s.name !== skillName));
+            showSuccess("Habilidad eliminada correctamente");
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : "Error al eliminar la habilidad");
             throw err;
         }
     };
 
     return {
         skills,
+        catalogSkills,
         isLoading,
         error,
         successMessage,
+        username: username ?? "",
         addSkill,
-        editSkill,
         removeSkill,
         reloadSkills: loadSkills,
-        validateSkillName
     };
 };
 
@@ -132,8 +89,8 @@ export const usePublicSoftSkills = (username: string | undefined) => {
             try {
                 const data = await getSoftSkills(username);
                 setSkills(data);
-            } catch (err: any) {
-                setError(err.message);
+            } catch (err: unknown) {
+                setError(err instanceof Error ? err.message : "Error");
             } finally {
                 setIsLoading(false);
             }

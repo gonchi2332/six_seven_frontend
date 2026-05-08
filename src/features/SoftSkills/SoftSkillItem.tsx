@@ -1,6 +1,5 @@
 interface SoftSkillItemProps {
     skillName: string;
-    onEdit: (name: string) => void;
     onDelete: (name: string) => void;
 }
 
@@ -16,6 +15,7 @@ export const SoftSkillItem = ({ skillName, onDelete }: SoftSkillItemProps) => {
             <span className={styles.name}>{skillName}</span>
             <div className={styles.buttons}>
                 <button
+                    type="button"
                     onClick={() => onDelete(skillName)}
                     className="text-red-400 hover:text-red-300 transition-colors p-1"
                     title="Eliminar"
@@ -28,7 +28,6 @@ export const SoftSkillItem = ({ skillName, onDelete }: SoftSkillItemProps) => {
         </div>
     );
 };
-
 
 export const PublicSoftSkillItem = ({ skillName }: { skillName: string }) => (
     <div className={styles.container}>

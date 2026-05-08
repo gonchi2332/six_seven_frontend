@@ -5,11 +5,12 @@ import RegisterPage from "../pages/RegisterPage";
 import VerificationPage from "../pages/VerificationPage";
 import PasswordResetPage from "../pages/PasswordResetPage";
 import Dashboard from "../pages/Dashboard";
-import TechnicalSkills from "../pages/TechnicalSkills";
-import SoftSkills from "../pages/SoftSkills";
 import Projects from "../pages/Projects";
-import Education from "../pages/Education";
 import PublicDashboard from "../pages/PublicDashboard";
+import HardSkillsPage from "../pages/HardSkillsPage";
+import SoftSkillsPage from "../pages/SoftSkillsPage";
+import EducationPage from "../pages/EducationPage";
+
 import Experience from "../pages/WorkExperiencePage";
 
 import MainLayout from "../pages/MainLayout";
@@ -26,14 +27,13 @@ const Router = () => {
                 <Route path="/ver/:username" element={<PublicDashboard />} />
                 <Route path="/verification" element={<VerificationPage />} />
                 <Route path="/changePassword" element={<PasswordResetPage />} />
-
                 {/*navbar compartido*/}
                 <Route element={<MainLayout />}>
                     <Route path="/info-personal" element={<Dashboard />} />
-                    <Route path="/habilidades-tecnicas" element={<TechnicalSkills />} />
-                    <Route path="/habilidades-blandas" element={<SoftSkills />} />
+                    <Route path="/habilidades-tecnicas" element={<HardSkillsPage />} />
+                    <Route path="/habilidades-blandas" element={<SoftSkillsPage />} />
                     <Route path="/proyectos" element={<Projects />} />
-                    <Route path="/educacion" element={<Education />} />
+                    <Route path="/educacion" element={<EducationPage/>} />
                     <Route path="/experiencia-laboral" element={<Experience />} />
                 </Route>
             </Routes>
