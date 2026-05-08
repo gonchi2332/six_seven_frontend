@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 // TIPOS
 // ============================================
 
+export type DeletableField = 'secondSurname' | 'city' | 'email' | 'phone' | 'country';
+
 export interface PersonalInfoResponse {
     username: string;
     is_new: boolean;
@@ -31,30 +33,33 @@ export const usePersonalInfoSubmit = () => {
     const [submitSuccess, setSubmitSuccess] = useState(false);
     const navigate = useNavigate();
 
-    // ============================================
-    // ACTUALIZAR TODO EL FORMULARIO (Editar)
-    // ============================================
-
+    
     const handleSubmit = async (profileData: ProfileFormData) => {
         setIsSubmitting(true);
         setSubmitError(null);
-        setSubmitSuccess(false);
 
         try {
             const formData = new FormData();
             formData.append("is_new", "false");
-            if (profileData.phone) formData.append("phone", profileData.phone);
-            if (profileData.firstName) formData.append("names", profileData.firstName);
-            if (profileData.firstSurname) formData.append("firstSurname", profileData.firstSurname);
-            if (profileData.secondSurname) formData.append("secondSurname", profileData.secondSurname);
-            if (profileData.city) formData.append("residenceCity", profileData.city);
-            if (profileData.country) formData.append("residenceCountry", profileData.country);
-            if (profileData.email) formData.append("contactEmail", profileData.email);
-            if (profileData.profileImage) formData.append("profilePicture", profileData.profileImage);
+
+            // Solo hacemos append si el valor tiene contenido real
+            if (profileData.firstName?.trim()) formData.append("names", profileData.firstName);
+            if (profileData.firstSurname?.trim()) formData.append("firstSurname", profileData.firstSurname);
+            
+            // Campos opcionales: solo se envían si existen y no están vacíos
+            if (profileData.secondSurname?.trim()) formData.append("secondSurname", profileData.secondSurname);
+            if (profileData.city?.trim()) formData.append("residenceCity", profileData.city);
+            if (profileData.country?.trim()) formData.append("residenceCountry", profileData.country);
+            if (profileData.email?.trim()) formData.append("contactEmail", profileData.email);
+            if (profileData.phone?.trim()) formData.append("phone", profileData.phone);
+            
+            if (profileData.profileImage) {
+                formData.append("profilePicture", profileData.profileImage);
+            }
 
             await updatePersonalInfo(formData);
             setSubmitSuccess(true);
-            navigate("/dashboard");
+            navigate("/info-personal");
         } catch (error: any) {
             setSubmitError(error.message);
         } finally {
@@ -66,7 +71,7 @@ export const usePersonalInfoSubmit = () => {
     // AGREGAR UN CAMPO ESPECÍFICO
     // ============================================
 
-    const addField = async (field: string, value: string, currentUserInfo: PersonalInfoResponse | null) => {
+    const addField = async (field: DeletableField, value: string, currentUserInfo: PersonalInfoResponse | null) => {
         setIsSubmitting(true);
         setSubmitError(null);
         setSubmitSuccess(false);
@@ -96,44 +101,11 @@ export const usePersonalInfoSubmit = () => {
         }
     };
 
-    // ============================================
-    // ELIMINAR UN CAMPO ESPECÍFICO
-    // ============================================
 
-    const deleteField = async (field: string, currentUserInfo: PersonalInfoResponse | null) => {
-        setIsSubmitting(true);
-        setSubmitError(null);
-        setSubmitSuccess(false);
-
-        try {
-            const formData = new FormData();
-            formData.append("is_new", "false");
-            
-            // Campos obligatorios
-            formData.append("names", currentUserInfo?.names || '');
-            formData.append("firstSurname", currentUserInfo?.first_surname || '');
-            
-            // Campos opcionales (enviar vacío para eliminar)
-            formData.append("secondSurname", field === "secondSurname" ? '' : currentUserInfo?.second_surname || '');
-            formData.append("residenceCity", field === "city" ? '' : currentUserInfo?.residence_city_name || '');
-            formData.append("contactEmail", field === "email" ? '' : currentUserInfo?.contact_email || '');
-            formData.append("phone", field === "phone" ? '' : currentUserInfo?.phone_number || '');
-            formData.append("residenceCountry", field === "country" ? '' : currentUserInfo?.residence_country_name || '');
-
-            await updatePersonalInfo(formData);
-            setSubmitSuccess(true);
-        } catch (error: any) {
-            setSubmitError(error.message);
-            throw error;
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
 
     return { 
         handleSubmit, 
         addField, 
-        deleteField, 
         isSubmitting, 
         submitError, 
         submitSuccess 

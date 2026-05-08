@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { useNavbarInfo } from '../../hooks/useNavbarInfo';
-import { usePersonalInfoSubmit } from '../../hooks/usePersonalInfoSubmit';
+import { usePersonalInfoSubmit, type DeletableField } from '../../hooks/usePersonalInfoSubmit';
 import Button from '../../components/Button';
 import { MapPin, Mail, Phone, User, Hash } from 'lucide-react';
 import EditPersonalInfoCard from './EditPersonalInfo/EditPersonalInfoCard';
 import AddInfoModal from './AddPersonalInfo/AddInfoModal';
-import DeleteInfoModal from './DeletePersonalInfo/DeleteInfoModal';
-import type { DeletableField, FieldValue } from './DeletePersonalInfo/DeleteInfoModal';
+import type { FieldValue } from './DeletePersonalInfo/DeleteInfoModal';
 
 // ============================================
 // CONSTANTES DE ESTILOS
@@ -89,12 +88,11 @@ const LoadingSkeleton = () => (
 // ============================================
 
 const PersonalInfo = () => {
-    const { userInfo, isLoading } = useNavbarInfo();
-    const { addField, deleteField, isSubmitting, submitError } = usePersonalInfoSubmit();
     const [refreshKey, setRefreshKey] = useState(0);
+    const { userInfo, isLoading } = useNavbarInfo(refreshKey);
+    const { addField, isSubmitting, submitError } = usePersonalInfoSubmit();
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const refreshData = () => {
         setRefreshKey(prev => prev + 1);
@@ -124,10 +122,6 @@ const PersonalInfo = () => {
         refreshData();
     };
 
-    const handleDelete = async (field: DeletableField) => {
-        await deleteField(field, userInfo);
-        refreshData();
-    };
 
     const fullName = [userInfo?.names, userInfo?.first_surname, userInfo?.second_surname]
         .filter(Boolean)
@@ -137,10 +131,10 @@ const PersonalInfo = () => {
         .filter(Boolean)
         .join(", ");
 
-    if (isLoading) return <LoadingSkeleton key={refreshKey} />;
+    if (isLoading) return <LoadingSkeleton />;
 
     return (
-        <div className={styles.container} key={refreshKey}>
+        <div className={styles.container}>
             {/* Header */}
             <div>
                 <h1 className={styles.headerTitle}>Información Personal</h1>
@@ -174,13 +168,7 @@ const PersonalInfo = () => {
                 >
                     Agregar
                 </Button>
-                <Button 
-                    variant="secondary" 
-                    onClick={() => setIsDeleteModalOpen(true)}
-                    disabled={fieldsWithValues.length === 0 || isSubmitting}
-                >
-                    Eliminar
-                </Button>
+                
             </div>
 
             {submitError && (
@@ -205,12 +193,7 @@ const PersonalInfo = () => {
             />
 
             {/* Modal de Eliminar */}
-            <DeleteInfoModal
-                isOpen={isDeleteModalOpen}
-                onClose={() => setIsDeleteModalOpen(false)}
-                onDelete={handleDelete}
-                fieldsWithValues={fieldsWithValues}
-            />
+            
         </div>
     );
 };

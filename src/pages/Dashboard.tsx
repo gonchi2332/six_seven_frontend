@@ -1,8 +1,8 @@
-import Navbar from "../components/Navbar/Navbar";
 import LinkedIn from "../features/LinkedIn/LinkedIn";
 import PersonalInfo from "./PersonalInfo";
 import SkillsList from "../features/skills/components/SkillsList";
 import SoftSkillPage from "./SoftSkill";
+import WorkExperiencePage from "./WorkExperiencePage";
 
 const STYLES = {
   WRAPPER: "min-h-screen bg-main flex flex-col",
@@ -13,7 +13,6 @@ const STYLES = {
 const Dashboard = () => {
   return (
     <div className={STYLES.WRAPPER}>
-      <Navbar />
       <div className={STYLES.CONTENT}>
         <PersonalInfo />
       </div>
@@ -25,7 +24,11 @@ const Dashboard = () => {
           <div className="w-full">
             <SoftSkillPage />
           </div>
+          
         </div>
+        <div className={STYLES.CONTENT}>
+            <WorkExperiencePage/>
+          </div>
       </div>
       <div className={STYLES.CONTENT}>
         <LinkedIn />

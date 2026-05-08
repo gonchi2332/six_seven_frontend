@@ -103,7 +103,7 @@ const LoginForm = () => {
                     mode={"verify"}
                     onSuccess={() => {
                         setShowVerified(false);
-                        navigate("/dashboard");
+                        navigate("/info-personal");
                     }}
                     onClose={() => setShowVerified(false)}
                 />

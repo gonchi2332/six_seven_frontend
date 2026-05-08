@@ -10,7 +10,7 @@ import { usePersonalInfoSubmit } from "../../../hooks/usePersonalInfoSubmit";
 
 const STYLES = {
   FORM_WRAPPER: "flex flex-col gap-6 px-8",
-  GRID_3: "grid grid-cols-1 md:grid-cols-3 gap-4",
+  DYNAMIC_GRID: "grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-min",
   INPUT_LABEL: "mb-1 text-xl font-inter text-white",
   SELECT: "w-full px-4 py-2 border rounded-xl outline-none transition-all duration-200 bg-white font-nunito disabled:cursor-not-allowed disabled:opacity-50 border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500",
   SELECT_PLACEHOLDER: "text-gray-400",
@@ -59,8 +59,6 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
   const isFirstNameEmpty = isEmptyField(formData.firstName);
   const isFirstSurnameEmpty = isEmptyField(formData.firstSurname);
   
-  
-
   if (isLoadingData) {
     return (
       <PopUpCard title="Datos Personales">
@@ -85,90 +83,99 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
       <PopUpCard title="Datos Personales">
         <div>
           <div className={STYLES.FORM_WRAPPER}>
-            {/* Fila 1: Nombres y apellidos */}
-            <div className={STYLES.GRID_3}>
+            {/* Grid dinámico - todos los campos en un solo contenedor */}
+            <div className={STYLES.DYNAMIC_GRID}>
+              {/* Campo 1: Nombre(s) - SIEMPRE visible */}
               <TextField
                 label="Nombre(s)*:"
                 value={formData.firstName}
                 onChange={(e) => handleChange("firstName", e.target.value)}
                 error={errors.firstName}
                 className="w-full"
-                
               />
+              
+              {/* Campo 2: Primer Apellido - SIEMPRE visible */}
               <TextField
                 label="Primer Apellido*:"
                 value={formData.firstSurname}
                 onChange={(e) => handleChange("firstSurname", e.target.value)}
                 error={errors.firstSurname}
                 className="w-full"
-                
               />
-              <TextField
-                label="Segundo Apellido:"
-                value={formData.secondSurname}
-                onChange={(e) => handleChange("secondSurname", e.target.value)}
-                error={errors.secondSurname}
-                className="w-full"
-                disabled={!formData.secondSurname}
-              />
-            </div>
+              
+              {/* Campo 3: Segundo Apellido - Solo si existe */}
+              {formData.secondSurname !== undefined && (
+                <TextField
+                  label="Segundo Apellido:"
+                  value={formData.secondSurname}
+                  onChange={(e) => handleChange("secondSurname", e.target.value)}
+                  error={errors.secondSurname}
+                  className="w-full"
+                />
+              )}
 
-            {/* Fila 2: Ciudad, Correo, Teléfono */}
-            <div className={STYLES.GRID_3}>
-              <TextField
-                label="Ciudad:"
-                value={formData.city}
-                onChange={(e) => handleChange("city", e.target.value)}
-                error={errors.city}
-                className="w-full"
-                placeholder="Ej: Av. San Martin 123"
-                disabled={!formData.city}
-              />
-              <TextField
-                label="Correo de contacto:"
-                value={formData.email}
-                onChange={(e) => handleChange("email", e.target.value)}
-                placeholder="Ej: juan@ejemplo.com"
-                type="email"
-                error={errors.email}
-                className="w-full"
-                disabled={!formData.email}
-              />
-              <TextField
-                label="Teléfono:"
-                value={formData.phone}
-                onChange={(e) => handleChange("phone", e.target.value)}
-                placeholder="Ej: +591 77123456"
-                type="text"
-                error={errors.phone}
-                className="w-full"
-                disabled={!formData.phone}
-              />
-            </div>
+              {/* Campo 4: Ciudad - Solo si tiene valor */}
+              {formData.city && formData.city.trim() !== '' && (
+                <TextField
+                  label="Ciudad:"
+                  value={formData.city}
+                  onChange={(e) => handleChange("city", e.target.value)}
+                  error={errors.city}
+                  className="w-full"
+                />
+              )}
 
-            {/* Fila 3: País, Imagen, espacio */}
-            <div className={STYLES.GRID_3}>
-              <div className="flex flex-col justify-start">
-                <label className={STYLES.INPUT_LABEL}>País de residencia:</label>
-                <select
-                  value={formData.country}
-                  onChange={(e) => handleChange("country", e.target.value)}
-                  disabled={isLoading || !formData.country}
-                  className={`${STYLES.SELECT} ${
-                    formData.country === "" ? STYLES.SELECT_PLACEHOLDER : STYLES.SELECT_VALUE
-                  }`}
-                >
-                  <option value="" disabled className="text-gray-400 hidden">
-                    {isLoading ? "Cargando países..." : "Ej: Bolivia"}
-                  </option>
-                  {countries.map((country) => (
-                    <option key={country} value={country} className="text-black">
-                      {country}
+              {/* Campo 5: Correo - Solo si tiene valor */}
+              {formData.email && formData.email.trim() !== '' && (
+                <TextField
+                  label="Correo de contacto:"
+                  value={formData.email}
+                  onChange={(e) => handleChange("email", e.target.value)}
+                  placeholder="Ej: juan@ejemplo.com"
+                  type="email"
+                  error={errors.email}
+                  className="w-full"
+                />
+              )}
+
+              {/* Campo 6: Teléfono - Solo si tiene valor */}
+              {formData.phone && formData.phone.trim() !== '' && (
+                <TextField
+                  label="Teléfono:"
+                  value={formData.phone}
+                  onChange={(e) => handleChange("phone", e.target.value)}
+                  placeholder="Ej: +591 77123456"
+                  type="text"
+                  error={errors.phone}
+                  className="w-full"
+                />
+              )}
+
+              {/* Campo 7: País de residencia - Solo si tiene valor */}
+              {formData.country && formData.country.trim() !== '' && (
+                <div className="flex flex-col justify-start">
+                  <label className={STYLES.INPUT_LABEL}>País de residencia:</label>
+                  <select
+                    value={formData.country}
+                    onChange={(e) => handleChange("country", e.target.value)}
+                    disabled={isLoading}
+                    className={`${STYLES.SELECT} ${
+                      formData.country === "" ? STYLES.SELECT_PLACEHOLDER : STYLES.SELECT_VALUE
+                    }`}
+                  >
+                    <option value="" disabled className="text-gray-400 hidden">
+                      {isLoading ? "Cargando países..." : "Selecciona un país"}
                     </option>
-                  ))}
-                </select>
-              </div>
+                    {countries.map((country) => (
+                      <option key={country} value={country} className="text-black">
+                        {country}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
+              {/* Campo 8: Imagen de perfil - Siempre visible */}
               <div className={STYLES.IMAGE_WRAPPER}>
                 <span className={STYLES.INPUT_LABEL}>Imagen de perfil:</span>
                 <ImageUpload
@@ -176,10 +183,9 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                   initialImageUrl={formData.profileImageUrl ?? null}
                 />
               </div>
-
-              <div className="hidden md:block" />
             </div>
 
+            {/* Mensajes de error y éxito */}
             {submitError && (
               <p className="text-red-400 text-sm font-inter">{submitError}</p>
             )}
@@ -190,6 +196,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
             )}
           </div>
 
+          {/* Footer con botones */}
           <div className={STYLES.FOOTER}>
             <Button variant="secondary" onClick={handleCancel}>
               Cancelar

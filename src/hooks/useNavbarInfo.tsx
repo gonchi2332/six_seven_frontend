@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { getPersonalInfo, type PersonalInfoResponse } from "../services/personalInfoService";
 import { useAuthContext } from "../context/AuthContext";
 
-export const useNavbarInfo = () => {
+export const useNavbarInfo = (refreshTrigger?: number) => {
   const { username } = useAuthContext();
   const [userInfo, setUserInfo] = useState<PersonalInfoResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,7 +25,7 @@ export const useNavbarInfo = () => {
       }
     };
     fetchData();
-  }, [username]);
+  }, [username, refreshTrigger]);
 
   return { userInfo, isLoading };
 };
