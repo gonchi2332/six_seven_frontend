@@ -20,11 +20,15 @@ const styles = {
     description: "text-xs sm:text-sm font-nunito text-white/70 mb-3 line-clamp-2",
     infoRow: "flex items-center gap-3 mb-2 text-xs text-white/60",
     infoItem: "flex items-center gap-1",
-    links: "flex items-center gap-2 mt-3 pt-2 border-t border-[#2C666E]",
-    link: "text-[#90DDF0] hover:text-white transition-colors",
+    links: "flex items-center gap-2 mt-3 pt-2 border-t border-[#2C666E] flex-wrap",
+    link: "text-[#90DDF0] hover:text-white transition-colors flex items-center gap-1",
+    linkText: "text-xs hidden sm:inline",
 };
 
 const ProjectCard = ({ project, onView }: ProjectCardProps) => {
+    // Mostrar solo los primeros 3 enlaces en la tarjeta para no saturar
+    const visibleLinks = project.links.slice(0, 3);
+
     return (
         <div className={styles.card} onClick={() => onView(project)}>
             <div className={styles.imageContainer}>
@@ -62,19 +66,25 @@ const ProjectCard = ({ project, onView }: ProjectCardProps) => {
 
                 {project.links.length > 0 && (
                     <div className={styles.links}>
-                        {project.links.map((link, index) => (
+                        {visibleLinks.map((link, index) => (
                             <a
                                 key={index}
-                                href={`https://${link}`}
+                                href={link.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
                                 className={styles.link}
-                                title={link}
+                                title={link.label}
                             >
                                 <ExternalLink size={12} />
+                                <span className={styles.linkText}>{link.label}</span>
                             </a>
                         ))}
+                        {project.links.length > 3 && (
+                            <span className="text-white/40 text-xs">
+                                +{project.links.length - 3}
+                            </span>
+                        )}
                     </div>
                 )}
             </div>

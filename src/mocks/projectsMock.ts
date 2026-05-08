@@ -1,4 +1,3 @@
-// mocks/projectsMock.ts
 import type { ProjectEntry } from "../features/PersonalProjects/services/personalProjectsService";
 
 export const mockProjects: ProjectEntry[] = [
@@ -9,7 +8,13 @@ export const mockProjects: ProjectEntry[] = [
         topic: "Full Stack",
         role: "Desarrollador Full Stack",
         status: "Finalizado",
-        links: ["github.com/user/ecommerce", "ecommerce-demo.com"],
+        links: [
+            { label: "GitHub", url: "https://github.com/user/ecommerce" },
+            { label: "Deploy", url: "https://ecommerce-demo.com" },
+            { label: "GitHub", url: "https://github.com/user/ecommerce" },
+            { label: "Deploy", url: "https://ecommerce-demo.com" }
+
+        ],
         imageUrl: "https://via.placeholder.com/300x200/2C666E/ffffff?text=E-commerce",
         createdAt: "2024-01-15T00:00:00Z",
         updatedAt: "2024-03-20T00:00:00Z"
@@ -21,7 +26,9 @@ export const mockProjects: ProjectEntry[] = [
         topic: "Frontend",
         role: "Desarrollador Frontend",
         status: "En proceso",
-        links: ["github.com/user/taskmanager"],
+        links: [
+            { label: "GitHub", url: "https://github.com/user/taskmanager" }
+        ],
         imageUrl: "https://via.placeholder.com/300x200/2C666E/ffffff?text=Task+Manager",
         createdAt: "2024-02-10T00:00:00Z",
         updatedAt: "2024-04-05T00:00:00Z"
@@ -33,7 +40,10 @@ export const mockProjects: ProjectEntry[] = [
         topic: "Frontend",
         role: "Desarrollador UI/UX",
         status: "Finalizado",
-        links: ["github.com/user/weather", "weather-dashboard.com"],
+        links: [
+            { label: "GitHub", url: "https://github.com/user/weather" },
+            { label: "Demo", url: "https://weather-dashboard.com" }
+        ],
         imageUrl: "https://via.placeholder.com/300x200/2C666E/ffffff?text=Weather+Dashboard",
         createdAt: "2023-11-20T00:00:00Z",
         updatedAt: "2024-01-10T00:00:00Z"
@@ -45,7 +55,9 @@ export const mockProjects: ProjectEntry[] = [
         topic: "Mobile",
         role: "Desarrollador React Native",
         status: "Cancelado",
-        links: ["github.com/user/chat"],
+        links: [
+            { label: "GitHub", url: "https://github.com/user/chat" }
+        ],
         imageUrl: "https://via.placeholder.com/300x200/2C666E/ffffff?text=Chat+App",
         createdAt: "2023-09-05T00:00:00Z",
         updatedAt: "2023-12-15T00:00:00Z"
@@ -57,7 +69,10 @@ export const mockProjects: ProjectEntry[] = [
         topic: "Backend",
         role: "Arquitecto de Software",
         status: "En proceso",
-        links: ["github.com/user/analytics", "analytics-demo.com"],
+        links: [
+            { label: "GitHub", url: "https://github.com/user/analytics" },
+            { label: "Demo", url: "https://analytics-demo.com" }
+        ],
         imageUrl: "https://via.placeholder.com/300x200/2C666E/ffffff?text=Analytics",
         createdAt: "2024-03-01T00:00:00Z",
         updatedAt: "2024-04-08T00:00:00Z"
@@ -69,7 +84,10 @@ export const mockProjects: ProjectEntry[] = [
         topic: "Frontend",
         role: "Diseñador UI/UX",
         status: "Finalizado",
-        links: ["github.com/user/portfolio", "johndoe.dev"],
+        links: [
+            { label: "GitHub", url: "https://github.com/user/portfolio" },
+            { label: "Website", url: "https://johndoe.dev" }
+        ],
         imageUrl: "https://via.placeholder.com/300x200/2C666E/ffffff?text=Portfolio",
         createdAt: "2024-04-01T00:00:00Z",
         updatedAt: "2024-04-10T00:00:00Z"

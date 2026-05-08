@@ -1,4 +1,3 @@
-// components/features/Projects/ViewProjectPopup.tsx
 import { useState } from "react";
 import { X } from "lucide-react";
 import PopUpCard from "../../../../components/PopUpCard";
@@ -17,26 +16,18 @@ const STYLES = {
     HEADER_IMAGE: "w-full h-52 object-cover rounded-xl mb-6",
     TOPIC_BADGE: "inline-flex px-4 py-1 rounded-full bg-[#90DDF0] text-[#0a2e33] text-sm font-nunito font-semibold mb-5",
     CONTENT: "flex flex-col px-6 pb-2",
-    GRID: "grid grid-cols-2 gap-x-8 gap-y-6",
-    SECTION: "flex flex-col",
+    SECTION: "flex flex-col mb-6",
     SECTION_BORDER: "border-l-2 border-[#90DDF0] pl-3",
     SECTION_TITLE: "text-[#90DDF0] font-inter font-bold text-base mb-2",
     SECTION_TEXT: "text-white/80 font-nunito text-sm leading-relaxed",
     LINKS_LIST: "flex flex-wrap gap-2 mt-1",
-    LINK_BUTTON: "flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#2C666E]/60 text-white hover:bg-[#2C666E]/90 transition-colors font-nunito text-sm border border-[#90DDF0]/30",
+    LINK_BUTTON: "px-4 py-1.5 rounded-full bg-[#2C666E]/60 text-white hover:bg-[#2C666E]/90 transition-colors font-nunito text-sm border border-[#90DDF0]/30",
     CLOSE_X: "absolute top-4 right-4 text-white/50 hover:text-white transition-colors z-10",
     FOOTER: "flex gap-3 px-6 pt-4 pb-5 mt-2",
 };
 
 const ViewProjectPopup = ({ project, onClose, onEdit, onDelete }: ViewProjectPopupProps) => {
     const [showEdit, setShowEdit] = useState(false);
-
-    const getLinkLabel = (link: string) => {
-        if (link.toLowerCase().includes("github")) return "GitHub";
-        if (link.toLowerCase().includes("deploy")) return "Deploy";
-        if (link.toLowerCase().includes("demo")) return "Demo";
-        return link;
-    };
 
     const handleDelete = () => {
         if (onDelete) {
@@ -84,37 +75,35 @@ const ViewProjectPopup = ({ project, onClose, onEdit, onDelete }: ViewProjectPop
                             />
                         )}
 
-                        <div className={STYLES.GRID}>
-                            <div className={STYLES.SECTION}>
-                                <div className={STYLES.SECTION_BORDER}>
-                                    <h3 className={STYLES.SECTION_TITLE}>Descripción:</h3>
-                                    <p className={STYLES.SECTION_TEXT}>{project.description}</p>
-                                </div>
+                        <div className={STYLES.SECTION}>
+                            <div className={STYLES.SECTION_BORDER}>
+                                <h3 className={STYLES.SECTION_TITLE}>Descripción:</h3>
+                                <p className={STYLES.SECTION_TEXT}>{project.description}</p>
                             </div>
+                        </div>
 
-                            <div className={STYLES.SECTION}>
-                                <div className={STYLES.SECTION_BORDER}>
-                                    <h3 className={STYLES.SECTION_TITLE}>Estado:</h3>
-                                    <p className={STYLES.SECTION_TEXT}>{project.status}</p>
-                                </div>
+                        <div className={STYLES.SECTION}>
+                            <div className={STYLES.SECTION_BORDER}>
+                                <h3 className={STYLES.SECTION_TITLE}>Estado:</h3>
+                                <p className={STYLES.SECTION_TEXT}>{project.status}</p>
                             </div>
+                        </div>
 
-                            <div className={STYLES.SECTION}>
-                                <div className={STYLES.SECTION_BORDER}>
-                                    <h3 className={STYLES.SECTION_TITLE}>Enlaces del proyecto:</h3>
-                                    <div className={STYLES.LINKS_LIST}>
-                                        {project.links.map((link, index) => (
-                                            <a
-                                                key={index}
-                                                href={`https://${link}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className={STYLES.LINK_BUTTON}
-                                            >
-                                                {getLinkLabel(link)}
-                                            </a>
-                                        ))}
-                                    </div>
+                        <div className={STYLES.SECTION}>
+                            <div className={STYLES.SECTION_BORDER}>
+                                <h3 className={STYLES.SECTION_TITLE}>Enlaces del proyecto:</h3>
+                                <div className={STYLES.LINKS_LIST}>
+                                    {project.links.map((link, index) => (
+                                        <a
+                                            key={index}
+                                            href={link.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className={STYLES.LINK_BUTTON}
+                                        >
+                                            {link.label}
+                                        </a>
+                                    ))}
                                 </div>
                             </div>
                         </div>
