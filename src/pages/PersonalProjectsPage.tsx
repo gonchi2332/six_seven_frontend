@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, FolderGit2 } from "lucide-react";
+import { Search } from "lucide-react";
 import { useProjects } from "../features/PersonalProjects/hooks/useProjects";
 import ProjectCard from "../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectCard";
 import ViewProjectPopup from "../features/PersonalProjects/components/PersonalProjectsModal/ViewProjectPopup";
@@ -78,10 +78,8 @@ const ProjectsPage = () => {
     };
 
     const handleDeleteProject = async (project: ProjectEntry) => {
-        if (confirm(`¿Eliminar el proyecto "${project.name}"?`)) {
-            await deleteProject(project.id);
-            setProjectToView(null);
-        }
+        await deleteProject(project.id);
+        setProjectToView(null);
     };
 
     const transformProjectToPayload = (project: ProjectEntry): Partial<CreateProjectPayload> => {
@@ -151,14 +149,7 @@ const ProjectsPage = () => {
                                     "No se encontraron proyectos."
                                 ) : (
                                     <div className="flex flex-col items-center gap-2">
-                                        <FolderGit2 size={48} className="text-white/30" />
                                         <p>No tienes proyectos personales registrados.</p>
-                                        <button
-                                            onClick={() => setShowAdd(true)}
-                                            className="mt-2 px-4 py-2 rounded-xl bg-[#90DDF0] text-[#07393C] font-nunito text-sm font-semibold"
-                                        >
-                                            Agregar tu primer proyecto
-                                        </button>
                                     </div>
                                 )}
                             </div>

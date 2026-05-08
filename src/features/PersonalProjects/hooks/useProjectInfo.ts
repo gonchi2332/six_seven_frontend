@@ -1,11 +1,8 @@
-// hooks/useProjectInfo.ts
 import { useState } from "react";
 import type { CreateProjectPayload } from "../services/personalProjectsService";
 
 type FormErrors = Partial<Record<keyof CreateProjectPayload | string, string>>;
 
-const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
-const MAX_IMAGE_SIZE_MB = 2;
 
 const INITIAL_FORM: CreateProjectPayload = {
     name: "",
@@ -17,7 +14,7 @@ const INITIAL_FORM: CreateProjectPayload = {
     image: null,
 };
 
-export const useProjectForm = (initialData?: Partial<CreateProjectPayload>) => {
+export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEditing: boolean = false) => {
     const [formData, setFormData] = useState<CreateProjectPayload>({
         ...INITIAL_FORM,
         ...initialData,
@@ -64,21 +61,8 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>) => {
     };
 
     const handleImageChange = (file: File | null) => {
-        if (!file) {
-            setFormData((prev) => ({ ...prev, image: null }));
-            setErrors((prev) => ({ ...prev, image: undefined }));
-            return;
-        }
-        if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-            setErrors((prev) => ({ ...prev, image: "Solo se permiten archivos .jpg, .jpeg o .png" }));
-            return;
-        }
-        if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
-            setErrors((prev) => ({ ...prev, image: `La imagen no puede superar ${MAX_IMAGE_SIZE_MB}MB` }));
-            return;
-        }
-        setErrors((prev) => ({ ...prev, image: undefined }));
         setFormData((prev) => ({ ...prev, image: file }));
+        setErrors((prev) => ({ ...prev, image: undefined }));
     };
 
     const validateForm = (): boolean => {
@@ -122,8 +106,10 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>) => {
             });
         }
 
-        if (!formData.image)
+        // Solo validar imagen si NO es edición
+        if (!isEditing && !formData.image) {
             e.image = "La imagen del proyecto es requerida";
+        }
 
         setErrors(e);
         return Object.keys(e).length === 0;

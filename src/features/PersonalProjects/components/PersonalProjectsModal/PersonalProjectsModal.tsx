@@ -1,4 +1,3 @@
-// PersonalProjectsModal.tsx
 import { X, Plus, Trash2 } from "lucide-react";
 import type { CreateProjectPayload, UpdateProjectPayload } from "../../services/personalProjectsService";
 import { useProjectForm } from "../../hooks/useProjectInfo";
@@ -47,7 +46,7 @@ const PersonalProjectsModal = ({
     const isEditing = mode === "edit";
 
     const { formData, errors, handleChange, handleLinkChange, addLink, removeLink, handleImageChange, validateForm } =
-        useProjectForm(initialData);
+        useProjectForm(initialData, isEditing);
 
     const handleSubmit = async () => {
         if (!validateForm()) return;
