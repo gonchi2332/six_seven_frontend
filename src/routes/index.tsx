@@ -10,6 +10,7 @@ import SoftSkills from "../pages/SoftSkills";
 import Projects from "../pages/Projects";
 import Education from "../pages/Education";
 import PublicDashboard from "../pages/PublicDashboard";
+import Experience from "../pages/WorkExperiencePage";
 
 import MainLayout from "../pages/MainLayout";
 
@@ -33,6 +34,7 @@ const Router = () => {
                     <Route path="/habilidades-blandas" element={<SoftSkills />} />
                     <Route path="/proyectos" element={<Projects />} />
                     <Route path="/educacion" element={<Education />} />
+                    <Route path="/experiencia-laboral" element={<Experience />} />
                 </Route>
             </Routes>
         </BrowserRouter>
