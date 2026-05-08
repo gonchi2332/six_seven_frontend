@@ -120,6 +120,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                             label="Puesto:*"
                             value={position}
                             onChange={(e) => setPosition(e.target.value)}
+                            disabled={true}
                             placeholder="Ej: Full Stack Developer"
                             error={errors.position}
                         />
@@ -127,6 +128,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                         <TextField
                             label="Empresa:*"
                             value={company}
+                            disabled={true}
                             onChange={(e) => setCompany(e.target.value)}
                             placeholder="Ej: WIMETRIX"
                             error={errors.company}

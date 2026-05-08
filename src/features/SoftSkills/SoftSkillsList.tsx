@@ -1,131 +1,144 @@
-import { useState } from 'react';
-import { useSoftSkills } from '../../hooks/userSoftSkills';
-import { SoftSkillItem } from './SoftSkillItem';
-import SoftSkillModal from './SoftSkillModal';
-import ConfirmModal from './ConfirmModal';
+// import { useState } from 'react';
+// import { useSoftSkills } from '../../hooks/userSoftSkills';
+// import { SoftSkillItem } from './SoftSkillItem';
+// import AddSoftSkillPopup from './AddSoftSkillPopup';
+// import ConfirmModal from './ConfirmModal';
 
-const styles = {
-    container: "flex flex-col gap-3",
-    header: "flex justify-between items-center mb-2",
-    title: "text-xl font-semibold text-surface font-inter",
-    empty: "text-surface text-center py-8 font-nunito",
-    loading: "text-surface/50 text-center py-8 font-nunito",
-    error: "text-red-500 text-center py-8 font-nunito bg-red-500/10 rounded-xl",
-    success: "text-green-300 font-nunito text-sm py-1",
-    addButton: "w-10 h-10 rounded-xl bg-primary text-surface hover:bg-primary/90 transition-colors flex items-center justify-center text-2xl font-bold",
-};
-const SoftSkillsList = () => {
-    const { skills, isLoading, successMessage, addSkill, editSkill, removeSkill } = useSoftSkills();
-    const [modalOpen, setModalOpen] = useState(false);
-    const [editingSkill, setEditingSkill] = useState<string | null>(null);
-    const [modalError, setModalError] = useState<string | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    
-    const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-    const [skillToDelete, setSkillToDelete] = useState<string | null>(null);
+// const PAGE_SIZE = 5;
 
-    const handleAdd = () => {
-        setEditingSkill(null);
-        setModalError(null);
-        setModalOpen(true);
-    };
+// const styles = {
+//     container: "flex flex-col gap-3",
+//     header: "flex justify-between items-center mb-2",
+//     title: "text-xl font-semibold text-surface font-inter",
+//     empty: "text-surface text-center py-8 font-nunito",
+//     loading: "text-surface/50 text-center py-8 font-nunito",
+//     success: "text-green-300 font-nunito text-sm py-1",
+//     addButton: "px-4 py-2 rounded-xl bg-primary text-white text-sm font-nunito font-semibold transition-all hover:brightness-110 active:scale-95",
+//     list: "flex flex-col gap-3",
+//     paginationWrapper: "flex items-center justify-center gap-4 pt-3",
+//     paginationBtn: "w-10 h-10 rounded-xl border border-white text-white flex items-center justify-center transition-all duration-200 hover:scale-105 hover:shadow-md active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed",
+//     paginationLabel: "text-[14px] font-nunito text-surface/70",
+// };
 
-    const handleEdit = (name: string) => {
-        setEditingSkill(name);
-        setModalError(null);
-        setModalOpen(true);
-    };
+// const SoftSkillsList = () => {
+//     const { skills, isLoading, successMessage, username, addSkill, removeSkill } = useSoftSkills();
+//     const [modalOpen, setModalOpen] = useState(false);
+//     const [isSubmitting, setIsSubmitting] = useState(false);
+//     const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+//     const [skillToDelete, setSkillToDelete] = useState<string | null>(null);
+//     const [currentPage, setCurrentPage] = useState(1);
 
-    const handleDeleteClick = (name: string) => {
-        setSkillToDelete(name);
-        setConfirmModalOpen(true);
-    };
+//     const totalPages = Math.ceil(skills.length / PAGE_SIZE);
+//     const paginated = skills.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-    const handleConfirmDelete = async () => {
-        if (!skillToDelete) return;
-        
-        setIsSubmitting(true);
-        try {
-            await removeSkill(skillToDelete);
-            setConfirmModalOpen(false);
-            setSkillToDelete(null);
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+//     const handleSubmit = (name: string) => {
+//         addSkill(name);
+//     };
 
-    const handleSave = async (newName: string, oldName?: string) => {
-        setModalError(null);
-        setIsSubmitting(true);
-        try {
-            if (oldName) {
-                await editSkill(oldName, newName);
-            } else {
-                await addSkill(newName);
-            }
-            setModalOpen(false);
-        } catch (err: any) {
-            setModalError(err.message || 'Error al guardar la habilidad');
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+//     const handleDeleteClick = (name: string) => {
+//         setSkillToDelete(name);
+//         setConfirmModalOpen(true);
+//     };
 
-    if (isLoading) {
-        return <div className={styles.loading}>Cargando habilidades blandas...</div>;
-    }
+//     const handleConfirmDelete = async () => {
+//         if (!skillToDelete) return;
+//         setIsSubmitting(true);
+//         try {
+//             await removeSkill(skillToDelete);
+//             setConfirmModalOpen(false);
+//             setSkillToDelete(null);
+//             if (paginated.length === 1 && currentPage > 1) {
+//                 setCurrentPage((p) => p - 1);
+//             }
+//         } finally {
+//             setIsSubmitting(false);
+//         }
+//     };
 
-    return (
-        <>
-            <div className={styles.container}>
-                <div className={styles.header}>
-                    <h2 className={styles.title}>Habilidades Blandas</h2>
-                    <button onClick={handleAdd} className={styles.addButton} title="Agregar" disabled={isSubmitting}>
-                        +
-                    </button>
-                </div>
+//     if (isLoading) {
+//         return <div className={styles.loading}>Cargando habilidades blandas...</div>;
+//     }
 
-                {successMessage && <p className={styles.success}>{successMessage}</p>}
+//     return (
+//         <>
+//             <div className={styles.container}>
+//                 <div className={styles.header}>
+//                     <h2 className={styles.title}>Habilidades Blandas</h2>
+//                     <button
+//                         type="button"
+//                         onClick={() => setModalOpen(true)}
+//                         className={styles.addButton}
+//                         disabled={isSubmitting}
+//                     >
+//                         Agregar
+//                     </button>
+//                 </div>
 
-                {skills.length === 0 ? (
-                    <div className={styles.empty}>
-                        No hay habilidades blandas aún. ¡Agrega una!
-                    </div>
-                ) : (
-                    skills.map((skill, index) => (
-                        <SoftSkillItem
-                            key={index}
-                            skillName={skill.name}
-                            onEdit={handleEdit}
-                            onDelete={handleDeleteClick}
-                        />
-                    ))
-                )}
-            </div>
+//                 {successMessage && <p className={styles.success}>{successMessage}</p>}
 
-            <SoftSkillModal
-                isOpen={modalOpen}
-                onClose={() => setModalOpen(false)}
-                onSave={handleSave}
-                initialName={editingSkill || ''}
-                isEditing={!!editingSkill}
-                error={modalError}
-                isSubmitting={isSubmitting}
-            />
+//                 {skills.length === 0 ? (
+//                     <div className={styles.empty}>No hay habilidades blandas aún. ¡Agrega una!</div>
+//                 ) : (
+//                     <>
+//                         <div className={styles.list}>
+//                             {paginated.map((skill, index) => (
+//                                 <SoftSkillItem
+//                                     key={index}
+//                                     skillName={skill.name}
+//                                     onDelete={handleDeleteClick}
+//                                 />
+//                             ))}
+//                         </div>
 
-            <ConfirmModal
-                isOpen={confirmModalOpen}
-                onClose={() => {
-                    setConfirmModalOpen(false);
-                    setSkillToDelete(null);
-                }}
-                onConfirm={handleConfirmDelete}
-                title="Eliminar habilidad"
-                message={`¿Estás seguro de que deseas eliminar la habilidad?`}
-                isLoading={isSubmitting}
-            />
-        </>
-    );
-};
+//                         {totalPages > 1 && (
+//                             <div className={styles.paginationWrapper}>
+//                                 <button
+//                                     type="button"
+//                                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+//                                     disabled={currentPage === 1}
+//                                     className={styles.paginationBtn}
+//                                 >
+//                                     ‹
+//                                 </button>
+//                                 <span className={styles.paginationLabel}>
+//                                     {currentPage} / {totalPages}
+//                                 </span>
+//                                 <button
+//                                     type="button"
+//                                     onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+//                                     disabled={currentPage === totalPages}
+//                                     className={styles.paginationBtn}
+//                                 >
+//                                     ›
+//                                 </button>
+//                             </div>
+//                         )}
+//                     </>
+//                 )}
+//             </div>
 
-export default SoftSkillsList;
+//             {modalOpen && (
+//                 <AddSoftSkillPopup
+//                     onSubmit={handleSubmit}
+//                     onClose={() => setModalOpen(false)}
+//                     username={username}
+//                     userSkills={skills}
+//                 />
+//             )}
+
+//             <ConfirmModal
+//                 isOpen={confirmModalOpen}
+//                 onClose={() => {
+//                     setConfirmModalOpen(false);
+//                     setSkillToDelete(null);
+//                 }}
+//                 onConfirm={handleConfirmDelete}
+//                 title={`Eliminar: ${skillToDelete}`}
+//                 message="¿Estás seguro que quieres eliminar esta habilidad?"
+//                 isLoading={isSubmitting}
+//             />
+//         </>
+//     );
+// };
+
+// export default SoftSkillsList;

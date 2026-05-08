@@ -1,12 +1,14 @@
-import Button from "../../../components/Button";
-import PopUpCard from "../../../components/PopUpCard";
-import SkillLevelSelector from "./SkillLevelSelector";
-import ResultPopup from "./ResultPopup";
-import useAddSkill from "../../../hooks/useAddSkill";
+import Button from "../../components/Button";
+import PopUpCard from "../../components/PopUpCard";
+import SoftSkillResultPopup from "./SoftskillResultPopup";
+import useAddSoftSkill from "../../hooks/useAddSoftSkill";
+import type { SoftSkill } from "../../services/softSkillService";
 
-interface AddSkillPopupProps {
-    onSubmit: (name: string, level: number) => void;
+interface AddSoftSkillPopupProps {
+    onSubmit: (name: string) => void;
     onClose: () => void;
+    username: string;
+    userSkills: SoftSkill[];
     isSubmitting?: boolean;
     catalogSkills?: string[];
 }
@@ -25,17 +27,32 @@ const styles = {
     dropdown: "absolute top-full left-0 right-0 mt-1 z-10 rounded-xl border border-surface/20 bg-[#1a1a2e] overflow-hidden max-h-44 overflow-y-auto shadow-lg",
     dropdownItem: "w-full text-left px-4 py-2.5 text-[15px] font-nunito text-surface transition-colors hover:bg-white/10 cursor-pointer",
     checkboxWrapper: "flex items-center gap-3 cursor-pointer select-none w-fit group",
-    checkboxBox: (active: boolean) => `w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all duration-200 ${active ? "bg-white border-white scale-105 shadow-sm" : "bg-transparent border-white/50 group-hover:border-white"}`,
-    checkboxLabel: (active: boolean) => `text-[16px] text-white font-nunito transition-all duration-200 ${active ? "text-white font-semibold" : "text-surface/70 group-hover:text-white"}`,
+    checkboxBox: (active: boolean) =>
+        `w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all duration-200 ${
+            active ? "bg-white border-white scale-105 shadow-sm" : "bg-transparent border-white/50 group-hover:border-white"
+        }`,
+    checkboxLabel: (active: boolean) =>
+        `text-[16px] text-white font-nunito transition-all duration-200 ${
+            active ? "text-white font-semibold" : "text-surface/70 group-hover:text-white"
+        }`,
 };
 
-const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills = [] }: AddSkillPopupProps) => {
+const AddSoftSkillPopup = ({
+    onSubmit,
+    onClose,
+    username,
+    userSkills,
+    isSubmitting = false,
+    catalogSkills = [],
+}: AddSoftSkillPopupProps) => {
     const {
         search, suggestions, showDropdown, setShowDropdown, isOther, otherName,
-        level, setLevel, result, inlineError, hasFieldError, loading, containerRef,
-        isDisabled, handleSearchChange, handleSelectSuggestion, handleToggleOther,
+        result, inlineError, hasFieldError, loading, isDisabled, containerRef,
+        handleSearchChange, handleSelectSuggestion, handleToggleOther,
         handleOtherNameChange, handleConfirm, handleResultClose,
-    } = useAddSkill(onSubmit, onClose, catalogSkills);
+    } = useAddSoftSkill(onSubmit, onClose, username, catalogSkills);
+
+    void userSkills;
 
     const getSearchInputClassName = () => {
         if (isOther) return `${styles.inputBase} ${styles.inputDisabled}`;
@@ -44,7 +61,7 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
     };
 
     if (result) {
-        return <ResultPopup type={result} onClose={handleResultClose} />;
+        return <SoftSkillResultPopup type={result} onClose={handleResultClose} />;
     }
 
     return (
@@ -61,7 +78,7 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
                                 value={search}
                                 onChange={handleSearchChange}
                                 onFocus={() => !isOther && search.trim() && setShowDropdown(true)}
-                                placeholder="Ej: JavaScript, React..."
+                                placeholder="Ej: Liderazgo, Empatía..."
                                 disabled={isOther || isSubmitting}
                                 className={getSearchInputClassName()}
                             />
@@ -113,13 +130,6 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
                                 )}
                             </div>
                         )}
-
-                        <div>
-                            <p className={styles.label}>
-                                Nivel de Conocimiento:<span className={styles.required}>*</span>
-                            </p>
-                            <SkillLevelSelector value={level} onChange={setLevel} />
-                        </div>
                     </div>
 
                     <div className={styles.buttonsWrapper}>
@@ -136,4 +146,4 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
     );
 };
 
-export default AddSkillPopup;
+export default AddSoftSkillPopup;

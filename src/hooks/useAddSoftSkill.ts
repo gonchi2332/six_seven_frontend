@@ -1,11 +1,13 @@
 import { useState, useRef } from "react";
-import type { ResultType } from "../features/skills/components/ResultPopup";
-import { postSkill, getUserSkillNames } from "../services/skillsService";
+import { postSoftSkill, getUserSoftSkillNames } from "../services/softSkillService";
 import useClickOutside from "./useClickOutside";
 
-const useAddSkill = (
-    onSubmit: (name: string, level: number) => void,
+export type SoftSkillResultType = "success" | "not-found";
+
+const useAddSoftSkill = (
+    onSubmit: (name: string) => void,
     onClose: () => void,
+    username: string,
     catalogSkills: string[] = []
 ) => {
     const [search, setSearch] = useState("");
@@ -14,8 +16,7 @@ const useAddSkill = (
     const [selectedName, setSelectedName] = useState<string | null>(null);
     const [isOther, setIsOther] = useState(false);
     const [otherName, setOtherName] = useState("");
-    const [level, setLevel] = useState(1);
-    const [result, setResult] = useState<ResultType | null>(null);
+    const [result, setResult] = useState<SoftSkillResultType | null>(null);
     const [inlineError, setInlineError] = useState<string | null>(null);
     const [hasFieldError, setHasFieldError] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -34,7 +35,9 @@ const useAddSkill = (
         setSelectedName(null);
         clearError();
         if (val.trim()) {
-            setSuggestions(catalogSkills.filter((s) => s.toLowerCase().includes(val.toLowerCase())));
+            setSuggestions(
+                catalogSkills.filter((s) => s.toLowerCase().includes(val.toLowerCase()))
+            );
             setShowDropdown(true);
         } else {
             setSuggestions([]);
@@ -78,7 +81,7 @@ const useAddSkill = (
 
         try {
             if (!isOther) {
-                const userSkills = await getUserSkillNames();
+                const userSkills = await getUserSoftSkillNames(username);
                 if (userSkills.includes(nameToSubmit.toLowerCase())) {
                     setInlineError("Esta habilidad ya ha sido añadida anteriormente.");
                     setHasFieldError(true);
@@ -86,9 +89,9 @@ const useAddSkill = (
                 }
             }
 
-            const outcome = await postSkill(nameToSubmit, level);
+            const outcome = await postSoftSkill(nameToSubmit);
             if (outcome === "success") {
-                onSubmit(nameToSubmit, level);
+                onSubmit(nameToSubmit);
             }
             setResult(outcome);
         } catch (err: unknown) {
@@ -123,8 +126,6 @@ const useAddSkill = (
         selectedName,
         isOther,
         otherName,
-        level,
-        setLevel,
         result,
         inlineError,
         hasFieldError,
@@ -141,4 +142,4 @@ const useAddSkill = (
     };
 };
 
-export default useAddSkill;
+export default useAddSoftSkill;
