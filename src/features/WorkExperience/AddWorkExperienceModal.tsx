@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Button from '../../components/Button';
 import TextField from '../../components/TextField';
+import PopUpCard from '../../components/PopUpCard';
 import { useWorkExperienceForm } from '../../hooks/useWorkExperienceForm';
 
 interface AddWorkExperienceModalProps {
@@ -12,18 +13,13 @@ interface AddWorkExperienceModalProps {
 const styles = {
     overlay: "fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto",
     container: "min-h-screen flex items-center justify-center p-4",
-    modal: "bg-primary rounded-2xl p-6 w-full max-w-lg mx-auto",
-    title: "text-2xl font-bold text-surface font-inter mb-4",
-    form: "flex flex-col gap-4",
+    form: "flex flex-col gap-4 px-6 py-4",
     row: "grid grid-cols-1 md:grid-cols-2 gap-4",
-    dateLabel: "block text-surface font-nunito mb-1 text-sm",
-    dateInput: "w-full px-4 py-2 border border-gray-300 rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none font-nunito bg-white",
-    dateInputError: "border-red-500 focus:border-red-500",
-    checkboxContainer: "flex items-center gap-2 mt-2",
+    checkboxContainer: "flex items-center gap-2",
     checkbox: "w-4 h-4 text-primary rounded focus:ring-primary",
-    checkboxLabel: "text-surface font-nunito",
-    buttonContainer: "flex gap-3 mt-6",
-    errorText: "text-red-500 text-sm mt-1",
+    checkboxLabel: "text-surface font-nunito text-sm",
+    buttonContainer: "flex gap-3 px-6 pb-6",
+    apiError: "p-2 mb-3 text-sm text-red-600 bg-red-50 rounded-xl border border-red-200 mx-6 mt-2",
 };
 
 const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceModalProps) => {
@@ -44,10 +40,10 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [apiError, setApiError] = useState<string | null>(null);
 
-    // Resetear cuando se abre el modal
     useEffect(() => {
         if (isOpen) {
             resetForm();
+            setApiError(null);
         }
     }, [isOpen, resetForm]);
 
@@ -82,32 +78,34 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
     return (
         <div className={styles.overlay} onClick={handleClose}>
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
-                <div className={styles.modal}>
-                    <h2 className={styles.title}>Agregar Experiencia Laboral</h2>
-                    
+                <PopUpCard title="Agregar Experiencia Laboral">
                     {apiError && (
-                        <div className="p-3 mb-4 text-sm text-red-600 bg-red-50 rounded-xl border border-red-200">
+                        <div className={styles.apiError}>
                             {apiError}
                         </div>
                     )}
                     
                     <div className={styles.form}>
-                        <TextField
-                            label="Puesto:*"
-                            value={formData.position}
-                            onChange={(e) => handlePositionChange(e.target.value)}
-                            placeholder="Ej: Full Stack Developer"
-                            error={errors.position}
-                        />
+                        {/* Fila: Puesto y Empresa */}
+                        <div className={styles.row}>
+                            <TextField
+                                label="Puesto:*"
+                                value={formData.position}
+                                onChange={(e) => handlePositionChange(e.target.value)}
+                                placeholder="Ej: Full Stack Developer"
+                                error={errors.position}
+                            />
+                            
+                            <TextField
+                                label="Empresa:*"
+                                value={formData.company}
+                                onChange={(e) => handleCompanyChange(e.target.value)}
+                                placeholder="Ej: WIMETRIX"
+                                error={errors.company}
+                            />
+                        </div>
                         
-                        <TextField
-                            label="Empresa:*"
-                            value={formData.company}
-                            onChange={(e) => handleCompanyChange(e.target.value)}
-                            placeholder="Ej: WIMETRIX"
-                            error={errors.company}
-                        />
-                        
+                        {/* Descripción - ancho completo */}
                         <TextField
                             label="Descripción:*"
                             value={formData.description}
@@ -116,29 +114,27 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
                             error={errors.description}
                         />
                         
+                        {/* Fila: Fechas */}
                         <div className={styles.row}>
-                            <div>
-                                <TextField
-                                    label="Fecha Inicio:*"
-                                    type="date"
-                                    value={formData.startDate}
-                                    onChange={(e) => handleStartDateChange(e.target.value)}
-                                    error={errors.startDate}
-                                />
-                            </div>
+                            <TextField
+                                label="Fecha Inicio:*"
+                                type="date"
+                                value={formData.startDate}
+                                onChange={(e) => handleStartDateChange(e.target.value)}
+                                error={errors.startDate}
+                            />
                             
-                            <div>
-                                <TextField
-                                    label="Fecha Fin:"
-                                    type="date"
-                                    value={formData.endDate}
-                                    onChange={(e) => handleEndDateChange(e.target.value)}
-                                    error={errors.endDate}
-                                    disabled={formData.isCurrent}
-                                />
-                            </div>
+                            <TextField
+                                label="Fecha Fin:"
+                                type="date"
+                                value={formData.endDate}
+                                onChange={(e) => handleEndDateChange(e.target.value)}
+                                error={errors.endDate}
+                                disabled={formData.isCurrent}
+                            />
                         </div>
                         
+                        {/* Checkbox */}
                         <div className={styles.checkboxContainer}>
                             <input
                                 type="checkbox"
@@ -151,22 +147,22 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
                                 Trabajo actualmente aquí
                             </label>
                         </div>
-                        
-                        <div className={styles.buttonContainer}>
-                            <Button variant="secondary" onClick={handleClose} fullWidth>
-                                Cancelar
-                            </Button>
-                            <Button
-                                variant="primary"
-                                onClick={handleSubmit}
-                                disabled={isSubmitting || !isFormValid()}
-                                fullWidth
-                            >
-                                {isSubmitting ? 'Agregando...' : 'Agregar'}
-                            </Button>
-                        </div>
                     </div>
-                </div>
+                    
+                    <div className={styles.buttonContainer}>
+                        <Button variant="secondary" onClick={handleClose} fullWidth>
+                            Cancelar
+                        </Button>
+                        <Button
+                            variant="primary"
+                            onClick={handleSubmit}
+                            disabled={isSubmitting || !isFormValid()}
+                            fullWidth
+                        >
+                            {isSubmitting ? 'Agregando...' : 'Agregar'}
+                        </Button>
+                    </div>
+                </PopUpCard>
             </div>
         </div>
     );

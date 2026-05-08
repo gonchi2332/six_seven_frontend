@@ -17,6 +17,15 @@ export interface WorkExperienceFormErrors {
     endDate: string;
 }
 
+// Función auxiliar para obtener la fecha de hoy en formato YYYY-MM-DD
+const getTodayDateString = (): string => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
 export const useWorkExperienceForm = (initialData?: WorkExperienceFormData) => {
     const [formData, setFormData] = useState<WorkExperienceFormData>({
         position: initialData?.position || '',
@@ -56,11 +65,17 @@ export const useWorkExperienceForm = (initialData?: WorkExperienceFormData) => {
 
     const validateStartDate = useCallback((value: string): string => {
         if (!value) return 'La fecha de inicio es obligatoria';
+        const today = getTodayDateString();
+        if (value > today) return 'La fecha de inicio no puede ser futura';
         return '';
     }, []);
 
     const validateEndDate = useCallback((value: string, isCurrent: boolean): string => {
         if (!isCurrent && !value) return 'La fecha de fin es obligatoria';
+        if (value) {
+            const today = getTodayDateString();
+            if (value > today) return 'La fecha de fin no puede ser futura';
+        }
         return '';
     }, []);
 

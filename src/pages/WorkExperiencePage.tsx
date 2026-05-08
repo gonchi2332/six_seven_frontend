@@ -1,7 +1,7 @@
 import { WorkExperienceList } from '../features/WorkExperience';
 
 const styles = {
-    container: "w-full max-w-4xl mx-auto",
+    container: "w-full",
 };
 
 const WorkExperiencePage = () => {

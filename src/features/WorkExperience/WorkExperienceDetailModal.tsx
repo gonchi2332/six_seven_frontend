@@ -1,4 +1,5 @@
 import Button from '../../components/Button';
+import PopUpCard from '../../components/PopUpCard';
 import type { WorkExperience } from '../../hooks/useWorkExperiences';
 
 interface WorkExperienceDetailModalProps {
@@ -11,26 +12,22 @@ interface WorkExperienceDetailModalProps {
 
 const styles = {
     overlay: "fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto",
-    container: "min-h-screen w-full flex items-center justify-center p-4",
-    modal: "bg-primary rounded-2xl w-full max-w-[700px] mx-auto overflow-hidden",
-    header: "relative flex items-center justify-center p-6 border-b border-accent/20",
-    title: "text-2xl font-bold text-surface font-inter text-center",
-    closeButton: "absolute right-6 text-gray-400 hover:text-gray-600 transition-colors text-2xl",
-    content: "p-8",
-    field: "mb-6",
-    label: "text-accent text-xs uppercase tracking-wide font-bold mb-2",
-    value: "text-surface font-nunito text-lg font-medium",
+    container: "min-h-screen flex items-center justify-center p-4",
+    content: "px-6 py-4",
+    field: "mb-5",
+    label: "text-accent text-xs uppercase tracking-wide font-bold mb-1",
+    value: "text-surface font-nunito text-base",
     descriptionValue: "text-surface font-nunito text-base leading-relaxed whitespace-pre-wrap",
-    dates: "flex gap-8 mb-6",
+    dates: "flex gap-6 mb-5",
     dateField: "flex-1",
-    buttonContainer: "flex gap-4 mt-8 pt-6 border-t border-accent/20",
+    buttonContainer: "flex gap-3 px-6 pb-6",
+    closeIcon: "absolute right-4 top-4 text-gray-400 hover:text-gray-600 transition-colors text-2xl cursor-pointer",
 };
 
 const formatDateLong = (dateStr: string | null): string => {
     if (!dateStr) return 'Presente';
     
     try {
-        // Extraer año y mes de YYYY-MM-DD
         const year = dateStr.substring(0, 4);
         const monthStr = dateStr.substring(5, 7);
         const month = parseInt(monthStr, 10);
@@ -63,11 +60,8 @@ const WorkExperienceDetailModal = ({ isOpen, experience, onClose, onEdit, onDele
     return (
         <div className={styles.overlay} onClick={onClose}>
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
-                <div className={styles.modal}>
-                    <div className={styles.header}>
-                        <h2 className={styles.title}>Experiencia Laboral</h2>
-                        <button onClick={onClose} className={styles.closeButton}>✕</button>
-                    </div>
+                <PopUpCard title="Experiencia Laboral">
+                    <button onClick={onClose} className={styles.closeIcon}>✕</button>
                     
                     <div className={styles.content}>
                         <div className={styles.dates}>
@@ -81,6 +75,7 @@ const WorkExperienceDetailModal = ({ isOpen, experience, onClose, onEdit, onDele
                                 <p className={styles.value}>{experience.company_name}</p>
                             </div>
                         </div>
+                        
                         <div className={styles.field}>
                             <p className={styles.label}>Descripción</p>
                             <p className={styles.descriptionValue}>{experience.description}</p>
@@ -96,27 +91,25 @@ const WorkExperienceDetailModal = ({ isOpen, experience, onClose, onEdit, onDele
                                 <p className={styles.value}>{endDateFormatted}</p>
                             </div>
                         </div>
-                        
-                        
-                        
-                        <div className={styles.buttonContainer}>
-                            <Button 
-                                variant="secondary" 
-                                onClick={handleEdit}
-                                fullWidth
-                            >
-                                Editar
-                            </Button>
-                            <Button 
-                                variant="primary" 
-                                onClick={handleDelete}
-                                fullWidth
-                            >
-                                Eliminar
-                            </Button>
-                        </div>
                     </div>
-                </div>
+                    
+                    <div className={styles.buttonContainer}>
+                        <Button 
+                            variant="secondary" 
+                            onClick={handleEdit}
+                            fullWidth
+                        >
+                            Editar
+                        </Button>
+                        <Button 
+                            variant="primary" 
+                            onClick={handleDelete}
+                            fullWidth
+                        >
+                            Eliminar
+                        </Button>
+                    </div>
+                </PopUpCard>
             </div>
         </div>
     );

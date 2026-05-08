@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Button from '../../components/Button';
 import TextField from '../../components/TextField';
+import PopUpCard from '../../components/PopUpCard';
 import type { WorkExperience, UpdateWorkExperienceDto } from '../../hooks/useWorkExperiences';
 
 interface EditWorkExperienceModalProps {
@@ -13,19 +14,17 @@ interface EditWorkExperienceModalProps {
 const styles = {
     overlay: "fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto",
     container: "min-h-screen flex items-center justify-center p-4",
-    modal: "bg-primary rounded-2xl p-6 w-full max-w-lg mx-auto",
-    title: "text-2xl font-bold text-surface font-inter mb-4",
-    form: "flex flex-col gap-4",
+    form: "flex flex-col gap-4 px-6 py-4",
     row: "grid grid-cols-1 md:grid-cols-2 gap-4",
-    checkboxContainer: "flex items-center gap-2 mt-2",
+    checkboxContainer: "flex items-center gap-2",
     checkbox: "w-4 h-4 text-primary rounded focus:ring-primary",
-    checkboxLabel: "text-surface font-nunito",
-    buttonContainer: "flex gap-3 mt-6",
+    checkboxLabel: "text-surface font-nunito text-sm",
+    buttonContainer: "flex gap-3 px-6 pb-6",
+    apiError: "p-2 mb-3 text-sm text-red-600 bg-red-50 rounded-xl border border-red-200 mx-6 mt-2",
 };
 
 const formatDateForInput = (dateStr: string | null): string => {
     if (!dateStr) return '';
-    // Extraer solo YYYY-MM-DD de la fecha ISO
     if (dateStr.includes('T')) {
         return dateStr.split('T')[0] || '';
     }
@@ -62,7 +61,6 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
         if (!startDate) newErrors.startDate = 'La fecha de inicio es obligatoria';
         if (!isCurrent && !endDate) newErrors.endDate = 'La fecha de fin es obligatoria';
         
-        // Validar formato de fecha YYYY-MM-DD
         if (startDate && !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
             newErrors.startDate = 'Formato de fecha inválido (YYYY-MM-DD)';
         }
@@ -106,34 +104,36 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
     return (
         <div className={styles.overlay} onClick={handleClose}>
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
-                <div className={styles.modal}>
-                    <h2 className={styles.title}>Modificar Experiencia Laboral</h2>
-                    
+                <PopUpCard title="Modificar Experiencia Laboral">
                     {apiError && (
-                        <div className="p-3 mb-4 text-sm text-red-600 bg-red-50 rounded-xl border border-red-200">
+                        <div className={styles.apiError}>
                             {apiError}
                         </div>
                     )}
                     
                     <div className={styles.form}>
-                        <TextField
-                            label="Puesto:*"
-                            value={position}
-                            onChange={(e) => setPosition(e.target.value)}
-                            disabled={true}
-                            placeholder="Ej: Full Stack Developer"
-                            error={errors.position}
-                        />
+                        {/* Fila: Puesto y Empresa - DESHABILITADOS */}
+                        <div className={styles.row}>
+                            <TextField
+                                label="Puesto:*"
+                                value={position}
+                                onChange={(e) => setPosition(e.target.value)}
+                                disabled={true}
+                                placeholder="Ej: Full Stack Developer"
+                                error={errors.position}
+                            />
+                            
+                            <TextField
+                                label="Empresa:*"
+                                value={company}
+                                onChange={(e) => setCompany(e.target.value)}
+                                disabled={true}
+                                placeholder="Ej: WIMETRIX"
+                                error={errors.company}
+                            />
+                        </div>
                         
-                        <TextField
-                            label="Empresa:*"
-                            value={company}
-                            disabled={true}
-                            onChange={(e) => setCompany(e.target.value)}
-                            placeholder="Ej: WIMETRIX"
-                            error={errors.company}
-                        />
-                        
+                        {/* Descripción - ancho completo */}
                         <TextField
                             label="Descripción:*"
                             value={description}
@@ -142,29 +142,27 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                             error={errors.description}
                         />
                         
+                        {/* Fila: Fechas */}
                         <div className={styles.row}>
-                            <div>
-                                <TextField
-                                    label="Fecha Inicio:*"
-                                    type="date"
-                                    value={startDate}
-                                    onChange={(e) => setStartDate(e.target.value)}
-                                    error={errors.startDate}
-                                />
-                            </div>
+                            <TextField
+                                label="Fecha Inicio:*"
+                                type="date"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                                error={errors.startDate}
+                            />
                             
-                            <div>
-                                <TextField
-                                    label="Fecha Fin:"
-                                    type="date"
-                                    value={endDate}
-                                    onChange={(e) => setEndDate(e.target.value)}
-                                    disabled={isCurrent}
-                                    error={errors.endDate}
-                                />
-                            </div>
+                            <TextField
+                                label="Fecha Fin:"
+                                type="date"
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                                disabled={isCurrent}
+                                error={errors.endDate}
+                            />
                         </div>
                         
+                        {/* Checkbox */}
                         <div className={styles.checkboxContainer}>
                             <input
                                 type="checkbox"
@@ -177,22 +175,22 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                                 Trabajo actualmente aquí
                             </label>
                         </div>
-                        
-                        <div className={styles.buttonContainer}>
-                            <Button variant="secondary" onClick={handleClose} fullWidth>
-                                Cancelar
-                            </Button>
-                            <Button
-                                variant="primary"
-                                onClick={handleSubmit}
-                                disabled={isSubmitting}
-                                fullWidth
-                            >
-                                {isSubmitting ? 'Guardando...' : 'Modificar'}
-                            </Button>
-                        </div>
                     </div>
-                </div>
+                    
+                    <div className={styles.buttonContainer}>
+                        <Button variant="secondary" onClick={handleClose} fullWidth>
+                            Cancelar
+                        </Button>
+                        <Button
+                            variant="primary"
+                            onClick={handleSubmit}
+                            disabled={isSubmitting}
+                            fullWidth
+                        >
+                            {isSubmitting ? 'Guardando...' : 'Modificar'}
+                        </Button>
+                    </div>
+                </PopUpCard>
             </div>
         </div>
     );

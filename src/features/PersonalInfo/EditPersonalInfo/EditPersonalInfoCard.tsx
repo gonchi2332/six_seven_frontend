@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import TextField from "../../../components/TextField";
 import Button from "../../../components/Button";
 import PopUpCard from "../../../components/PopUpCard";
@@ -25,18 +24,18 @@ interface EditPersonalInfoCardProps {
 
 const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
   const { countries, isLoading } = useCountries();
-  const { formData, errors, handleChange, validateForm, setInitialData } = useProfileForm();
+  const { 
+    formData, 
+    errors, 
+    handleChange, 
+    validateForm, 
+    setInitialData,
+    restoreOriginalData,
+    isFormComplete, 
+    shouldShowField
+  } = useProfileForm();
   const { isLoadingData, loadError } = usePersonalInfo(setInitialData);
   const { handleSubmit, isSubmitting, submitError, submitSuccess } = usePersonalInfoSubmit();
-
-  useEffect(() => {
-    if (submitSuccess) {
-      const timer = setTimeout(() => {
-        onClose?.();
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [submitSuccess, onClose]);
 
   const handleAcept = async () => {
     if (!validateForm()) return;
@@ -44,21 +43,10 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
   };
 
   const handleCancel = () => {
+    restoreOriginalData();
     onClose?.();
   };
 
-  // ============================================
-  // DETERMINAR QUÉ CAMPOS ESTÁN VACÍOS
-  // ============================================
-
-  const isEmptyField = (value: string | undefined | null): boolean => {
-    return !value || value.trim() === '';
-  };
-
-  // Campos obligatorios (siempre deshabilitados)
-  const isFirstNameEmpty = isEmptyField(formData.firstName);
-  const isFirstSurnameEmpty = isEmptyField(formData.firstSurname);
-  
   if (isLoadingData) {
     return (
       <PopUpCard title="Datos Personales">
@@ -75,26 +63,23 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
     );
   }
 
-  // Botón de aceptar deshabilitado si hay campos obligatorios vacíos
-  const isFormIncomplete = isFirstNameEmpty || isFirstSurnameEmpty;
-
   return (
     <div>
       <PopUpCard title="Datos Personales">
         <div>
           <div className={STYLES.FORM_WRAPPER}>
-            {/* Grid dinámico - todos los campos en un solo contenedor */}
             <div className={STYLES.DYNAMIC_GRID}>
-              {/* Campo 1: Nombre(s) - SIEMPRE visible */}
+              {/* Nombre(s) - SIEMPRE visible */}
               <TextField
                 label="Nombre(s)*:"
                 value={formData.firstName}
                 onChange={(e) => handleChange("firstName", e.target.value)}
                 error={errors.firstName}
                 className="w-full"
+                disabled={true}
               />
               
-              {/* Campo 2: Primer Apellido - SIEMPRE visible */}
+              {/* Primer Apellido - SIEMPRE visible */}
               <TextField
                 label="Primer Apellido*:"
                 value={formData.firstSurname}
@@ -103,55 +88,55 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                 className="w-full"
               />
               
-              {/* Campo 3: Segundo Apellido - Solo si existe */}
-              {formData.secondSurname !== undefined && (
-                <TextField
-                  label="Segundo Apellido:"
-                  value={formData.secondSurname}
-                  onChange={(e) => handleChange("secondSurname", e.target.value)}
-                  error={errors.secondSurname}
-                  className="w-full"
-                />
+              {/* Segundo Apellido - Solo si existía originalmente */}
+              {shouldShowField('secondSurname') && (
+                  <TextField
+                      label="Segundo Apellido:"
+                      value={formData.secondSurname ?? ''}
+                      onChange={(e) => handleChange("secondSurname", e.target.value)}
+                      error={errors.secondSurname}
+                      className="w-full"
+                  />
               )}
 
-              {/* Campo 4: Ciudad - Solo si tiene valor */}
-              {formData.city && formData.city.trim() !== '' && (
-                <TextField
-                  label="Ciudad:"
-                  value={formData.city}
-                  onChange={(e) => handleChange("city", e.target.value)}
-                  error={errors.city}
-                  className="w-full"
-                />
+              {/* Ciudad - Solo si existía originalmente */}
+              {shouldShowField('city') && (
+                  <TextField
+                      label="Ciudad:"
+                      value={formData.city ?? ''}
+                      onChange={(e) => handleChange("city", e.target.value)}
+                      error={errors.city}
+                      className="w-full"
+                  />
               )}
 
-              {/* Campo 5: Correo - Solo si tiene valor */}
-              {formData.email && formData.email.trim() !== '' && (
-                <TextField
-                  label="Correo de contacto:"
-                  value={formData.email}
-                  onChange={(e) => handleChange("email", e.target.value)}
-                  placeholder="Ej: juan@ejemplo.com"
-                  type="email"
-                  error={errors.email}
-                  className="w-full"
-                />
+              {/* Correo - Solo si existía originalmente */}
+              {shouldShowField('email') && (
+                  <TextField
+                      label="Correo de contacto:"
+                      value={formData.email ?? ''}
+                      onChange={(e) => handleChange("email", e.target.value)}
+                      placeholder="Ej: juan@ejemplo.com"
+                      type="email"
+                      error={errors.email}
+                      className="w-full"
+                  />
               )}
 
-              {/* Campo 6: Teléfono - Solo si tiene valor */}
-              {formData.phone && formData.phone.trim() !== '' && (
-                <TextField
-                  label="Teléfono:"
-                  value={formData.phone}
-                  onChange={(e) => handleChange("phone", e.target.value)}
-                  placeholder="Ej: +591 77123456"
-                  type="text"
-                  error={errors.phone}
-                  className="w-full"
-                />
+              {/* Teléfono - Solo si existía originalmente */}
+              {shouldShowField('phone') && (
+                  <TextField
+                      label="Teléfono:"
+                      value={formData.phone ?? ''}
+                      onChange={(e) => handleChange("phone", e.target.value)}
+                      placeholder="Ej: +591 77123456"
+                      type="text"
+                      error={errors.phone}
+                      className="w-full"
+                  />
               )}
 
-              {/* Campo 7: País de residencia - Solo si tiene valor */}
+              {/* País de residencia - Solo si existe */}
               {formData.country && formData.country.trim() !== '' && (
                 <div className="flex flex-col justify-start">
                   <label className={STYLES.INPUT_LABEL}>País de residencia:</label>
@@ -175,7 +160,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                 </div>
               )}
 
-              {/* Campo 8: Imagen de perfil - Siempre visible */}
+              {/* Imagen de perfil - Siempre visible */}
               <div className={STYLES.IMAGE_WRAPPER}>
                 <span className={STYLES.INPUT_LABEL}>Imagen de perfil:</span>
                 <ImageUpload
@@ -185,7 +170,6 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
               </div>
             </div>
 
-            {/* Mensajes de error y éxito */}
             {submitError && (
               <p className="text-red-400 text-sm font-inter">{submitError}</p>
             )}
@@ -196,7 +180,6 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
             )}
           </div>
 
-          {/* Footer con botones */}
           <div className={STYLES.FOOTER}>
             <Button variant="secondary" onClick={handleCancel}>
               Cancelar
@@ -204,7 +187,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
             <Button 
               variant="primary" 
               onClick={handleAcept} 
-              disabled={isSubmitting || isFormIncomplete}
+              disabled={isSubmitting || !isFormComplete()}
             >
               {isSubmitting ? "Guardando..." : "Aceptar"}
             </Button>
