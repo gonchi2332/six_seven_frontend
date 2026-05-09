@@ -57,8 +57,8 @@ export const fetchEducation = async (): Promise<EducationEntry[]> => {
         academicLevel: e.academicdegree,
         academicLevelId: 0,
         institution: e.institution,
-        startDate: e.start_date ? String(new Date(e.start_date).getFullYear()) : "",
-        endDate: e.end_date ? String(new Date(e.end_date).getFullYear()) : undefined,
+        startDate: e.start_date?.split('-')[0] ?? "", //e.start_date ? String(new Date(e.start_date).getFullYear()) : "",
+        endDate: e.end_date?.split('-')[0] ?? undefined //e.end_date ? String(new Date(e.end_date).getFullYear()) : undefined,
     }));
 };
 
