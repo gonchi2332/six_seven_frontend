@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import type { EducationEntry } from "../services/educationService";
+import type { EducationEntry, AcademicDegree } from "../services/educationService";
 import {
     fetchEducation,
+    fetchAcademicDegrees,
     createEducation,
     updateEducation,
     deleteEducation as apiDeleteEducation,
@@ -9,6 +10,7 @@ import {
 
 export const useEducation = () => {
     const [entries, setEntries] = useState<EducationEntry[]>([]);
+    const [academicDegrees, setAcademicDegrees] = useState<AcademicDegree[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -28,8 +30,12 @@ export const useEducation = () => {
             setIsLoading(true);
             setError(null);
             try {
-                const data = await fetchEducation();
+                const [data, degrees] = await Promise.all([
+                    fetchEducation(),
+                    fetchAcademicDegrees(),
+                ]);
                 setEntries(data);
+                setAcademicDegrees(degrees);
             } catch {
                 showError("No se pudieron cargar las experiencias académicas");
             } finally {
@@ -44,8 +50,8 @@ export const useEducation = () => {
             const created = await createEducation(data);
             setEntries((prev) => [...prev, created]);
             showSuccess("Experiencia académica registrada correctamente");
-        } catch {
-            throw new Error("Error al registrar experiencia académica");
+        } catch (err: unknown) {
+            throw new Error(err instanceof Error ? err.message : "Error al registrar experiencia académica");
         }
     };
 
@@ -54,8 +60,8 @@ export const useEducation = () => {
             const updated = await updateEducation(id, data);
             setEntries((prev) => prev.map((e) => (e.id === id ? updated : e)));
             showSuccess("Experiencia académica modificada correctamente");
-        } catch {
-            throw new Error("Error al modificar experiencia académica");
+        } catch (err: unknown) {
+            throw new Error(err instanceof Error ? err.message : "Error al modificar experiencia académica");
         }
     };
 
@@ -64,10 +70,10 @@ export const useEducation = () => {
             await apiDeleteEducation(id);
             setEntries((prev) => prev.filter((e) => e.id !== id));
             showSuccess("Experiencia académica eliminada correctamente");
-        } catch {
-            throw new Error("Error al eliminar experiencia académica");
+        } catch (err: unknown) {
+            throw new Error(err instanceof Error ? err.message : "Error al eliminar experiencia académica");
         }
     };
 
-    return { entries, isLoading, error, successMessage, addEntry, editEntry, deleteEntry };
+    return { entries, academicDegrees, isLoading, error, successMessage, addEntry, editEntry, deleteEntry };
 };

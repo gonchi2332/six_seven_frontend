@@ -3,13 +3,11 @@ import { Search } from "lucide-react";
 import { useSoftSkills } from "../hooks/userSoftSkills";
 import AddSoftSkillPopup from "../features/SoftSkills/AddSoftSkillPopup";
 import ConfirmModal from "../features/SoftSkills/ConfirmModal";
-import ViewSoftSkillPopup from "../features/SoftSkills/ViewSoftSkillPopup";
+import SoftSkillActionPopup from "../features/SoftSkills/SoftSkillActionPopup";
 import type { SoftSkill } from "../services/softSkillService";
 
 const PAGE_SIZE_COMPACT = 3;
 const PAGE_SIZE_FULL = 5;
-
-type ActionMode = "ver" | "delete";
 
 const styles = {
     wrapper: "flex-1 flex flex-col overflow-hidden",
@@ -37,20 +35,14 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
-const MODE_LABELS: Record<ActionMode, string> = {
-    ver: "Ver",
-    delete: "Eliminar",
-};
-
 const SoftSkillsPage = () => {
     const { skills, catalogSkills, isLoading, error, successMessage, username, addSkill, removeSkill } = useSoftSkills();
     const [searchInput, setSearchInput] = useState("");
     const [activeSearch, setActiveSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [showExpanded, setShowExpanded] = useState(false);
-    const [actionMode, setActionMode] = useState<ActionMode>("ver");
     const [showAdd, setShowAdd] = useState(false);
-    const [skillToView, setSkillToView] = useState<SoftSkill | null>(null);
+    const [skillAction, setSkillAction] = useState<SoftSkill | null>(null);
     const [skillToDelete, setSkillToDelete] = useState<string | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -77,20 +69,7 @@ const SoftSkillsPage = () => {
         const nextPageSize = nextExpanded ? PAGE_SIZE_FULL : PAGE_SIZE_COMPACT;
         const nextTotalPages = Math.max(1, Math.ceil(filtered.length / nextPageSize));
         setShowExpanded(nextExpanded);
-        setActionMode("ver");
         setCurrentPage((p) => Math.min(p, nextTotalPages));
-    };
-
-    const handleSetMode = (mode: ActionMode) => {
-        setActionMode((prev) => prev === mode ? "ver" : mode);
-    };
-
-    const handleSkillClick = (skill: SoftSkill) => {
-        if (actionMode === "ver") {
-            setSkillToView(skill);
-        } else if (actionMode === "delete") {
-            setSkillToDelete(skill.name);
-        }
     };
 
     const handleAddSubmit = (name: string) => {
@@ -104,7 +83,6 @@ const SoftSkillsPage = () => {
             await removeSkill(skillToDelete);
             if (paginated.length === 1 && safePage > 1) setCurrentPage((p) => p - 1);
             setSkillToDelete(null);
-            setActionMode("ver");
         } finally {
             setIsDeleting(false);
         }
@@ -120,9 +98,6 @@ const SoftSkillsPage = () => {
                             <button type="button" onClick={() => setShowAdd(true)} className={styles.topBtn(false)}>
                                 Agregar
                             </button>
-                            <button type="button" onClick={() => handleSetMode("delete")} className={styles.topBtn(actionMode === "delete")}>
-                                Eliminar
-                            </button>
                             <button type="button" onClick={handleToggleVer} className={styles.topBtn(showExpanded)}>
                                 {showExpanded ? "Atrás" : "Ver"}
                             </button>
@@ -131,7 +106,7 @@ const SoftSkillsPage = () => {
 
                     <div className={styles.greenContainer}>
                         <div className={styles.innerHeader}>
-                            <span className={styles.modeLabel}>{MODE_LABELS[actionMode]}</span>
+                            <span className={styles.modeLabel}>Ver</span>
                             <div className={styles.searchRow}>
                                 <div className={styles.searchInputWrapper}>
                                     <Search size={16} className={styles.searchIcon} />
@@ -166,7 +141,11 @@ const SoftSkillsPage = () => {
                         ) : (
                             <div className={styles.listWrapper}>
                                 {paginated.map((skill, i) => (
-                                    <div key={i} className={styles.skillRow} onClick={() => handleSkillClick(skill)}>
+                                    <div
+                                        key={i}
+                                        className={styles.skillRow}
+                                        onClick={() => setSkillAction(skill)}
+                                    >
                                         <span className={styles.skillName}>{skill.name}</span>
                                     </div>
                                 ))}
@@ -207,10 +186,11 @@ const SoftSkillsPage = () => {
                 />
             )}
 
-            {skillToView && (
-                <ViewSoftSkillPopup
-                    name={skillToView.name}
-                    onClose={() => setSkillToView(null)}
+            {skillAction && (
+                <SoftSkillActionPopup
+                    skillName={skillAction.name}
+                    onDelete={() => { setSkillToDelete(skillAction.name); setSkillAction(null); }}
+                    onClose={() => setSkillAction(null)}
                 />
             )}
 

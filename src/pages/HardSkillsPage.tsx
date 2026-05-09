@@ -4,14 +4,12 @@ import { useSkills } from "../hooks/useSkills";
 import AddSkillPopup from "../features/skills/components/AddSkillPopup";
 import EditSkillPopup from "../features/skills/components/EditSkillPopup";
 import DeleteSkillPopup from "../features/skills/components/DeleteSkillPopup";
-import ViewHardSkillPopup from "../features/skills/components/ViewHardSkillPopup";
+import SkillActionPopup from "../features/skills/components/SkillActionPopup";
 import type { Skill } from "../features/skills/types/skill.types";
 
 const TOTAL_BARS = 5;
 const PAGE_SIZE_COMPACT = 3;
 const PAGE_SIZE_FULL = 5;
-
-type ActionMode = "ver" | "edit" | "delete";
 
 const styles = {
     wrapper: "flex-1 flex flex-col overflow-hidden",
@@ -32,12 +30,7 @@ const styles = {
     listWrapper: "flex flex-col gap-2 sm:gap-3",
     empty: "text-white/70 font-nunito text-sm sm:text-base text-center py-8 sm:py-12 bg-black/20 rounded-xl border border-white/10",
     loading: "text-white/70 font-nunito text-sm sm:text-base text-center py-8 sm:py-12 bg-black/20 rounded-xl border border-white/10",
-    skillRow: (clickable: boolean) =>
-        `flex items-center gap-3 sm:gap-4 px-3 sm:px-5 py-3 sm:py-4 rounded-xl border transition-all ${
-            clickable
-                ? "border-white/20 bg-black/30 cursor-pointer hover:border-[#90DDF0]/60 hover:bg-white/5"
-                : "border-white/10 bg-black/30"
-        }`,
+    skillRow: "flex items-center gap-3 sm:gap-4 px-3 sm:px-5 py-3 sm:py-4 rounded-xl border border-white/20 bg-black/30 cursor-pointer hover:border-[#90DDF0]/60 hover:bg-white/5 transition-all",
     skillLeft: "flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 flex-1 min-w-0",
     skillName: "text-white font-nunito text-[14px] sm:text-[16px] sm:w-36 shrink-0 truncate",
     barsWrapper: "flex gap-1 sm:gap-1.5 p-1 flex-1 bg-black/40 rounded-md",
@@ -48,22 +41,14 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
-const MODE_LABELS: Record<ActionMode, string> = {
-    ver: "Ver",
-    edit: "Modificar",
-    delete: "Eliminar",
-};
-
 const HardSkillsPage = () => {
     const { skills, catalogSkills, isLoading, error, successMessage, addSkill, editSkill, deleteSkill } = useSkills();
     const [searchInput, setSearchInput] = useState("");
     const [activeSearch, setActiveSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [showExpanded, setShowExpanded] = useState(false);
-    const [actionMode, setActionMode] = useState<ActionMode>("ver");
-    const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
     const [showAdd, setShowAdd] = useState(false);
-    const [skillToView, setSkillToView] = useState<Skill | null>(null);
+    const [skillAction, setSkillAction] = useState<Skill | null>(null);
     const [skillToEdit, setSkillToEdit] = useState<Skill | null>(null);
     const [skillToDelete, setSkillToDelete] = useState<Skill | null>(null);
     const [editError, setEditError] = useState<string | null>(null);
@@ -93,27 +78,7 @@ const HardSkillsPage = () => {
         const nextPageSize = nextExpanded ? PAGE_SIZE_FULL : PAGE_SIZE_COMPACT;
         const nextTotalPages = Math.max(1, Math.ceil(filtered.length / nextPageSize));
         setShowExpanded(nextExpanded);
-        setActionMode("ver");
-        setSelectedSkill(null);
         setCurrentPage((p) => Math.min(p, nextTotalPages));
-    };
-
-    const handleSetMode = (mode: ActionMode) => {
-        setActionMode((prev) => prev === mode ? "ver" : mode);
-        setSelectedSkill(null);
-    };
-
-    const handleSkillClick = (skill: Skill) => {
-        if (actionMode === "ver") {
-            setSkillToView(skill);
-        } else if (actionMode === "edit") {
-            setSelectedSkill(skill);
-            setEditError(null);
-            setSkillToEdit(skill);
-        } else if (actionMode === "delete") {
-            setSelectedSkill(skill);
-            setSkillToDelete(skill);
-        }
     };
 
     const handleAddSubmit = async (name: string, level: number) => {
@@ -126,8 +91,6 @@ const HardSkillsPage = () => {
         try {
             await editSkill(id, name, level);
             setSkillToEdit(null);
-            setSelectedSkill(null);
-            setActionMode("ver");
         } catch {
             setEditError("Ocurrió un error al guardar los cambios.");
         } finally {
@@ -141,8 +104,6 @@ const HardSkillsPage = () => {
         try {
             await deleteSkill(skillToDelete.id);
             setSkillToDelete(null);
-            setSelectedSkill(null);
-            setActionMode("ver");
             if (paginated.length === 1 && safePage > 1) setCurrentPage((p) => p - 1);
         } finally {
             setIsDeleting(false);
@@ -159,12 +120,6 @@ const HardSkillsPage = () => {
                             <button type="button" onClick={() => setShowAdd(true)} className={styles.topBtn(false)}>
                                 Agregar
                             </button>
-                            <button type="button" onClick={() => handleSetMode("edit")} className={styles.topBtn(actionMode === "edit")}>
-                                Modificar
-                            </button>
-                            <button type="button" onClick={() => handleSetMode("delete")} className={styles.topBtn(actionMode === "delete")}>
-                                Eliminar
-                            </button>
                             <button type="button" onClick={handleToggleVer} className={styles.topBtn(showExpanded)}>
                                 {showExpanded ? "Atrás" : "Ver"}
                             </button>
@@ -173,7 +128,7 @@ const HardSkillsPage = () => {
 
                     <div className={styles.greenContainer}>
                         <div className={styles.innerHeader}>
-                            <span className={styles.modeLabel}>{MODE_LABELS[actionMode]}</span>
+                            <span className={styles.modeLabel}>Ver</span>
                             <div className={styles.searchRow}>
                                 <div className={styles.searchInputWrapper}>
                                     <Search size={16} className={styles.searchIcon} />
@@ -210,8 +165,8 @@ const HardSkillsPage = () => {
                                 {paginated.map((skill) => (
                                     <div
                                         key={skill.id}
-                                        className={styles.skillRow(true)}
-                                        onClick={() => handleSkillClick(skill)}
+                                        className={styles.skillRow}
+                                        onClick={() => setSkillAction(skill)}
                                     >
                                         <div className={styles.skillLeft}>
                                             <span className={styles.skillName}>{skill.name}</span>
@@ -258,15 +213,20 @@ const HardSkillsPage = () => {
                 />
             )}
 
-            {skillToView && (
-                <ViewHardSkillPopup skill={skillToView} onClose={() => { setSkillToView(null); setSelectedSkill(null); }} />
+            {skillAction && (
+                <SkillActionPopup
+                    skill={skillAction}
+                    onModify={() => { setEditError(null); setSkillToEdit(skillAction); setSkillAction(null); }}
+                    onDelete={() => { setSkillToDelete(skillAction); setSkillAction(null); }}
+                    onClose={() => setSkillAction(null)}
+                />
             )}
 
             {skillToEdit && (
                 <EditSkillPopup
                     skill={skillToEdit}
                     onSubmit={handleEditSubmit}
-                    onClose={() => { setSkillToEdit(null); setSelectedSkill(null); }}
+                    onClose={() => setSkillToEdit(null)}
                     serverError={editError}
                     isSubmitting={isEditSubmitting}
                 />
@@ -276,7 +236,7 @@ const HardSkillsPage = () => {
                 <DeleteSkillPopup
                     skillName={skillToDelete.name}
                     onConfirm={handleDeleteConfirm}
-                    onClose={() => { setSkillToDelete(null); setSelectedSkill(null); }}
+                    onClose={() => setSkillToDelete(null)}
                     isSubmitting={isDeleting}
                 />
             )}

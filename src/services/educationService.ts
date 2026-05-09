@@ -2,100 +2,115 @@ export interface EducationEntry {
     id: string;
     degree: string;
     academicLevel: string;
+    academicLevelId: number;
     institution: string;
-    description: string;
     startDate: string;
     endDate?: string;
 }
 
-const USE_MOCK = true;
-const BASE_URL = "/api/education";
-const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+export interface AcademicDegree {
+    id: number;
+    academicdegree: string;
+}
 
-let mockData: EducationEntry[] = [
-    {
-        id: "1",
-        degree: "Ingeniería en Sistemas",
-        academicLevel: "Licenciatura",
-        institution: "Universidad Mayor de San Simón",
-        description: "Carrera de ingeniería enfocada en desarrollo de software y sistemas computacionales.",
-        startDate: "2018",
-        endDate: undefined,
-    },
-    {
-        id: "2",
-        degree: "Bachillerato en Ciencias",
-        academicLevel: "Bachillerato",
-        institution: "Colegio Nacional Simón Bolívar",
-        description: "Educación secundaria con énfasis en ciencias exactas y matemáticas.",
-        startDate: "2012",
-        endDate: "2017",
-    },
-];
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/portfolio`;
 
-let nextId = 3;
+const getToken = () => localStorage.getItem("token") ?? "";
+const getUsername = () => localStorage.getItem("username") ?? "";
 
-const mock = {
-    fetch: async (): Promise<EducationEntry[]> => {
-        await delay(500);
-        return [...mockData];
-    },
-    create: async (data: Omit<EducationEntry, "id">): Promise<EducationEntry> => {
-        await delay(400);
-        const created: EducationEntry = { id: String(nextId++), ...data };
-        mockData = [...mockData, created];
-        return created;
-    },
-    update: async (id: string, data: Omit<EducationEntry, "id">): Promise<EducationEntry> => {
-        await delay(400);
-        const updated: EducationEntry = { id, ...data };
-        mockData = mockData.map((e) => (e.id === id ? updated : e));
-        return updated;
-    },
-    delete: async (id: string): Promise<void> => {
-        await delay(400);
-        mockData = mockData.filter((e) => e.id !== id);
-    },
+const authHeaders = () => ({
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${getToken()}`,
+});
+
+const jsonHeaders = () => ({
+    "Content-Type": "application/json",
+});
+
+export const fetchAcademicDegrees = async (): Promise<AcademicDegree[]> => {
+    const res = await fetch(`${BASE_URL}/education_degree`, {
+        headers: jsonHeaders(),
+    });
+    if (!res.ok) throw new Error("Error al obtener grados académicos");
+    const data = await res.json();
+    return data.educationGrade ?? [];
 };
 
-const api = {
-    fetch: async (): Promise<EducationEntry[]> => {
-        const res = await fetch(BASE_URL, { credentials: "include" });
-        if (!res.ok) throw new Error("Error al cargar experiencias académicas");
-        return res.json();
-    },
-    create: async (data: Omit<EducationEntry, "id">): Promise<EducationEntry> => {
-        const res = await fetch(BASE_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify(data),
-        });
-        if (!res.ok) throw new Error("Error al crear experiencia académica");
-        return res.json();
-    },
-    update: async (id: string, data: Omit<EducationEntry, "id">): Promise<EducationEntry> => {
-        const res = await fetch(`${BASE_URL}/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify(data),
-        });
-        if (!res.ok) throw new Error("Error al actualizar experiencia académica");
-        return res.json();
-    },
-    delete: async (id: string): Promise<void> => {
-        const res = await fetch(`${BASE_URL}/${id}`, {
-            method: "DELETE",
-            credentials: "include",
-        });
-        if (!res.ok) throw new Error("Error al eliminar experiencia académica");
-    },
+export const fetchEducation = async (): Promise<EducationEntry[]> => {
+    const username = getUsername();
+    const res = await fetch(`${BASE_URL}/users/education?username=${username}`, {
+        headers: jsonHeaders(),
+    });
+    if (!res.ok) throw new Error("Error al cargar experiencias académicas");
+    const data = await res.json();
+    if (!data.education) return [];
+    return data.education.map((e: {
+        id: number;
+        title: string;
+        institution: string;
+        academicdegree: string;
+        start_date: string;
+        end_date: string | null;
+    }) => ({
+        id: String(e.id),
+        degree: e.title,
+        academicLevel: e.academicdegree,
+        academicLevelId: 0,
+        institution: e.institution,
+        startDate: e.start_date ? String(new Date(e.start_date).getFullYear()) : "",
+        endDate: e.end_date ? String(new Date(e.end_date).getFullYear()) : undefined,
+    }));
 };
 
-const service = USE_MOCK ? mock : api;
+export const createEducation = async (
+    data: Omit<EducationEntry, "id">
+): Promise<EducationEntry> => {
+    const body: Record<string, unknown> = {
+        title: data.degree,
+        academyDegreeId: data.academicLevelId,
+        institution: data.institution,
+        startDate: data.startDate,
+    };
+    if (data.endDate) body.endDate = data.endDate;
 
-export const fetchEducation = (): Promise<EducationEntry[]> => service.fetch();
-export const createEducation = (data: Omit<EducationEntry, "id">): Promise<EducationEntry> => service.create(data);
-export const updateEducation = (id: string, data: Omit<EducationEntry, "id">): Promise<EducationEntry> => service.update(id, data);
-export const deleteEducation = (id: string): Promise<void> => service.delete(id);
+    const res = await fetch(`${BASE_URL}/users/education`, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify(body),
+    });
+    const resData = await res.json();
+    if (!res.ok) throw new Error(resData.message ?? "Error al crear experiencia académica");
+    return { ...data, id: String(Date.now()) };
+};
+
+export const updateEducation = async (
+    id: string,
+    data: Omit<EducationEntry, "id">
+): Promise<EducationEntry> => {
+    const body: Record<string, unknown> = {
+        academyDegreeId: data.academicLevelId,
+        institution: data.institution,
+        startDate: data.startDate,
+    };
+    if (data.endDate) body.endDate = data.endDate;
+
+    const res = await fetch(`${BASE_URL}/users/education?id=${id}`, {
+        method: "PATCH",
+        headers: authHeaders(),
+        body: JSON.stringify(body),
+    });
+    const resData = await res.json();
+    if (!res.ok) throw new Error(resData.message ?? "Error al actualizar experiencia académica");
+    return { ...data, id };
+};
+
+export const deleteEducation = async (id: string): Promise<void> => {
+    const res = await fetch(`${BASE_URL}/users/education?id=${id}`, {
+        method: "DELETE",
+        headers: authHeaders(),
+    });
+    if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message ?? "Error al eliminar experiencia académica");
+    }
+};

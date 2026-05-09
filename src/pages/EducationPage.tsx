@@ -33,7 +33,7 @@ const styles = {
 };
 
 const EducationPage = () => {
-    const { entries, isLoading, error, successMessage, addEntry, editEntry, deleteEntry } = useEducation();
+    const { entries, academicDegrees, isLoading, error, successMessage, addEntry, editEntry, deleteEntry } = useEducation();
     const [searchInput, setSearchInput] = useState("");
     const [activeSearch, setActiveSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -67,8 +67,8 @@ const EducationPage = () => {
         try {
             await addEntry(data);
             setShowAdd(false);
-        } catch {
-            setFormError("Ocurrió un error al registrar la experiencia académica.");
+        } catch (err: unknown) {
+            setFormError(err instanceof Error ? err.message : "Ocurrió un error al registrar la experiencia académica.");
         } finally {
             setIsFormSubmitting(false);
         }
@@ -81,8 +81,8 @@ const EducationPage = () => {
         try {
             await editEntry(entryToEdit.id, data);
             setEntryToEdit(null);
-        } catch {
-            setFormError("Ocurrió un error al modificar la experiencia académica.");
+        } catch (err: unknown) {
+            setFormError(err instanceof Error ? err.message : "Ocurrió un error al modificar la experiencia académica.");
         } finally {
             setIsFormSubmitting(false);
         }
@@ -93,9 +93,7 @@ const EducationPage = () => {
         setIsDeleting(true);
         try {
             await deleteEntry(entryToDelete.id);
-            if (paginated.length === 1 && currentPage > 1) {
-                setCurrentPage((p) => p - 1);
-            }
+            if (paginated.length === 1 && currentPage > 1) setCurrentPage((p) => p - 1);
             setEntryToDelete(null);
         } finally {
             setIsDeleting(false);
@@ -109,7 +107,6 @@ const EducationPage = () => {
                     <div className={styles.greenContainer}>
                         <div className={styles.header}>
                             <h1 className={styles.title}>Experiencia Académica</h1>
-
                             <div className={styles.searchRow}>
                                 <div className={styles.searchInputWrapper}>
                                     <Search size={16} className={styles.searchIcon} />
@@ -162,32 +159,13 @@ const EducationPage = () => {
 
                         {totalPages > 1 && (
                             <div className={styles.pagination}>
-                                <button
-                                    type="button"
-                                    onClick={() => setCurrentPage((p) => p - 1)}
-                                    disabled={currentPage === 1}
-                                    className={styles.pageArrow}
-                                >
-                                    ‹
-                                </button>
+                                <button type="button" onClick={() => setCurrentPage((p) => p - 1)} disabled={currentPage === 1} className={styles.pageArrow}>‹</button>
                                 {Array.from({ length: totalPages }).map((_, i) => (
-                                    <button
-                                        key={i}
-                                        type="button"
-                                        onClick={() => setCurrentPage(i + 1)}
-                                        className={styles.pageBtn(currentPage === i + 1)}
-                                    >
+                                    <button key={i} type="button" onClick={() => setCurrentPage(i + 1)} className={styles.pageBtn(currentPage === i + 1)}>
                                         {i + 1}
                                     </button>
                                 ))}
-                                <button
-                                    type="button"
-                                    onClick={() => setCurrentPage((p) => p + 1)}
-                                    disabled={currentPage === totalPages}
-                                    className={styles.pageArrow}
-                                >
-                                    ›
-                                </button>
+                                <button type="button" onClick={() => setCurrentPage((p) => p + 1)} disabled={currentPage === totalPages} className={styles.pageArrow}>›</button>
                             </div>
                         )}
                     </div>
@@ -197,6 +175,7 @@ const EducationPage = () => {
             {showAdd && (
                 <EducationForm
                     mode="add"
+                    academicDegrees={academicDegrees}
                     onSubmit={handleAddSubmit}
                     onClose={() => setShowAdd(false)}
                     serverError={formError}
@@ -208,6 +187,7 @@ const EducationPage = () => {
                 <EducationForm
                     mode="edit"
                     initial={entryToEdit}
+                    academicDegrees={academicDegrees}
                     onSubmit={handleEditSubmit}
                     onClose={() => setEntryToEdit(null)}
                     serverError={formError}
@@ -216,10 +196,7 @@ const EducationPage = () => {
             )}
 
             {entryToView && (
-                <ViewEducationPopup
-                    entry={entryToView}
-                    onClose={() => setEntryToView(null)}
-                />
+                <ViewEducationPopup entry={entryToView} onClose={() => setEntryToView(null)} />
             )}
 
             {entryToDelete && (

@@ -1,6 +1,6 @@
 import LinkedIn from "../features/LinkedIn/LinkedIn";
 import PersonalInfo from "./PersonalInfo";
-import SkillsList from "../features/skills/components/SkillsList";
+
 import WorkExperiencePage from "./WorkExperiencePage";
 
 const STYLES = {
@@ -16,12 +16,6 @@ const Dashboard = () => {
         <PersonalInfo />
       </div>
       <div className={STYLES.CONTENT}>
-        <div className={STYLES.GRID_CONTAINER}>
-          <div className="w-full">
-            <SkillsList />
-          </div>
-          
-        </div>
         <div className={STYLES.CONTENT}>
             <WorkExperiencePage/>
           </div>

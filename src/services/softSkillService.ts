@@ -92,6 +92,7 @@ export const postSoftSkill = async (
         return "success";
     } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : "";
+        
         if (msg.includes("no existe")) {
             return postNewSoftSkill(skillName);
         }

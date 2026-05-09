@@ -14,7 +14,6 @@ const styles = {
     field: "flex flex-col gap-1 flex-1 min-w-0",
     label: "text-[13px] font-nunito text-white/50",
     value: "text-[15px] font-nunito text-white font-semibold break-words",
-    description: "text-[14px] font-nunito text-white/80 leading-relaxed break-words",
     divider: "border-t border-white/10",
     buttonsWrapper: "flex justify-center mt-2 px-6 sm:px-8 pb-6",
 };
@@ -43,11 +42,6 @@ const ViewEducationPopup = ({ entry, onClose }: Props) => {
                         <div className={styles.field}>
                             <span className={styles.label}>Institución</span>
                             <span className={styles.value}>{entry.institution}</span>
-                        </div>
-                        <div className={styles.divider} />
-                        <div className={styles.field}>
-                            <span className={styles.label}>Descripción</span>
-                            <span className={styles.description}>{entry.description}</span>
                         </div>
                         <div className={styles.divider} />
                         <div className={styles.field}>
