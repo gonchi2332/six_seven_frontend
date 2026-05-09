@@ -30,7 +30,7 @@ const EditSkillPopup = ({ skill, onSubmit, onClose, serverError, isSubmitting = 
     return (
         <div className={styles.overlay}>
             <div className="w-full max-w-xs sm:max-w-sm">
-                <PopUpCard title={`Editar: ${skill.name}`}>
+                <PopUpCard title={`Modificar: ${skill.name}`}>
                     {serverError && <div className={styles.serverError}>{serverError}</div>}
                     <div className={styles.formWrapper}>
                         <div>

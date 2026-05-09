@@ -94,6 +94,7 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
                                 onChange={(e) => handlePositionChange(e.target.value)}
                                 placeholder="Ej: Full Stack Developer"
                                 error={errors.position}
+                                maxLength={50}
                             />
                             
                             <TextField
@@ -102,6 +103,7 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
                                 onChange={(e) => handleCompanyChange(e.target.value)}
                                 placeholder="Ej: WIMETRIX"
                                 error={errors.company}
+                                maxLength={50}
                             />
                         </div>
                         
@@ -112,6 +114,7 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
                             onChange={(e) => handleDescriptionChange(e.target.value)}
                             placeholder="Describe tus responsabilidades..."
                             error={errors.description}
+                            maxLength={200}
                         />
                         
                         {/* Fila: Fechas */}

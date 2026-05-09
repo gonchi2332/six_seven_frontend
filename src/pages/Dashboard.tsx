@@ -1,8 +1,6 @@
 import LinkedIn from "../features/LinkedIn/LinkedIn";
 import PersonalInfo from "./PersonalInfo";
 
-import WorkExperiencePage from "./WorkExperiencePage";
-
 const STYLES = {
   WRAPPER: "min-h-screen bg-main flex flex-col",
   CONTENT: "w-full p-6",
@@ -16,9 +14,7 @@ const Dashboard = () => {
         <PersonalInfo />
       </div>
       <div className={STYLES.CONTENT}>
-        <div className={STYLES.CONTENT}>
-            <WorkExperiencePage/>
-          </div>
+        
       </div>
       <div className={STYLES.CONTENT}>
         <LinkedIn />

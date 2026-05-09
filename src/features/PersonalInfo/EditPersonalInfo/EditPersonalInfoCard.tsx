@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import TextField from "../../../components/TextField";
 import Button from "../../../components/Button";
 import PopUpCard from "../../../components/PopUpCard";
@@ -37,6 +38,17 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
   const { isLoadingData, loadError } = usePersonalInfo(setInitialData);
   const { handleSubmit, isSubmitting, submitError, submitSuccess } = usePersonalInfoSubmit();
 
+  // Recargar la página cuando el submit es exitoso
+  useEffect(() => {
+    if (submitSuccess) {
+      // Pequeño delay para mostrar el mensaje de éxito
+      const timer = setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [submitSuccess]);
+
   const handleAcept = async () => {
     if (!validateForm()) return;
     await handleSubmit(formData);
@@ -70,24 +82,25 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
           <div className={STYLES.FORM_WRAPPER}>
             <div className={STYLES.DYNAMIC_GRID}>
               {/* Nombre(s) - SIEMPRE visible */}
+              {shouldShowField('firstName') && (
               <TextField
                 label="Nombre(s)*:"
                 value={formData.firstName}
                 onChange={(e) => handleChange("firstName", e.target.value)}
                 error={errors.firstName}
                 className="w-full"
-                disabled={true}
               />
-              
+              )}
               {/* Primer Apellido - SIEMPRE visible */}
-              <TextField
-                label="Primer Apellido*:"
-                value={formData.firstSurname}
-                onChange={(e) => handleChange("firstSurname", e.target.value)}
-                error={errors.firstSurname}
-                className="w-full"
-              />
-              
+              {shouldShowField('firstSurname') && (
+                <TextField
+                  label="Primer Apellido*:"
+                  value={formData.firstSurname}
+                  onChange={(e) => handleChange("firstSurname", e.target.value)}
+                  error={errors.firstSurname}
+                  className="w-full"
+                />
+              )} 
               {/* Segundo Apellido - Solo si existía originalmente */}
               {shouldShowField('secondSurname') && (
                   <TextField

@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useCountries } from '../../../hooks/useCountries';
 import Button from '../../../components/Button';
 import TextField from '../../../components/TextField';
-import { useCountries } from '../../../hooks/useCountries';
+import { useAddInfoForm } from '../../../hooks/useAddInfoForm';
 
 // Campos que se pueden agregar (los que pueden estar vacíos)
 type AvailableField = 'secondSurname' | 'city' | 'email' | 'phone' | 'country';
@@ -10,14 +10,14 @@ interface FieldOption {
     value: AvailableField;
     label: string;
     placeholder: string;
-    type?: 'text' | 'email' | 'number';
+    type?: 'text' | 'email';
 }
 
 const fieldOptions: FieldOption[] = [
     { value: 'secondSurname', label: 'Segundo Apellido', placeholder: 'Ej: Pérez', type: 'text' },
     { value: 'city', label: 'Ciudad', placeholder: 'Ej: La Paz', type: 'text' },
-    { value: 'email', label: 'Correo de contacto', placeholder: 'Ej: juan@ejemplo.com', type: 'email' },
-    { value: 'phone', label: 'Teléfono', placeholder: 'Ej: +591 77123456', type: 'number' },
+    { value: 'email', label: 'Correo electrónico', placeholder: 'Ej: juan@ejemplo.com', type: 'email' },
+    { value: 'phone', label: 'Teléfono', placeholder: 'Ej: +591 77123456', type: 'text' },
     { value: 'country', label: 'País de residencia', placeholder: 'Selecciona un país', type: 'text' },
 ];
 
@@ -25,7 +25,7 @@ interface AddInfoModalProps {
     isOpen: boolean;
     onClose: () => void;
     onAdd: (field: AvailableField, value: string) => Promise<void>;
-    emptyFields: AvailableField[];  // Lista de campos que están vacíos y se pueden agregar
+    emptyFields: AvailableField[];
 }
 
 const styles = {
@@ -40,46 +40,22 @@ const styles = {
 
 const AddInfoModal = ({ isOpen, onClose, onAdd, emptyFields }: AddInfoModalProps) => {
     const { countries, isLoading: countriesLoading } = useCountries();
-    const [selectedField, setSelectedField] = useState<AvailableField | ''>('');
-    const [value, setValue] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    
+    const {
+        selectedField,
+        value,
+        isSubmitting,
+        error,
+        fieldError,
+        handleFieldChange,
+        handleValueChange,
+        handleSubmit,
+        handleClose,
+        isSubmitDisabled,
+    } = useAddInfoForm({ onAdd, onClose });
 
     const availableOptions = fieldOptions.filter(opt => emptyFields.includes(opt.value));
     const selectedOption = fieldOptions.find(opt => opt.value === selectedField);
-
-    const handleFieldChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedField(e.target.value as AvailableField | '');
-        setValue('');
-        setError(null);
-    };
-
-    const handleSubmit = async () => {
-        if (!selectedField || !value.trim()) {
-            setError('Completa todos los campos');
-            return;
-        }
-
-        setIsSubmitting(true);
-        setError(null);
-        try {
-            await onAdd(selectedField, value.trim());
-            onClose();
-            setSelectedField('');
-            setValue('');
-        } catch (err: any) {
-            setError(err.message || 'Error al agregar');
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    const handleClose = () => {
-        setSelectedField('');
-        setValue('');
-        setError(null);
-        onClose();
-    };
 
     if (!isOpen) return null;
 
@@ -89,7 +65,6 @@ const AddInfoModal = ({ isOpen, onClose, onAdd, emptyFields }: AddInfoModalProps
                 <div className={styles.modal}>
                     <h2 className={styles.title}>Agregar Información Personal</h2>
 
-                    {/* Dropdown para seleccionar qué campo agregar */}
                     <label className={styles.label}>Campo a agregar</label>
                     <select
                         value={selectedField}
@@ -102,7 +77,6 @@ const AddInfoModal = ({ isOpen, onClose, onAdd, emptyFields }: AddInfoModalProps
                         ))}
                     </select>
 
-                    {/* Input o Select según el campo seleccionado */}
                     {selectedField && (
                         <div className="mt-4">
                             <label className={styles.label}>
@@ -111,7 +85,7 @@ const AddInfoModal = ({ isOpen, onClose, onAdd, emptyFields }: AddInfoModalProps
                             {selectedField === 'country' ? (
                                 <select
                                     value={value}
-                                    onChange={(e) => setValue(e.target.value)}
+                                    onChange={(e) => handleValueChange(e.target.value)}
                                     className={styles.select}
                                     disabled={countriesLoading}
                                 >
@@ -123,17 +97,17 @@ const AddInfoModal = ({ isOpen, onClose, onAdd, emptyFields }: AddInfoModalProps
                             ) : (
                                 <TextField
                                     value={value}
-                                    onChange={(e) => setValue(e.target.value)}
+                                    onChange={(e) => handleValueChange(e.target.value)}
                                     placeholder={selectedOption?.placeholder}
                                     type={selectedOption?.type}
-                                    error={error || undefined}
+                                    error={fieldError || undefined}
                                     className="w-full"
                                 />
                             )}
                         </div>
                     )}
 
-                    {error && !selectedField && (
+                    {(error || (selectedField && !fieldError && !value && error)) && (
                         <p className="text-red-500 text-sm mt-2">{error}</p>
                     )}
 
@@ -144,7 +118,7 @@ const AddInfoModal = ({ isOpen, onClose, onAdd, emptyFields }: AddInfoModalProps
                         <Button
                             variant="primary"
                             onClick={handleSubmit}
-                            disabled={isSubmitting || !selectedField || !value.trim()}
+                            disabled={isSubmitDisabled()}
                             fullWidth
                         >
                             {isSubmitting ? 'Agregando...' : 'Agregar'}

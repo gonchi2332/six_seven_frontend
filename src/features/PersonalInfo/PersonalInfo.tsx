@@ -23,9 +23,10 @@ const styles = {
     emptyValue: "text-white/20 italic font-nunito text-base mt-0.5",
     loadingSkeleton: "h-16 bg-white/5 rounded-2xl animate-pulse border border-white/5",
     loadingContainer: "flex flex-col gap-4",
+    headerRow: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4",
     headerTitle: "text-surface font-inter font-bold text-2xl",
-    headerSubtitle: "text-white/40 text-sm font-nunito",
-    actionsRow: "flex items-center gap-4 mt-6 flex-wrap",
+    headerSubtitle: "text-white/40 text-sm font-nunito mt-1",
+    actionsRow: "flex items-center gap-3",
     overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 z-50",
     errorMessage: "text-red-400 text-sm font-inter text-center mt-4",
 };
@@ -122,7 +123,6 @@ const PersonalInfo = () => {
         refreshData();
     };
 
-
     const fullName = [userInfo?.names, userInfo?.first_surname, userInfo?.second_surname]
         .filter(Boolean)
         .join(" ");
@@ -135,12 +135,26 @@ const PersonalInfo = () => {
 
     return (
         <div className={styles.container}>
-            {/* Header */}
-            <div>
-                <h1 className={styles.headerTitle}>Información Personal</h1>
-                <p className={styles.headerSubtitle}>
-                    Tus datos de perfil y contacto registrados en la plataforma.
-                </p>
+            {/* Header con título y botones alineados */}
+            <div className={styles.headerRow}>
+                <div>
+                    <h1 className={styles.headerTitle}>Información Personal</h1>
+                    <p className={styles.headerSubtitle}>
+                        Tus datos de perfil y contacto registrados en la plataforma.
+                    </p>
+                </div>
+                <div className={styles.actionsRow}>
+                    <Button variant="primary" onClick={handleEdit}>
+                        Modificar
+                    </Button>
+                    <Button 
+                        variant="secondary" 
+                        onClick={() => setIsAddModalOpen(true)}
+                        disabled={emptyFields.length === 0 || isSubmitting}
+                    >
+                        Registrar
+                    </Button>
+                </div>
             </div>
 
             {/* Sección Identidad */}
@@ -155,21 +169,6 @@ const PersonalInfo = () => {
                 <InfoRow icon={Mail} label="Correo de contacto" value={userInfo?.contact_email} />
                 <InfoRow icon={Phone} label="Teléfono" value={userInfo?.phone_number} />
             </Section>
-
-            {/* Botones de acción */}
-            <div className={styles.actionsRow}>
-                <Button variant="primary" onClick={handleEdit}>
-                    Modificar
-                </Button>
-                <Button 
-                    variant="secondary" 
-                    onClick={() => setIsAddModalOpen(true)}
-                    disabled={emptyFields.length === 0 || isSubmitting}
-                >
-                    Agregar
-                </Button>
-                
-            </div>
 
             {submitError && (
                 <p className={styles.errorMessage}>{submitError}</p>
@@ -191,9 +190,6 @@ const PersonalInfo = () => {
                 onAdd={handleAdd}
                 emptyFields={emptyFields}
             />
-
-            {/* Modal de Eliminar */}
-            
         </div>
     );
 };

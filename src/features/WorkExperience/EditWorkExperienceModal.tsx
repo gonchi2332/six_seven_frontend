@@ -121,6 +121,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                                 disabled={true}
                                 placeholder="Ej: Full Stack Developer"
                                 error={errors.position}
+                                maxLength={50}
                             />
                             
                             <TextField
@@ -130,6 +131,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                                 disabled={true}
                                 placeholder="Ej: WIMETRIX"
                                 error={errors.company}
+                                maxLength={50}
                             />
                         </div>
                         
@@ -140,6 +142,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                             onChange={(e) => setDescription(e.target.value)}
                             placeholder="Describe tus responsabilidades y logros..."
                             error={errors.description}
+                            maxLength={200}
                         />
                         
                         {/* Fila: Fechas */}
@@ -187,7 +190,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                             disabled={isSubmitting}
                             fullWidth
                         >
-                            {isSubmitting ? 'Guardando...' : 'Modificar'}
+                            {isSubmitting ? 'Guardando...' : 'Aceptar'}
                         </Button>
                     </div>
                 </PopUpCard>
