@@ -80,7 +80,7 @@ const useAddSkill = (
             if (!isOther) {
                 const userSkills = await getUserSkillNames();
                 if (userSkills.includes(nameToSubmit.toLowerCase())) {
-                    setInlineError("Esta habilidad ya ha sido añadida anteriormente.");
+                    setInlineError("La habilidad tecnica a insertar con su puntuacion ya existe.");
                     setHasFieldError(true);
                     return;
                 }
@@ -97,7 +97,7 @@ const useAddSkill = (
                 setInlineError("Habilidad inválida: el nombre contiene palabras no permitidas.");
                 setHasFieldError(true);
             } else if (msg === "ALREADY_EXISTS") {
-                setInlineError("Esta habilidad ya ha sido añadida anteriormente.");
+                setInlineError("La habilidad tecnica a insertar con su puntuacion ya existe.");
                 setHasFieldError(true);
             } else {
                 setResult("not-found");
@@ -116,28 +116,11 @@ const useAddSkill = (
     const isDisabled = loading || !canConfirm;
 
     return {
-        search,
-        suggestions,
-        showDropdown,
-        setShowDropdown,
-        selectedName,
-        isOther,
-        otherName,
-        level,
-        setLevel,
-        result,
-        inlineError,
-        hasFieldError,
-        loading,
-        containerRef,
-        canConfirm,
-        isDisabled,
-        handleSearchChange,
-        handleSelectSuggestion,
-        handleToggleOther,
-        handleOtherNameChange,
-        handleConfirm,
-        handleResultClose,
+        search, suggestions, showDropdown, setShowDropdown, selectedName,
+        isOther, otherName, level, setLevel, result, inlineError, hasFieldError,
+        loading, containerRef, canConfirm, isDisabled,
+        handleSearchChange, handleSelectSuggestion, handleToggleOther,
+        handleOtherNameChange, handleConfirm, handleResultClose,
     };
 };
 
