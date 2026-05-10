@@ -15,7 +15,7 @@ interface EditSkillPopupProps {
 const styles = {
     overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 z-50",
     formWrapper: "flex flex-col gap-4 px-6 sm:px-8 pb-2",
-    buttonsWrapper: "flex gap-4 justify-center mt-2 px-6 sm:px-8",
+    buttonsWrapper: "flex gap-4 justify-center mt-2 px-6 sm:px-8 pb-6",
     label: "text-[18px] font-nunito text-surface",
     required: "text-white ml-0.5",
     serverError: "mx-6 sm:mx-8 mb-2 p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center",
@@ -23,6 +23,9 @@ const styles = {
 
 const EditSkillPopup = ({ skill, onSubmit, onClose, serverError, isSubmitting = false }: EditSkillPopupProps) => {
     const [level, setLevel] = useState(skill.level);
+
+    const hasChanges = level !== skill.level;
+
     const handleSubmit = async () => {
         await onSubmit(skill.id, skill.name, level);
     };
@@ -41,23 +44,11 @@ const EditSkillPopup = ({ skill, onSubmit, onClose, serverError, isSubmitting = 
                         </div>
                     </div>
                     <div className={styles.buttonsWrapper}>
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            onClick={onClose}
-                            fullWidth
-                            disabled={isSubmitting}
-                        >
+                        <Button type="button" variant="secondary" onClick={onClose} fullWidth disabled={isSubmitting}>
                             Cancelar
                         </Button>
-                        <Button
-                            type="button"
-                            variant="primary"
-                            onClick={handleSubmit}
-                            fullWidth
-                            disabled={isSubmitting}
-                        >
-                            {isSubmitting ? "Guardando..." : "Guardar"}
+                        <Button type="button" variant="primary" onClick={handleSubmit} fullWidth disabled={isSubmitting || !hasChanges}>
+                            {isSubmitting ? "Guardando..." : "Aceptar"}
                         </Button>
                     </div>
                 </PopUpCard>

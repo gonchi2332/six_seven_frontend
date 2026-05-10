@@ -27,9 +27,7 @@ const ViewSoftSkillPopup = ({ name, onClose }: Props) => {
                         </div>
                     </div>
                     <div className={styles.buttonsWrapper}>
-                        <Button type="button" variant="secondary" onClick={onClose} fullWidth>
-                            Cerrar
-                        </Button>
+                        <Button type="button" variant="secondary" onClick={onClose} fullWidth>Atrás</Button>
                     </div>
                 </PopUpCard>
             </div>

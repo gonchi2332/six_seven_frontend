@@ -35,9 +35,7 @@ const useAddSoftSkill = (
         setSelectedName(null);
         clearError();
         if (val.trim()) {
-            setSuggestions(
-                catalogSkills.filter((s) => s.toLowerCase().includes(val.toLowerCase()))
-            );
+            setSuggestions(catalogSkills.filter((s) => s.toLowerCase().includes(val.toLowerCase())));
             setShowDropdown(true);
         } else {
             setSuggestions([]);
@@ -83,7 +81,7 @@ const useAddSoftSkill = (
             if (!isOther) {
                 const userSkills = await getUserSoftSkillNames(username);
                 if (userSkills.includes(nameToSubmit.toLowerCase())) {
-                    setInlineError("Esta habilidad ya ha sido añadida anteriormente.");
+                    setInlineError("El usuario ya tiene registrada esta habilidad blanda.");
                     setHasFieldError(true);
                     return;
                 }
@@ -100,7 +98,7 @@ const useAddSoftSkill = (
                 setInlineError("Habilidad inválida: el nombre contiene palabras no permitidas.");
                 setHasFieldError(true);
             } else if (msg === "ALREADY_EXISTS") {
-                setInlineError("Esta habilidad ya ha sido añadida anteriormente.");
+                setInlineError("El usuario ya tiene registrada esta habilidad blanda.");
                 setHasFieldError(true);
             } else {
                 setResult("not-found");
@@ -119,26 +117,11 @@ const useAddSoftSkill = (
     const isDisabled = loading || !canConfirm;
 
     return {
-        search,
-        suggestions,
-        showDropdown,
-        setShowDropdown,
-        selectedName,
-        isOther,
-        otherName,
-        result,
-        inlineError,
-        hasFieldError,
-        loading,
-        containerRef,
-        canConfirm,
-        isDisabled,
-        handleSearchChange,
-        handleSelectSuggestion,
-        handleToggleOther,
-        handleOtherNameChange,
-        handleConfirm,
-        handleResultClose,
+        search, suggestions, showDropdown, setShowDropdown, selectedName,
+        isOther, otherName, result, inlineError, hasFieldError, loading,
+        containerRef, canConfirm, isDisabled,
+        handleSearchChange, handleSelectSuggestion, handleToggleOther,
+        handleOtherNameChange, handleConfirm, handleResultClose,
     };
 };
 

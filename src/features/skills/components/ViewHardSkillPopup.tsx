@@ -1,13 +1,12 @@
 import Button from "../../../components/Button";
 import PopUpCard from "../../../components/PopUpCard";
+import LevelBars from "../../../components/LevelBars/Levelbars ";
 import type { Skill } from "../types/skill.types";
 
 interface Props {
     skill: Skill;
     onClose: () => void;
 }
-
-const TOTAL_BARS = 5;
 
 const LEVEL_LABELS: Record<number, string> = {
     1: "Básico",
@@ -24,9 +23,6 @@ const styles = {
     label: "text-[13px] font-nunito text-white/50",
     value: "text-[15px] font-nunito text-white font-semibold",
     divider: "border-t border-white/10",
-    barsWrapper: "flex gap-2 p-2 bg-black/40 rounded-md",
-    barActive: "h-4 flex-1 rounded-sm bg-[#90DDF0]",
-    barInactive: "h-4 flex-1 rounded-sm bg-white/10",
     levelLabel: "text-[13px] font-nunito text-[#90DDF0] font-semibold text-center",
     buttonsWrapper: "flex justify-center mt-2 px-6 sm:px-8 pb-6",
 };
@@ -44,14 +40,7 @@ const ViewHardSkillPopup = ({ skill, onClose }: Props) => {
                         <div className={styles.divider} />
                         <div className={styles.field}>
                             <span className={styles.label}>Nivel de conocimiento</span>
-                            <div className={styles.barsWrapper}>
-                                {Array.from({ length: TOTAL_BARS }).map((_, i) => (
-                                    <div
-                                        key={i}
-                                        className={i < skill.level ? styles.barActive : styles.barInactive}
-                                    />
-                                ))}
-                            </div>
+                            <LevelBars level={skill.level} size="md" />
                             <span className={styles.levelLabel}>
                                 {skill.level} - {LEVEL_LABELS[skill.level] ?? ""}
                             </span>
@@ -59,7 +48,7 @@ const ViewHardSkillPopup = ({ skill, onClose }: Props) => {
                     </div>
                     <div className={styles.buttonsWrapper}>
                         <Button type="button" variant="secondary" onClick={onClose} fullWidth>
-                            Cerrar
+                            Atrás
                         </Button>
                     </div>
                 </PopUpCard>
