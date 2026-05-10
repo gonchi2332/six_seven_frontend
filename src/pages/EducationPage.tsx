@@ -4,7 +4,7 @@ import { useEducation } from "../hooks/useEducation";
 import EducationCard from "../features/Education/EducationCard";
 import EducationForm from "../features/Education/EducationForm";
 import ViewEducationPopup from "../features/Education/ViewEducationPopup";
-import DeleteEducationPopup from "../features/Education/DeleteEducationPopup";
+import ConfirmDeleteModal from "../features/Education/DeleteEducationPopup";
 import type { EducationEntry } from "../services/educationService";
 
 const PAGE_SIZE = 10;
@@ -34,16 +34,21 @@ const styles = {
 
 const EducationPage = () => {
     const { entries, academicDegrees, isLoading, error, successMessage, addEntry, editEntry, deleteEntry } = useEducation();
+    
+    // Estados de búsqueda y paginación
     const [searchInput, setSearchInput] = useState("");
     const [activeSearch, setActiveSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [showAdd, setShowAdd] = useState(false);
-    const [entryToView, setEntryToView] = useState<EducationEntry | null>(null);
-    const [entryToEdit, setEntryToEdit] = useState<EducationEntry | null>(null);
-    const [entryToDelete, setEntryToDelete] = useState<EducationEntry | null>(null);
+
+    // Estados de Modales
+    const [isAddOpen, setIsAddOpen] = useState(false);
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const [isDetailOpen, setIsDetailOpen] = useState(false);
+    const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+    
+    const [selectedEntry, setSelectedEntry] = useState<EducationEntry | null>(null);
     const [formError, setFormError] = useState<string | null>(null);
-    const [isFormSubmitting, setIsFormSubmitting] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSearch = () => {
         setActiveSearch(searchInput);
@@ -55,48 +60,71 @@ const EducationPage = () => {
     };
 
     const filtered = entries.filter((e) =>
-        e.degree.toLowerCase().includes(activeSearch.toLowerCase())
+        e.degree.toLowerCase().includes(activeSearch.toLowerCase()) ||
+        e.institution.toLowerCase().includes(activeSearch.toLowerCase())
     );
 
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
+    // Flujo de Modales
+    const handleView = (entry: EducationEntry) => {
+        setSelectedEntry(entry);
+        setIsDetailOpen(true);
+    };
+
+    const handleEditClick = (entry: EducationEntry) => {
+        setFormError(null);
+        setSelectedEntry(entry);
+        setIsDetailOpen(false);
+        setIsEditOpen(true);
+    };
+
+    const handleDeleteClick = (entry: EducationEntry) => {
+        setSelectedEntry(entry);
+        setIsDetailOpen(false);
+        setIsConfirmDeleteOpen(true);
+    };
+
+    // Acciones de Formulario
     const handleAddSubmit = async (data: Omit<EducationEntry, "id">) => {
-        setIsFormSubmitting(true);
+        setIsSubmitting(true);
         setFormError(null);
         try {
             await addEntry(data);
-            setShowAdd(false);
-        } catch (err: unknown) {
-            setFormError(err instanceof Error ? err.message : "Ocurrió un error al registrar la experiencia académica.");
+            setIsAddOpen(false);
+        } catch (err: any) {
+            setFormError(err.message || "Error al registrar educación");
         } finally {
-            setIsFormSubmitting(false);
+            setIsSubmitting(false);
         }
     };
 
     const handleEditSubmit = async (data: Omit<EducationEntry, "id">) => {
-        if (!entryToEdit) return;
-        setIsFormSubmitting(true);
+        if (!selectedEntry) return;
+        setIsSubmitting(true);
         setFormError(null);
         try {
-            await editEntry(entryToEdit.id, data);
-            setEntryToEdit(null);
-        } catch (err: unknown) {
-            setFormError(err instanceof Error ? err.message : "Ocurrió un error al modificar la experiencia académica.");
+            await editEntry(selectedEntry.id, data);
+            setIsEditOpen(false);
+            setSelectedEntry(null);
+        } catch (err: any) {
+            setFormError(err.message || "Error al modificar educación");
         } finally {
-            setIsFormSubmitting(false);
+            setIsSubmitting(false);
         }
     };
 
-    const handleDeleteConfirm = async () => {
-        if (!entryToDelete) return;
-        setIsDeleting(true);
+    const handleConfirmDelete = async () => {
+        if (!selectedEntry) return;
+        setIsSubmitting(true);
         try {
-            await deleteEntry(entryToDelete.id);
+            await deleteEntry(selectedEntry.id);
             if (paginated.length === 1 && currentPage > 1) setCurrentPage((p) => p - 1);
-            setEntryToDelete(null);
+            setIsConfirmDeleteOpen(false);
+            setSelectedEntry(null);
         } finally {
-            setIsDeleting(false);
+            setIsSubmitting(false);
         }
     };
 
@@ -107,6 +135,7 @@ const EducationPage = () => {
                     <div className={styles.greenContainer}>
                         <div className={styles.header}>
                             <h1 className={styles.title}>Experiencia Académica</h1>
+                            
                             <div className={styles.searchRow}>
                                 <div className={styles.searchInputWrapper}>
                                     <Search size={16} className={styles.searchIcon} />
@@ -115,7 +144,7 @@ const EducationPage = () => {
                                         value={searchInput}
                                         onChange={(e) => setSearchInput(e.target.value)}
                                         onKeyDown={handleKeyDown}
-                                        placeholder="Buscar título..."
+                                        placeholder="Buscar título o institución..."
                                         className={styles.searchInput}
                                     />
                                 </div>
@@ -123,18 +152,22 @@ const EducationPage = () => {
                                     <button type="button" onClick={handleSearch} className={styles.searchBtn}>
                                         Buscar
                                     </button>
-                                    <button type="button" onClick={() => { setFormError(null); setShowAdd(true); }} className={styles.addBtn}>
+                                    <button type="button" onClick={() => { setFormError(null); setIsAddOpen(true); }} className={styles.addBtn}>
                                         Agregar
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        {error && (
-                            <p className={`${styles.toast} bg-red-500/10 border border-red-500 text-red-400`}>{error}</p>
+                        {(error || formError) && (
+                            <p className={`${styles.toast} bg-red-500/10 border border-red-500 text-red-400`}>
+                                {error || formError}
+                            </p>
                         )}
                         {successMessage && (
-                            <p className={`${styles.toast} bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]`}>{successMessage}</p>
+                            <p className={`${styles.toast} bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]`}>
+                                {successMessage}
+                            </p>
                         )}
 
                         {isLoading ? (
@@ -149,9 +182,7 @@ const EducationPage = () => {
                                     <EducationCard
                                         key={entry.id}
                                         entry={entry}
-                                        onView={setEntryToView}
-                                        onEdit={(e) => { setFormError(null); setEntryToEdit(e); }}
-                                        onDelete={setEntryToDelete}
+                                        onView={handleView}
                                     />
                                 ))}
                             </div>
@@ -172,39 +203,45 @@ const EducationPage = () => {
                 </div>
             </div>
 
-            {showAdd && (
+            {/* Renderizado de Modales */}
+            
+            <ViewEducationPopup
+                isOpen={isDetailOpen && selectedEntry !== null}
+                entry={selectedEntry}
+                onClose={() => setIsDetailOpen(false)}
+                onEdit={handleEditClick}
+                onDelete={handleDeleteClick}
+            />
+
+            {isAddOpen && (
                 <EducationForm
                     mode="add"
                     academicDegrees={academicDegrees}
                     onSubmit={handleAddSubmit}
-                    onClose={() => setShowAdd(false)}
+                    onClose={() => setIsAddOpen(false)}
                     serverError={formError}
-                    isSubmitting={isFormSubmitting}
+                    isSubmitting={isSubmitting}
                 />
             )}
 
-            {entryToEdit && (
+            {isEditOpen && selectedEntry && (
                 <EducationForm
                     mode="edit"
-                    initial={entryToEdit}
+                    initial={selectedEntry}
                     academicDegrees={academicDegrees}
                     onSubmit={handleEditSubmit}
-                    onClose={() => setEntryToEdit(null)}
+                    onClose={() => setIsEditOpen(false)}
                     serverError={formError}
-                    isSubmitting={isFormSubmitting}
+                    isSubmitting={isSubmitting}
                 />
             )}
 
-            {entryToView && (
-                <ViewEducationPopup entry={entryToView} onClose={() => setEntryToView(null)} />
-            )}
-
-            {entryToDelete && (
-                <DeleteEducationPopup
-                    degree={entryToDelete.degree}
-                    onConfirm={handleDeleteConfirm}
-                    onClose={() => setEntryToDelete(null)}
-                    isSubmitting={isDeleting}
+            {isConfirmDeleteOpen && selectedEntry && (
+                <ConfirmDeleteModal
+                    degree={selectedEntry.degree}
+                    onConfirm={handleConfirmDelete}
+                    onClose={() => setIsConfirmDeleteOpen(false)}
+                    isSubmitting={isSubmitting}
                 />
             )}
         </div>
