@@ -13,14 +13,12 @@ const RegisterForm = () => {
         handlePasswordChange,
         handleConfirmPasswordChange,
         handlePaternalLastNameChange,
-        handlesecondSurnameChange,
         handleUsernameChange,
         handleMailChange,
         handleNameBlur,
         handlePasswordBlur,
         handleConfirmPasswordBlur,
         handlePaternalLastNameBlur,
-        handlesecondSurnameBlur,
         handleUsernameBlur,
         handleMailBlur,
         handleSubmit
@@ -61,16 +59,6 @@ const RegisterForm = () => {
                         value={formData.paternalLastName}
                         onChange={handlePaternalLastNameChange}
                         error={touched.paternalLastName ? errors.paternalLastName : ""}
-                        disabled={isLoading}
-                    />
-                </div>
-                <div onBlur={handlesecondSurnameBlur} className={FIELD_WRAPPER}>
-                    <TextField
-                        label="Segundo Apellido"
-                        type="text"
-                        value={formData.secondSurname}
-                        onChange={handlesecondSurnameChange}
-                        error={touched.secondSurname ? errors.secondSurname : ""}
                         disabled={isLoading}
                     />
                 </div>

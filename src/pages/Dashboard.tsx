@@ -3,7 +3,7 @@ import PersonalInfo from "./PersonalInfo";
 
 const STYLES = {
   WRAPPER: "min-h-screen bg-main flex flex-col",
-  CONTENT: "w-full p-6",
+  CONTENT: "w-full",
   GRID_CONTAINER: "grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"
 };
 
@@ -12,9 +12,6 @@ const Dashboard = () => {
     <div className={STYLES.WRAPPER}>
       <div className={STYLES.CONTENT}>
         <PersonalInfo />
-      </div>
-      <div className={STYLES.CONTENT}>
-        
       </div>
       <div className={STYLES.CONTENT}>
         <LinkedIn />
