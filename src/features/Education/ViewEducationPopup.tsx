@@ -6,8 +6,6 @@ interface Props {
     isOpen: boolean;
     entry: EducationEntry | null;
     onClose: () => void;
-    onEdit: (entry: EducationEntry) => void;
-    onDelete: (entry: EducationEntry) => void;
 }
 
 const styles = {
@@ -22,7 +20,7 @@ const styles = {
     closeIcon: "absolute right-4 top-4 text-gray-400 hover:text-white transition-colors text-2xl cursor-pointer bg-transparent border-none",
 };
 
-const ViewEducationPopup = ({ isOpen, entry, onClose, onEdit, onDelete }: Props) => {
+const ViewEducationPopup = ({ isOpen, entry, onClose}: Props) => {
     if (!isOpen || !entry) return null;
 
     const dateRange = entry.endDate ? entry.endDate : "Presente";
@@ -63,11 +61,8 @@ const ViewEducationPopup = ({ isOpen, entry, onClose, onEdit, onDelete }: Props)
                     </div>
                     
                     <div className={styles.buttonContainer}>
-                        <Button variant="secondary" onClick={() => onEdit(entry)} fullWidth>
-                            Modificar
-                        </Button>
-                        <Button variant="primary" onClick={() => onDelete(entry)} fullWidth>
-                            Eliminar
+                        <Button variant="secondary" onClick={() => onClose()} fullWidth>
+                            Atras
                         </Button>
                     </div>
                 </PopUpCard>

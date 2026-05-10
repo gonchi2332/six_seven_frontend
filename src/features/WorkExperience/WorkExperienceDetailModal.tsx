@@ -6,8 +6,6 @@ interface WorkExperienceDetailModalProps {
     isOpen: boolean;
     experience: WorkExperience | null;
     onClose: () => void;
-    onEdit: (experience: WorkExperience) => void;
-    onDelete: (id: number) => void;
 }
 
 const styles = {
@@ -41,21 +39,11 @@ const formatDateLong = (dateStr: string | null): string => {
     }
 };
 
-const WorkExperienceDetailModal = ({ isOpen, experience, onClose, onEdit, onDelete }: WorkExperienceDetailModalProps) => {
+const WorkExperienceDetailModal = ({ isOpen, experience, onClose}: WorkExperienceDetailModalProps) => {
     if (!isOpen || !experience) return null;
 
     const startDateFormatted = formatDateLong(experience.start_date);
     const endDateFormatted = formatDateLong(experience.end_date);
-
-    const handleEdit = () => {
-        onClose();
-        onEdit(experience);
-    };
-
-    const handleDelete = () => {
-        onClose();
-        onDelete(experience.id);
-    };
 
     return (
         <div className={styles.overlay} onClick={onClose}>
@@ -95,18 +83,11 @@ const WorkExperienceDetailModal = ({ isOpen, experience, onClose, onEdit, onDele
                     
                     <div className={styles.buttonContainer}>
                         <Button 
-                            variant="secondary" 
-                            onClick={handleEdit}
-                            fullWidth
-                        >
-                            Modificar
-                        </Button>
-                        <Button 
                             variant="primary" 
-                            onClick={handleDelete}
+                            onClick={onClose}
                             fullWidth
                         >
-                            Eliminar
+                            Atras
                         </Button>
                     </div>
                 </PopUpCard>

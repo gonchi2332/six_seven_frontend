@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { Search } from 'lucide-react';
 import { useWorkExperiences } from '../../hooks/useWorkExperiences';
 import WorkExperienceItem from './WorkExperienceItem';
-import WorkExperienceDetailModal from './WorkExperienceDetailModal';
+import WorkExperiencePopUp from './WorkExperiencePopUp';
 import AddWorkExperienceModal from './AddWorkExperienceModal';
 import EditWorkExperienceModal from './EditWorkExperienceModal';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
 import type { WorkExperience } from '../../hooks/useWorkExperiences';
+import WorkExperienceDetailModal from './WorkExperienceDetailModal';
 
 const PAGE_SIZE = 10;
 
@@ -44,6 +45,7 @@ const WorkExperienceList = () => {
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [selectedExperience, setSelectedExperience] = useState<WorkExperience | null>(null);
     const [experienceToDelete, setExperienceToDelete] = useState<number | null>(null);
+    const [isInfoOpen, setIsInfoOpen] = useState(false);
 
     const handleSearch = () => {
         setActiveSearch(searchInput);
@@ -71,8 +73,14 @@ const WorkExperienceList = () => {
         setIsDetailModalOpen(true);
     };
 
+    const handleOpenInfo = (experience: WorkExperience) => {
+        setIsDetailModalOpen(false); // Cerramos el menú
+        setIsInfoOpen(true);        // Abrimos la info real
+    };
+
     const handleEdit = (experience: WorkExperience) => {
         setIsDetailModalOpen(false);
+        setIsInfoOpen(false);
         setSelectedExperience(experience);
         setIsEditModalOpen(true);
     };
@@ -105,7 +113,7 @@ const WorkExperienceList = () => {
 
     const handleCloseEditModal = () => {
         setIsEditModalOpen(false);
-        setSelectedExperience(null);
+        setIsDetailModalOpen(true);
     };
 
     return (
@@ -208,12 +216,22 @@ const WorkExperienceList = () => {
                 experience={selectedExperience}
             />
 
-            <WorkExperienceDetailModal
+            <WorkExperiencePopUp
                 isOpen={isDetailModalOpen && selectedExperience !== null}
                 experience={selectedExperience}
-                onClose={handleCloseDetailModal}
+                onClose={() => setIsDetailModalOpen(false)}
+                onView={handleOpenInfo} // Ahora llama a abrir la info real
                 onEdit={handleEdit}
                 onDelete={handleDeleteClick}
+            />
+
+            <WorkExperienceDetailModal
+                isOpen={isInfoOpen && selectedExperience !== null}
+                experience={selectedExperience}
+                onClose={() => {
+                    setIsInfoOpen(false);
+                    setIsDetailModalOpen(true);
+                }}
             />
 
             <ConfirmDeleteModal

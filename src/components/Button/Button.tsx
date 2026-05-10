@@ -18,7 +18,7 @@ const Button = ({
   disabled = false,
 }: ButtonProps) => {
 
-  const BASE_STYLES = "px-6 py-2 rounded-xl transition-all duration-200 font-nunito font-bold text-2xl w-fit cursor-pointer";
+  const BASE_STYLES = "px-4 py-2 rounded-xl transition-all duration-200 font-nunito font-bold text-2xl w-fit cursor-pointer";
 
   const variantStyles = {
     primary: "bg-secondary text-surface" ,
