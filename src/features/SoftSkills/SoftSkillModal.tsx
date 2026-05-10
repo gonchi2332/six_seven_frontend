@@ -51,7 +51,7 @@ const SoftSkillModal = ({
     return (
         <div className={styles.overlay}>
             <div className="w-full max-w-xs sm:max-w-sm">
-                <PopUpCard title={isEditing ? 'Editar Habilidad' : 'Añadir Habilidad'}>
+                <PopUpCard title={isEditing ? 'Modificar Habilidad' : 'Registrar Habilidad'}>
                     {serverError && (
                         <div className={styles.serverError}>
                             {serverError}

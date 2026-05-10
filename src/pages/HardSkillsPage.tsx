@@ -92,7 +92,7 @@ const HardSkillsPage = () => {
                                 onKeyDown={handleKeyDown}
                                 onAdd={() => setShowAdd(true)}
                                 placeholder="Buscar habilidad..."
-                                addLabel="Agregar"
+                                addLabel="Registrar"
                             />
                         </div>
 
