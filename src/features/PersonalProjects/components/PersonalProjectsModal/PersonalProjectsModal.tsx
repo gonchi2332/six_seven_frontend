@@ -4,6 +4,7 @@ import { useProjectForm } from "../../hooks/useProjectInfo";
 import TextField from "../../../../components/TextField";
 import Button from "../../../../components/Button";
 import PopUpCard from "../../../../components/PopUpCard";
+import ImageUpload from "../../../UploadFile/components/uploadFile";
 
 interface PersonalProjectsModalProps {
     mode: "create" | "edit";
@@ -16,20 +17,20 @@ interface PersonalProjectsModalProps {
 }
 
 const STYLES = {
-    FORM_WRAPPER: "flex flex-col gap-6 px-8",
-    DYNAMIC_GRID: "grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-min",
+    FORM_WRAPPER: "flex flex-col gap-4 px-6", // Reducido gap y padding
+    DYNAMIC_GRID: "grid grid-cols-1 md:grid-cols-3 gap-3 auto-rows-min", // Gap más pequeño
     TITLE: "w-1/2",
-    INPUT_LABEL: "mb-1 text-xl font-inter text-white",
-    SELECT: "w-full px-4 py-2 border rounded-xl outline-none transition-all duration-200 bg-white font-nunito disabled:cursor-not-allowed disabled:opacity-50 border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500",
+    INPUT_LABEL: "mb-0.5 text-sm font-medium text-white", // Reducido tamaño y margen
+    SELECT: "w-full px-3 py-1.5 border rounded-lg outline-none text-sm bg-white font-nunito disabled:cursor-not-allowed disabled:opacity-50 border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500",
     SELECT_PLACEHOLDER: "text-gray-400",
     SELECT_VALUE: "text-black",
-    IMAGE_WRAPPER: "flex flex-col gap-2",
-    LINKS_SECTION: "flex flex-col gap-3",
-    LINK_GROUP: "flex gap-3 items-start",
-    LINK_FIELDS: "flex-1 grid grid-cols-2 gap-3",
-    REMOVE_BTN: "mt-7 p-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors",
-    ADD_BTN: "flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#2C666E]/50 text-[#90DDF0] hover:bg-[#2C666E]/70 transition-colors font-nunito text-sm font-semibold mt-2",
-    FOOTER: "flex gap-3 mt-10 pt-6 px-8 pb-2",
+    IMAGE_WRAPPER: "flex flex-col gap-1",
+    LINKS_SECTION: "flex flex-col gap-2",
+    LINK_GROUP: "flex gap-2 items-start",
+    LINK_FIELDS: "flex-1 grid grid-cols-2 gap-2",
+    REMOVE_BTN: "mt-6 p-1.5 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors",
+    ADD_BTN: "flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#2C666E]/50 text-[#90DDF0] hover:bg-[#2C666E]/70 transition-colors font-nunito text-xs font-semibold mt-1",
+    FOOTER: "flex gap-3 mt-6 pt-4 px-6 pb-2",
 };
 
 const STATUS_OPTIONS = ["En proceso", "Finalizado", "Cancelado"] as const;
@@ -80,9 +81,9 @@ const PersonalProjectsModal = ({
             <div className="max-w-3xl w-full relative">
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors z-10"
+                    className="absolute top-3 right-3 text-white/50 hover:text-white transition-colors z-10"
                 >
-                    <X size={22} />
+                    <X size={18} />
                 </button>
                 <PopUpCard title={isEditing ? "Editar Proyecto" : "Agregar Proyecto Personal"}>
                     <div className={STYLES.FORM_WRAPPER}>
@@ -94,9 +95,10 @@ const PersonalProjectsModal = ({
                                 onChange={(e) => handleChange("name", e.target.value)}
                                 error={errors.name}
                                 disabled={isEditing}
+                                className="[&_input]:py-1.5 [&_label]:text-sm"
                             />
                             {isEditing && (
-                                <p className="text-white/40 text-xs mt-1">El título no se puede editar</p>
+                                <p className="text-white/40 text-xs mt-0.5">El título no se puede editar</p>
                             )}
                         </div>
 
@@ -106,14 +108,14 @@ const PersonalProjectsModal = ({
                             value={formData.description}
                             onChange={(e) => handleChange("description", e.target.value)}
                             error={errors.description}
-                            className="[&_input]:h-24"
+                            className="[&_input]:h-16 [&_label]:text-sm [&_input]:py-1.5"
                         />
 
                         <div className={STYLES.DYNAMIC_GRID}>
                             <div>
                                 <label className={STYLES.INPUT_LABEL}>Estado</label>
                                 <select
-                                    className={`${STYLES.SELECT} ${formData.status ? STYLES.SELECT_VALUE : STYLES.SELECT_PLACEHOLDER}`}
+                                    className={STYLES.SELECT}
                                     value={formData.status}
                                     onChange={(e) => handleChange("status", e.target.value as CreateProjectPayload["status"])}
                                 >
@@ -129,6 +131,7 @@ const PersonalProjectsModal = ({
                                 value={formData.topic}
                                 onChange={(e) => handleChange("topic", e.target.value)}
                                 error={errors.topic}
+                                className="[&_input]:py-1.5 [&_label]:text-sm"
                             />
 
                             <TextField
@@ -137,6 +140,7 @@ const PersonalProjectsModal = ({
                                 value={formData.role}
                                 onChange={(e) => handleChange("role", e.target.value)}
                                 error={errors.role}
+                                className="[&_input]:py-1.5 [&_label]:text-sm"
                             />
                         </div>
 
@@ -152,6 +156,7 @@ const PersonalProjectsModal = ({
                                             onChange={(e) => handleLinkChange(index, "label", e.target.value)}
                                             error={errors[`link${index}_label`] as string}
                                             placeholder="Ej: GitHub, Deploy, Demo"
+                                            className="[&_input]:py-1.5 [&_label]:text-sm"
                                         />
                                         <TextField
                                             label="URL"
@@ -160,6 +165,7 @@ const PersonalProjectsModal = ({
                                             onChange={(e) => handleLinkChange(index, "url", e.target.value)}
                                             error={errors[`link${index}_url`] as string}
                                             placeholder="https://..."
+                                            className="[&_input]:py-1.5 [&_label]:text-sm"
                                         />
                                     </div>
                                     {formData.links.length > 1 && (
@@ -169,7 +175,7 @@ const PersonalProjectsModal = ({
                                             className={STYLES.REMOVE_BTN}
                                             title="Eliminar enlace"
                                         >
-                                            <Trash2 size={18} />
+                                            <Trash2 size={16} />
                                         </button>
                                     )}
                                 </div>
@@ -179,7 +185,7 @@ const PersonalProjectsModal = ({
                                 onClick={addLink}
                                 className={STYLES.ADD_BTN}
                             >
-                                <Plus size={16} />
+                                <Plus size={14} />
                                 Agregar otro enlace
                             </button>
                         </div>
@@ -188,12 +194,10 @@ const PersonalProjectsModal = ({
                             <label className={STYLES.INPUT_LABEL}>
                                 Imagen de portada {isEditing && "(dejar vacío para mantener la actual)"}
                             </label>
-                            <input
-                                type="file"
-                                accept=".jpg,.jpeg,.png"
-                                onChange={(e) => handleImageChange(e.target.files?.[0] ?? null)}
+                            <ImageUpload
+                                onImageSelect={(file) => handleImageChange(file)}
                             />
-                            {errors.image && <p className="text-red-500 text-sm">{errors.image}</p>}
+                            {errors.image && <p className="text-red-500 text-xs mt-0.5">{errors.image}</p>}
                         </div>
 
                         {externalError && (
@@ -203,7 +207,7 @@ const PersonalProjectsModal = ({
 
                     <div className={STYLES.FOOTER}>
                         <div className="flex-1">
-                            <Button variant="secondary" onClick={onClose} disabled={isSubmitting} fullWidth>
+                            <Button variant="secondary" onClick={onClose} disabled={isSubmitting} fullWidth >
                                 Cancelar
                             </Button>
                         </div>
