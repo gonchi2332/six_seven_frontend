@@ -3,7 +3,6 @@ import type { CreateProjectPayload } from "../services/personalProjectsService";
 
 type FormErrors = Partial<Record<keyof CreateProjectPayload | string, string>>;
 
-
 const INITIAL_FORM: CreateProjectPayload = {
     name: "",
     description: "",
@@ -26,11 +25,65 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
         field: K,
         value: CreateProjectPayload[K]
     ) => {
-        setFormData((prev) => ({ ...prev, [field]: value }));
-        setErrors((prev) => ({ ...prev, [field]: undefined }));
+        // Validaciones en tiempo real
+        let newValue = value;
+
+        if (field === 'name' && typeof value === 'string') {
+            // Bloquear más de 50 caracteres
+            if (value.length > 50) return;
+            newValue = value;
+            // Validación en tiempo real
+            if (value.length > 0 && value.length > 50) {
+                setErrors((prev) => ({ ...prev, [field]: "El nombre del proyecto supera el límite de 50 caracteres" }));
+            } else if (value.length === 0) {
+                setErrors((prev) => ({ ...prev, [field]: "El nombre del proyecto es requerido" }));
+            } else {
+                setErrors((prev) => ({ ...prev, [field]: undefined }));
+            }
+        }
+
+        if (field === 'description' && typeof value === 'string') {
+            if (value.length > 200) return;
+            newValue = value;
+            if (value.length > 0 && value.length > 200) {
+                setErrors((prev) => ({ ...prev, [field]: "La descripción supera el límite de 200 caracteres" }));
+            } else if (value.length === 0) {
+                setErrors((prev) => ({ ...prev, [field]: "La descripción es requerida" }));
+            } else {
+                setErrors((prev) => ({ ...prev, [field]: undefined }));
+            }
+        }
+
+        if (field === 'role' && typeof value === 'string') {
+            if (value.length > 50) return;
+            newValue = value;
+            if (value.length > 0 && value.length > 50) {
+                setErrors((prev) => ({ ...prev, [field]: "El rol supera el límite de 50 caracteres" }));
+            } else if (value.length === 0) {
+                setErrors((prev) => ({ ...prev, [field]: "El rol es requerido" }));
+            } else {
+                setErrors((prev) => ({ ...prev, [field]: undefined }));
+            }
+        }
+
+        if (field === 'topic' && typeof value === 'string') {
+            // topic no tiene límite específico pero requerido
+            newValue = value;
+            if (value.length === 0) {
+                setErrors((prev) => ({ ...prev, [field]: "El área es requerida" }));
+            } else {
+                setErrors((prev) => ({ ...prev, [field]: undefined }));
+            }
+        }
+
+        setFormData((prev) => ({ ...prev, [field]: newValue }));
     };
 
     const handleLinkChange = (index: number, field: "label" | "url", value: string) => {
+        // Los labels no tienen límite específico en tu validación
+        // Si quieres agregar límite a labels, descomenta:
+        // if (field === 'label' && value.length > 50) return;
+
         setFormData((prev) => {
             const updated = [...prev.links];
             if (!updated[index]) {
@@ -39,6 +92,8 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
             updated[index] = { ...updated[index], [field]: value };
             return { ...prev, links: updated };
         });
+
+        // Limpiar error específico
         setErrors((prev) => ({ ...prev, [`link${index}_${field}`]: undefined }));
     };
 
@@ -106,7 +161,6 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
             });
         }
 
-        // Solo validar imagen si NO es edición
         if (!isEditing && !formData.image) {
             e.image = "La imagen del proyecto es requerida";
         }
