@@ -73,7 +73,7 @@ const WorkExperienceList = () => {
         setIsDetailModalOpen(true);
     };
 
-    const handleOpenInfo = (experience: WorkExperience) => {
+    const handleOpenInfo = () => {
         setIsDetailModalOpen(false); // Cerramos el menú
         setIsInfoOpen(true);        // Abrimos la info real
     };
@@ -104,11 +104,6 @@ const WorkExperienceList = () => {
                 setCurrentPage((page) => page - 1);
             }
         }
-    };
-
-    const handleCloseDetailModal = () => {
-        setIsDetailModalOpen(false);
-        setSelectedExperience(null);
     };
 
     const handleCloseEditModal = () => {
