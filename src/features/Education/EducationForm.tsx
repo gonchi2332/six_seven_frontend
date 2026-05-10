@@ -48,6 +48,22 @@ const EducationForm = ({
 
     const handleYearInput = (val: string) => val.replace(/\D/g, "").slice(0, 4);
 
+    const hasChanges = () => {
+        if (mode === "add") return degree.trim() !== "" || institution.trim() !== "" || startDate !== "";
+        if (!initial) return false;
+
+        const currentIsPresent = !initial.endDate;
+        const endDateChanged = isPresent !== currentIsPresent || (!isPresent && endDate !== (initial.endDate ?? ""));
+
+        return (
+            degree.trim() !== initial.degree ||
+            academicLevelId !== initial.academicLevelId ||
+            institution.trim() !== initial.institution ||
+            startDate !== initial.startDate ||
+            endDateChanged
+        );
+    };
+
     const validate = () => {
         const next: Record<string, string> = {};
         if (!degree.trim()) next.degree = "El nombre es requerido";
@@ -183,7 +199,13 @@ const EducationForm = ({
                         <Button variant="secondary" onClick={onClose} fullWidth disabled={isSubmitting}>
                             Cancelar
                         </Button>
-                        <Button variant="primary" onClick={handleSubmit} fullWidth disabled={isSubmitting}>
+                        <Button 
+                            variant="primary" 
+                            onClick={handleSubmit} 
+                            fullWidth 
+                            // Deshabilitar si está enviando o si no hay cambios en modo edición
+                            disabled={isSubmitting || (mode === "edit" && !hasChanges())}
+                        >
                             {isSubmitting ? "Guardando..." : mode === "add" ? "Agregar" : "Aceptar"}
                         </Button>
                     </div>

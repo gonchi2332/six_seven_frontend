@@ -12,23 +12,20 @@ interface EditWorkExperienceModalProps {
 }
 
 const styles = {
-    overlay: "fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto",
-    container: "min-h-screen flex items-center justify-center p-4",
+    overlay: "fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4",
+    container: "w-full max-w-2xl flex items-center justify-center p-4",
     form: "flex flex-col gap-4 px-6 py-4",
     row: "grid grid-cols-1 md:grid-cols-2 gap-4",
-    checkboxContainer: "flex items-center gap-2",
-    checkbox: "w-4 h-4 text-primary rounded focus:ring-primary cursor-pointer",
-    checkboxLabel: "text-surface font-nunito text-sm cursor-pointer",
+    checkboxContainer: "flex items-center gap-2 mt-2",
+    checkbox: "w-4 h-4 accent-[#90DDF0] rounded cursor-pointer",
+    checkboxLabel: "text-white/80 font-nunito text-sm cursor-pointer hover:text-white transition-colors",
     buttonContainer: "flex gap-3 px-6 pb-6",
-    apiError: "p-2 mb-3 text-sm text-red-600 bg-red-50 rounded-xl border border-red-200 mx-6 mt-2",
+    apiError: "mx-6 mt-2 p-3 text-sm text-red-400 bg-red-500/10 border border-red-500/50 rounded-xl font-nunito",
 };
 
-const formatDateForInput = (dateStr: string | null): string => {
+const formatDateForInput = (dateStr: string | null | undefined): string => {
     if (!dateStr) return '';
-    if (dateStr.includes('T')) {
-        return dateStr.split('T')[0] || '';
-    }
-    return dateStr;
+    return dateStr.split('T')[0] ?? '';
 };
 
 const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWorkExperienceModalProps) => {
@@ -52,6 +49,28 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
             setIsCurrent(!experience.end_date);
         }
     }, [experience]);
+
+    /**
+     * Lógica para deshabilitar el botón si no hay cambios reales
+     */
+    const hasChanges = () => {
+        if (!experience) return false;
+
+        const originalStartDate = formatDateForInput(experience.start_date);
+        const originalEndDate = formatDateForInput(experience.end_date);
+
+        // Validar si la fecha de fin cambió (considerando el checkbox de "actualidad")
+        const currentIsCurrent = !experience.end_date;
+        const endDateChanged = isCurrent !== currentIsCurrent || (!isCurrent && endDate !== originalEndDate);
+
+        return (
+            position.trim() !== experience.position ||
+            company.trim() !== experience.company_name ||
+            description.trim() !== experience.description ||
+            startDate !== originalStartDate ||
+            endDateChanged
+        );
+    };
 
     const validateForm = (): boolean => {
         const newErrors: Record<string, string> = {};
@@ -78,7 +97,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                 startDate,
                 endDate: isCurrent ? undefined : endDate,
             });
-            handleClose();
+            onClose();
         } catch (err: any) {
             setApiError(err.message || 'Error al modificar la experiencia');
         } finally {
@@ -180,10 +199,10 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                             Cancelar
                         </Button>
                         <Button 
-                        variant="primary" 
-                        onClick={handleSubmit} 
-                        disabled={isSubmitting} 
-                        fullWidth
+                            variant="primary" 
+                            onClick={handleSubmit} 
+                            disabled={isSubmitting || !hasChanges()} 
+                            fullWidth
                         >
                             {isSubmitting ? 'Guardando...' : 'Aceptar'}
                         </Button>
