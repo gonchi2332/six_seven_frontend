@@ -99,7 +99,7 @@ const WorkExperienceDetailModal = ({ isOpen, experience, onClose, onEdit, onDele
                             onClick={handleEdit}
                             fullWidth
                         >
-                            Editar
+                            Modificar
                         </Button>
                         <Button 
                             variant="primary" 
