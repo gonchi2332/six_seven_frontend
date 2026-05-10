@@ -136,7 +136,7 @@ const SoftSkillsPage = () => {
                             <p className={styles.loading}>Cargando...</p>
                         ) : paginated.length === 0 ? (
                             <p className={styles.empty}>
-                                {activeSearch ? "No se encontraron habilidades." : "No hay habilidades blandas aún. ¡Agrega una!"}
+                                {activeSearch ? "No se encontraron habilidades." : "No tienes habilidades registradas."}
                             </p>
                         ) : (
                             <div className={styles.listWrapper}>
