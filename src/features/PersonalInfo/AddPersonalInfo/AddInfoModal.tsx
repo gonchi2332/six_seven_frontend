@@ -63,9 +63,9 @@ const AddInfoModal = ({ isOpen, onClose, onAdd, emptyFields }: AddInfoModalProps
         <div className={styles.overlay} onClick={handleClose}>
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
                 <div className={styles.modal}>
-                    <h2 className={styles.title}>Agregar Información Personal</h2>
+                    <h2 className={styles.title}>Registrar Información Personal</h2>
 
-                    <label className={styles.label}>Campo a agregar</label>
+                    <label className={styles.label}>Campo a registrar</label>
                     <select
                         value={selectedField}
                         onChange={handleFieldChange}
@@ -121,7 +121,7 @@ const AddInfoModal = ({ isOpen, onClose, onAdd, emptyFields }: AddInfoModalProps
                             disabled={isSubmitDisabled()}
                             fullWidth
                         >
-                            {isSubmitting ? 'Agregando...' : 'Agregar'}
+                            {isSubmitting ? 'Registrando...' : 'Registrar'}
                         </Button>
                     </div>
                 </div>

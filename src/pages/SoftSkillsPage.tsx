@@ -96,7 +96,7 @@ const SoftSkillsPage = () => {
                         <h1 className={styles.title}>Habilidades Blandas</h1>
                         <div className={styles.topButtons}>
                             <button type="button" onClick={() => setShowAdd(true)} className={styles.topBtn(false)}>
-                                Agregar
+                                Registrar
                             </button>
                             <button type="button" onClick={handleToggleVer} className={styles.topBtn(showExpanded)}>
                                 {showExpanded ? "Atrás" : "Ver"}

@@ -168,7 +168,7 @@ const EducationPage = () => {
                                         Buscar
                                     </button>
                                     <button type="button" onClick={() => { setFormError(null); setIsAddOpen(true); }} className={styles.addBtn}>
-                                        Agregar
+                                        Registrar
                                     </button>
                                 </div>
                             </div>

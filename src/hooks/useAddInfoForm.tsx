@@ -113,7 +113,7 @@ export const useAddInfoForm = ({ onAdd, onClose }: UseAddInfoFormProps) => {
             handleReset();
             onClose();
         } catch (err: any) {
-            setError(err.message || 'Error al agregar');
+            setError(err.message || 'Error al registrar');
         } finally {
             setIsSubmitting(false);
         }

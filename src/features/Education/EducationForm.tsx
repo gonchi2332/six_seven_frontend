@@ -105,7 +105,7 @@ const EducationForm = ({
     return (
         <div className={styles.overlay} onClick={onClose}>
             <div className="w-full max-w-xl" onClick={(e) => e.stopPropagation()}>
-                <PopUpCard title={mode === "add" ? "Agregar Educación" : "Editar Educación"}>
+                <PopUpCard title={mode === "add" ? "Registrar Educación" : "Editar Educación"}>
                     {serverError && <div className={styles.serverError}>{serverError}</div>}
 
                     <div className={styles.body}>
@@ -206,7 +206,7 @@ const EducationForm = ({
                             // Deshabilitar si está enviando o si no hay cambios en modo edición
                             disabled={isSubmitting || (mode === "edit" && !hasChanges())}
                         >
-                            {isSubmitting ? "Guardando..." : mode === "add" ? "Agregar" : "Aceptar"}
+                            {isSubmitting ? "Guardando..." : mode === "add" ? "Registrar" : "Aceptar"}
                         </Button>
                     </div>
                 </PopUpCard>

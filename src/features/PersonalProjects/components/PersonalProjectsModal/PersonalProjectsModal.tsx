@@ -84,7 +84,7 @@ const PersonalProjectsModal = ({
                 >
                     <X size={22} />
                 </button>
-                <PopUpCard title={isEditing ? "Editar Proyecto" : "Agregar Proyecto Personal"}>
+                <PopUpCard title={isEditing ? "Editar Proyecto" : "Registrar Proyecto Personal"}>
                     <div className={STYLES.FORM_WRAPPER}>
                         <div className={STYLES.TITLE}>
                             <TextField
@@ -209,7 +209,7 @@ const PersonalProjectsModal = ({
                         </div>
                         <div className="flex-1">
                             <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting} fullWidth>
-                                {isSubmitting ? "Guardando..." : isEditing ? "Guardar cambios" : "Agregar"}
+                                {isSubmitting ? "Guardando..." : isEditing ? "Guardar cambios" : "Registrar"}
                             </Button>
                         </div>
                     </div>

@@ -127,7 +127,7 @@ const ProjectsPage = () => {
                                         Buscar
                                     </button>
                                     <button type="button" onClick={() => setShowAdd(true)} className={styles.addBtn}>
-                                        Agregar
+                                        Registrar
                                     </button>
                                 </div>
                             </div>
