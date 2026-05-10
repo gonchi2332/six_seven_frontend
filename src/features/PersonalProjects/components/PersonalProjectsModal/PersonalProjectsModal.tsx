@@ -95,6 +95,7 @@ const PersonalProjectsModal = ({
                                 onChange={(e) => handleChange("name", e.target.value)}
                                 error={errors.name}
                                 disabled={isEditing}
+                                placeholder="Sistema de Inventario"
                                 className="[&_input]:py-1.5 [&_label]:text-sm"
                             />
                             {isEditing && (
@@ -108,6 +109,7 @@ const PersonalProjectsModal = ({
                             value={formData.description}
                             onChange={(e) => handleChange("description", e.target.value)}
                             error={errors.description}
+                            placeholder="Este proyecto ..."
                             className="[&_input]:h-16 [&_label]:text-sm [&_input]:py-1.5"
                         />
 
@@ -131,6 +133,7 @@ const PersonalProjectsModal = ({
                                 value={formData.topic}
                                 onChange={(e) => handleChange("topic", e.target.value)}
                                 error={errors.topic}
+                                placeholder="Ej: Frontend, Backend"
                                 className="[&_input]:py-1.5 [&_label]:text-sm"
                             />
 
@@ -140,6 +143,7 @@ const PersonalProjectsModal = ({
                                 value={formData.role}
                                 onChange={(e) => handleChange("role", e.target.value)}
                                 error={errors.role}
+                                placeholder="Ej: Lider Frontend"
                                 className="[&_input]:py-1.5 [&_label]:text-sm"
                             />
                         </div>
@@ -150,7 +154,7 @@ const PersonalProjectsModal = ({
                                 <div key={index} className={STYLES.LINK_GROUP}>
                                     <div className={STYLES.LINK_FIELDS}>
                                         <TextField
-                                            label="Label"
+                                            label="Nombre"
                                             type="text"
                                             value={link.label}
                                             onChange={(e) => handleLinkChange(index, "label", e.target.value)}
@@ -159,7 +163,7 @@ const PersonalProjectsModal = ({
                                             className="[&_input]:py-1.5 [&_label]:text-sm"
                                         />
                                         <TextField
-                                            label="URL"
+                                            label="Enlace"
                                             type="text"
                                             value={link.url}
                                             onChange={(e) => handleLinkChange(index, "url", e.target.value)}
