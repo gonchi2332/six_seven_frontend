@@ -61,7 +61,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
 
   if (isLoadingData) {
     return (
-      <PopUpCard title="Datos Personales">
+      <PopUpCard title="Modificar Informacion Personal">
         <p className="text-white text-center py-10">Cargando información...</p>
       </PopUpCard>
     );
@@ -69,7 +69,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
 
   if (loadError) {
     return (
-      <PopUpCard title="Datos Personales">
+      <PopUpCard title="Modificar Informacion Personal">
         <p className="text-red-400 text-center py-10">{loadError}</p>
       </PopUpCard>
     );
@@ -77,7 +77,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
 
   return (
     <div>
-      <PopUpCard title="Datos Personales">
+      <PopUpCard title="Modificar Informacion Personal">
         <div>
           <div className={STYLES.FORM_WRAPPER}>
             <div className={STYLES.DYNAMIC_GRID}>
@@ -202,7 +202,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
               onClick={handleAcept} 
               disabled={isSubmitting || !isFormComplete()}
             >
-              {isSubmitting ? "Guardando..." : "Aceptar"}
+              {isSubmitting ? "Guardando..." : "Modificar"}
             </Button>
           </div>
         </div>

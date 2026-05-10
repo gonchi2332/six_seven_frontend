@@ -63,7 +63,7 @@ const AddSoftSkillPopup = ({
     return (
         <div className={styles.overlay}>
             <div className="w-full max-w-sm sm:max-w-md">
-                <PopUpCard title="Agregar Habilidad Blanda">
+                <PopUpCard title="Registrar Habilidad Blanda">
                     <div className={styles.formWrapper}>
                         <div className="relative flex flex-col" ref={containerRef}>
                             <label className="mb-1 text-xl font-inter text-white">
@@ -121,7 +121,7 @@ const AddSoftSkillPopup = ({
                             Cancelar
                         </Button>
                         <Button type="button" variant="primary" onClick={handleConfirm} fullWidth disabled={isDisabled || isSubmitting}>
-                            {loading ? "Verificando..." : isSubmitting ? "Guardando..." : "Aceptar"}
+                            {loading ? "Verificando..." : isSubmitting ? "Guardando..." : "Registrar"}
                         </Button>
                     </div>
                 </PopUpCard>

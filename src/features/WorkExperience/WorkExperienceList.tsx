@@ -136,7 +136,7 @@ const WorkExperienceList = () => {
                                         Buscar
                                     </button>
                                     <button type="button" onClick={handleAdd} className={styles.addBtn}>
-                                        Agregar
+                                        Registrar
                                     </button>
                                 </div>
                             </div>

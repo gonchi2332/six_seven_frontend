@@ -9,7 +9,7 @@ interface UseAddInfoFormProps {
 
 // Validaciones
 const validateSecondSurname = (value: string): string | null => {
-    if (!value.trim()) return 'El segundo apellido es obligatorio';
+    if (!value.trim()) return 'El segundo apellido no puede estar vacio';
     const regex = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/;
     if (!regex.test(value)) return 'Solo se permiten letras y espacios';
     if (value.length > 50) return 'Máximo 50 caracteres';
@@ -17,7 +17,7 @@ const validateSecondSurname = (value: string): string | null => {
 };
 
 const validateCity = (value: string): string | null => {
-    if (!value.trim()) return 'La ciudad es obligatoria';
+    if (!value.trim()) return 'La ciudad no puede estar vacia';
     const regex = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/;
     if (!regex.test(value)) return 'Solo se permiten letras y espacios';
     if (value.length > 50) return 'Máximo 50 caracteres';
@@ -25,7 +25,7 @@ const validateCity = (value: string): string | null => {
 };
 
 const validateEmail = (value: string): string | null => {
-    if (!value.trim()) return 'El correo es obligatorio';
+    if (!value.trim()) return 'El correo no puede estar vacio';
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!regex.test(value)) return 'Formato de correo inválido';
     if (value.length > 50) return 'Máximo 50 caracteres';
@@ -33,7 +33,7 @@ const validateEmail = (value: string): string | null => {
 };
 
 const validatePhone = (value: string): string | null => {
-    if (!value.trim()) return 'El teléfono es obligatorio';
+    if (!value.trim()) return 'El teléfono no puede estar vacio';
     const regex = /^[\+\d\s]+$/;
     if (!regex.test(value)) return 'Solo se permiten números, espacios y el signo +';
     if (value.length > 20) return 'Máximo 20 caracteres';
@@ -41,7 +41,7 @@ const validatePhone = (value: string): string | null => {
 };
 
 const validateCountry = (value: string): string | null => {
-    if (!value.trim()) return 'El país es obligatorio';
+    if (!value.trim()) return 'El país no puede estar vacio';
     if (value.length > 50) return 'Máximo 50 caracteres';
     return null;
 };
@@ -113,7 +113,7 @@ export const useAddInfoForm = ({ onAdd, onClose }: UseAddInfoFormProps) => {
             handleReset();
             onClose();
         } catch (err: any) {
-            setError(err.message || 'Error al agregar');
+            setError(err.message || 'Error al registrar');
         } finally {
             setIsSubmitting(false);
         }

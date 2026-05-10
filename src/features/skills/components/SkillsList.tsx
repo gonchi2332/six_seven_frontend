@@ -46,7 +46,7 @@ const SkillsList = () => {
             <div className={styles.header}>
                 <h2 className={styles.title}>Habilidades Técnicas</h2>
                 <button type="button" className={styles.addBtn} onClick={() => setShowAdd(true)}>
-                    Agregar
+                    Registrar
                 </button>
             </div>
 

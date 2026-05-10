@@ -51,7 +51,7 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
     return (
         <div className={styles.overlay}>
             <div className="w-full max-w-xs sm:max-w-sm">
-                <PopUpCard title="Agregar Habilidad Técnica">
+                <PopUpCard title="Registrar Habilidad Técnica">
                     <div className={styles.formWrapper}>
                         <div className="relative flex flex-col" ref={containerRef}>
                             <label className="mb-1 text-xl font-inter text-white">
@@ -116,7 +116,7 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
                             Cancelar
                         </Button>
                         <Button type="button" variant="primary" onClick={handleConfirm} fullWidth disabled={isDisabled || isSubmitting}>
-                            {loading ? "Verificando..." : isSubmitting ? "Guardando..." : "Aceptar"}
+                            {loading ? "Verificando..." : isSubmitting ? "Guardando..." : "Registrar"}
                         </Button>
                     </div>
                 </PopUpCard>

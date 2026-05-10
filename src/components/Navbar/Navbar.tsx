@@ -11,23 +11,23 @@ const STYLES = {
   NAVBAR: "w-full bg-secondary px-4 sm:px-6 py-3 text-white font-inter border-b border-white/5 sticky top-0 z-50",
   CONTAINER: "flex items-center justify-between w-full max-w-7xl mx-auto",
   LEFT_SECTION: "flex items-center gap-4 lg:gap-8",
-  USER_INFO: "flex items-center gap-3 lg:border-r lg:border-white/10 lg:pr-6",
+  USER_INFO: "flex gap-3 lg:border-r lg:border-white/10 lg:pr-4", 
   AVATAR: "w-9 h-9 object-cover rounded-full border border-white/20 shrink-0",
-  USER_NAME: "font-bold text-base sm:text-lg truncate max-w-[120px] sm:max-w-[150px]",
+  USER_NAME: "font-bold text-base sm:text-lg whitespace-nowrap shrink-0",
   
   // Desktop Tabs
   TABS_CONTAINER: "hidden lg:flex items-center gap-1",
-  TAB_BUTTON: "px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer",
+  TAB_BUTTON: "px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap",
   TAB_ACTIVE: "bg-accent text-secondary shadow-lg shadow-accent/20",
   TAB_INACTIVE: "text-white/60 hover:text-white hover:bg-white/5",
   
   // Desktop Actions
-  ACTIONS_CONTAINER: "hidden lg:flex items-center gap-4",
+  ACTIONS_CONTAINER: "hidden lg:flex items-center gap-4 ml-auto", // ml-auto ayuda a empujar las acciones al final
   COPY_BUTTON: "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-200 bg-white/10 hover:bg-white/20 text-white shrink-0",
   LOGOUT_BUTTON: "flex items-center gap-2 text-white/60 hover:text-red-400 transition-colors text-sm font-bold ml-2 shrink-0",
   
   // Mobile Menu
-  MOBILE_TOGGLE: "lg:hidden p-2 text-white/80 hover:text-white transition-colors",
+  MOBILE_TOGGLE: "lg:hidden p-2 text-white/80 hover:text-white transition-colors ml-4",
   MOBILE_MENU: "lg:hidden absolute top-full left-0 w-full bg-secondary border-b border-white/10 flex flex-col p-4 gap-4 animate-in slide-in-from-top duration-300",
   MOBILE_TAB: "w-full text-left px-4 py-3 rounded-xl text-sm font-medium",
   

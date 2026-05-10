@@ -62,7 +62,7 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
             });
             onClose();
         } catch (err: any) {
-            setApiError(err.message || 'Error al agregar la experiencia');
+            setApiError(err.message || 'Error al registrar la experiencia');
         } finally {
             setIsSubmitting(false);
         }
@@ -78,7 +78,7 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
     return (
         <div className={styles.overlay} onClick={handleClose}>
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
-                <PopUpCard title="Agregar Experiencia Laboral">
+                <PopUpCard title="Registrar Experiencia Laboral">
                     {apiError && (
                     <div className={styles.apiError}>
                         {apiError}
@@ -166,7 +166,7 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
                             disabled={isSubmitting || !isFormValid()}
                             fullWidth
                         >
-                            {isSubmitting ? 'Agregando...' : 'Agregar'}
+                            {isSubmitting ? 'Registrando...' : 'Registrar'}
                         </Button>
                     </div>
                 </PopUpCard>
