@@ -16,8 +16,8 @@ const styles = {
     form: "flex flex-col gap-4 px-6 py-4",
     row: "grid grid-cols-1 md:grid-cols-2 gap-4",
     checkboxContainer: "flex items-center gap-2",
-    checkbox: "w-4 h-4 text-primary rounded focus:ring-primary",
-    checkboxLabel: "text-surface font-nunito text-sm",
+    checkbox: "w-4 h-4 text-primary rounded focus:ring-primary cursor-pointer",
+    checkboxLabel: "text-surface font-nunito text-sm cursor-pointer",
     buttonContainer: "flex gap-3 px-6 pb-6",
     apiError: "p-2 mb-3 text-sm text-red-600 bg-red-50 rounded-xl border border-red-200 mx-6 mt-2",
 };
@@ -80,8 +80,8 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
                 <PopUpCard title="Agregar Experiencia Laboral">
                     {apiError && (
-                        <div className={styles.apiError}>
-                            {apiError}
+                    <div className={styles.apiError}>
+                        {apiError}
                         </div>
                     )}
                     
@@ -96,7 +96,7 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
                                 error={errors.position}
                                 maxLength={50}
                             />
-                            
+
                             <TextField
                                 label="Empresa:*"
                                 value={formData.company}
@@ -106,7 +106,7 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
                                 maxLength={50}
                             />
                         </div>
-                        
+
                         {/* Descripción - ancho completo */}
                         <TextField
                             label="Descripción:*"
@@ -116,24 +116,24 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
                             error={errors.description}
                             maxLength={200}
                         />
-                        
+
                         {/* Fila: Fechas */}
                         <div className={styles.row}>
                             <TextField
                                 label="Fecha Inicio:*"
                                 type="date"
-                                placeholder="dd/mm/aaaa"
+                                placeholder={"dd/mm/aaaa"}
                                 value={formData.startDate}
                                 onChange={(e) => handleStartDateChange(e.target.value)}
                                 error={errors.startDate}
                             />
-                            
+
                             <TextField
                                 label="Fecha Fin:"
                                 type="date"
+                                placeholder={"dd/mm/aaaa"}
                                 value={formData.isCurrent ? '' : formData.endDate}
                                 onChange={(e) => handleEndDateChange(e.target.value)}
-                                placeholder="dd/mm/aaaa"
                                 error={errors.endDate}
                                 disabled={formData.isCurrent}
                             />
@@ -143,12 +143,14 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
                         <div className={styles.checkboxContainer}>
                             <input
                                 type="checkbox"
-                                id="isCurrent"
+                                id="isCurrentAdd"
                                 checked={formData.isCurrent}
-                                onChange={(e) => handleIsCurrentChange(e.target.checked)}
+                                onChange={(e) => {
+                                    handleIsCurrentChange(e.target.checked);
+                                }}
                                 className={styles.checkbox}
                             />
-                            <label htmlFor="isCurrent" className={styles.checkboxLabel}>
+                            <label htmlFor="isCurrentAdd" className={styles.checkboxLabel}>
                                 Trabajo actualmente aquí
                             </label>
                         </div>
