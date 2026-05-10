@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { useEducation } from "../hooks/useEducation";
 import EducationCard from "../features/Education/EducationCard";
 import EducationForm from "../features/Education/EducationForm";
 import ViewEducationPopup from "../features/Education/ViewEducationPopup";
+import EducationPopup from "../features/Education/EducationPopup";
 import ConfirmDeleteModal from "../features/Education/DeleteEducationPopup";
 import type { EducationEntry } from "../services/educationService";
 
@@ -43,12 +44,20 @@ const EducationPage = () => {
     // Estados de Modales
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
-    const [isDetailOpen, setIsDetailOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false); 
     const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+    const [isViewOpen, setIsViewOpen] = useState(false); 
     
     const [selectedEntry, setSelectedEntry] = useState<EducationEntry | null>(null);
     const [formError, setFormError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        if (searchInput === "") {
+            setActiveSearch("");
+            setCurrentPage(1);
+        }
+    }, [searchInput]);
 
     const handleSearch = () => {
         setActiveSearch(searchInput);
@@ -59,30 +68,36 @@ const EducationPage = () => {
         if (e.key === "Enter") handleSearch();
     };
 
-    const filtered = entries.filter((e) =>
-        e.degree.toLowerCase().includes(activeSearch.toLowerCase()) ||
-        e.institution.toLowerCase().includes(activeSearch.toLowerCase())
-    );
+    const filtered = entries.filter((e) => {
+        if (!activeSearch.trim()) return true;
+        const term = activeSearch.toLowerCase();
+        return e.degree.toLowerCase().includes(term) || e.institution.toLowerCase().includes(term);
+    });
 
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
     // Flujo de Modales
-    const handleView = (entry: EducationEntry) => {
+    const handleCardClick = (entry: EducationEntry) => {
         setSelectedEntry(entry);
-        setIsDetailOpen(true);
+        setIsMenuOpen(true);
+    };
+
+    const handleViewDetail = () => {
+        setIsMenuOpen(false);
+        setIsViewOpen(true);
     };
 
     const handleEditClick = (entry: EducationEntry) => {
-        setFormError(null);
         setSelectedEntry(entry);
-        setIsDetailOpen(false);
+        setFormError(null);
+        setIsMenuOpen(false);
         setIsEditOpen(true);
     };
 
     const handleDeleteClick = (entry: EducationEntry) => {
         setSelectedEntry(entry);
-        setIsDetailOpen(false);
+        setIsMenuOpen(false);
         setIsConfirmDeleteOpen(true);
     };
 
@@ -179,11 +194,10 @@ const EducationPage = () => {
                         ) : (
                             <div className={styles.listWrapper}>
                                 {paginated.map((entry) => (
-                                    <EducationCard
-                                        key={entry.id}
-                                        entry={entry}
-                                        onView={handleView}
-                                    />
+                                    <EducationCard 
+                                        key={entry.id} 
+                                        entry={entry} 
+                                        onView={handleCardClick} />
                                 ))}
                             </div>
                         )}
@@ -204,14 +218,27 @@ const EducationPage = () => {
             </div>
 
             {/* Renderizado de Modales */}
-            
-            <ViewEducationPopup
-                isOpen={isDetailOpen && selectedEntry !== null}
-                entry={selectedEntry}
-                onClose={() => setIsDetailOpen(false)}
-                onEdit={handleEditClick}
-                onDelete={handleDeleteClick}
-            />
+            {isMenuOpen && selectedEntry && (
+                <EducationPopup
+                    isOpen={isMenuOpen}
+                    entry={selectedEntry}
+                    onClose={() => setIsMenuOpen(false)}
+                    onEdit={handleEditClick}
+                    onDelete={handleDeleteClick}
+                    onView={handleViewDetail}
+                />
+            )}
+
+            {isViewOpen && selectedEntry && (
+                <ViewEducationPopup
+                    isOpen={isViewOpen}
+                    entry={selectedEntry}
+                    onClose={() => {
+                        setIsViewOpen(false);
+                        setIsMenuOpen(true); 
+                    }}
+                />
+            )}
 
             {isAddOpen && (
                 <EducationForm
@@ -230,7 +257,10 @@ const EducationPage = () => {
                     initial={selectedEntry}
                     academicDegrees={academicDegrees}
                     onSubmit={handleEditSubmit}
-                    onClose={() => setIsEditOpen(false)}
+                    onClose={() => {
+                        setIsEditOpen(false);
+                        setIsMenuOpen(true);
+                    }}
                     serverError={formError}
                     isSubmitting={isSubmitting}
                 />
@@ -240,7 +270,10 @@ const EducationPage = () => {
                 <ConfirmDeleteModal
                     degree={selectedEntry.degree}
                     onConfirm={handleConfirmDelete}
-                    onClose={() => setIsConfirmDeleteOpen(false)}
+                    onClose={() => {
+                        setIsConfirmDeleteOpen(false);
+                        setIsMenuOpen(true); // Al cancelar borrar, regresa al menú
+                    }}
                     isSubmitting={isSubmitting}
                 />
             )}
