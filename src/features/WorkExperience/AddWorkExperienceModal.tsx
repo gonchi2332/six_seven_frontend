@@ -122,6 +122,7 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
                             <TextField
                                 label="Fecha Inicio:*"
                                 type="date"
+                                placeholder="dd/mm/aaaa"
                                 value={formData.startDate}
                                 onChange={(e) => handleStartDateChange(e.target.value)}
                                 error={errors.startDate}
@@ -130,8 +131,9 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
                             <TextField
                                 label="Fecha Fin:"
                                 type="date"
-                                value={formData.endDate}
+                                value={formData.isCurrent ? '' : formData.endDate}
                                 onChange={(e) => handleEndDateChange(e.target.value)}
+                                placeholder="dd/mm/aaaa"
                                 error={errors.endDate}
                                 disabled={formData.isCurrent}
                             />

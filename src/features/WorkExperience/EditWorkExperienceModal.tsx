@@ -152,15 +152,17 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                                 type="date"
                                 value={startDate}
                                 onChange={(e) => setStartDate(e.target.value)}
+                                placeholder="dd/mm/aaaa"
                                 error={errors.startDate}
                             />
                             
                             <TextField
                                 label="Fecha Fin:"
                                 type="date"
-                                value={endDate}
+                                value={isCurrent ? '' : endDate}
                                 onChange={(e) => setEndDate(e.target.value)}
                                 disabled={isCurrent}
+                                placeholder="dd/mm/aaaa"
                                 error={errors.endDate}
                             />
                         </div>

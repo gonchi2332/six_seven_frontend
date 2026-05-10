@@ -33,14 +33,19 @@ const TextField = ({
 
   return (
     <div className={`flex flex-col ${className}`}>
-      {label && (
-        <label className={MAIN_LABEL_STYLES}>
-          {label}
-        </label>
-      )}
+      {label && <label className={MAIN_LABEL_STYLES}>{label}</label>}
+      
       <input
-        type={type}
-        className={`${INPUT_BASE_STYLES} ${error ? INPUT_ERROR_STYLES : INPUT_NORMAL_STYLES}`}
+        type={type === 'date' && !value ? 'text' : type}
+        onFocus={(e) => {
+          if (type === 'date') e.target.type = 'date';
+        }}
+        onBlur={(e) => {
+          if (type === 'date' && !e.target.value) e.target.type = 'text';
+        }}
+        className={`${INPUT_BASE_STYLES} ${
+          error ? INPUT_ERROR_STYLES : INPUT_NORMAL_STYLES
+        } ${!value ? "text-gray-400" : "text-black"}`}        
         value={value}
         onChange={onChange}
         placeholder={placeholder}
