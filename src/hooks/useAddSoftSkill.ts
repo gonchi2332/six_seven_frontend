@@ -16,7 +16,7 @@ const useAddSoftSkill = (
     const [selectedName, setSelectedName] = useState<string | null>(null);
     const [isOther, setIsOther] = useState(false);
     const [otherName, setOtherName] = useState("");
-    const [result, setResult] = useState<SoftSkillResultType | null>(null);
+    const [topError, setTopError] = useState<string | null>(null);
     const [inlineError, setInlineError] = useState<string | null>(null);
     const [hasFieldError, setHasFieldError] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -27,6 +27,7 @@ const useAddSoftSkill = (
     const clearError = () => {
         setInlineError(null);
         setHasFieldError(false);
+        setTopError(null);
     };
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,8 +91,11 @@ const useAddSoftSkill = (
             const outcome = await postSoftSkill(nameToSubmit);
             if (outcome === "success") {
                 onSubmit(nameToSubmit);
+                onClose();
+            } else {
+                // not-found
+                setTopError("La habilidad introducida no corresponde a ninguna habilidad blanda reconocible dentro del campo de la informática, ciencias de la computación y desarrollo de software.");
             }
-            setResult(outcome);
         } catch (err: unknown) {
             const msg = err instanceof Error ? err.message : "";
             if (msg === "INAPPROPRIATE") {
@@ -101,16 +105,11 @@ const useAddSoftSkill = (
                 setInlineError("El usuario ya tiene registrada esta habilidad blanda");
                 setHasFieldError(true);
             } else {
-                setResult("not-found");
+                setTopError("La habilidad introducida no corresponde a ninguna habilidad blanda reconocible dentro del campo de la informática, ciencias de la computación y desarrollo de software.");
             }
         } finally {
             setLoading(false);
         }
-    };
-
-    const handleResultClose = () => {
-        setResult(null);
-        onClose();
     };
 
     const canConfirm = isOther ? otherName.trim().length > 0 : !!selectedName;
@@ -118,10 +117,10 @@ const useAddSoftSkill = (
 
     return {
         search, suggestions, showDropdown, setShowDropdown, selectedName,
-        isOther, otherName, result, inlineError, hasFieldError, loading,
+        isOther, otherName, topError, inlineError, hasFieldError, loading,
         containerRef, canConfirm, isDisabled,
         handleSearchChange, handleSelectSuggestion, handleToggleOther,
-        handleOtherNameChange, handleConfirm, handleResultClose,
+        handleOtherNameChange, handleConfirm,
     };
 };
 

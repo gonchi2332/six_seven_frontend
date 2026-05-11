@@ -32,6 +32,10 @@
   .bg-tertiary { background-color: #0C1A1B; }
   .text-tertiary { color: #0C1A1B; }
 
+  /*Cuarteario*/
+  .bg-quaternary { background-color: #90DDF0; }
+  .text-quaternary { color: #1A2C2D; }
+
   /* Acento (Frosted Blue) */
   .bg-accent { background-color: #8EB4BA; }
   .text-accent { color: #8EB4BA; }

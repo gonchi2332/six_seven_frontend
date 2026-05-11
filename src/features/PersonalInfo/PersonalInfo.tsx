@@ -109,13 +109,13 @@ const PersonalInfo = () => {
                                     Ver
                                 </Button>
                                 <Button 
-                                    variant="secondary" 
+                                    variant="quaternary" 
                                     onClick={() => setIsEditModalOpen(true)}
                                 >
                                     Modificar
                                 </Button>
                                 <Button 
-                                    variant="primary" 
+                                    variant="quaternary" 
                                     onClick={() => setIsAddModalOpen(true)}
                                     disabled={emptyFields.length === 0 || isSubmitting}
                                 >
