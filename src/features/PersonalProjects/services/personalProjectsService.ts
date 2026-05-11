@@ -12,7 +12,7 @@ export interface CreateProjectPayload {
     role: string;
     status: "En proceso" | "Finalizado" | "Cancelado";
     links: Link[];
-    image: File | null;
+    image: File | string | null;
 }
 
 export interface UpdateProjectPayload {
@@ -21,7 +21,7 @@ export interface UpdateProjectPayload {
     role?: string;
     status?: "En proceso" | "Finalizado" | "Cancelado";
     links?: Link[];
-    image?: File | null;
+    image?: File | string | null;
 }
 
 export interface ProjectEntry {

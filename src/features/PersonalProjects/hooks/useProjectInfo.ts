@@ -1,4 +1,5 @@
-import { useState } from "react";
+// hooks/useProjectInfo.ts
+import { useState, useEffect } from "react";
 import type { CreateProjectPayload } from "../services/personalProjectsService";
 
 type FormErrors = Partial<Record<keyof CreateProjectPayload | string, string>>;
@@ -17,22 +18,53 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
     const [formData, setFormData] = useState<CreateProjectPayload>({
         ...INITIAL_FORM,
         ...initialData,
-        links: initialData?.links || [{ label: "", url: "" }],
+        links: initialData?.links?.length ? initialData.links : [{ label: "", url: "" }],
+        image: initialData?.image !== undefined ? initialData.image : null,
     });
+    const [originalData, setOriginalData] = useState<Partial<CreateProjectPayload>>({});
     const [errors, setErrors] = useState<FormErrors>({});
+
+    // Para el ImageUpload - obtener la URL de la imagen si existe
+    const imageUrl = typeof formData.image === 'string' ? formData.image : null;
+
+    // Guardar los datos originales cuando initialData cambie
+    useEffect(() => {
+        if (initialData && isEditing) {
+            setOriginalData({
+                description: initialData.description,
+                topic: initialData.topic,
+                role: initialData.role,
+                status: initialData.status,
+                links: initialData.links ? JSON.parse(JSON.stringify(initialData.links)) : undefined,
+                image: initialData.image,
+            });
+        }
+    }, [initialData, isEditing]);
+
+    // Función para verificar si hay cambios
+    const hasChanges = (): boolean => {
+        if (!isEditing) return true; // En modo creación siempre habilitado
+
+        // Comparar campos
+        const descriptionChanged = formData.description !== originalData.description;
+        const topicChanged = formData.topic !== originalData.topic;
+        const roleChanged = formData.role !== originalData.role;
+        const statusChanged = formData.status !== originalData.status;
+        const linksChanged = JSON.stringify(formData.links) !== JSON.stringify(originalData.links);
+        const imageChanged = formData.image !== originalData.image;
+
+        return descriptionChanged || topicChanged || roleChanged || statusChanged || linksChanged || imageChanged;
+    };
 
     const handleChange = <K extends keyof CreateProjectPayload>(
         field: K,
         value: CreateProjectPayload[K]
     ) => {
-        // Validaciones en tiempo real
         let newValue = value;
 
         if (field === 'name' && typeof value === 'string') {
-            // Bloquear más de 50 caracteres
             if (value.length > 50) return;
             newValue = value;
-            // Validación en tiempo real
             if (value.length > 0 && value.length > 50) {
                 setErrors((prev) => ({ ...prev, [field]: "El nombre del proyecto supera el límite de 50 caracteres" }));
             } else if (value.length === 0) {
@@ -67,7 +99,6 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
         }
 
         if (field === 'topic' && typeof value === 'string') {
-            // topic no tiene límite específico pero requerido
             newValue = value;
             if (value.length === 0) {
                 setErrors((prev) => ({ ...prev, [field]: "El área es requerida" }));
@@ -76,14 +107,15 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
             }
         }
 
+        if (field === 'image') {
+            newValue = value;
+            setErrors((prev) => ({ ...prev, image: undefined }));
+        }
+
         setFormData((prev) => ({ ...prev, [field]: newValue }));
     };
 
     const handleLinkChange = (index: number, field: "label" | "url", value: string) => {
-        // Los labels no tienen límite específico en tu validación
-        // Si quieres agregar límite a labels, descomenta:
-        // if (field === 'label' && value.length > 50) return;
-
         setFormData((prev) => {
             const updated = [...prev.links];
             if (!updated[index]) {
@@ -93,7 +125,6 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
             return { ...prev, links: updated };
         });
 
-        // Limpiar error específico
         setErrors((prev) => ({ ...prev, [`link${index}_${field}`]: undefined }));
     };
 
@@ -161,7 +192,13 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
             });
         }
 
+        // Validación de imagen para creación
         if (!isEditing && !formData.image) {
+            e.image = "La imagen del proyecto es requerida";
+        }
+
+        // Para edición, si no hay imagen (ni File ni URL existente)
+        if (isEditing && !formData.image && !imageUrl) {
             e.image = "La imagen del proyecto es requerida";
         }
 
@@ -173,7 +210,8 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
         setFormData({
             ...INITIAL_FORM,
             ...data,
-            links: data.links?.map(link => ({ label: link.label || "", url: link.url || "" })) || [{ label: "", url: "" }]
+            links: data.links?.length ? data.links : [{ label: "", url: "" }],
+            image: data.image !== undefined ? data.image : null,
         });
         setErrors({});
     };
@@ -182,14 +220,17 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
         setFormData({
             ...INITIAL_FORM,
             ...initialData,
-            links: initialData?.links?.map(link => ({ label: link.label || "", url: link.url || "" })) || [{ label: "", url: "" }]
+            links: initialData?.links?.length ? initialData.links : [{ label: "", url: "" }],
+            image: initialData?.image !== undefined ? initialData.image : null,
         });
         setErrors({});
     };
 
     return {
         formData,
+        imageUrl,
         errors,
+        hasChanges: hasChanges(), // Retornar el valor actual de hasChanges
         handleChange,
         handleLinkChange,
         addLink,
