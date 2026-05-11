@@ -19,7 +19,7 @@ const DeleteEducationPopup = ({ degree, onConfirm, onClose, isSubmitting = false
     return (
         <div className={styles.overlay}>
             <div className="w-full max-w-xs sm:max-w-sm">
-                <PopUpCard title="Eliminar experiencia académica">
+                <PopUpCard title="Eliminar formacion académica">
                     <p className={styles.message}>
                         ¿Estás seguro que quieres eliminar 
                         <span className={styles.highlight}> {degree}</span>?

@@ -72,13 +72,13 @@ const EducationForm = ({
         if (!startDate.trim()) {
             next.startDate = "Requerido";
         } else if (!isValidYear(startDate)) {
-            next.startDate = "Año inválido";
+            next.startDate = "El Año de inicio debe ser valido";
         }
         if (!isPresent) {
             if (!endDate.trim()) {
                 next.endDate = "Requerido";
             } else if (!isValidYear(endDate)) {
-                next.endDate = "Año inválido";
+                next.endDate = "El Año de finalización debe ser valido";
             } else if (Number(endDate) < Number(startDate)) {
                 next.endDate = "Debe ser mayor";
             }
@@ -105,7 +105,7 @@ const EducationForm = ({
     return (
         <div className={styles.overlay} onClick={onClose}>
             <div className="w-full max-w-xl" onClick={(e) => e.stopPropagation()}>
-                <PopUpCard title={mode === "add" ? "Registrar Educación" : "Editar Educación"}>
+                <PopUpCard title={mode === "add" ? "Registrar Formacion Academica" : "Modificar Formacion Academica"}>
                     {serverError && <div className={styles.serverError}>{serverError}</div>}
 
                     <div className={styles.body}>
@@ -113,7 +113,7 @@ const EducationForm = ({
                             label="Título/Carrera:*"
                             value={degree}
                             onChange={(e) => setDegree(e.target.value)}
-                            placeholder="Ej: Ingeniería de Sistemas"
+                            placeholder="Ej: Ingeniería Informatica"
                             disabled={isSubmitting || mode === "edit"}
                             error={errors.degree}
                         />
@@ -150,7 +150,7 @@ const EducationForm = ({
 
                         <div className={styles.row}>
                             <TextField
-                                label="Año Inicio:*"
+                                label="Año de Inicio:*"
                                 value={startDate}
                                 onChange={(e) => setStartDate(handleYearInput(e.target.value))}
                                 placeholder="AAAA"
@@ -159,7 +159,7 @@ const EducationForm = ({
                             />
 
                             <TextField
-                                label="Año Fin:"
+                                label="Año de Finalizacion:"
                                 value={isPresent ? "" : endDate}
                                 onChange={(e) => setEndDate(handleYearInput(e.target.value))}
                                 placeholder={isPresent ? "Actualidad" : "AAAA"}

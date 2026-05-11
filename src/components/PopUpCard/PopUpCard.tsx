@@ -7,7 +7,7 @@ interface PopUpCardProps {
 
 const PopUpCard = ({ title, children }: PopUpCardProps) => {
   return (
-    <div className="bg-primary rounded-xl pb-8 w-full max-w-5xl mx-auto shadow-2xl">
+    <div className="bg-primary rounded-xl pb-4 w-full max-w-5xl mx-auto shadow-2xl">
       <div className="mb-8 border-b-2 border-surface pb-4 w-full">
         <h2 className="text-3xl font-bold text-surface text-center font-inter align-center pt-4">
           {title}

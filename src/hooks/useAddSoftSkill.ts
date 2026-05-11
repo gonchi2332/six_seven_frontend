@@ -81,7 +81,7 @@ const useAddSoftSkill = (
             if (!isOther) {
                 const userSkills = await getUserSoftSkillNames(username);
                 if (userSkills.includes(nameToSubmit.toLowerCase())) {
-                    setInlineError("El usuario ya tiene registrada esta habilidad blanda.");
+                    setInlineError("El usuario ya tiene registrada esta habilidad blanda");
                     setHasFieldError(true);
                     return;
                 }
@@ -98,7 +98,7 @@ const useAddSoftSkill = (
                 setInlineError("Habilidad inválida: el nombre contiene palabras no permitidas.");
                 setHasFieldError(true);
             } else if (msg === "ALREADY_EXISTS") {
-                setInlineError("El usuario ya tiene registrada esta habilidad blanda.");
+                setInlineError("El usuario ya tiene registrada esta habilidad blanda");
                 setHasFieldError(true);
             } else {
                 setResult("not-found");

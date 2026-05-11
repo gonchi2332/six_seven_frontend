@@ -32,7 +32,7 @@ const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm, title, message }: Conf
                             Cancelar
                         </Button>
                         <Button variant="primary" onClick={onConfirm} fullWidth>
-                            Aceptar
+                            Eliminar
                         </Button>
                     </div>
                 </PopUpCard>

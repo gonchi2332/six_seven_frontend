@@ -85,7 +85,7 @@ const PersonalProjectsModal = ({
                 >
                     <X size={18} />
                 </button>
-                <PopUpCard title={isEditing ? "Editar Proyecto" : "Registrar Proyecto Personal"}>
+                <PopUpCard title={isEditing ? "Modificar Proyecto" : "Registrar Proyecto Personal"}>
                     <div className={STYLES.FORM_WRAPPER}>
                         <div className={STYLES.TITLE}>
                             <TextField
@@ -99,7 +99,7 @@ const PersonalProjectsModal = ({
                                 className="[&_input]:py-1.5 [&_label]:text-sm"
                             />
                             {isEditing && (
-                                <p className="text-white/40 text-xs mt-0.5">El título no se puede editar</p>
+                                <p className="text-white/40 text-xs mt-0.5">El título no se puede modificar</p>
                             )}
                         </div>
 

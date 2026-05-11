@@ -49,9 +49,9 @@ export const useEducation = () => {
         try {
             const created = await createEducation(data);
             setEntries((prev) => [...prev, created]);
-            showSuccess("Experiencia académica registrada correctamente");
+            showSuccess("Formacion académica registrada correctamente");
         } catch (err: unknown) {
-            throw new Error(err instanceof Error ? err.message : "Error al registrar experiencia académica");
+            throw new Error(err instanceof Error ? err.message : "Error al registrar formacion académica");
         }
     };
 
@@ -59,9 +59,9 @@ export const useEducation = () => {
         try {
             const updated = await updateEducation(id, data);
             setEntries((prev) => prev.map((e) => (e.id === id ? updated : e)));
-            showSuccess("Experiencia académica modificada correctamente");
+            showSuccess("Formacion académica modificada correctamente");
         } catch (err: unknown) {
-            throw new Error(err instanceof Error ? err.message : "Error al modificar experiencia académica");
+            throw new Error(err instanceof Error ? err.message : "Error al modificar formacion académica");
         }
     };
 
@@ -69,9 +69,9 @@ export const useEducation = () => {
         try {
             await apiDeleteEducation(id);
             setEntries((prev) => prev.filter((e) => e.id !== id));
-            showSuccess("Experiencia académica eliminada correctamente");
+            showSuccess("Formacion académica eliminada correctamente");
         } catch (err: unknown) {
-            throw new Error(err instanceof Error ? err.message : "Error al eliminar experiencia académica");
+            throw new Error(err instanceof Error ? err.message : "Error al eliminar formacion académica");
         }
     };
 

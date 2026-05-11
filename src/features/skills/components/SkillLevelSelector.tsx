@@ -8,7 +8,7 @@ const LEVELS = [
     { value: 2, label: "Elemental" },
     { value: 3, label: "Intermedio" },
     { value: 4, label: "Avanzado" },
-    { value: 5, label: "Excelente" },
+    { value: 5, label: "Experto" },
 ];
 
 const styles = {

@@ -75,7 +75,7 @@ const WorkExperienceDetailModal = ({ isOpen, experience, onClose}: WorkExperienc
                                 <p className={styles.value}>{startDateFormatted}</p>
                             </div>
                             <div className={styles.dateField}>
-                                <p className={styles.label}>Fecha de fin</p>
+                                <p className={styles.label}>Fecha de finalizacion</p>
                                 <p className={styles.value}>{endDateFormatted}</p>
                             </div>
                         </div>
@@ -83,7 +83,7 @@ const WorkExperienceDetailModal = ({ isOpen, experience, onClose}: WorkExperienc
                     
                     <div className={styles.buttonContainer}>
                         <Button 
-                            variant="primary" 
+                            variant="secondary" 
                             onClick={onClose}
                             fullWidth
                         >
