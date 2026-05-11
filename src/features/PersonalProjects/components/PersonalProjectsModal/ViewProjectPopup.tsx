@@ -1,83 +1,164 @@
+import { Globe, Link as LinkIcon, BookOpen, Target, Tag } from 'lucide-react';
 import PopUpCard from "../../../../components/PopUpCard";
 import Button from "../../../../components/Button";
 import type { ProjectEntry } from "../../services/personalProjectsService";
 
 interface ViewProjectPopupProps {
     project: ProjectEntry;
-    onBack: () => void; // Nueva función para regresar al modal de opciones
+    onBack: () => void;
 }
 
-const STYLES = {
-    HEADER_IMAGE: "w-full h-52 object-cover rounded-xl mb-6",
-    TOPIC_BADGE: "inline-flex px-4 py-1 rounded-full bg-[#90DDF0] text-[#0a2e33] text-sm font-nunito font-semibold mb-5",
-    CONTENT: "flex flex-col px-6 pb-2",
-    SECTION: "flex flex-col mb-6",
-    SECTION_BORDER: "border-l-2 border-[#90DDF0] pl-3",
-    SECTION_TITLE: "text-[#90DDF0] font-inter font-bold text-base mb-2",
-    SECTION_TEXT: "text-white/80 font-nunito text-sm leading-relaxed",
-    LINKS_LIST: "flex flex-wrap gap-2 mt-1",
-    LINK_BUTTON: "px-4 py-1.5 rounded-full bg-[#2C666E]/60 text-white hover:bg-[#2C666E]/90 transition-colors font-nunito text-sm border border-[#90DDF0]/30",
-    FOOTER: "flex gap-3 px-6 pt-4 pb-5 mt-2",
+const styles = {
+    overlay: 'fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center px-4 z-50 overflow-y-auto py-4',
+    container: 'min-h-screen flex items-center justify-center p-2',
+
+    // Header con topic badge - más compacto
+    headerSection: 'flex flex-col items-center gap-2 px-6 pt-4 pb-3 border-b border-white/10 bg-black/20',
+    topicBadge: 'flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#90DDF0]/20 text-[#90DDF0] text-xs font-nunito font-semibold border border-[#90DDF0]/30',
+    projectName: 'text-lg font-bold font-inter text-white text-center mt-1',
+
+    // Imagen
+    imageWrapper: 'px-6 pt-4 pb-2',
+    image: 'w-full h-48 object-cover rounded-xl shadow-lg shadow-black/40',
+
+    // Cuerpo con grid
+    body: 'px-6 py-3',
+    grid: 'grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-0',
+    sectionLabel: 'text-[#90DDF0] font-bold text-[10px] uppercase tracking-widest flex items-center gap-1.5 mb-1 mt-2 first:mt-0 col-span-full',
+    divider: 'border-t border-white/10 my-1.5 col-span-full',
+
+    // Filas de datos - más compactas
+    row: 'flex items-start gap-2 py-1',
+    iconBox: 'w-6 h-6 rounded-lg bg-[#2C666E]/50 flex items-center justify-center shrink-0 mt-0.5',
+    icon: 'text-[#90DDF0] w-3 h-3',
+    textGroup: 'flex flex-col flex-1',
+    label: 'text-white/40 text-[8px] uppercase tracking-wide font-bold',
+    value: 'text-white font-nunito text-xs mt-0 leading-snug',
+    emptyValue: 'text-white/25 italic font-nunito text-xs mt-0',
+
+    // Enlaces
+    linksContainer: 'flex flex-wrap gap-2 mt-1',
+    linkButton: 'px-3 py-1 rounded-full bg-[#2C666E]/60 text-white hover:bg-[#2C666E]/90 transition-colors font-nunito text-xs border border-[#90DDF0]/30 inline-flex items-center gap-1.5',
+
+    // Footer - más compacto
+    footer: 'px-6 py-3 border-t border-white/10 bg-black/20',
 };
+
+
+const InfoRow = ({
+    icon: Icon,
+    label,
+    value,
+}: {
+    icon: React.ElementType;
+    label: string;
+    value: string | null | undefined;
+}) => (
+    <div className={styles.row}>
+        <div className={styles.iconBox}>
+            <Icon className={styles.icon} />
+        </div>
+        <div className={styles.textGroup}>
+            <p className={styles.label}>{label}</p>
+            {value ? (
+                <p className={styles.value}>{value}</p>
+            ) : (
+                <p className={styles.emptyValue}>No especificado</p>
+            )}
+        </div>
+    </div>
+);
+
 
 const ViewProjectPopup = ({ project, onBack }: ViewProjectPopupProps) => {
     return (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 overflow-y-auto">
-            <div className="max-w-2xl w-full relative">
-                <PopUpCard title={project.name}>
-                    <div className={STYLES.CONTENT}>
-                        <div className="flex justify-center">
-                            <span className={STYLES.TOPIC_BADGE}>{project.topic}</span>
+        <div className={styles.overlay} onClick={onBack}>
+            <div className={styles.container} onClick={(e) => e.stopPropagation()}>
+                <PopUpCard title="Detalles del Proyecto">
+                    {/* Header con topic y nombre */}
+                    <div className={styles.headerSection}>
+                        <div className={styles.topicBadge}>
+                            <Tag size={12} />
+                            <span>{project.topic}</span>
                         </div>
+                        <h2 className={styles.projectName}>{project.name}</h2>
+                    </div>
 
-                        {project.imageUrl && (
+                    {/* Imagen del proyecto */}
+                    {project.imageUrl && (
+                        <div className={styles.imageWrapper}>
                             <img
                                 src={project.imageUrl}
                                 alt={project.name}
-                                className={STYLES.HEADER_IMAGE}
+                                className={styles.image}
                             />
-                        )}
-
-                        <div className={STYLES.SECTION}>
-                            <div className={STYLES.SECTION_BORDER}>
-                                <h3 className={STYLES.SECTION_TITLE}>Descripción:</h3>
-                                <p className={STYLES.SECTION_TEXT}>{project.description}</p>
-                            </div>
                         </div>
+                    )}
 
-                        <div className={STYLES.SECTION}>
-                            <div className={STYLES.SECTION_BORDER}>
-                                <h3 className={STYLES.SECTION_TITLE}>Estado:</h3>
-                                <p className={STYLES.SECTION_TEXT}>{project.status}</p>
-                            </div>
-                        </div>
+                    <div className={styles.body}>
+                        <div className={styles.grid}>
+                            {/* Sección Descripción */}
+                            <p className={styles.sectionLabel}>
+                                <BookOpen size={12} /> Descripción
+                            </p>
+                            <InfoRow icon={BookOpen} label="Descripción" value={project.description} />
 
-                        <div className={STYLES.SECTION}>
-                            <div className={STYLES.SECTION_BORDER}>
-                                <h3 className={STYLES.SECTION_TITLE}>Enlaces del proyecto:</h3>
-                                <div className={STYLES.LINKS_LIST}>
-                                    {project.links.map((link, index) => (
-                                        <a
-                                            key={index}
-                                            href={link.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className={STYLES.LINK_BUTTON}
-                                        >
-                                            {link.label}
-                                        </a>
-                                    ))}
+                            <div className={styles.divider} />
+
+                            <p className={styles.sectionLabel}>
+                                <Target size={12} /> Estado
+                            </p>
+                            <InfoRow icon={Target} label="Estado del proyecto" value={project.status} />
+
+                            <div className={styles.divider} />
+
+                            <p className={styles.sectionLabel}>
+                                <Globe size={12} /> Rol
+                            </p>
+                            <InfoRow icon={Globe} label="Rol en el proyecto" value={project.role} />
+
+                            <div className={styles.divider} />
+
+                            <p className={styles.sectionLabel}>
+                                <LinkIcon size={12} /> Enlaces
+                            </p>
+                            <div className={styles.row}>
+                                <div className={styles.iconBox}>
+                                    <LinkIcon className={styles.icon} />
+                                </div>
+                                <div className={styles.textGroup}>
+                                    <p className={styles.label}>Enlaces del proyecto</p>
+                                    <div className={styles.linksContainer}>
+                                        {project.links && project.links.length > 0 ? (
+                                            project.links.map((link, index) => (
+                                                <a
+                                                    key={index}
+                                                    href={link.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className={styles.linkButton}
+                                                >
+                                                    <LinkIcon size={10} />
+                                                    {link.label}
+                                                </a>
+                                            ))
+                                        ) : (
+                                            <p className={styles.emptyValue}>No hay enlaces registrados</p>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className={STYLES.FOOTER}>
-                        <div className="flex-1">
-                            <Button variant="secondary" onClick={onBack} fullWidth>
-                                Atrás
-                            </Button>
-                        </div>
+                    <div className={styles.footer}>
+                        <Button
+                            variant="secondary"
+                            onClick={onBack}
+                            fullWidth
+                        >
+                            Atrás
+                        </Button>
                     </div>
                 </PopUpCard>
             </div>
