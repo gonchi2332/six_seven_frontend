@@ -1,7 +1,7 @@
 import Button from "../../components/Button";
 import PopUpCard from "../../components/PopUpCard";
 import TextField from "../../components/TextField";
-import SoftSkillResultPopup from "./SoftskillResultPopup";
+
 import useAddSoftSkill from "../../hooks/useAddSoftSkill";
 import type { SoftSkill } from "../../services/softSkillService";
 
@@ -38,9 +38,9 @@ const AddSoftSkillPopup = ({
 }: AddSoftSkillPopupProps) => {
     const {
         search, suggestions, showDropdown, setShowDropdown, isOther, otherName,
-        result, inlineError, hasFieldError, loading, isDisabled, containerRef,
+        topError, inlineError, hasFieldError, loading, isDisabled, containerRef,
         handleSearchChange, handleSelectSuggestion, handleToggleOther,
-        handleOtherNameChange, handleConfirm, handleResultClose,
+        handleOtherNameChange, handleConfirm,
     } = useAddSoftSkill(onSubmit, onClose, username, catalogSkills);
 
     void userSkills;
@@ -56,14 +56,17 @@ const AddSoftSkillPopup = ({
         handleOtherNameChange(e);
     };
 
-    if (result) {
-        return <SoftSkillResultPopup type={result} onClose={handleResultClose} />;
-    }
+
 
     return (
         <div className={styles.overlay}>
             <div className="w-full max-w-sm sm:max-w-md">
                 <PopUpCard title="Registrar Habilidad Blanda">
+                    {topError && (
+                        <div className="mx-6 sm:mx-8 mb-2 p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center">
+                            {topError}
+                        </div>
+                    )}
                     <div className={styles.formWrapper}>
                         <div className="relative flex flex-col" ref={containerRef}>
                             <label className="mb-1 text-xl font-inter text-white">

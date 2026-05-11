@@ -132,7 +132,7 @@ const VerificationPopup = ({ username, email, mode, onSuccess, onClose }: Props)
                         <div className={VERIFICATION_ERROR_BOX}>
                             <i className={ICON_INFO}></i>
                             <span>
-                                Por favor revisa que el código sea válido.
+                                Por favor revisa que el código sea válido
                             </span>
                         </div>
                     )}

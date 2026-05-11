@@ -35,7 +35,7 @@ const styles = {
 };
 
 const WorkExperienceList = () => {
-    const { experiences, isLoading, error, addExperience, updateExperience, deleteExperience } = useWorkExperiences();
+    const { experiences, isLoading, error, successMessage, addExperience, updateExperience, deleteExperience } = useWorkExperiences();
     const [searchInput, setSearchInput] = useState('');
     const [activeSearch, setActiveSearch] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
@@ -144,6 +144,11 @@ const WorkExperienceList = () => {
 
                         {error && (
                             <p className={`${styles.toast} bg-red-500/10 border border-red-500 text-red-400`}>{error}</p>
+                        )}
+                        {successMessage && (
+                            <p className={`${styles.toast} bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]`}>
+                                {successMessage}
+                            </p>
                         )}
 
                         {isLoading ? (

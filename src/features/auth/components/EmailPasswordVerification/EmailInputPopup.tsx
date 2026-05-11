@@ -39,7 +39,7 @@ const EmailInputPopup = ({ onSubmit, onCancel }: Props) => {
         const { success, email: mail } = await handleSend();
         if (success) {
             onSubmit?.(username, mail ?? "");
-          
+
         }
     };
 
@@ -59,7 +59,7 @@ const EmailInputPopup = ({ onSubmit, onCancel }: Props) => {
                 </div>
 
                 <h2 className={TITLE}>
-                    Recuperación de contraseña
+                    Recuperación de Contraseña
                 </h2>
 
                 <p className={DESCRIPTION}>
@@ -68,7 +68,7 @@ const EmailInputPopup = ({ onSubmit, onCancel }: Props) => {
 
                 <div className={INPUT_WRAPPER}>
                     <label className={LABEL}>
-                        Nombre de usuario
+                        Nombre de usuario:*
                     </label>
                     <input
                         type="text"

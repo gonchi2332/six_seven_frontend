@@ -1,10 +1,13 @@
-import { X, Plus, Trash2 } from "lucide-react";
+// PersonalProjectsModal.tsx
+import { Trash2 } from "lucide-react";
 import type { CreateProjectPayload, UpdateProjectPayload } from "../../services/personalProjectsService";
 import { useProjectForm } from "../../hooks/useProjectInfo";
 import TextField from "../../../../components/TextField";
 import Button from "../../../../components/Button";
 import PopUpCard from "../../../../components/PopUpCard";
 import ImageUpload from "../../../UploadFile/components/uploadFile";
+import TextAreaField from "../../../../components/TextAreaField";
+
 
 interface PersonalProjectsModalProps {
     mode: "create" | "edit";
@@ -17,13 +20,11 @@ interface PersonalProjectsModalProps {
 }
 
 const STYLES = {
-    FORM_WRAPPER: "flex flex-col gap-4 px-6", // Reducido gap y padding
-    DYNAMIC_GRID: "grid grid-cols-1 md:grid-cols-3 gap-3 auto-rows-min", // Gap más pequeño
+    FORM_WRAPPER: "flex flex-col gap-4 px-6",
+    DYNAMIC_GRID: "grid grid-cols-1 md:grid-cols-3 gap-3 auto-rows-min",
     TITLE: "w-1/2",
-    INPUT_LABEL: "mb-0.5 text-sm font-medium text-white", // Reducido tamaño y margen
+    INPUT_LABEL: "mb-0.5 text-sm font-medium text-white",
     SELECT: "w-full px-3 py-1.5 border rounded-lg outline-none text-sm bg-white font-nunito disabled:cursor-not-allowed disabled:opacity-50 border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500",
-    SELECT_PLACEHOLDER: "text-gray-400",
-    SELECT_VALUE: "text-black",
     IMAGE_WRAPPER: "flex flex-col gap-1",
     LINKS_SECTION: "flex flex-col gap-2",
     LINK_GROUP: "flex gap-2 items-start",
@@ -46,8 +47,18 @@ const PersonalProjectsModal = ({
 }: PersonalProjectsModalProps) => {
     const isEditing = mode === "edit";
 
-    const { formData, errors, handleChange, handleLinkChange, addLink, removeLink, handleImageChange, validateForm } =
-        useProjectForm(initialData, isEditing);
+    const {
+        formData,
+        imageUrl,
+        errors,
+        hasChanges,
+        handleChange,
+        handleLinkChange,
+        addLink,
+        removeLink,
+        handleImageChange,
+        validateForm
+    } = useProjectForm(initialData, isEditing);
 
     const handleSubmit = async () => {
         if (!validateForm()) return;
@@ -76,20 +87,21 @@ const PersonalProjectsModal = ({
         }
     };
 
+    // Determinar si el botón debe estar deshabilitado
+    const isSubmitDisabled = () => {
+        if (isSubmitting) return true;
+        if (isEditing && !hasChanges) return true;
+        return false;
+    };
+
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 overflow-y-auto">
             <div className="max-w-3xl w-full relative">
-                <button
-                    onClick={onClose}
-                    className="absolute top-3 right-3 text-white/50 hover:text-white transition-colors z-10"
-                >
-                    <X size={18} />
-                </button>
                 <PopUpCard title={isEditing ? "Modificar Proyecto" : "Registrar Proyecto Personal"}>
                     <div className={STYLES.FORM_WRAPPER}>
                         <div className={STYLES.TITLE}>
-                            <TextField
-                                label="Título"
+                            {!isEditing && <TextField
+                                label="Título:*"
                                 type="text"
                                 value={formData.name}
                                 onChange={(e) => handleChange("name", e.target.value)}
@@ -97,25 +109,19 @@ const PersonalProjectsModal = ({
                                 disabled={isEditing}
                                 placeholder="Sistema de Inventario"
                                 className="[&_input]:py-1.5 [&_label]:text-sm"
-                            />
-                            {isEditing && (
-                                <p className="text-white/40 text-xs mt-0.5">El título no se puede modificar</p>
-                            )}
+                            />}
                         </div>
-
-                        <TextField
-                            label="Descripción"
-                            type="text"
+                        <TextAreaField
+                            label="Descripción:*"
                             value={formData.description}
                             onChange={(e) => handleChange("description", e.target.value)}
                             error={errors.description}
                             placeholder="Este proyecto ..."
-                            className="[&_input]:h-16 [&_label]:text-sm [&_input]:py-1.5"
+                            rows={4}
                         />
-
                         <div className={STYLES.DYNAMIC_GRID}>
                             <div>
-                                <label className={STYLES.INPUT_LABEL}>Estado</label>
+                                <label className={STYLES.INPUT_LABEL}>Estado:*</label>
                                 <select
                                     className={STYLES.SELECT}
                                     value={formData.status}
@@ -128,7 +134,7 @@ const PersonalProjectsModal = ({
                             </div>
 
                             <TextField
-                                label="Temática"
+                                label="Temática:*"
                                 type="text"
                                 value={formData.topic}
                                 onChange={(e) => handleChange("topic", e.target.value)}
@@ -138,7 +144,7 @@ const PersonalProjectsModal = ({
                             />
 
                             <TextField
-                                label="Rol"
+                                label="Rol:*"
                                 type="text"
                                 value={formData.role}
                                 onChange={(e) => handleChange("role", e.target.value)}
@@ -154,7 +160,7 @@ const PersonalProjectsModal = ({
                                 <div key={index} className={STYLES.LINK_GROUP}>
                                     <div className={STYLES.LINK_FIELDS}>
                                         <TextField
-                                            label="Nombre"
+                                            label="Nombre:*"
                                             type="text"
                                             value={link.label}
                                             onChange={(e) => handleLinkChange(index, "label", e.target.value)}
@@ -163,7 +169,7 @@ const PersonalProjectsModal = ({
                                             className="[&_input]:py-1.5 [&_label]:text-sm"
                                         />
                                         <TextField
-                                            label="Enlace"
+                                            label="Enlace:*"
                                             type="text"
                                             value={link.url}
                                             onChange={(e) => handleLinkChange(index, "url", e.target.value)}
@@ -184,22 +190,19 @@ const PersonalProjectsModal = ({
                                     )}
                                 </div>
                             ))}
-                            <button
-                                type="button"
-                                onClick={addLink}
-                                className={STYLES.ADD_BTN}
-                            >
-                                <Plus size={14} />
+                            <Button variant="primary" onClick={addLink} disabled={isSubmitting} fullWidth>
                                 Agregar otro enlace
-                            </button>
+                            </Button>
                         </div>
 
                         <div className={STYLES.IMAGE_WRAPPER}>
-                            <label className={STYLES.INPUT_LABEL}>
-                                Imagen de portada {isEditing && "(dejar vacío para mantener la actual)"}
-                            </label>
+                            <span className={STYLES.INPUT_LABEL}>
+                                Imagen de portada:*
+                            </span>
                             <ImageUpload
-                                onImageSelect={(file) => handleImageChange(file)}
+                                onImageSelect={handleImageChange}
+                                initialImageUrl={imageUrl}
+                                maxSizeMB={2}
                             />
                             {errors.image && <p className="text-red-500 text-xs mt-0.5">{errors.image}</p>}
                         </div>
@@ -211,13 +214,18 @@ const PersonalProjectsModal = ({
 
                     <div className={STYLES.FOOTER}>
                         <div className="flex-1">
-                            <Button variant="secondary" onClick={onClose} disabled={isSubmitting} fullWidth >
+                            <Button variant="secondary" onClick={onClose} disabled={isSubmitting} fullWidth>
                                 Cancelar
                             </Button>
                         </div>
                         <div className="flex-1">
-                            <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting} fullWidth>
-                                {isSubmitting ? "Guardando..." : isEditing ? "Guardar cambios" : "Registrar"}
+                            <Button
+                                variant="primary"
+                                onClick={handleSubmit}
+                                disabled={isSubmitDisabled()}
+                                fullWidth
+                            >
+                                {isSubmitting ? "Guardando..." : isEditing ? "Aceptar" : "Registrar"}
                             </Button>
                         </div>
                     </div>

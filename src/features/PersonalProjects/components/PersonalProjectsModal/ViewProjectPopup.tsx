@@ -1,17 +1,10 @@
-import { useState } from "react";
-import { X } from "lucide-react";
 import PopUpCard from "../../../../components/PopUpCard";
 import Button from "../../../../components/Button";
-import PersonalProjectsModal from "./PersonalProjectsModal";
 import type { ProjectEntry } from "../../services/personalProjectsService";
-import type { CreateProjectPayload } from "../../services/personalProjectsService";
-
 
 interface ViewProjectPopupProps {
     project: ProjectEntry;
-    onClose: () => void;
-    onEdit?: () => void;
-    onDelete?: () => void;
+    onBack: () => void; // Nueva función para regresar al modal de opciones
 }
 
 const STYLES = {
@@ -24,61 +17,13 @@ const STYLES = {
     SECTION_TEXT: "text-white/80 font-nunito text-sm leading-relaxed",
     LINKS_LIST: "flex flex-wrap gap-2 mt-1",
     LINK_BUTTON: "px-4 py-1.5 rounded-full bg-[#2C666E]/60 text-white hover:bg-[#2C666E]/90 transition-colors font-nunito text-sm border border-[#90DDF0]/30",
-    CLOSE_X: "absolute top-4 right-4 text-white/50 hover:text-white transition-colors z-10",
     FOOTER: "flex gap-3 px-6 pt-4 pb-5 mt-2",
 };
 
-const ViewProjectPopup = ({ project, onClose, onEdit, onDelete }: ViewProjectPopupProps) => {
-    const [showEdit, setShowEdit] = useState(false);
-
-    const handleDelete = () => {
-        if (onDelete) {
-            onDelete();
-        } else {
-            onClose();
-        }
-    };
-
-    const handleEdit = () => {
-        if (onEdit) {
-            onEdit();
-        } else {
-            setShowEdit(true);
-        }
-    };
-
-    if (showEdit) {
-        const editInitialData: Partial<CreateProjectPayload> = {
-            name: project.name,
-            description: project.description,
-            topic: project.topic,
-            role: project.role,
-            status: project.status,
-            links: project.links,
-        };
-
-        return (
-            <PersonalProjectsModal
-                mode="edit"
-                projectId={project.id}
-                initialData={editInitialData}
-                onClose={() => setShowEdit(false)}
-                onSubmit={async (data, id) => {
-                    // Aquí deberías llamar a tu servicio de actualización
-                    console.log('Update project:', id, data);
-                    setShowEdit(false);
-                    if (onEdit) onEdit();
-                }}
-            />
-        );
-    }
-
+const ViewProjectPopup = ({ project, onBack }: ViewProjectPopupProps) => {
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 overflow-y-auto">
             <div className="max-w-2xl w-full relative">
-                <button onClick={onClose} className={STYLES.CLOSE_X}>
-                    <X size={22} />
-                </button>
                 <PopUpCard title={project.name}>
                     <div className={STYLES.CONTENT}>
                         <div className="flex justify-center">
@@ -129,13 +74,8 @@ const ViewProjectPopup = ({ project, onClose, onEdit, onDelete }: ViewProjectPop
 
                     <div className={STYLES.FOOTER}>
                         <div className="flex-1">
-                            <Button variant="secondary" onClick={handleDelete} fullWidth>
-                                Eliminar
-                            </Button>
-                        </div>
-                        <div className="flex-1">
-                            <Button variant="primary" onClick={handleEdit} fullWidth>
-                                Modificar
+                            <Button variant="secondary" onClick={onBack} fullWidth>
+                                Atrás
                             </Button>
                         </div>
                     </div>

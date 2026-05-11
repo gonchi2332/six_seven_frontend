@@ -29,11 +29,9 @@ const styles = {
     pagination: "flex items-center justify-center gap-1 sm:gap-2 pt-2",
     pageBtn: (active: boolean) => `w-8 h-8 sm:w-10 sm:h-10 rounded-lg font-nunito text-sm sm:text-base font-semibold transition-all ${active ? "bg-[#90DDF0] text-[#07393C]" : "border border-white/20 text-white/70 hover:border-[#90DDF0] hover:text-[#90DDF0]"}`,
     pageArrow: "w-8 h-8 sm:w-10 sm:h-10 rounded-lg border border-white/20 text-white/70 text-sm sm:text-base hover:border-[#90DDF0] hover:text-[#90DDF0] transition-colors disabled:opacity-30 disabled:cursor-not-allowed",
-    toastSuccess: "bg-green-500/10 border border-green-500 text-green-400 text-center py-2 px-4 rounded-xl font-nunito text-sm",
-    toastError: "bg-red-500/10 border border-red-500 text-red-400 text-center py-2 px-4 rounded-xl font-nunito text-sm",
-    optionsModalContent: "flex flex-col gap-4",
-    optionsModalText: "text-white/90 font-nunito text-center mb-2",
-    optionsModalButtons: "flex gap-3",
+    toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
+    toastSuccess: "bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]",
+    toastError: "bg-red-500/10 border border-red-500 text-red-400",
 };
 
 const ProjectsPage = () => {
@@ -46,6 +44,7 @@ const ProjectsPage = () => {
     const [showOptionsModal, setShowOptionsModal] = useState(false);
     const [showViewModal, setShowViewModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [localError, setLocalError] = useState<string | null>(null);
     const [localSuccess, setLocalSuccess] = useState<string | null>(null);
 
@@ -84,11 +83,22 @@ const ProjectsPage = () => {
         closeAllModals();
     };
 
-    const handleDeleteProject = async () => {
+    const handleDeleteClick = () => {
+        setShowOptionsModal(false);
+        setShowDeleteConfirm(true);
+    };
+
+    const handleConfirmDelete = async () => {
         if (selectedProject) {
             await deleteProject(selectedProject.id);
+            setShowDeleteConfirm(false);
             closeAllModals();
         }
+    };
+
+    const handleCancelDelete = () => {
+        setShowDeleteConfirm(false);
+        setShowOptionsModal(true);
     };
 
     const closeAllModals = () => {
@@ -96,6 +106,7 @@ const ProjectsPage = () => {
         setShowViewModal(false);
         setShowEditModal(false);
         setShowAdd(false);
+        setShowDeleteConfirm(false);
         setSelectedProject(null);
     };
 
@@ -118,11 +129,6 @@ const ProjectsPage = () => {
         closeAllModals();
     };
 
-    const handleViewModalClose = () => {
-        setShowViewModal(false);
-        setSelectedProject(null);
-    };
-
     const handleEditModalClose = () => {
         setShowEditModal(false);
         setSelectedProject(null);
@@ -136,7 +142,7 @@ const ProjectsPage = () => {
             role: project.role,
             status: project.status,
             links: project.links,
-            image: null,
+            image: project.imageUrl,
         };
     };
 
@@ -179,14 +185,13 @@ const ProjectsPage = () => {
                             </div>
                         </div>
 
-                        {(localError || error) && (
-                            <p className={styles.toastError}>{localError || error}</p>
+                        {localError && (
+                            <p className={`${styles.toast} ${styles.toastError}`}>{localError}</p>
                         )}
 
-                        {(localSuccess || successMessage) && (
-                            <p className={styles.toastSuccess}>{localSuccess || successMessage}</p>
+                        {localSuccess && (
+                            <p className={`${styles.toast} ${styles.toastSuccess}`}>{localSuccess}</p>
                         )}
-
                         {isLoading ? (
                             <p className={styles.empty}>Cargando proyectos...</p>
                         ) : paginated.length === 0 ? (
@@ -247,16 +252,12 @@ const ProjectsPage = () => {
                 </div>
             </div>
 
-            {/* Modal de opciones - Botones horizontales con tamaños iguales */}
+            {/* Modal de opciones */}
             {showOptionsModal && selectedProject && (
                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
                     <div className="w-full max-w-2xl">
                         <PopUpCard title={selectedProject.name}>
                             <div className="flex flex-col gap-6 p-6">
-                                <p className="text-white/90 font-nunito text-center text-base">
-                                    Selecciona una acción para el proyecto
-                                </p>
-
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                     <Button
                                         variant="secondary"
@@ -267,6 +268,14 @@ const ProjectsPage = () => {
                                     </Button>
                                     <Button
                                         variant="secondary"
+                                        onClick={handleDeleteClick}
+                                        disabled={isLoading}
+                                        fullWidth
+                                    >
+                                        {"Eliminar"}
+                                    </Button>
+                                    <Button
+                                        variant="primary"
                                         onClick={handleView}
                                         fullWidth
                                     >
@@ -277,15 +286,41 @@ const ProjectsPage = () => {
                                         onClick={handleEdit}
                                         fullWidth
                                     >
-                                        Editar
+                                        Modificar
                                     </Button>
+                                </div>
+                            </div>
+                        </PopUpCard>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de confirmación de eliminación */}
+            {showDeleteConfirm && selectedProject && (
+                <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+                    <div className="w-full max-w-md">
+                        <PopUpCard title="Eliminar Proyecto">
+                            <div className="flex flex-col gap-6 p-6">
+                                <p className="text-white/90 font-nunito text-center text-base">
+                                    ¿Estás seguro de que deseas eliminar este proyecto?
+                                </p>
+
+                                <div className="grid grid-cols-2 gap-3 mt-2">
                                     <Button
                                         variant="secondary"
-                                        onClick={handleDeleteProject}
+                                        onClick={handleCancelDelete}
                                         disabled={isLoading}
                                         fullWidth
                                     >
-                                        {isLoading ? "..." : "Eliminar"}
+                                        Cancelar
+                                    </Button>
+                                    <Button
+                                        variant="primary"
+                                        onClick={handleConfirmDelete}
+                                        disabled={isLoading}
+                                        fullWidth
+                                    >
+                                        {isLoading ? "Eliminando..." : "Eliminar"}
                                     </Button>
                                 </div>
                             </div>
@@ -304,20 +339,15 @@ const ProjectsPage = () => {
                 />
             )}
 
-            {/* Modal para ver proyecto */}
             {showViewModal && selectedProject && (
                 <ViewProjectPopup
                     project={selectedProject}
-                    onClose={handleViewModalClose}
-                    onEdit={() => {
+                    onBack={() => {
                         setShowViewModal(false);
-                        setShowEditModal(true);
+                        setShowOptionsModal(true);
                     }}
-                    onDelete={handleDeleteProject}
                 />
             )}
-
-            {/* Modal para editar proyecto */}
             {showEditModal && selectedProject && (
                 <PersonalProjectsModal
                     mode="edit"

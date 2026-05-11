@@ -1,5 +1,4 @@
 import { useState, useRef } from "react";
-import type { ResultType } from "../features/skills/components/ResultPopup";
 import { postSkill, getUserSkillNames } from "../services/skillsService";
 import useClickOutside from "./useClickOutside";
 
@@ -15,7 +14,7 @@ const useAddSkill = (
     const [isOther, setIsOther] = useState(false);
     const [otherName, setOtherName] = useState("");
     const [level, setLevel] = useState(1);
-    const [result, setResult] = useState<ResultType | null>(null);
+    const [topError, setTopError] = useState<string | null>(null);
     const [inlineError, setInlineError] = useState<string | null>(null);
     const [hasFieldError, setHasFieldError] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -26,6 +25,7 @@ const useAddSkill = (
     const clearError = () => {
         setInlineError(null);
         setHasFieldError(false);
+        setTopError(null);
     };
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,8 +89,11 @@ const useAddSkill = (
             const outcome = await postSkill(nameToSubmit, level);
             if (outcome === "success") {
                 onSubmit(nameToSubmit, level);
+                onClose();
+            } else {
+                // not-found: habilidad no reconocida
+                setTopError("La habilidad introducida no corresponde a ninguna habilidad técnica reconocible dentro del campo de la informática, ciencias de la computación y desarrollo de software.");
             }
-            setResult(outcome);
         } catch (err: unknown) {
             const msg = err instanceof Error ? err.message : "";
             if (msg === "INAPPROPRIATE") {
@@ -100,16 +103,11 @@ const useAddSkill = (
                 setInlineError("La habilidad tecnica a insertar ya existe.");
                 setHasFieldError(true);
             } else {
-                setResult("not-found");
+                setTopError("La habilidad introducida no corresponde a ninguna habilidad técnica reconocible dentro del campo de la informática, ciencias de la computación y desarrollo de software.");
             }
         } finally {
             setLoading(false);
         }
-    };
-
-    const handleResultClose = () => {
-        setResult(null);
-        onClose();
     };
 
     const canConfirm = isOther ? otherName.trim().length > 0 : !!selectedName;
@@ -117,10 +115,10 @@ const useAddSkill = (
 
     return {
         search, suggestions, showDropdown, setShowDropdown, selectedName,
-        isOther, otherName, level, setLevel, result, inlineError, hasFieldError,
+        isOther, otherName, level, setLevel, topError, inlineError, hasFieldError,
         loading, containerRef, canConfirm, isDisabled,
         handleSearchChange, handleSelectSuggestion, handleToggleOther,
-        handleOtherNameChange, handleConfirm, handleResultClose,
+        handleOtherNameChange, handleConfirm,
     };
 };
 

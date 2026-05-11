@@ -2,7 +2,6 @@ import Button from "../../../components/Button";
 import PopUpCard from "../../../components/PopUpCard";
 import TextField from "../../../components/TextField";
 import SkillLevelSelector from "./SkillLevelSelector";
-import ResultPopup from "./ResultPopup";
 import useAddSkill from "../../../hooks/useAddSkill";
 
 interface AddSkillPopupProps {
@@ -33,9 +32,9 @@ const styles = {
 const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills = [] }: AddSkillPopupProps) => {
     const {
         search, suggestions, showDropdown, setShowDropdown, isOther, otherName,
-        level, setLevel, result, inlineError, hasFieldError, loading, containerRef,
+        level, setLevel, inlineError, hasFieldError, loading, containerRef,
         isDisabled, handleSearchChange, handleSelectSuggestion, handleToggleOther,
-        handleOtherNameChange, handleConfirm, handleResultClose,
+        handleOtherNameChange, handleConfirm,
     } = useAddSkill(onSubmit, onClose, catalogSkills);
 
     const getInputClass = () => {
@@ -44,9 +43,7 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
         return `${styles.inputBase} ${styles.inputNormal}`;
     };
 
-    if (result) {
-        return <ResultPopup type={result} onClose={handleResultClose} />;
-    }
+   
 
     return (
         <div className={styles.overlay}>
