@@ -29,8 +29,9 @@ const styles = {
     pagination: "flex items-center justify-center gap-1 sm:gap-2 pt-2",
     pageBtn: (active: boolean) => `w-8 h-8 sm:w-10 sm:h-10 rounded-lg font-nunito text-sm sm:text-base font-semibold transition-all ${active ? "bg-[#90DDF0] text-[#07393C]" : "border border-white/20 text-white/70 hover:border-[#90DDF0] hover:text-[#90DDF0]"}`,
     pageArrow: "w-8 h-8 sm:w-10 sm:h-10 rounded-lg border border-white/20 text-white/70 text-sm sm:text-base hover:border-[#90DDF0] hover:text-[#90DDF0] transition-colors disabled:opacity-30 disabled:cursor-not-allowed",
-    toastSuccess: "bg-green-500/10 border border-green-500 text-green-400 text-center py-2 px-4 rounded-xl font-nunito text-sm",
-    toastError: "bg-red-500/10 border border-red-500 text-red-400 text-center py-2 px-4 rounded-xl font-nunito text-sm",
+    toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
+    toastSuccess: "bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]",
+    toastError: "bg-red-500/10 border border-red-500 text-red-400",
 };
 
 const ProjectsPage = () => {
@@ -43,7 +44,7 @@ const ProjectsPage = () => {
     const [showOptionsModal, setShowOptionsModal] = useState(false);
     const [showViewModal, setShowViewModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // Nuevo estado
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [localError, setLocalError] = useState<string | null>(null);
     const [localSuccess, setLocalSuccess] = useState<string | null>(null);
 
@@ -82,13 +83,11 @@ const ProjectsPage = () => {
         closeAllModals();
     };
 
-    // Función para abrir el modal de confirmación
     const handleDeleteClick = () => {
         setShowOptionsModal(false);
         setShowDeleteConfirm(true);
     };
 
-    // Función para confirmar la eliminación
     const handleConfirmDelete = async () => {
         if (selectedProject) {
             await deleteProject(selectedProject.id);
@@ -97,10 +96,8 @@ const ProjectsPage = () => {
         }
     };
 
-    // Función para cancelar la eliminación
     const handleCancelDelete = () => {
         setShowDeleteConfirm(false);
-        // Opcional: volver a mostrar el modal de opciones
         setShowOptionsModal(true);
     };
 
@@ -131,7 +128,6 @@ const ProjectsPage = () => {
     const handleCancel = () => {
         closeAllModals();
     };
-
 
     const handleEditModalClose = () => {
         setShowEditModal(false);
@@ -189,14 +185,13 @@ const ProjectsPage = () => {
                             </div>
                         </div>
 
-                        {(localError || error) && (
-                            <p className={styles.toastError}>{localError || error}</p>
+                        {localError && (
+                            <p className={`${styles.toast} ${styles.toastError}`}>{localError}</p>
                         )}
 
-                        {(localSuccess || successMessage) && (
-                            <p className={styles.toastSuccess}>{localSuccess || successMessage}</p>
+                        {localSuccess && (
+                            <p className={`${styles.toast} ${styles.toastSuccess}`}>{localSuccess}</p>
                         )}
-
                         {isLoading ? (
                             <p className={styles.empty}>Cargando proyectos...</p>
                         ) : paginated.length === 0 ? (
