@@ -4,6 +4,8 @@ import PopUpCard from "../../../../components/PopUpCard";
 import Button from "../../../../components/Button";
 import PersonalProjectsModal from "./PersonalProjectsModal";
 import type { ProjectEntry } from "../../services/personalProjectsService";
+import type { CreateProjectPayload } from "../../services/personalProjectsService";
+
 
 interface ViewProjectPopupProps {
     project: ProjectEntry;
@@ -46,11 +48,27 @@ const ViewProjectPopup = ({ project, onClose, onEdit, onDelete }: ViewProjectPop
     };
 
     if (showEdit) {
+        const editInitialData: Partial<CreateProjectPayload> = {
+            name: project.name,
+            description: project.description,
+            topic: project.topic,
+            role: project.role,
+            status: project.status,
+            links: project.links,
+        };
+
         return (
             <PersonalProjectsModal
                 mode="edit"
-                initialData={project}
+                projectId={project.id}
+                initialData={editInitialData}
                 onClose={() => setShowEdit(false)}
+                onSubmit={async (data, id) => {
+                    // Aquí deberías llamar a tu servicio de actualización
+                    console.log('Update project:', id, data);
+                    setShowEdit(false);
+                    if (onEdit) onEdit();
+                }}
             />
         );
     }
