@@ -17,7 +17,7 @@ const SoftSkillActionPopup = ({ skillName, onView, onDelete, onClose }: Props) =
     return (
         <div className={styles.overlay}>
             <div className="w-full max-w-sm sm:max-w-md">
-                <PopUpCard title={`Habilidad Blanda: ${skillName}`}>
+                <PopUpCard title={skillName}>
                     <div className={styles.buttonsWrapper}>
                         <Button type="button" variant="secondary" onClick={onClose}>
                             Cancelar

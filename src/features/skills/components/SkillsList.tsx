@@ -56,7 +56,7 @@ const SkillsList = () => {
             {isLoading ? (
                 <p className={styles.empty}>Cargando...</p>
             ) : skills.length === 0 ? (
-                <p className={styles.empty}>No tienes habilidades registradas.</p>
+                <p className={styles.empty}>No tienes habilidades aún.</p>
             ) : (
                 <>
                     <div className={styles.list}>

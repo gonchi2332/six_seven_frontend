@@ -105,7 +105,7 @@ const HardSkillsPage = () => {
                             <p className={styles.empty}>
                                 {filtered.length === 0 && skills.length > 0
                                     ? "No se encontraron habilidades."
-                                    : "No hay habilidades técnicas aún. ¡Agrega una!"}
+                                    : "No hay habilidades técnicas aún."}
                             </p>
                         ) : (
                             <div className={styles.listWrapper}>
