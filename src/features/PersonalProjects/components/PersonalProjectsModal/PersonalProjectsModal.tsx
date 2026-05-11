@@ -1,4 +1,4 @@
-import { X, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import type { CreateProjectPayload, UpdateProjectPayload } from "../../services/personalProjectsService";
 import { useProjectForm } from "../../hooks/useProjectInfo";
 import TextField from "../../../../components/TextField";
@@ -83,11 +83,11 @@ const PersonalProjectsModal = ({
                     onClick={onClose}
                     className="absolute top-3 right-3 text-white/50 hover:text-white transition-colors z-10"
                 >
-                    <X size={18} />
                 </button>
-                <PopUpCard title={isEditing ? "Modificar Proyecto" : "Registrar Proyecto Personal"}>
+                <PopUpCard title={isEditing ? `Modificar ${formData.name}` : "Registrar Proyecto Personal"}>
                     <div className={STYLES.FORM_WRAPPER}>
-                        <div className={STYLES.TITLE}>
+                        {/**ARRICK*/}
+                        {!isEditing && (<div className={STYLES.TITLE}>
                             <TextField
                                 label="Título"
                                 type="text"
@@ -98,10 +98,7 @@ const PersonalProjectsModal = ({
                                 placeholder="Sistema de Inventario"
                                 className="[&_input]:py-1.5 [&_label]:text-sm"
                             />
-                            {isEditing && (
-                                <p className="text-white/40 text-xs mt-0.5">El título no se puede modificar</p>
-                            )}
-                        </div>
+                        </div>)}
 
                         <TextField
                             label="Descripción"

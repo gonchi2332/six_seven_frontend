@@ -36,7 +36,7 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
             if (value.length > 0 && value.length > 50) {
                 setErrors((prev) => ({ ...prev, [field]: "El nombre del proyecto supera el límite de 50 caracteres" }));
             } else if (value.length === 0) {
-                setErrors((prev) => ({ ...prev, [field]: "El nombre del proyecto es requerido" }));
+                setErrors((prev) => ({ ...prev, [field]: "El nombre del proyecto es obligatorio" }));
             } else {
                 setErrors((prev) => ({ ...prev, [field]: undefined }));
             }
@@ -48,7 +48,7 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
             if (value.length > 0 && value.length > 200) {
                 setErrors((prev) => ({ ...prev, [field]: "La descripción supera el límite de 200 caracteres" }));
             } else if (value.length === 0) {
-                setErrors((prev) => ({ ...prev, [field]: "La descripción es requerida" }));
+                setErrors((prev) => ({ ...prev, [field]: "La descripción es obligatoria" }));
             } else {
                 setErrors((prev) => ({ ...prev, [field]: undefined }));
             }
@@ -60,7 +60,7 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
             if (value.length > 0 && value.length > 50) {
                 setErrors((prev) => ({ ...prev, [field]: "El rol supera el límite de 50 caracteres" }));
             } else if (value.length === 0) {
-                setErrors((prev) => ({ ...prev, [field]: "El rol es requerido" }));
+                setErrors((prev) => ({ ...prev, [field]: "El rol es obligatorio" }));
             } else {
                 setErrors((prev) => ({ ...prev, [field]: undefined }));
             }
@@ -70,7 +70,7 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
             // topic no tiene límite específico pero requerido
             newValue = value;
             if (value.length === 0) {
-                setErrors((prev) => ({ ...prev, [field]: "El área es requerida" }));
+                setErrors((prev) => ({ ...prev, [field]: "El área es obligatoria" }));
             } else {
                 setErrors((prev) => ({ ...prev, [field]: undefined }));
             }
@@ -124,20 +124,20 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
         const e: FormErrors = {};
 
         if (!formData.name.trim())
-            e.name = "El nombre del proyecto es requerido";
+            e.name = "El nombre del proyecto es obligatorio";
         else if (formData.name.length > 50)
             e.name = "El nombre del proyecto supera el límite de 50 caracteres";
 
         if (!formData.description.trim())
-            e.description = "La descripción es requerida";
+            e.description = "La descripción es obligatoria";
         else if (formData.description.length > 200)
             e.description = "La descripción supera el límite de 200 caracteres";
 
         if (!formData.topic.trim())
-            e.topic = "El área es requerida";
+            e.topic = "El área es obligatoria";
 
         if (!formData.role.trim())
-            e.role = "El rol es requerido";
+            e.role = "El rol es obligatorio";
         else if (formData.role.length > 50)
             e.role = "El rol supera el límite de 50 caracteres";
 
@@ -147,14 +147,14 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
         const validLinks = formData.links.filter(link => link.label.trim() !== "" && link.url.trim() !== "");
 
         if (validLinks.length === 0) {
-            e.link0_label = "Al menos un enlace es requerido";
+            e.link0_label = "Al menos un enlace es obligatorio";
         } else {
             const urlPattern = /^https?:\/\/([\w-]+\.)+[\w-]+(\/[\w\-./?%&=]*)?$/;
             formData.links.forEach((link, idx) => {
                 if (link.label.trim() && !link.url.trim()) {
-                    e[`link${idx}_url`] = "La URL es requerida";
+                    e[`link${idx}_url`] = "La URL es obligatoria";
                 } else if (link.url.trim() && !link.label.trim()) {
-                    e[`link${idx}_label`] = "El label es requerido";
+                    e[`link${idx}_label`] = "El label es obligatorio";
                 } else if (link.label.trim() && link.url.trim() && !urlPattern.test(link.url)) {
                     e[`link${idx}_url`] = "Debe ser una URL válida (ej: https://github.com/usuario)";
                 }
@@ -162,7 +162,7 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
         }
 
         if (!isEditing && !formData.image) {
-            e.image = "La imagen del proyecto es requerida";
+            e.image = "La imagen del proyecto es obligatoria";
         }
 
         setErrors(e);
