@@ -14,9 +14,9 @@ interface FieldOption {
 }
 
 const fieldOptions: FieldOption[] = [
-    { value: 'secondSurname', label: 'Segundo Apellido', placeholder: 'Ej: Pérez', type: 'text' },
+    { value: 'secondSurname', label: 'Segundo apellido', placeholder: 'Ej: Pérez', type: 'text' },
     { value: 'city', label: 'Ciudad', placeholder: 'Ej: La Paz', type: 'text' },
-    { value: 'email', label: 'Correo electrónico', placeholder: 'Ej: juan@ejemplo.com', type: 'email' },
+    { value: 'email', label: 'Correo de contacto', placeholder: 'Ej: juan@ejemplo.com', type: 'email' },
     { value: 'phone', label: 'Teléfono', placeholder: 'Ej: +591 77123456', type: 'text' },
     { value: 'country', label: 'País de residencia', placeholder: 'Selecciona un país', type: 'text' },
 ];
@@ -40,7 +40,7 @@ const styles = {
 
 const AddInfoModal = ({ isOpen, onClose, onAdd, emptyFields }: AddInfoModalProps) => {
     const { countries, isLoading: countriesLoading } = useCountries();
-    
+
     const {
         selectedField,
         value,
