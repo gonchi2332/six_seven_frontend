@@ -85,26 +85,25 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
     };
 
     const handleSubmit = async () => {
-        setApiError(null);
-        if (!experience || !validateForm()) return;
-        
-        setIsSubmitting(true);
-        try {
-            await onEdit(experience.id, {
-                position: position.trim(),
-                companyName: company.trim(),
-                description: description.trim(),
-                startDate,
-                endDate: isCurrent ? undefined : endDate,
-            });
-            onClose();
-        } catch (err: any) {
-            setApiError(err.message || 'Error al modificar la experiencia');
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
+    setApiError(null);
+    if (!experience || !validateForm()) return;
+    
+    setIsSubmitting(true);
+    try {
+        await onEdit(experience.id, {
+            position: position.trim(),
+            companyName: company.trim(),
+            description: description.trim(),
+            startDate,
+            endDate: isCurrent ? "" : endDate,
+        });
+        handleClose();
+    } catch (err: any) {
+        setApiError(err.message || 'Error al modificar la experiencia');
+    } finally {
+        setIsSubmitting(false);
+    }
+};
     const handleClose = () => {
         setErrors({});
         setApiError(null);

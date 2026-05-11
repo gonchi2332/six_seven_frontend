@@ -16,7 +16,7 @@ export interface CreateWorkExperienceBackendDto {
     companyName: string;
     description: string;
     startDate: string;   // YYYY-MM-DD
-    endDate?: string;     // YYYY-MM-DD (opcional)
+    endDate?: string | null;     // YYYY-MM-DD (opcional)
 }
 
 export interface UpdateWorkExperienceBackendDto {
@@ -24,7 +24,7 @@ export interface UpdateWorkExperienceBackendDto {
     companyName?: string;
     description?: string;
     startDate?: string;
-    endDate?: string;
+    endDate?: string | null;
 }
 
 // ============================================

@@ -18,7 +18,7 @@ export interface CreateWorkExperienceDto {
     companyName: string;
     description: string;
     startDate: string;
-    endDate?: string;
+    endDate?: string | null;  
 }
 
 export interface UpdateWorkExperienceDto {
@@ -26,12 +26,20 @@ export interface UpdateWorkExperienceDto {
     companyName?: string;
     description?: string;
     startDate?: string;
-    endDate?: string;
+    endDate?: string | null;  
 }
 
 // ============================================
 // VALIDACIONES
 // ============================================
+
+const getTodayDateString = (): string => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
 
 export interface ValidationErrors {
     position?: string;
@@ -59,13 +67,17 @@ export const validateDescription = (value: string): string => {
 export const validateStartDate = (value: string): string => {
     if (!value) return 'La fecha de inicio es obligatoria';
     if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return 'Formato: YYYY-MM-DD';
+    const today = getTodayDateString();
+    if (value > today) return 'La fecha de inicio no puede ser futura';
     return '';
 };
 
-export const validateEndDate = (value: string, isCurrent: boolean): string => {
+export const validateEndDate = (value: string | null | undefined, isCurrent: boolean): string => {
     if (isCurrent) return '';
     if (!value) return 'La fecha de fin es obligatoria';
     if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return 'Formato: YYYY-MM-DD';
+    const today = getTodayDateString();
+    if (value > today) return 'La fecha de fin no puede ser futura';
     return '';
 };
 
@@ -74,7 +86,7 @@ export const validateForm = (data: {
     company: string;
     description: string;
     startDate: string;
-    endDate: string;
+    endDate: string | null | undefined;
     isCurrent: boolean;
 }): ValidationErrors => {
     const errors: ValidationErrors = {};
