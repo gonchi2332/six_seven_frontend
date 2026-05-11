@@ -286,7 +286,7 @@ const ProjectsPage = () => {
                                         onClick={handleEdit}
                                         fullWidth
                                     >
-                                        Editar
+                                        Modificar
                                     </Button>
                                 </div>
                             </div>
