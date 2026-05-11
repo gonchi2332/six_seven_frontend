@@ -6,6 +6,8 @@ import TextField from "../../../../components/TextField";
 import Button from "../../../../components/Button";
 import PopUpCard from "../../../../components/PopUpCard";
 import ImageUpload from "../../../UploadFile/components/uploadFile";
+import TextAreaField from "../../../../components/TextAreaField";
+
 
 interface PersonalProjectsModalProps {
     mode: "create" | "edit";
@@ -98,7 +100,7 @@ const PersonalProjectsModal = ({
                 <PopUpCard title={isEditing ? "Modificar Proyecto" : "Registrar Proyecto Personal"}>
                     <div className={STYLES.FORM_WRAPPER}>
                         <div className={STYLES.TITLE}>
-                            <TextField
+                            {!isEditing && <TextField
                                 label="Título:*"
                                 type="text"
                                 value={formData.name}
@@ -107,22 +109,16 @@ const PersonalProjectsModal = ({
                                 disabled={isEditing}
                                 placeholder="Sistema de Inventario"
                                 className="[&_input]:py-1.5 [&_label]:text-sm"
-                            />
-                            {isEditing && (
-                                <p className="text-white/40 text-xs mt-0.5">El título no se puede modificar</p>
-                            )}
+                            />}
                         </div>
-
-                        <TextField
+                        <TextAreaField
                             label="Descripción:*"
-                            type="text"
                             value={formData.description}
                             onChange={(e) => handleChange("description", e.target.value)}
                             error={errors.description}
                             placeholder="Este proyecto ..."
-                            className="[&_input]:h-16 [&_label]:text-sm [&_input]:py-1.5"
+                            rows={4}
                         />
-
                         <div className={STYLES.DYNAMIC_GRID}>
                             <div>
                                 <label className={STYLES.INPUT_LABEL}>Estado:*</label>
@@ -229,7 +225,7 @@ const PersonalProjectsModal = ({
                                 disabled={isSubmitDisabled()}
                                 fullWidth
                             >
-                                {isSubmitting ? "Guardando..." : isEditing ? "Guardar cambios" : "Registrar"}
+                                {isSubmitting ? "Guardando..." : isEditing ? "Aceptar" : "Registrar"}
                             </Button>
                         </div>
                     </div>
