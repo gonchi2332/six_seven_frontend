@@ -191,7 +191,6 @@ export const useWorkExperiences = () => {
         updateExperience,
         deleteExperience,
         reloadExperiences: loadExperiences,
-        // Exportar validaciones para usar en componentes
         validatePosition,
         validateCompany,
         validateDescription,

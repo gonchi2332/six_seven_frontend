@@ -79,6 +79,8 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
         if (!description.trim()) newErrors.description = 'La descripción es obligatoria';
         if (!startDate) newErrors.startDate = 'La fecha de inicio es obligatoria';
         if (!isCurrent && !endDate) newErrors.endDate = 'La fecha de fin es obligatoria';
+        if (startDate && endDate && !isCurrent && startDate >= endDate)
+            newErrors.startDate = 'La fecha de inicio debe ser anterior a la fecha de fin';
         
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
