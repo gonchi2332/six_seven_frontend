@@ -58,7 +58,7 @@ export const useVerifyRecoveryCode = ({ username, code }: UseVerifyRecoveryParam
 
     const resetError = () => setError(null);
 
-    const title = error ? "Código inválido" : "Recuperación de contraseña";
+    const title = error ? "Código inválido" : "Recuperación de Contraseña";
     const description = error
         ? error
         : "Ingresa el código de recuperación enviado a tu correo";
