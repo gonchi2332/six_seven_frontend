@@ -12,14 +12,9 @@ interface Props {
 }
 
 const styles = {
-    overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 z-50 overflow-y-auto",
-    container: "min-h-screen flex items-center justify-center p-4",
-    content: "px-6 py-4 flex flex-col gap-5",
-    field: "flex flex-col gap-1",
-    label: "text-accent text-xs uppercase tracking-wide font-bold",
-    value: "text-surface font-nunito text-base",
-    buttonContainer: "flex gap-3 px-6 pb-6",
-    closeIcon: "absolute right-4 top-4 text-gray-400 hover:text-white transition-colors text-2xl cursor-pointer bg-transparent border-none",
+    overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 z-50",
+    buttonContainer: "flex flex-col sm:flex-row flex-wrap gap-2 px-4 sm:px-6 pb-6 justify-center w-full",
+    btnWide: "w-full sm:flex-1 sm:min-w-6",
 };
 
 const EducationPopup = ({ isOpen, entry, onClose, onEdit, onDelete, onView }: Props) => {
@@ -27,21 +22,29 @@ const EducationPopup = ({ isOpen, entry, onClose, onEdit, onDelete, onView }: Pr
 
     return (
         <div className={styles.overlay} onClick={onClose}>
-            <div className="w-full max-w-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex-col w-full max-w-sm sm:max-w-160" onClick={(e) => e.stopPropagation()}>
                 <PopUpCard title={entry.degree}>
                     <div className={styles.buttonContainer}>
-                        <Button variant="primary" onClick={() => onClose()} fullWidth>
-                            Cancelar
-                        </Button>
-                        <Button variant="primary" onClick={() => onView()} fullWidth>
-                            Ver
-                        </Button>
-                        <Button variant="secondary" onClick={() => onEdit(entry)} fullWidth>
-                            Modificar
-                        </Button>
-                        <Button variant="primary" onClick={() => onDelete(entry)} fullWidth>
-                            Eliminar
-                        </Button>
+                        <div className={styles.btnWide}>
+                            <Button variant="secondary" onClick={onClose} fullWidth>
+                                Cerrar
+                            </Button>
+                        </div>
+                        <div className={styles.btnWide}>
+                            <Button variant="primary" onClick={onView} fullWidth>
+                                Ver
+                            </Button>
+                        </div>
+                        <div className={styles.btnWide}>
+                            <Button variant="primary" onClick={() => onEdit(entry)} fullWidth>
+                                Modificar
+                            </Button>
+                        </div>
+                        <div className={styles.btnWide}>
+                            <Button variant="secondary" onClick={() => onDelete(entry)} fullWidth>
+                                Eliminar
+                            </Button>
+                        </div>
                     </div>
                 </PopUpCard>
             </div>

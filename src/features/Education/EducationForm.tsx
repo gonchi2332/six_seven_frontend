@@ -2,6 +2,7 @@ import { useState } from "react";
 import Button from "../../components/Button/Button";
 import PopUpCard from "../../components/PopUpCard/PopUpCard";
 import TextField from "../../components/TextField";
+import YearSelect from "./YearSelect";
 import type { EducationEntry, AcademicDegree } from "../../services/educationService";
 
 interface Props {
@@ -16,28 +17,37 @@ interface Props {
 
 const styles = {
     overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 z-50",
-    body: "flex flex-col gap-4 px-6 sm:px-8 pb-2",
+    body: "flex flex-col gap-4 px-4 sm:px-8 pb-2",
     row: "grid grid-cols-1 sm:grid-cols-2 gap-4",
     field: "flex flex-col gap-1",
     label: "text-[15px] font-nunito text-surface mb-1",
     required: "text-white ml-0.5",
-    select: "w-full appearance-none bg-white border border-gray-300 rounded-xl px-4 py-2 text-black font-nunito text-[15px] outline-none transition-all focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-100",
     selectWrapper: "relative w-full",
+    select: "w-full appearance-none bg-white border border-gray-300 rounded-xl px-4 py-2 text-black font-nunito text-[15px] outline-none transition-all focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-100",
     selectArrow: "pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400",
+    selectError: "border-red-500 bg-red-50",
+    errorText: "text-xs text-red-600 mt-1 text-right",
     checkboxContainer: "flex items-center gap-2 mt-1",
     checkbox: "w-4 h-4 text-primary rounded focus:ring-primary cursor-pointer",
     checkboxLabel: "text-surface font-nunito text-sm cursor-pointer",
-    serverError: "mx-6 sm:mx-8 mb-2 p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center",
-    buttonsWrapper: "flex gap-4 justify-center mt-4 px-6 sm:px-8 pb-6",
+    serverError: "mx-4 sm:mx-8 mb-2 p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center",
+    buttonsWrapper: "flex gap-3 justify-center mt-4 px-4 sm:px-8 pb-6",
 };
-
-const isValidYear = (val: string) => /^\d{4}$/.test(val) && Number(val) >= 1900 && Number(val) <= 2100;
 
 const EducationForm = ({
     mode, initial, academicDegrees, onSubmit, onClose, serverError, isSubmitting = false,
 }: Props) => {
+    const resolvedInitialId = (() => {
+        if (!initial) return 0;
+        if (initial.academicLevelId && initial.academicLevelId !== 0) return initial.academicLevelId;
+        const matched = academicDegrees.find(
+            (d) => d.academicdegree.toLowerCase() === (initial.academicLevel ?? "").toLowerCase()
+        );
+        return matched?.id ?? 0;
+    })();
+
     const [degree, setDegree] = useState(initial?.degree ?? "");
-    const [academicLevelId, setAcademicLevelId] = useState<number>(initial?.academicLevelId ?? 0);
+    const [academicLevelId, setAcademicLevelId] = useState<number>(resolvedInitialId);
     const [institution, setInstitution] = useState(initial?.institution ?? "");
     const [startDate, setStartDate] = useState(initial?.startDate ?? "");
     const [endDate, setEndDate] = useState(initial?.endDate ?? "");
@@ -46,18 +56,14 @@ const EducationForm = ({
 
     const selectedDegree = academicDegrees.find((d) => d.id === academicLevelId);
 
-    const handleYearInput = (val: string) => val.replace(/\D/g, "").slice(0, 4);
-
     const hasChanges = () => {
         if (mode === "add") return degree.trim() !== "" || institution.trim() !== "" || startDate !== "";
         if (!initial) return false;
-
         const currentIsPresent = !initial.endDate;
         const endDateChanged = isPresent !== currentIsPresent || (!isPresent && endDate !== (initial.endDate ?? ""));
-
         return (
             degree.trim() !== initial.degree ||
-            academicLevelId !== initial.academicLevelId ||
+            academicLevelId !== resolvedInitialId ||
             institution.trim() !== initial.institution ||
             startDate !== initial.startDate ||
             endDateChanged
@@ -67,22 +73,10 @@ const EducationForm = ({
     const validate = () => {
         const next: Record<string, string> = {};
         if (!degree.trim()) next.degree = "El nombre es requerido";
-        if (mode === "add" && !academicLevelId) next.academicLevel = "El grado es requerido";
+        if (mode === "add" && !academicLevelId) next.academicLevel = "El grado académico es requerido";
         if (!institution.trim()) next.institution = "La institución es requerida";
-        if (!startDate.trim()) {
-            next.startDate = "Requerido";
-        } else if (!isValidYear(startDate)) {
-            next.startDate = "El Año de inicio debe ser valido";
-        }
-        if (!isPresent) {
-            if (!endDate.trim()) {
-                next.endDate = "Requerido";
-            } else if (!isValidYear(endDate)) {
-                next.endDate = "El Año de finalización debe ser valido";
-            } else if (Number(endDate) < Number(startDate)) {
-                next.endDate = "Debe ser mayor";
-            }
-        }
+        if (!startDate) next.startDate = "La Fecha de Inicio es requerida";
+        if (!isPresent && !endDate) next.endDate = "La Fecha de Fin es requerida";
         return next;
     };
 
@@ -90,34 +84,33 @@ const EducationForm = ({
         const next = validate();
         if (Object.keys(next).length > 0) {
             setErrors(next);
+            setTimeout(() => setErrors({}), 4000);
             return;
         }
         await onSubmit({
             degree: degree.trim(),
             academicLevel: selectedDegree?.academicdegree ?? initial?.academicLevel ?? "",
-            academicLevelId: academicLevelId || initial?.academicLevelId || 0,
+            academicLevelId: academicLevelId || resolvedInitialId || 0,
             institution: institution.trim(),
-            startDate: startDate.trim(),
-            endDate: isPresent ? undefined : endDate.trim() || undefined,
+            startDate,
+            endDate: isPresent ? undefined : endDate || undefined,
         });
     };
 
     return (
         <div className={styles.overlay} onClick={onClose}>
             <div className="w-full max-w-xl" onClick={(e) => e.stopPropagation()}>
-                <PopUpCard title={mode === "add" ? "Registrar Formacion Academica" : "Modificar Formacion Academica"}>
+                <PopUpCard title={mode === "add" ? "Registrar Formación Académica" : "Modificar Formación Académica"}>
                     {serverError && <div className={styles.serverError}>{serverError}</div>}
-
                     <div className={styles.body}>
                         <TextField
                             label="Título/Carrera:*"
                             value={degree}
                             onChange={(e) => setDegree(e.target.value)}
-                            placeholder="Ej: Ingeniería Informatica"
+                            placeholder="Ej: Ingeniería Informática"
                             disabled={isSubmitting || mode === "edit"}
                             error={errors.degree}
                         />
-
                         <div className={styles.row}>
                             <div className={styles.field}>
                                 <p className={styles.label}>Grado Académico:<span className={styles.required}>*</span></p>
@@ -126,7 +119,7 @@ const EducationForm = ({
                                         value={academicLevelId}
                                         onChange={(e) => setAcademicLevelId(Number(e.target.value))}
                                         disabled={isSubmitting || mode === "edit"}
-                                        className={`${styles.select} ${errors.academicLevel ? "border-red-500 bg-red-50" : ""}`}
+                                        className={`${styles.select} ${errors.academicLevel ? styles.selectError : ""}`}
                                     >
                                         <option value={0}>Seleccionar...</option>
                                         {academicDegrees.map((d) => (
@@ -135,9 +128,8 @@ const EducationForm = ({
                                     </select>
                                     <span className={styles.selectArrow}>▼</span>
                                 </div>
-                                {errors.academicLevel && <p className="text-xs text-red-600 mt-1">{errors.academicLevel}</p>}
+                                {errors.academicLevel && <p className={styles.errorText}>{errors.academicLevel}</p>}
                             </div>
-
                             <TextField
                                 label="Institución:*"
                                 value={institution}
@@ -147,27 +139,36 @@ const EducationForm = ({
                                 error={errors.institution}
                             />
                         </div>
-
                         <div className={styles.row}>
-                            <TextField
-                                label="Año de Inicio:*"
-                                value={startDate}
-                                onChange={(e) => setStartDate(handleYearInput(e.target.value))}
-                                placeholder="AAAA"
-                                disabled={isSubmitting}
-                                error={errors.startDate}
-                            />
-
-                            <TextField
-                                label="Año de Finalizacion:"
-                                value={isPresent ? "" : endDate}
-                                onChange={(e) => setEndDate(handleYearInput(e.target.value))}
-                                placeholder={isPresent ? "Actualidad" : "AAAA"}
-                                disabled={isSubmitting || isPresent}
-                                error={errors.endDate}
-                            />
+                            <div className={styles.field}>
+                                <p className={styles.label}>Año de Inicio:<span className={styles.required}>*</span></p>
+                                <YearSelect
+                                    value={startDate}
+                                    onChange={(val) => {
+                                        setStartDate(val);
+                                        setErrors((prev) => { const n = { ...prev }; delete n.startDate; return n; });
+                                    }}
+                                    disabled={isSubmitting}
+                                    placeholder="Seleccionar..."
+                                    hasError={!!errors.startDate}
+                                />
+                                {errors.startDate && <p className={styles.errorText}>{errors.startDate}</p>}
+                            </div>
+                            <div className={styles.field}>
+                                <p className={styles.label}>Año de Finalización:</p>
+                                <YearSelect
+                                    value={isPresent ? "" : endDate}
+                                    onChange={(val) => {
+                                        setEndDate(val);
+                                        setErrors((prev) => { const n = { ...prev }; delete n.endDate; return n; });
+                                    }}
+                                    disabled={isSubmitting || isPresent}
+                                    placeholder={isPresent ? "Presente" : "Seleccionar..."}
+                                    hasError={!!errors.endDate}
+                                />
+                                {errors.endDate && <p className={styles.errorText}>{errors.endDate}</p>}
+                            </div>
                         </div>
-
                         <div className={styles.checkboxContainer}>
                             <input
                                 type="checkbox"
@@ -176,37 +177,29 @@ const EducationForm = ({
                                 onChange={(e) => {
                                     const checked = e.target.checked;
                                     setIsPresent(checked);
-                                    
                                     if (checked) {
                                         setEndDate("");
-                                        // Limpiamos el error de endDate si el usuario marca "Actualidad"
-                                        setErrors(prev => {
-                                            const newErrors = { ...prev };
-                                            delete newErrors.endDate;
-                                            return newErrors;
-                                        });
+                                        setErrors((prev) => { const n = { ...prev }; delete n.endDate; return n; });
                                     }
                                 }}
                                 className={styles.checkbox}
                             />
                             <label htmlFor="isPresentEducation" className={styles.checkboxLabel}>
-                                Sigo estudiando aquí
+                                Presente
                             </label>
                         </div>
                     </div>
-
                     <div className={styles.buttonsWrapper}>
                         <Button variant="secondary" onClick={onClose} fullWidth disabled={isSubmitting}>
                             Cancelar
                         </Button>
-                        <Button 
-                            variant="primary" 
-                            onClick={handleSubmit} 
-                            fullWidth 
-                            // Deshabilitar si está enviando o si no hay cambios en modo edición
+                        <Button
+                            variant="primary"
+                            onClick={handleSubmit}
+                            fullWidth
                             disabled={isSubmitting || (mode === "edit" && !hasChanges())}
                         >
-                            {isSubmitting ? "Guardando..." : mode === "add" ? "Registrar" : "Aceptar"}
+                            {isSubmitting ? "Guardando..." : mode === "add" ? "Registrar" : "Modificar"}
                         </Button>
                     </div>
                 </PopUpCard>

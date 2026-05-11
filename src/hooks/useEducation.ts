@@ -37,7 +37,7 @@ export const useEducation = () => {
                 setEntries(data);
                 setAcademicDegrees(degrees);
             } catch {
-                showError("No se pudieron cargar las experiencias académicas");
+                showError("No se pudieron cargar las formaciones académicas");
             } finally {
                 setIsLoading(false);
             }
@@ -47,21 +47,21 @@ export const useEducation = () => {
 
     const addEntry = async (data: Omit<EducationEntry, "id">) => {
         try {
-            const created = await createEducation(data);
-            setEntries((prev) => [...prev, created]);
-            showSuccess("Formacion académica registrada correctamente");
+            const updated = await createEducation(data);
+            setEntries(updated);
+            showSuccess("Formación académica registrada correctamente");
         } catch (err: unknown) {
-            throw new Error(err instanceof Error ? err.message : "Error al registrar formacion académica");
+            throw new Error(err instanceof Error ? err.message : "Error al registrar formación académica");
         }
     };
 
     const editEntry = async (id: string, data: Omit<EducationEntry, "id">) => {
         try {
             const updated = await updateEducation(id, data);
-            setEntries((prev) => prev.map((e) => (e.id === id ? updated : e)));
-            showSuccess("Formacion académica modificada correctamente");
+            setEntries(updated);
+            showSuccess("Formación académica modificada correctamente");
         } catch (err: unknown) {
-            throw new Error(err instanceof Error ? err.message : "Error al modificar formacion académica");
+            throw new Error(err instanceof Error ? err.message : "Error al modificar formación académica");
         }
     };
 
@@ -69,9 +69,9 @@ export const useEducation = () => {
         try {
             await apiDeleteEducation(id);
             setEntries((prev) => prev.filter((e) => e.id !== id));
-            showSuccess("Formacion académica eliminada correctamente");
+            showSuccess("Formación académica eliminada correctamente");
         } catch (err: unknown) {
-            throw new Error(err instanceof Error ? err.message : "Error al eliminar formacion académica");
+            throw new Error(err instanceof Error ? err.message : "Error al eliminar formación académica");
         }
     };
 
