@@ -28,7 +28,7 @@ const ViewEducationPopup = ({ isOpen, entry, onClose}: Props) => {
     return (
         <div className={styles.overlay} onClick={onClose}>
             <div className="w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
-                <PopUpCard title="Detalle de Educación">
+                <PopUpCard title="Detalle de Formacion Academica">
                     <button onClick={onClose} className={styles.closeIcon}>✕</button>
                     
                     <div className={styles.content}>
@@ -50,11 +50,11 @@ const ViewEducationPopup = ({ isOpen, entry, onClose}: Props) => {
 
                         <div className={styles.datesRow}>
                             <div className="flex-1">
-                                <p className={styles.label}>Fecha Inicio</p>
+                                <p className={styles.label}>Fecha de Inicio</p>
                                 <p className={styles.value}>{entry.startDate}</p>
                             </div>
                             <div className="flex-1">
-                                <p className={styles.label}>Fecha Fin</p>
+                                <p className={styles.label}>Fecha de Finalizacion</p>
                                 <p className={styles.value}>{dateRange}</p>
                             </div>
                         </div>

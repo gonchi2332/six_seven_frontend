@@ -86,7 +86,7 @@ const SoftSkillsPage = () => {
                             <p className={styles.empty}>
                                 {filtered.length === 0 && skills.length > 0
                                     ? "No se encontraron habilidades."
-                                    : "No hay habilidades blandas aún. ¡Agrega una!"}
+                                    : "No hay habilidades blandas aún."}
                             </p>
                         ) : (
                             <div className={styles.listWrapper}>

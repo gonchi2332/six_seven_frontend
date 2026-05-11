@@ -19,7 +19,7 @@ const SkillActionPopup = ({ skill, onView, onModify, onDelete, onClose }: Props)
     return (
         <div className={styles.overlay}>
             <div className="w-full max-w-lg sm:max-w-xl">
-                <PopUpCard title={`Habilidad Técnica: ${skill.name}`}>
+                <PopUpCard title={skill.name}>
                     <div className={styles.buttonsWrapper}>
                         <Button type="button" variant="secondary" onClick={onClose}>
                             Cancelar

@@ -48,7 +48,7 @@ const EditSkillPopup = ({ skill, onSubmit, onClose, serverError, isSubmitting = 
                             Cancelar
                         </Button>
                         <Button type="button" variant="primary" onClick={handleSubmit} fullWidth disabled={isSubmitting || !hasChanges}>
-                            {isSubmitting ? "Guardando..." : "Aceptar"}
+                            {isSubmitting ? "Guardando..." : "Modificar"}
                         </Button>
                     </div>
                 </PopUpCard>

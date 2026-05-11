@@ -41,7 +41,7 @@ export const fetchEducation = async (): Promise<EducationEntry[]> => {
     const res = await fetch(`${BASE_URL}/users/education?username=${username}`, {
         headers: jsonHeaders(),
     });
-    if (!res.ok) throw new Error("Error al cargar experiencias académicas");
+    if (!res.ok) throw new Error("Error al cargar formacions académicas");
     const data = await res.json();
     if (!data.education) return [];
     return data.education.map((e: {
@@ -79,7 +79,7 @@ export const createEducation = async (
         body: JSON.stringify(body),
     });
     const resData = await res.json();
-    if (!res.ok) throw new Error(resData.message ?? "Error al crear experiencia académica");
+    if (!res.ok) throw new Error(resData.message ?? "Error al crear formacion académica");
     return { ...data, id: String(Date.now()) };
 };
 
@@ -100,7 +100,7 @@ export const updateEducation = async (
         body: JSON.stringify(body),
     });
     const resData = await res.json();
-    if (!res.ok) throw new Error(resData.message ?? "Error al actualizar experiencia académica");
+    if (!res.ok) throw new Error(resData.message ?? "Error al actualizar formacion académica");
     return { ...data, id };
 };
 
@@ -111,6 +111,6 @@ export const deleteEducation = async (id: string): Promise<void> => {
     });
     if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.message ?? "Error al eliminar experiencia académica");
+        throw new Error(data.message ?? "Error al eliminar formacion académica");
     }
 };

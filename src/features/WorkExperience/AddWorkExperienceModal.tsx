@@ -120,7 +120,7 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
                         {/* Fila: Fechas */}
                         <div className={styles.row}>
                             <TextField
-                                label="Fecha Inicio:*"
+                                label="Fecha de Inicio:*"
                                 type="date"
                                 placeholder={"dd/mm/aaaa"}
                                 value={formData.startDate}
@@ -129,7 +129,7 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
                             />
 
                             <TextField
-                                label="Fecha Fin:"
+                                label="Fecha de Finalizacion:"
                                 type="date"
                                 placeholder={"dd/mm/aaaa"}
                                 value={formData.isCurrent ? '' : formData.endDate}

@@ -135,7 +135,7 @@ const ViewProjectPopup = ({ project, onClose, onEdit, onDelete }: ViewProjectPop
                         </div>
                         <div className="flex-1">
                             <Button variant="primary" onClick={handleEdit} fullWidth>
-                                Editar
+                                Modificar
                             </Button>
                         </div>
                     </div>

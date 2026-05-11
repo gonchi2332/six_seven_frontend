@@ -236,7 +236,7 @@ const WorkExperienceList = () => {
                     setExperienceToDelete(null);
                 }}
                 onConfirm={handleConfirmDelete}
-                title="Eliminar experiencia"
+                title="Eliminar Experiencia Laboral"
                 message="¿Estás seguro de que deseas eliminar esta experiencia laboral?"
             />
         </div>

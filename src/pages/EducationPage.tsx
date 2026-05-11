@@ -109,7 +109,7 @@ const EducationPage = () => {
             await addEntry(data);
             setIsAddOpen(false);
         } catch (err: any) {
-            setFormError(err.message || "Error al registrar educación");
+            setFormError(err.message || "Error al registrar Formacion Academica");
         } finally {
             setIsSubmitting(false);
         }
@@ -124,7 +124,7 @@ const EducationPage = () => {
             setIsEditOpen(false);
             setSelectedEntry(null);
         } catch (err: any) {
-            setFormError(err.message || "Error al modificar educación");
+            setFormError(err.message || "Error al modificar Formacion Academica");
         } finally {
             setIsSubmitting(false);
         }
@@ -149,7 +149,7 @@ const EducationPage = () => {
                 <div className={styles.outerCard}>
                     <div className={styles.greenContainer}>
                         <div className={styles.header}>
-                            <h1 className={styles.title}>Experiencia Académica</h1>
+                            <h1 className={styles.title}>Formacion Académica</h1>
                             
                             <div className={styles.searchRow}>
                                 <div className={styles.searchInputWrapper}>
@@ -189,7 +189,7 @@ const EducationPage = () => {
                             <p className={styles.loading}>Cargando...</p>
                         ) : paginated.length === 0 ? (
                             <p className={styles.empty}>
-                                {activeSearch ? "No se encontraron registros." : "No tienes experiencias académicas registradas."}
+                                {activeSearch ? "No se encontraron registros." : "No tienes experiencias académicas aún."}
                             </p>
                         ) : (
                             <div className={styles.listWrapper}>

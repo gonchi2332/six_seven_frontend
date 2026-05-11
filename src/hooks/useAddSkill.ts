@@ -80,7 +80,7 @@ const useAddSkill = (
             if (!isOther) {
                 const userSkills = await getUserSkillNames();
                 if (userSkills.includes(nameToSubmit.toLowerCase())) {
-                    setInlineError("La habilidad tecnica a insertar con su puntuacion ya existe.");
+                    setInlineError("La habilidad tecnica a insertar ya existe.");
                     setHasFieldError(true);
                     return;
                 }
@@ -97,7 +97,7 @@ const useAddSkill = (
                 setInlineError("Habilidad inválida: el nombre contiene palabras no permitidas.");
                 setHasFieldError(true);
             } else if (msg === "ALREADY_EXISTS") {
-                setInlineError("La habilidad tecnica a insertar con su puntuacion ya existe.");
+                setInlineError("La habilidad tecnica a insertar ya existe.");
                 setHasFieldError(true);
             } else {
                 setResult("not-found");

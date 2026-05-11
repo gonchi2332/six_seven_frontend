@@ -116,18 +116,11 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
     return (
         <div className={styles.overlay} onClick={handleClose}>
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
-                <PopUpCard title="Modificar Experiencia Laboral">
+                <PopUpCard title={`Modificar: ${experience?.position}`}>
                     {apiError && <div className={styles.apiError}>{apiError}</div>}
                     
                     <div className={styles.form}>
                         <div className={styles.row}>
-                            <TextField
-                                label="Puesto:*"
-                                value={position}
-                                onChange={() =>({})}
-                                disabled={true}
-                                error={errors.position}
-                            />
                             <TextField
                                 label="Empresa:*"
                                 value={company}
@@ -150,7 +143,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                         {/* Fila: Fechas */}
                         <div className={styles.row}>
                             <TextField
-                                label="Fecha Inicio:*"
+                                label="Fecha de Inicio:*"
                                 type="date"
                                 value={startDate}
                                 onChange={(e) => setStartDate(e.target.value)}
@@ -159,7 +152,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                             />
 
                             <TextField
-                                label="Fecha Fin:"
+                                label="Fecha de Finalizacion:"
                                 type="date"
                                 placeholder={"dd/mm/aaaa"}
                                 value={isCurrent ? '' : endDate}
