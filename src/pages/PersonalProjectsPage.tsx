@@ -4,6 +4,8 @@ import { useProjects } from "../features/PersonalProjects/hooks/useProjects";
 import ProjectCard from "../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectCard";
 import ViewProjectPopup from "../features/PersonalProjects/components/PersonalProjectsModal/ViewProjectPopup";
 import PersonalProjectsModal from "../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectsModal";
+import PopUpCard from "../components/PopUpCard";
+import Button from "../components/Button";
 import type { ProjectEntry, CreateProjectPayload, UpdateProjectPayload } from "../features/PersonalProjects/services/personalProjectsService";
 
 const PAGE_SIZE = 10;
@@ -29,6 +31,9 @@ const styles = {
     pageArrow: "w-8 h-8 sm:w-10 sm:h-10 rounded-lg border border-white/20 text-white/70 text-sm sm:text-base hover:border-[#90DDF0] hover:text-[#90DDF0] transition-colors disabled:opacity-30 disabled:cursor-not-allowed",
     toastSuccess: "bg-green-500/10 border border-green-500 text-green-400 text-center py-2 px-4 rounded-xl font-nunito text-sm",
     toastError: "bg-red-500/10 border border-red-500 text-red-400 text-center py-2 px-4 rounded-xl font-nunito text-sm",
+    optionsModalContent: "flex flex-col gap-4",
+    optionsModalText: "text-white/90 font-nunito text-center mb-2",
+    optionsModalButtons: "flex gap-3",
 };
 
 const ProjectsPage = () => {
@@ -37,8 +42,10 @@ const ProjectsPage = () => {
     const [activeSearch, setActiveSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [showAdd, setShowAdd] = useState(false);
-    const [projectToView, setProjectToView] = useState<ProjectEntry | null>(null);
-    const [projectToEdit, setProjectToEdit] = useState<ProjectEntry | null>(null);
+    const [selectedProject, setSelectedProject] = useState<ProjectEntry | null>(null);
+    const [showOptionsModal, setShowOptionsModal] = useState(false);
+    const [showViewModal, setShowViewModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
     const [localError, setLocalError] = useState<string | null>(null);
     const [localSuccess, setLocalSuccess] = useState<string | null>(null);
 
@@ -74,12 +81,51 @@ const ProjectsPage = () => {
 
     const handleEditProject = async (data: UpdateProjectPayload, id: string) => {
         await editProject(id, data);
-        setProjectToEdit(null);
+        closeAllModals();
     };
 
-    const handleDeleteProject = async (project: ProjectEntry) => {
-        await deleteProject(project.id);
-        setProjectToView(null);
+    const handleDeleteProject = async () => {
+        if (selectedProject) {
+            await deleteProject(selectedProject.id);
+            closeAllModals();
+        }
+    };
+
+    const closeAllModals = () => {
+        setShowOptionsModal(false);
+        setShowViewModal(false);
+        setShowEditModal(false);
+        setShowAdd(false);
+        setSelectedProject(null);
+    };
+
+    const handleCardClick = (project: ProjectEntry) => {
+        setSelectedProject(project);
+        setShowOptionsModal(true);
+    };
+
+    const handleView = () => {
+        setShowOptionsModal(false);
+        setShowViewModal(true);
+    };
+
+    const handleEdit = () => {
+        setShowOptionsModal(false);
+        setShowEditModal(true);
+    };
+
+    const handleCancel = () => {
+        closeAllModals();
+    };
+
+    const handleViewModalClose = () => {
+        setShowViewModal(false);
+        setSelectedProject(null);
+    };
+
+    const handleEditModalClose = () => {
+        setShowEditModal(false);
+        setSelectedProject(null);
     };
 
     const transformProjectToPayload = (project: ProjectEntry): Partial<CreateProjectPayload> => {
@@ -160,7 +206,7 @@ const ProjectsPage = () => {
                                         <ProjectCard
                                             key={project.id}
                                             project={project}
-                                            onView={setProjectToView}
+                                            onClick={handleCardClick}
                                         />
                                     ))}
                                 </div>
@@ -201,6 +247,53 @@ const ProjectsPage = () => {
                 </div>
             </div>
 
+            {/* Modal de opciones - Botones horizontales con tamaños iguales */}
+            {showOptionsModal && selectedProject && (
+                <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+                    <div className="w-full max-w-2xl">
+                        <PopUpCard title={selectedProject.name}>
+                            <div className="flex flex-col gap-6 p-6">
+                                <p className="text-white/90 font-nunito text-center text-base">
+                                    Selecciona una acción para el proyecto
+                                </p>
+
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                    <Button
+                                        variant="secondary"
+                                        onClick={handleCancel}
+                                        fullWidth
+                                    >
+                                        Cancelar
+                                    </Button>
+                                    <Button
+                                        variant="secondary"
+                                        onClick={handleView}
+                                        fullWidth
+                                    >
+                                        Ver
+                                    </Button>
+                                    <Button
+                                        variant="primary"
+                                        onClick={handleEdit}
+                                        fullWidth
+                                    >
+                                        Editar
+                                    </Button>
+                                    <Button
+                                        variant="secondary"
+                                        onClick={handleDeleteProject}
+                                        disabled={isLoading}
+                                        fullWidth
+                                    >
+                                        {isLoading ? "..." : "Eliminar"}
+                                    </Button>
+                                </div>
+                            </div>
+                        </PopUpCard>
+                    </div>
+                </div>
+            )}
+
             {showAdd && (
                 <PersonalProjectsModal
                     mode="create"
@@ -211,24 +304,26 @@ const ProjectsPage = () => {
                 />
             )}
 
-            {projectToView && (
+            {/* Modal para ver proyecto */}
+            {showViewModal && selectedProject && (
                 <ViewProjectPopup
-                    project={projectToView}
-                    onClose={() => setProjectToView(null)}
+                    project={selectedProject}
+                    onClose={handleViewModalClose}
                     onEdit={() => {
-                        setProjectToView(null);
-                        setProjectToEdit(projectToView);
+                        setShowViewModal(false);
+                        setShowEditModal(true);
                     }}
-                    onDelete={() => handleDeleteProject(projectToView)}
+                    onDelete={handleDeleteProject}
                 />
             )}
 
-            {projectToEdit && (
+            {/* Modal para editar proyecto */}
+            {showEditModal && selectedProject && (
                 <PersonalProjectsModal
                     mode="edit"
-                    projectId={projectToEdit.id}
-                    initialData={transformProjectToPayload(projectToEdit)}
-                    onClose={() => setProjectToEdit(null)}
+                    projectId={selectedProject.id}
+                    initialData={transformProjectToPayload(selectedProject)}
+                    onClose={handleEditModalClose}
                     onSubmit={(data, id) => handleEditProject(data as UpdateProjectPayload, id!)}
                     isSubmitting={isLoading}
                     error={error}
