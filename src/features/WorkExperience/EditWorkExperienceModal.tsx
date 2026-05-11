@@ -79,32 +79,33 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
         if (!description.trim()) newErrors.description = 'La descripción es obligatoria';
         if (!startDate) newErrors.startDate = 'La fecha de inicio es obligatoria';
         if (!isCurrent && !endDate) newErrors.endDate = 'La fecha de fin es obligatoria';
+        if (startDate && endDate && !isCurrent && startDate >= endDate)
+            newErrors.startDate = 'La fecha de inicio debe ser anterior a la fecha de fin';
         
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async () => {
-        setApiError(null);
-        if (!experience || !validateForm()) return;
-        
-        setIsSubmitting(true);
-        try {
-            await onEdit(experience.id, {
-                position: position.trim(),
-                companyName: company.trim(),
-                description: description.trim(),
-                startDate,
-                endDate: isCurrent ? undefined : endDate,
-            });
-            onClose();
-        } catch (err: any) {
-            setApiError(err.message || 'Error al modificar la experiencia');
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
+    setApiError(null);
+    if (!experience || !validateForm()) return;
+    
+    setIsSubmitting(true);
+    try {
+        await onEdit(experience.id, {
+            position: position.trim(),
+            companyName: company.trim(),
+            description: description.trim(),
+            startDate,
+            endDate: isCurrent ? "" : endDate,
+        });
+        handleClose();
+    } catch (err: any) {
+        setApiError(err.message || 'Error al modificar la experiencia');
+    } finally {
+        setIsSubmitting(false);
+    }
+};
     const handleClose = () => {
         setErrors({});
         setApiError(null);

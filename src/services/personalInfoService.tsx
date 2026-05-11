@@ -9,6 +9,7 @@ export interface PersonalInfoResponse {
     residence_city_name: string | null;
     residence_country_name: string | null;
     contact_email: string | null;
+    main_registration_email: string;
     profile_picture: string | null;
 }
 
