@@ -121,6 +121,12 @@ export const useWorkExperiences = () => {
     const [experiences, setExperiences] = useState<WorkExperience[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+    const showSuccess = (msg: string) => {
+        setSuccessMessage(msg);
+        setTimeout(() => setSuccessMessage(null), 3000);
+    };
 
     const getUsername = (): string | null => {
         return localStorage.getItem('username');
@@ -160,6 +166,7 @@ export const useWorkExperiences = () => {
         try {
             await createWorkExperience(data);
             await loadExperiences();
+            showSuccess('Experiencia laboral registrada correctamente');
         } catch (err: any) {
             throw err;
         }
@@ -169,6 +176,7 @@ export const useWorkExperiences = () => {
         try {
             await updateWorkExperience(id, data);
             await loadExperiences();
+            showSuccess('Experiencia laboral modificada correctamente');
         } catch (err: any) {
             throw err;
         }
@@ -178,6 +186,7 @@ export const useWorkExperiences = () => {
         try {
             await deleteWorkExperience(id);
             await loadExperiences();
+            showSuccess('Experiencia laboral eliminada correctamente');
         } catch (err: any) {
             throw err;
         }
@@ -187,6 +196,7 @@ export const useWorkExperiences = () => {
         experiences,
         isLoading,
         error,
+        successMessage,
         addExperience,
         updateExperience,
         deleteExperience,
