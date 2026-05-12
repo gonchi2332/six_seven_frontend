@@ -162,7 +162,6 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                 startDate,
                 endDate: isCurrent ? null : endDate,
             });
-            handleClose();
         } catch (err: any) {
             setApiError(err.message || 'Error al modificar la experiencia');
         } finally {

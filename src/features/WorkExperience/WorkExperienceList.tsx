@@ -99,10 +99,19 @@ const WorkExperienceList = () => {
             setIsDetailModalOpen(false);
             setIsConfirmModalOpen(false);
             setIsEditModalOpen(false);
+            setIsInfoOpen(false);
             if (paginatedExperiences.length === 1 && currentPage > 1) {
                 setCurrentPage((page) => page - 1);
             }
         }
+    };
+
+    const handleUpdateExperience = async (id: number, data: any) => {
+        await updateExperience(id, data);
+        setIsEditModalOpen(false);
+        setIsDetailModalOpen(false);
+        setIsInfoOpen(false);
+        setSelectedExperience(null);
     };
 
     const handleCloseEditModal = () => {
@@ -211,7 +220,7 @@ const WorkExperienceList = () => {
             <EditWorkExperienceModal
                 isOpen={isEditModalOpen && selectedExperience !== null}
                 onClose={handleCloseEditModal}
-                onEdit={updateExperience}
+                onEdit={handleUpdateExperience}
                 experience={selectedExperience}
             />
 
