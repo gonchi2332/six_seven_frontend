@@ -33,7 +33,7 @@ const SoftSkillResultPopup = ({ type, onClose }: SoftSkillResultPopupProps) => {
                     <p className={styles.message}>{message}</p>
                     <div className={styles.buttonsWrapper}>
                         <Button type="button" variant="primary" onClick={onClose} fullWidth>
-                            Aceptar
+                            Registrar
                         </Button>
                     </div>
                 </PopUpCard>

@@ -97,7 +97,7 @@ const PersonalProjectsModal = ({
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 overflow-y-auto">
             <div className="max-w-3xl w-full relative">
-                <PopUpCard title={isEditing ? "Modificar Proyecto" : "Registrar Proyecto Personal"}>
+                <PopUpCard title={isEditing ? `Modificar: ${formData.name}` : "Registrar Proyecto Personal"}>
                     <div className={STYLES.FORM_WRAPPER}>
                         <div className={STYLES.TITLE}>
                             {!isEditing && <TextField
@@ -225,7 +225,7 @@ const PersonalProjectsModal = ({
                                 disabled={isSubmitDisabled()}
                                 fullWidth
                             >
-                                {isSubmitting ? "Guardando..." : isEditing ? "Aceptar" : "Registrar"}
+                                {isSubmitting ? "Guardando..." : isEditing ? "Modificar" : "Registrar"}
                             </Button>
                         </div>
                     </div>

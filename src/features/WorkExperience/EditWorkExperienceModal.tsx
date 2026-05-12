@@ -198,7 +198,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                             disabled={isSubmitting || !hasChanges()} 
                             fullWidth
                         >
-                            {isSubmitting ? 'Guardando...' : 'Aceptar'}
+                            {isSubmitting ? 'Guardando...' : 'Modificar'}
                         </Button>
                     </div>
                 </PopUpCard>
