@@ -12,7 +12,7 @@ interface EditWorkExperienceModalProps {
 }
 
 const styles = {
-    overlay: "fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4",
+    overlay: "fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4 overflow-y-auto",
     container: "w-full max-w-2xl flex items-center justify-center p-4",
     form: "flex flex-col gap-4 px-6 py-4",
     row: "grid grid-cols-1 md:grid-cols-2 gap-4",
@@ -28,6 +28,34 @@ const formatDateForInput = (dateStr: string | null | undefined): string => {
     return dateStr.split('T')[0] ?? '';
 };
 
+// ============================================
+// VALIDACIONES EN TIEMPO REAL
+// ============================================
+
+const validatePosition = (value: string): string => {
+    if (!value.trim()) return 'El puesto es obligatorio';
+    return '';
+};
+
+const validateDescription = (value: string): string => {
+    if (!value.trim()) return 'La descripción es obligatoria';
+    return '';
+};
+
+const validateStartDate = (value: string): string => {
+    if (!value) return 'La fecha de inicio es obligatoria';
+    return '';
+};
+
+const validateEndDate = (value: string, isCurrent: boolean): string => {
+    if (!isCurrent && !value) return 'La fecha de finalización es obligatoria';
+    return '';
+};
+
+// ============================================
+// COMPONENTE PRINCIPAL
+// ============================================
+
 const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWorkExperienceModalProps) => {
     const [position, setPosition] = useState('');
     const [company, setCompany] = useState('');
@@ -36,8 +64,13 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
     const [endDate, setEndDate] = useState('');
     const [isCurrent, setIsCurrent] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [errors, setErrors] = useState<Record<string, string>>({});
     const [apiError, setApiError] = useState<string | null>(null);
+    
+    // Errores en tiempo real
+    const [positionError, setPositionError] = useState('');
+    const [descriptionError, setDescriptionError] = useState('');
+    const [startDateError, setStartDateError] = useState('');
+    const [endDateError, setEndDateError] = useState('');
 
     useEffect(() => {
         if (experience && isOpen) {
@@ -47,77 +80,96 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
             setStartDate(formatDateForInput(experience.start_date));
             setEndDate(formatDateForInput(experience.end_date));
             setIsCurrent(!experience.end_date);
+            
+            // Limpiar errores al cargar
+            setPositionError('');
+            setDescriptionError('');
+            setStartDateError('');
+            setEndDateError('');
         }
     }, [experience, isOpen]);
 
-    /**
-     * Lógica para deshabilitar el botón si no hay cambios reales
-     */
+    // Handlers con validación en tiempo real
+    const handlePositionChange = (value: string) => {
+        setPosition(value);
+        setPositionError(validatePosition(value));
+    };
+
+    const handleDescriptionChange = (value: string) => {
+        setDescription(value);
+        setDescriptionError(validateDescription(value));
+    };
+
+    const handleStartDateChange = (value: string) => {
+        setStartDate(value);
+        setStartDateError(validateStartDate(value));
+    };
+
+    const handleEndDateChange = (value: string) => {
+        setEndDate(value);
+        setEndDateError(validateEndDate(value, isCurrent));
+    };
+
+    const handleIsCurrentChange = (checked: boolean) => {
+        setIsCurrent(checked);
+        if (checked) {
+            setEndDateError('');
+        } else if (!endDate) {
+            setEndDateError('La fecha de finalización es obligatoria');
+        }
+    };
+
     const hasChanges = () => {
         if (!experience) return false;
 
         const originalStartDate = formatDateForInput(experience.start_date);
         const originalEndDate = formatDateForInput(experience.end_date);
 
-        // Validar si la fecha de fin cambió (considerando el checkbox de "actualidad")
         const currentIsCurrent = !experience.end_date;
         const endDateChanged = isCurrent !== currentIsCurrent || (!isCurrent && endDate !== originalEndDate);
 
         return (
             position.trim() !== experience.position ||
-            company.trim() !== experience.company_name ||
             description.trim() !== experience.description ||
             startDate !== originalStartDate ||
             endDateChanged
         );
     };
 
-    const validateForm = (): boolean => {
-        const newErrors: Record<string, string> = {};
-        if (!position.trim()) newErrors.position = 'El puesto es obligatorio';
-        if (!company.trim()) newErrors.company = 'La empresa es obligatoria';
-        if (!description.trim()) newErrors.description = 'La descripción es obligatoria';
-        if (!startDate) newErrors.startDate = 'La fecha de inicio es obligatoria';
-        if (!isCurrent && !endDate) newErrors.endDate = 'La fecha de finalizacion es obligatoria';
-        if (startDate && endDate && !isCurrent && startDate >= endDate)
-            newErrors.startDate = 'La fecha de inicio no puede ser luego de la fecha de finalización';
-        
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
     const isFormValid = (): boolean => {
         return (
             position.trim() !== '' &&
-            company.trim() !== '' &&
             description.trim() !== '' &&
             startDate !== '' &&
-            (isCurrent || endDate !== '')
+            (isCurrent || endDate !== '') &&
+            positionError === '' &&
+            descriptionError === '' &&
+            startDateError === '' &&
+            endDateError === ''
         );
     };
 
     const handleSubmit = async () => {
-    setApiError(null);
-    if (!experience || !validateForm()) return;
-    
-    setIsSubmitting(true);
-    try {
-        await onEdit(experience.id, {
-            position: position.trim(),
-            companyName: company.trim(),
-            description: description.trim(),
-            startDate,
-            endDate: isCurrent ? "" : endDate,
-        });
-        handleClose();
-    } catch (err: any) {
-        setApiError(err.message || 'Error al modificar la experiencia');
-    } finally {
-        setIsSubmitting(false);
-    }
-};
+        setApiError(null);
+        if (!experience || !isFormValid()) return;
+        
+        setIsSubmitting(true);
+        try {
+            await onEdit(experience.id, {
+                position: position.trim(),
+                companyName: company.trim(),
+                description: description.trim(),
+                startDate,
+                endDate: isCurrent ? null : endDate,
+            });
+        } catch (err: any) {
+            setApiError(err.message || 'Error al modificar la experiencia');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     const handleClose = () => {
-        setErrors({});
         setApiError(null);
         onClose();
     };
@@ -131,13 +183,22 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                     {apiError && <div className={styles.apiError}>{apiError}</div>}
                     
                     <div className={styles.form}>
+                        {/* Fila: Puesto y Empresa */}
                         <div className={styles.row}>
+                            <TextField
+                                label="Puesto:*"
+                                value={position}
+                                onChange={(e) => handlePositionChange(e.target.value)}
+                                placeholder="Ej: Full Stack Developer"
+                                error={positionError}
+                            />
+                            
                             <TextField
                                 label="Empresa:*"
                                 value={company}
-                                onChange={() =>({})}
+                                onChange={() => {}}
                                 disabled={true}
-                                error={errors.company}
+                                placeholder="Ej: WIMETRIX"
                             />
                         </div>
                   
@@ -145,9 +206,9 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                         <TextField
                             label="Descripción:*"
                             value={description}
-                            onChange={(e) => setDescription(e.target.value)}
+                            onChange={(e) => handleDescriptionChange(e.target.value)}
                             placeholder="Describe tus responsabilidades y logros..."
-                            error={errors.description}
+                            error={descriptionError}
                             maxLength={200}
                         />
 
@@ -157,39 +218,27 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                                 label="Fecha de inicio:*"
                                 type="date"
                                 value={startDate}
-                                onChange={(e) => setStartDate(e.target.value)}
-                                placeholder={"dd/mm/aaaa"}
-                                error={errors.startDate}
+                                onChange={(e) => handleStartDateChange(e.target.value)}
+                                error={startDateError}
                             />
 
                             <TextField
-                                label="Fecha de finalizacion:*"
+                                label="Fecha de finalización:"
                                 type="date"
-                                placeholder={"dd/mm/aaaa"}
                                 value={isCurrent ? '' : endDate}
-                                onChange={(e) => setEndDate(e.target.value)}
+                                onChange={(e) => handleEndDateChange(e.target.value)}
                                 disabled={isCurrent}
-                                error={errors.endDate}
+                                error={endDateError}
                             />
                         </div>
+
                         {/* Checkbox */}
                         <div className={styles.checkboxContainer}>
                             <input
                                 type="checkbox"
                                 id="isCurrentEdit"
                                 checked={isCurrent}
-                                onChange={(e) => {
-                                    const checked = e.target.checked;
-                                    setIsCurrent(checked);
-                                    if (checked) {
-                                        setEndDate('');
-                                        setErrors(prev => {
-                                            const newErrors = { ...prev };
-                                            delete newErrors.endDate;
-                                            return newErrors;
-                                        });
-                                    }
-                                }}
+                                onChange={(e) => handleIsCurrentChange(e.target.checked)}
                                 className={styles.checkbox}
                             />
                             <label htmlFor="isCurrentEdit" className={styles.checkboxLabel}>
