@@ -20,19 +20,19 @@ const styles = {
     header: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3",
     title: "text-xl sm:text-2xl font-bold font-inter text-white",
     actionRow: "flex items-center gap-2",
-    
+
     // Grid de información
     listWrapper: "grid grid-cols-1 md:grid-cols-2 gap-4",
     infoCard: "bg-black/20 border border-white/10 rounded-xl p-5 flex flex-col gap-4",
     sectionTitle: "text-[#90DDF0] font-bold text-xs uppercase tracking-widest flex items-center gap-2 mb-2",
-    
+
     // Filas de datos
     field: "flex items-start gap-3",
     icon: "mt-0.5 text-[#90DDF0] shrink-0",
     label: "text-white/40 text-[10px] sm:text-xs uppercase tracking-wide font-bold",
     value: "text-white font-nunito text-sm sm:text-base mt-0.5 leading-tight",
     emptyValue: "text-white/20 italic font-nunito text-sm mt-0.5",
-    
+
     // Modales y estados
     overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 z-50 overflow-y-auto",
     loading: "text-white/70 font-nunito text-center py-12 bg-black/20 rounded-xl border border-white/10",
@@ -65,7 +65,7 @@ const PersonalInfo = () => {
     const [refreshKey, setRefreshKey] = useState(0);
     const { userInfo, isLoading } = useNavbarInfo(refreshKey);
     const { addField, isSubmitting } = usePersonalInfoSubmit();
-    
+
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -97,7 +97,7 @@ const PersonalInfo = () => {
             <div className={styles.pageContent}>
                 <div className={styles.outerCard}>
                     <div className={styles.greenContainer}>
-                        
+
                         {/* Header Estandarizado */}
                         <div className={styles.header}>
                             <h1 className={styles.title}>Información Personal</h1>
@@ -108,18 +108,18 @@ const PersonalInfo = () => {
                                 >
                                     Ver
                                 </Button>
-                                <Button 
-                                    variant="quaternary" 
+                                <Button
+                                    variant="quaternary"
                                     onClick={() => setIsEditModalOpen(true)}
                                 >
                                     Modificar
                                 </Button>
-                                <Button 
-                                    variant="quaternary" 
+                                <Button
+                                    variant="quaternary"
                                     onClick={() => setIsAddModalOpen(true)}
                                     disabled={emptyFields.length === 0 || isSubmitting}
                                 >
-                                    Registrar Datos
+                                    Ingresar Información
                                 </Button>
                             </div>
                         </div>
@@ -127,7 +127,7 @@ const PersonalInfo = () => {
                             <div className={styles.loading}>Cargando información personal...</div>
                         ) : (
                             <div className={styles.listWrapper}>
-                                
+
                                 {/* Card Identidad */}
                                 <div className={styles.infoCard}>
                                     <p className={styles.sectionTitle}>
@@ -161,8 +161,8 @@ const PersonalInfo = () => {
             {/* Modal de Edición (Overlay estandarizado) */}
             {isEditModalOpen && (
                 <div className={styles.overlay} onClick={() => setIsEditModalOpen(false)}>
-                    <div 
-                        className="w-full max-w-4xl max-h-[90vh] overflow-y-auto" 
+                    <div
+                        className="w-full max-w-4xl max-h-[90vh] overflow-y-auto"
                         onClick={e => e.stopPropagation()}
                     >
                         <EditPersonalInfoCard onClose={() => {
