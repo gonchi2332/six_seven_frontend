@@ -27,6 +27,8 @@ const jsonHeaders = () => ({
     "Content-Type": "application/json",
 });
 
+const toISO = (year: string) => `${year}-12-15T00:00:00Z`;
+
 export const fetchAcademicDegrees = async (): Promise<AcademicDegree[]> => {
     const res = await fetch(`${BASE_URL}/education_degree`, {
         headers: jsonHeaders(),
@@ -41,7 +43,7 @@ export const fetchEducation = async (): Promise<EducationEntry[]> => {
     const res = await fetch(`${BASE_URL}/users/education?username=${username}`, {
         headers: jsonHeaders(),
     });
-    if (!res.ok) throw new Error("Error al cargar formacions académicas");
+    if (!res.ok) throw new Error("Error al cargar formaciones académicas");
     const data = await res.json();
     if (!data.education) return [];
     return data.education.map((e: {
@@ -57,14 +59,14 @@ export const fetchEducation = async (): Promise<EducationEntry[]> => {
         academicLevel: e.academicdegree,
         academicLevelId: 0,
         institution: e.institution,
-        startDate: e.start_date?.split('-')[0] ?? "", //e.start_date ? String(new Date(e.start_date).getFullYear()) : "",
-        endDate: e.end_date?.split('-')[0] ?? undefined //e.end_date ? String(new Date(e.end_date).getFullYear()) : undefined,
+        startDate: e.start_date?.split("-")[0] ?? "",
+        endDate: e.end_date?.split("-")[0] ?? undefined,
     }));
 };
 
 export const createEducation = async (
     data: Omit<EducationEntry, "id">
-): Promise<EducationEntry> => {
+): Promise<EducationEntry[]> => {
     const body: Record<string, unknown> = {
         title: data.degree,
         academyDegreeId: data.academicLevelId,
@@ -79,20 +81,22 @@ export const createEducation = async (
         body: JSON.stringify(body),
     });
     const resData = await res.json();
-    if (!res.ok) throw new Error(resData.message ?? "Error al crear formacion académica");
-    return { ...data, id: String(Date.now()) };
+    if (!res.ok) throw new Error(resData.message ?? "Error al crear formación académica");
+    return fetchEducation();
 };
 
 export const updateEducation = async (
     id: string,
     data: Omit<EducationEntry, "id">
-): Promise<EducationEntry> => {
+): Promise<EducationEntry[]> => {
     const body: Record<string, unknown> = {
-        academyDegreeId: data.academicLevelId,
-        institution: data.institution,
-        startDate: data.startDate,
+        startDate: toISO(data.startDate),
+        endDate: data.endDate ? toISO(data.endDate) : "",
     };
-    if (data.endDate) body.endDate = data.endDate;
+    if (data.academicLevelId && data.academicLevelId !== 0) {
+        body.academyDegreeId = data.academicLevelId;
+    }
+    if (data.institution) body.institution = data.institution;
 
     const res = await fetch(`${BASE_URL}/users/education?id=${id}`, {
         method: "PATCH",
@@ -100,8 +104,8 @@ export const updateEducation = async (
         body: JSON.stringify(body),
     });
     const resData = await res.json();
-    if (!res.ok) throw new Error(resData.message ?? "Error al actualizar formacion académica");
-    return { ...data, id };
+    if (!res.ok) throw new Error(resData.message ?? "Error al actualizar formación académica");
+    return fetchEducation();
 };
 
 export const deleteEducation = async (id: string): Promise<void> => {
@@ -111,6 +115,6 @@ export const deleteEducation = async (id: string): Promise<void> => {
     });
     if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.message ?? "Error al eliminar formacion académica");
+        throw new Error(data.message ?? "Error al eliminar formación académica");
     }
 };

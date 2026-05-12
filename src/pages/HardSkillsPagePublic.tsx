@@ -4,12 +4,7 @@ import useSearch from "../hooks/useSearch";
 import usePagination from "../hooks/usePagination";
 import SkillSearchBar from "../components/SkillSearchBar";
 import SkillPagination from "../components/SkillPagination";
-import ConfirmDeletePopup from "../components/ConfirmDeletePopup/ConfirmDeletePopup ";
 import LevelBars from "../components/LevelBars/Levelbars ";
-import AddSkillPopup from "../features/skills/components/AddSkillPopup";
-import EditSkillPopup from "../features/skills/components/EditSkillPopup";
-import SkillActionPopup from "../features/skills/components/SkillActionPopup";
-import ViewHardSkillPopup from "../features/skills/components/ViewHardSkillPopup";
 import type { Skill } from "../features/skills/types/skill.types";
 
 const PAGE_SIZE = 12;
@@ -31,52 +26,18 @@ const styles = {
 };
 
 const HardSkillsPage = () => {
-    const { skills, catalogSkills, isLoading, error, successMessage, addSkill, editSkill, deleteSkill } = useSkills();
+    const { skills, isLoading, error, successMessage } = useSkills();
     const { searchInput, filtered, handleSearch, handleKeyDown, handleChange } = useSearch(
         skills,
         (s, q) => s.name.toLowerCase().includes(q.toLowerCase())
     );
-    const { currentPage, totalPages, paginated, prevPage, nextPage, resetPage, adjustAfterDelete } = usePagination(filtered, PAGE_SIZE);
+    const { currentPage, totalPages, paginated, prevPage, nextPage, resetPage } = usePagination(filtered, PAGE_SIZE);
 
     const [showAdd, setShowAdd] = useState(false);
     const [skillAction, setSkillAction] = useState<Skill | null>(null);
-    const [skillToView, setSkillToView] = useState<Skill | null>(null);
-    const [skillToEdit, setSkillToEdit] = useState<Skill | null>(null);
-    const [skillToDelete, setSkillToDelete] = useState<Skill | null>(null);
-    const [editError, setEditError] = useState<string | null>(null);
-    const [isEditSubmitting, setIsEditSubmitting] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
+
 
     const onSearch = () => { handleSearch(); resetPage(); };
-
-    const handleAddSubmit = async (name: string, level: number) => {
-        await addSkill(name, level);
-    };
-
-    const handleEditSubmit = async (id: string, name: string, level: number) => {
-        setIsEditSubmitting(true);
-        setEditError(null);
-        try {
-            await editSkill(id, name, level);
-            setSkillToEdit(null);
-        } catch {
-            setEditError("Ocurrió un error al guardar los cambios.");
-        } finally {
-            setIsEditSubmitting(false);
-        }
-    };
-
-    const handleDeleteConfirm = async () => {
-        if (!skillToDelete) return;
-        setIsDeleting(true);
-        try {
-            await deleteSkill(skillToDelete.id);
-            adjustAfterDelete(paginated.length);
-            setSkillToDelete(null);
-        } finally {
-            setIsDeleting(false);
-        }
-    };
 
     return (
         <div className={styles.wrapper}>
@@ -93,6 +54,7 @@ const HardSkillsPage = () => {
                                 onAdd={() => setShowAdd(true)}
                                 placeholder="Buscar habilidad..."
                                 addLabel="Registrar"
+                                isPublic={true}
                             />
                         </div>
 
@@ -129,49 +91,6 @@ const HardSkillsPage = () => {
                     </div>
                 </div>
             </div>
-
-            {showAdd && (
-                <AddSkillPopup
-                    onSubmit={handleAddSubmit}
-                    onClose={() => setShowAdd(false)}
-                    catalogSkills={catalogSkills}
-                />
-            )}
-
-            {skillAction && (
-                <SkillActionPopup
-                    skill={skillAction}
-                    onView={() => { setSkillToView(skillAction); setSkillAction(null); }}
-                    onModify={() => { setEditError(null); setSkillToEdit(skillAction); setSkillAction(null); }}
-                    onDelete={() => { setSkillToDelete(skillAction); setSkillAction(null); }}
-                    onClose={() => setSkillAction(null)}
-                />
-            )}
-
-            {skillToView && (
-                    <ViewHardSkillPopup
-                        skill={skillToView}
-                        onClose={() => { setSkillToView(null); setSkillAction(skillToView); }}
-                    />
-                )}
-
-                {skillToEdit && (
-                    <EditSkillPopup
-                        skill={skillToEdit}
-                        onSubmit={handleEditSubmit}
-                        onClose={() => { setSkillToEdit(null); setSkillAction(skillToEdit); }}
-                        serverError={editError}
-                        isSubmitting={isEditSubmitting}
-                    />
-                )}
-
-                <ConfirmDeletePopup
-                    isOpen={!!skillToDelete}
-                    skillName={skillToDelete?.name ?? ""}
-                    onConfirm={handleDeleteConfirm}
-                    onClose={() => { setSkillToDelete(null); setSkillAction(skillToDelete); }}
-                    isLoading={isDeleting}
-                />
         </div>
     );
 };

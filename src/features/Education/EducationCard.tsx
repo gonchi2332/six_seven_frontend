@@ -6,14 +6,14 @@ interface Props {
 }
 
 const styles = {
-    container: "bg-black/30 rounded-xl border border-accent/20 hover:border-accent/50 transition-all overflow-hidden cursor-pointer hover:bg-white/10 flex flex-col justify-between min-h-[165px]",
-    content: "p-5", 
-    header: "mb-3", 
-    title: "text-surface font-inter font-bold text-lg leading-tight line-clamp-2", 
-    infoRow: "flex items-center justify-left flex-wrap gap-2 mt-1.5",
-    academicLevel: "text-accent font-nunito text-sm font-semibold", 
+    container: "bg-black/30 rounded-xl border border-accent/20 hover:border-accent/50 transition-all overflow-hidden cursor-pointer hover:bg-white/10 flex flex-col justify-between min-h-[150px] sm:min-h-[165px]",
+    content: "p-3 sm:p-5",
+    header: "mb-2 sm:mb-3",
+    title: "text-surface font-inter font-bold text-base sm:text-lg leading-tight line-clamp-2",
+    infoRow: "flex items-center flex-wrap gap-2 mt-1.5",
+    academicLevel: "text-accent font-nunito text-xs sm:text-sm font-semibold",
     date: "text-white/40 font-nunito text-xs",
-    institution: "text-surface font-nunito text-[15px] mt-3 italic line-clamp-1", 
+    institution: "text-surface font-nunito text-[13px] sm:text-[15px] mt-2 sm:mt-3 italic line-clamp-1",
     separator: "text-white/50 font-nunito text-xs",
 };
 
@@ -28,14 +28,12 @@ const EducationCard = ({ entry, onView }: Props) => {
                 <div className={styles.header}>
                     <h3 className={styles.title}>{entry.degree}</h3>
                     <div className={styles.infoRow}>
-                        <span className={styles.academicLevel}>{entry.academicLevel}</span> 
+                        <span className={styles.academicLevel}>{entry.academicLevel}</span>
                         <span className={styles.separator}>|</span>
                         <span className={styles.date}>{dateRange}</span>
                     </div>
                 </div>
-                <p className={styles.institution}>
-                    {entry.institution}
-                </p>
+                <p className={styles.institution}>{entry.institution}</p>
             </div>
         </div>
     );

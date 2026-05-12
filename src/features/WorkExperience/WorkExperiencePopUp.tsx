@@ -36,15 +36,16 @@ const WorkExperiencePopUp = ({
                         <Button variant="secondary" onClick={onClose} fullWidth>
                             Cancelar
                         </Button>
+                        <Button variant="primary" onClick={() => onDelete(experience.id)} fullWidth>
+                            Eliminar
+                        </Button>
                         <Button variant="primary" onClick={() => onView(experience)} fullWidth>
                             Ver
                         </Button>
                         <Button variant="primary" onClick={() => onEdit(experience)} fullWidth>
                             Modificar
                         </Button>
-                        <Button variant="primary" onClick={() => onDelete(experience.id)} fullWidth>
-                            Eliminar
-                        </Button>
+                        
                     </div>
                 </PopUpCard>
             </div>

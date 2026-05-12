@@ -2,14 +2,7 @@ import { useState } from 'react';
 import { Search } from 'lucide-react';
 import { useWorkExperiences } from '../../hooks/useWorkExperiences';
 import WorkExperienceItem from './WorkExperienceItem';
-import WorkExperiencePopUp from './WorkExperiencePopUp';
-import AddWorkExperienceModal from './AddWorkExperienceModal';
-import EditWorkExperienceModal from './EditWorkExperienceModal';
-import ConfirmDeleteModal from './ConfirmDeleteModal';
 import type { WorkExperience } from '../../hooks/useWorkExperiences';
-import WorkExperienceDetailModal from './WorkExperienceDetailModal';
-import Button from '../../components/Button';
-
 
 const PAGE_SIZE = 10;
 
@@ -37,17 +30,12 @@ const styles = {
 };
 
 const WorkExperienceList = () => {
-    const { experiences, isLoading, error, successMessage, addExperience, updateExperience, deleteExperience } = useWorkExperiences();
+    const { experiences, isLoading, error, successMessage } = useWorkExperiences();
     const [searchInput, setSearchInput] = useState('');
     const [activeSearch, setActiveSearch] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [selectedExperience, setSelectedExperience] = useState<WorkExperience | null>(null);
-    const [experienceToDelete, setExperienceToDelete] = useState<number | null>(null);
-    const [isInfoOpen, setIsInfoOpen] = useState(false);
 
     const handleSearch = () => {
         setActiveSearch(searchInput);
@@ -66,58 +54,8 @@ const WorkExperienceList = () => {
     const totalPages = Math.max(1, Math.ceil(filteredExperiences.length / PAGE_SIZE));
     const paginatedExperiences = filteredExperiences.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-    const handleAdd = () => {
-        setIsAddModalOpen(true);
-    };
-
     const handleView = (experience: WorkExperience) => {
         setSelectedExperience(experience);
-        setIsDetailModalOpen(true);
-    };
-
-    const handleOpenInfo = () => {
-        setIsDetailModalOpen(false); // Cerramos el menú
-        setIsInfoOpen(true);        // Abrimos la info real
-    };
-
-    const handleEdit = (experience: WorkExperience) => {
-        setIsDetailModalOpen(false);
-        setIsInfoOpen(false);
-        setSelectedExperience(experience);
-        setIsEditModalOpen(true);
-    };
-
-    const handleDeleteClick = (id: number) => {
-        setIsDetailModalOpen(false);
-        setExperienceToDelete(id);
-        setIsConfirmModalOpen(true);
-    };
-
-    const handleConfirmDelete = async () => {
-        if (experienceToDelete) {
-            await deleteExperience(experienceToDelete);
-            setExperienceToDelete(null);
-            setSelectedExperience(null);
-            setIsDetailModalOpen(false);
-            setIsConfirmModalOpen(false);
-            setIsEditModalOpen(false);
-            setIsInfoOpen(false);
-            if (paginatedExperiences.length === 1 && currentPage > 1) {
-                setCurrentPage((page) => page - 1);
-            }
-        }
-    };
-
-    const handleUpdateExperience = async (id: number, data: any) => {
-        await updateExperience(id, data);
-        setIsEditModalOpen(false);
-        setIsDetailModalOpen(false);
-        setIsInfoOpen(false);
-        setSelectedExperience(null);
-    };
-
-    const handleCloseEditModal = () => {
-        setIsEditModalOpen(false);
         setIsDetailModalOpen(true);
     };
 
@@ -141,24 +79,11 @@ const WorkExperienceList = () => {
                                         className={styles.searchInput}
                                     />
                                 </div>
-                                <div className={styles.actionRow}>
-                                    <Button
-                                        variant="secondary"
-                                        onClick={handleSearch}
-                                        disabled={isLoading}
-                                        fullWidth
-                                    >
+                                   <div className={styles.actionRow}>
+                                    <button type="button" onClick={handleSearch} className={styles.searchBtn}>
                                         Buscar
-                                    </Button>
-                                    <Button
-                                        variant="quaternary"
-                                        onClick={handleAdd}
-                                        disabled={isLoading}
-                                        fullWidth
-                                    >
-                                        Registrar
-                                    </Button>
-                                </div>
+                                    </button>
+                                    </div>
                             </div>
                         </div>
 
@@ -222,57 +147,6 @@ const WorkExperienceList = () => {
                     </div>
                 </div>
             </div>
-
-            <AddWorkExperienceModal
-                isOpen={isAddModalOpen}
-                onClose={() => setIsAddModalOpen(false)}
-                onAdd={addExperience}
-            />
-
-            <EditWorkExperienceModal
-                isOpen={isEditModalOpen && selectedExperience !== null}
-                onClose={handleCloseEditModal}
-                onEdit={handleUpdateExperience}
-                experience={selectedExperience}
-            />
-
-            <WorkExperiencePopUp
-                isOpen={isDetailModalOpen && selectedExperience !== null}
-                experience={selectedExperience}
-                onClose={() => setIsDetailModalOpen(false)}
-                onView={handleOpenInfo} // Ahora llama a abrir la info real
-                onEdit={handleEdit}
-                onDelete={handleDeleteClick}
-            />
-
-            <WorkExperienceDetailModal
-                isOpen={isInfoOpen && selectedExperience !== null}
-                experience={selectedExperience}
-                onClose={() => {
-                    setIsInfoOpen(false);
-                    setIsDetailModalOpen(true);
-                }}
-            />
-
-            <ConfirmDeleteModal
-                isOpen={isConfirmModalOpen}
-                onClose={() => {
-                    setIsConfirmModalOpen(false);
-                    setExperienceToDelete(null);
-                    setIsDetailModalOpen(true);
-                }}
-                onConfirm={handleConfirmDelete}
-                title="Eliminar Experiencia Laboral"
-                message={
-                    selectedExperience ? (
-                        <>
-                            ¿Estás seguro de que deseas eliminar <strong>{selectedExperience.position} de {selectedExperience.company_name}</strong>?
-                        </>
-                    ) : (
-                        "¿Estás seguro de que deseas eliminar esta experiencia laboral?"
-                    )
-                }
-            />
         </div>
     );
 };

@@ -4,10 +4,6 @@ import useSearch from "../hooks/useSearch";
 import usePagination from "../hooks/usePagination";
 import SkillSearchBar from "../components/SkillSearchBar";
 import SkillPagination from "../components/SkillPagination";
-import ConfirmDeletePopup from "../components/ConfirmDeletePopup/ConfirmDeletePopup ";
-import AddSoftSkillPopup from "../features/SoftSkills/AddSoftSkillPopup";
-import SoftSkillActionPopup from "../features/SoftSkills/SoftSkillActionPopup";
-import ViewSoftSkillPopup from "../features/SoftSkills/ViewSoftSkillPopup";
 import type { SoftSkill } from "../services/softSkillService";
 
 const PAGE_SIZE = 12;
@@ -28,36 +24,17 @@ const styles = {
 };
 
 const SoftSkillsPage = () => {
-    const { skills, catalogSkills, isLoading, error, successMessage, username, addSkill, removeSkill } = useSoftSkills();
+    const { skills, isLoading, error, successMessage } = useSoftSkills();
     const { searchInput, filtered, handleSearch, handleKeyDown, handleChange } = useSearch(
         skills,
         (s, q) => s.name.toLowerCase().includes(q.toLowerCase())
     );
-    const { currentPage, totalPages, paginated, prevPage, nextPage, resetPage, adjustAfterDelete } = usePagination(filtered, PAGE_SIZE);
+    const { currentPage, totalPages, paginated, prevPage, nextPage, resetPage } = usePagination(filtered, PAGE_SIZE);
 
     const [showAdd, setShowAdd] = useState(false);
     const [skillAction, setSkillAction] = useState<SoftSkill | null>(null);
-    const [skillToView, setSkillToView] = useState<SoftSkill | null>(null);
-    const [skillToDelete, setSkillToDelete] = useState<string | null>(null);
-    const [isDeleting, setIsDeleting] = useState(false);
 
     const onSearch = () => { handleSearch(); resetPage(); };
-
-    const handleAddSubmit = (name: string) => {
-        addSkill(name);
-    };
-
-    const handleDeleteConfirm = async () => {
-        if (!skillToDelete) return;
-        setIsDeleting(true);
-        try {
-            await removeSkill(skillToDelete);
-            adjustAfterDelete(paginated.length);
-            setSkillToDelete(null);
-        } finally {
-            setIsDeleting(false);
-        }
-    };
 
     return (
         <div className={styles.wrapper}>
@@ -74,6 +51,7 @@ const SoftSkillsPage = () => {
                                 onAdd={() => setShowAdd(true)}
                                 placeholder="Buscar habilidad..."
                                 addLabel="Registrar"
+                                isPublic={true}
                             />
                         </div>
 
@@ -107,40 +85,6 @@ const SoftSkillsPage = () => {
                     </div>
                 </div>
             </div>
-
-            {showAdd && (
-                <AddSoftSkillPopup
-                    onSubmit={handleAddSubmit}
-                    onClose={() => setShowAdd(false)}
-                    username={username}
-                    userSkills={skills}
-                    catalogSkills={catalogSkills}
-                />
-            )}
-
-            {skillAction && (
-                <SoftSkillActionPopup
-                    skillName={skillAction.name}
-                    onView={() => { setSkillToView(skillAction); setSkillAction(null); }}
-                    onDelete={() => { setSkillToDelete(skillAction.name); setSkillAction(null); }}
-                    onClose={() => setSkillAction(null)}
-                />
-            )}
-
-            {skillToView && (
-                <ViewSoftSkillPopup
-                    name={skillToView.name}
-                    onClose={() => { setSkillToView(null); setSkillAction(skillToView); }}
-                />
-            )}
-
-            <ConfirmDeletePopup
-                isOpen={!!skillToDelete}
-                skillName={skillToDelete ?? ""}
-                onConfirm={handleDeleteConfirm}
-                onClose={() => { setSkillToDelete(null); setSkillAction(skillAction ?? { name: skillToDelete ?? "" } as SoftSkill); }}
-                isLoading={isDeleting}
-            />
         </div>
     );
 };

@@ -7,26 +7,26 @@ interface Props {
 }
 
 const styles = {
-    overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 z-50",
-    body: "flex flex-col gap-4 px-6 sm:px-8 pb-2",
+    overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 py-4 z-50",
+    content: "px-4 sm:px-6 pb-5 pt-0 flex flex-col gap-4 sm:gap-5",
     field: "flex flex-col gap-1",
-    label: "text-[13px] font-nunito text-white/50",
-    value: "text-[15px] font-nunito text-white font-semibold",
-    buttonsWrapper: "flex justify-center mt-2 px-6 sm:px-8 pb-6",
+    label: "text-secondary text-xs uppercase tracking-wide font-bold mb-1",
+    value: "text-surface font-nunito text-sm sm:text-base",
+    buttonContainer: "flex gap-3 px-4 sm:px-6 pb-6",
 };
 
 const ViewSoftSkillPopup = ({ name, onClose }: Props) => {
     return (
         <div className={styles.overlay}>
-            <div className="w-full max-w-xs sm:max-w-sm">
+            <div className="w-full max-w-xs sm:max-w-sm my-4 max-h-[90vh] overflow-y-auto">
                 <PopUpCard title="Habilidad Blanda">
-                    <div className={styles.body}>
+                    <div className={styles.content}>
                         <div className={styles.field}>
-                            <span className={styles.label}>Nombre</span>
-                            <span className={styles.value}>{name}</span>
+                            <p className={styles.label}>Nombre</p>
+                            <p className={styles.value}>{name}</p>
                         </div>
                     </div>
-                    <div className={styles.buttonsWrapper}>
+                    <div className={styles.buttonContainer}>
                         <Button type="button" variant="secondary" onClick={onClose} fullWidth>Atrás</Button>
                     </div>
                 </PopUpCard>

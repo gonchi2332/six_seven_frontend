@@ -1,13 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { useEducation } from "../hooks/useEducation";
 import EducationCard from "../features/Education/EducationCard";
-import EducationForm from "../features/Education/EducationForm";
-import ViewEducationPopup from "../features/Education/ViewEducationPopup";
-import EducationPopup from "../features/Education/EducationPopup";
-import ConfirmDeleteModal from "../features/Education/DeleteEducationPopup";
 import type { EducationEntry } from "../services/educationService";
-import Button from "../components/Button";
 
 const PAGE_SIZE = 10;
 
@@ -35,39 +30,24 @@ const styles = {
 };
 
 const EducationPage = () => {
-    const { entries, academicDegrees, isLoading, error, successMessage, addEntry, editEntry, deleteEntry } = useEducation();
-
-
+    const { entries, isLoading, error, successMessage} = useEducation();
+    
+    // Estados de búsqueda y paginación
     const [searchInput, setSearchInput] = useState("");
     const [activeSearch, setActiveSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
 
-    const [isAddOpen, setIsAddOpen] = useState(false);
-    const [isEditOpen, setIsEditOpen] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
-    const [isViewOpen, setIsViewOpen] = useState(false);
-
+    const [isMenuOpen, setIsMenuOpen] = useState(false); 
+    
     const [selectedEntry, setSelectedEntry] = useState<EducationEntry | null>(null);
-    const [formError, setFormError] = useState<string | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [formError] = useState<string | null>(null);
 
-    const closeAll = () => {
-        setIsAddOpen(false);
-        setIsEditOpen(false);
-        setIsMenuOpen(false);
-        setIsConfirmDeleteOpen(false);
-        setIsViewOpen(false);
-        setSelectedEntry(null);
-    };
-
-    const goToMenu = () => {
-        setIsAddOpen(false);
-        setIsEditOpen(false);
-        setIsConfirmDeleteOpen(false);
-        setIsViewOpen(false);
-        setIsMenuOpen(true);
-    };
+    useEffect(() => {
+        if (searchInput === "") {
+            setActiveSearch("");
+            setCurrentPage(1);
+        }
+    }, [searchInput]);
 
     const handleSearch = () => {
         setActiveSearch(searchInput);
@@ -87,66 +67,10 @@ const EducationPage = () => {
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
+    // Flujo de Modales
     const handleCardClick = (entry: EducationEntry) => {
         setSelectedEntry(entry);
         setIsMenuOpen(true);
-    };
-
-    const handleViewDetail = () => {
-        setIsMenuOpen(false);
-        setIsViewOpen(true);
-    };
-
-    const handleEditClick = (entry: EducationEntry) => {
-        setSelectedEntry(entry);
-        setFormError(null);
-        setIsMenuOpen(false);
-        setIsEditOpen(true);
-    };
-
-    const handleDeleteClick = (entry: EducationEntry) => {
-        setSelectedEntry(entry);
-        setIsMenuOpen(false);
-        setIsConfirmDeleteOpen(true);
-    };
-
-    const handleAddSubmit = async (data: Omit<EducationEntry, "id">) => {
-        setIsSubmitting(true);
-        setFormError(null);
-        try {
-            await addEntry(data);
-            closeAll();
-        } catch (err: any) {
-            setFormError(err.message || "Error al registrar Formación Académica");
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    const handleEditSubmit = async (data: Omit<EducationEntry, "id">) => {
-        if (!selectedEntry) return;
-        setIsSubmitting(true);
-        setFormError(null);
-        try {
-            await editEntry(selectedEntry.id, data);
-            closeAll();
-        } catch (err: any) {
-            setFormError(err.message || "Error al modificar Formación Académica");
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    const handleConfirmDelete = async () => {
-        if (!selectedEntry) return;
-        setIsSubmitting(true);
-        try {
-            await deleteEntry(selectedEntry.id);
-            if (paginated.length === 1 && currentPage > 1) setCurrentPage((p) => p - 1);
-            closeAll();
-        } finally {
-            setIsSubmitting(false);
-        }
     };
 
     return (
@@ -155,7 +79,8 @@ const EducationPage = () => {
                 <div className={styles.outerCard}>
                     <div className={styles.greenContainer}>
                         <div className={styles.header}>
-                            <h1 className={styles.title}>Formación Académica</h1>
+                            <h1 className={styles.title}>Formacion Académica</h1>
+                            
                             <div className={styles.searchRow}>
                                 <div className={styles.searchInputWrapper}>
                                     <Search size={16} className={styles.searchIcon} />
@@ -168,32 +93,17 @@ const EducationPage = () => {
                                         className={styles.searchInput}
                                     />
                                 </div>
-
-
-                                <div className={styles.actionRow}>
-                                    <Button
-                                        variant="secondary"
-                                        onClick={handleSearch}
-                                        disabled={isLoading}
-                                        fullWidth
-                                    >
+                                    <div className={styles.actionRow}>
+                                    <button type="button" onClick={handleSearch} className={styles.searchBtn}>
                                         Buscar
-                                    </Button>
-                                    <Button
-                                        variant="quaternary"
-                                        onClick={() => { setFormError(null); setIsAddOpen(true); }}
-                                        disabled={isLoading}
-                                        fullWidth
-                                    >
-                                        Registrar
-                                    </Button>
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
-                        {error && (
+                        {(error || formError) && (
                             <p className={`${styles.toast} bg-red-500/10 border border-red-500 text-red-400`}>
-                                {error}
+                                {error || formError}
                             </p>
                         )}
                         {successMessage && (
@@ -211,7 +121,10 @@ const EducationPage = () => {
                         ) : (
                             <div className={styles.listWrapper}>
                                 {paginated.map((entry) => (
-                                    <EducationCard key={entry.id} entry={entry} onView={handleCardClick} />
+                                    <EducationCard 
+                                        key={entry.id} 
+                                        entry={entry} 
+                                        onView={handleCardClick} />
                                 ))}
                             </div>
                         )}
@@ -230,60 +143,6 @@ const EducationPage = () => {
                     </div>
                 </div>
             </div>
-
-            {isMenuOpen && selectedEntry && (
-                <EducationPopup
-                    isOpen={isMenuOpen}
-                    entry={selectedEntry}
-                    onClose={closeAll}
-                    onEdit={handleEditClick}
-                    onDelete={handleDeleteClick}
-                    onView={handleViewDetail}
-                />
-            )}
-
-            {isViewOpen && selectedEntry && (
-                <ViewEducationPopup
-                    isOpen={isViewOpen}
-                    entry={selectedEntry}
-                    onClose={closeAll}
-                    onBack={goToMenu}
-                />
-            )}
-
-            {isAddOpen && (
-                <EducationForm
-                    mode="add"
-                    academicDegrees={academicDegrees}
-                    onSubmit={handleAddSubmit}
-                    onClose={closeAll}
-                    serverError={formError}
-                    isSubmitting={isSubmitting}
-                />
-            )}
-
-            {isEditOpen && selectedEntry && (
-                <EducationForm
-                    mode="edit"
-                    initial={selectedEntry}
-                    academicDegrees={academicDegrees}
-                    onSubmit={handleEditSubmit}
-                    onClose={closeAll}
-                    onBack={goToMenu}
-                    serverError={formError}
-                    isSubmitting={isSubmitting}
-                />
-            )}
-
-            {isConfirmDeleteOpen && selectedEntry && (
-                <ConfirmDeleteModal
-                    degree={selectedEntry.degree}
-                    onConfirm={handleConfirmDelete}
-                    onClose={closeAll}
-                    onBack={goToMenu}
-                    isSubmitting={isSubmitting}
-                />
-            )}
         </div>
     );
 };
