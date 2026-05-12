@@ -106,16 +106,25 @@ const PersonalProjectsModal = ({
         return hasName && hasDescription && hasTopic && hasRole && hasImage && areLinksValid;
     };
 
-    // Verificar si hay algún error en los campos
-    const hasErrors = () => {
-        return Object.keys(errors).length > 0;
+    // Verificar si hay errores importantes (solo los campos requeridos)
+    const hasCriticalErrors = () => {
+        // Solo verificamos errores de campos que son obligatorios
+        const criticalFields = ['name', 'description', 'topic', 'role', 'image'];
+
+        // También verificamos errores de enlaces
+        const hasLinkErrors = formData.links.some((_, index) =>
+            errors[`link${index}_label`] || errors[`link${index}_url`]
+        );
+
+        return criticalFields.some(field => errors[field]) || hasLinkErrors;
     };
 
     // Determinar si el botón debe estar deshabilitado
     const isSubmitDisabled = () => {
         if (isSubmitting) return true;
         if (isEditing && !hasChanges) return true;
-        if (!isEditing && (!isFormComplete() || hasErrors())) return true;
+        // En modo creación, deshabilitar si el formulario no está completo o hay errores críticos
+        if (!isEditing && (!isFormComplete() || hasCriticalErrors())) return true;
         return false;
     };
 
