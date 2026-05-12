@@ -1,12 +1,20 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
 
-// esta es la pagina base para evitar que el navbar se recargue todo el timepo ojito, es como un lienzo
-
 const MainLayout = () => {
+  const location = useLocation();
+  const { username } = useParams();
+
+  // Detectamos si la ruta actual es pública (contiene "/ver/")
+  const isPublicView = location.pathname.includes("/ver/");
+
   return (
     <div className="min-h-screen bg-main flex flex-col">
-      <Navbar />
+      {/* Pasamos las props necesarias al Navbar */}
+      <Navbar 
+        isPublic={isPublicView} 
+        ownerName={username} 
+      />
       <main className="w-full">
         <Outlet />
       </main>
