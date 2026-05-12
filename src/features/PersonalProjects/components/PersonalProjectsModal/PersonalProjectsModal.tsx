@@ -128,6 +128,13 @@ const PersonalProjectsModal = ({
         return false;
     };
 
+    // Función helper para obtener el error de un enlace
+    const getLinkError = (index: number, field: 'label' | 'url') => {
+        const errorKey = `link${index}_${field}`;
+        const error = errors[errorKey];
+        return typeof error === 'string' ? error : undefined;
+    };
+
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 overflow-y-auto">
             <div className="max-w-3xl w-full relative">
@@ -139,7 +146,7 @@ const PersonalProjectsModal = ({
                                 type="text"
                                 value={formData.name}
                                 onChange={(e) => handleChange("name", e.target.value)}
-                                error={errors.name}
+                                error={errors.name as string}
                                 disabled={isEditing}
                                 placeholder="Sistema de Inventario"
                                 className="[&_input]:py-1.5 [&_label]:text-sm"
@@ -149,7 +156,7 @@ const PersonalProjectsModal = ({
                             label="Descripción:*"
                             value={formData.description}
                             onChange={(e) => handleChange("description", e.target.value)}
-                            error={errors.description}
+                            error={errors.description as string}
                             placeholder="Este proyecto ..."
                             rows={4}
                         />
@@ -172,7 +179,7 @@ const PersonalProjectsModal = ({
                                 type="text"
                                 value={formData.topic}
                                 onChange={(e) => handleChange("topic", e.target.value)}
-                                error={errors.topic}
+                                error={errors.topic as string}
                                 placeholder="Ej: Frontend, Backend"
                                 className="[&_input]:py-1.5 [&_label]:text-sm"
                             />
@@ -182,7 +189,7 @@ const PersonalProjectsModal = ({
                                 type="text"
                                 value={formData.role}
                                 onChange={(e) => handleChange("role", e.target.value)}
-                                error={errors.role}
+                                error={errors.role as string}
                                 placeholder="Ej: Lider Frontend"
                                 className="[&_input]:py-1.5 [&_label]:text-sm"
                             />
@@ -198,7 +205,7 @@ const PersonalProjectsModal = ({
                                             type="text"
                                             value={link.label}
                                             onChange={(e) => handleLinkChange(index, "label", e.target.value)}
-                                            error={errors[`link${index}_label`] as string}
+                                            error={getLinkError(index, 'label')}
                                             placeholder="Ej: GitHub, Deploy, Demo"
                                             className="[&_input]:py-1.5 [&_label]:text-sm"
                                         />
@@ -207,7 +214,7 @@ const PersonalProjectsModal = ({
                                             type="text"
                                             value={link.url}
                                             onChange={(e) => handleLinkChange(index, "url", e.target.value)}
-                                            error={errors[`link${index}_url`] as string}
+                                            error={getLinkError(index, 'url')}
                                             placeholder="https://..."
                                             className="[&_input]:py-1.5 [&_label]:text-sm"
                                         />
@@ -238,7 +245,7 @@ const PersonalProjectsModal = ({
                                 initialImageUrl={imageUrl}
                                 maxSizeMB={2}
                             />
-                            {errors.image && <p className="text-red-500 text-xs mt-0.5">{errors.image}</p>}
+                            {errors.image && <p className="text-red-500 text-xs mt-0.5">{errors.image as string}</p>}
                         </div>
 
                         {externalError && (
