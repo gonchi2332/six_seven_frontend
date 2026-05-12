@@ -128,14 +128,17 @@ const SoftSkillsPage = () => {
             )}
 
             {skillToView && (
-                <ViewSoftSkillPopup name={skillToView.name} onClose={() => setSkillToView(null)} />
+                <ViewSoftSkillPopup
+                    name={skillToView.name}
+                    onClose={() => { setSkillToView(null); setSkillAction(skillToView); }}
+                />
             )}
 
             <ConfirmDeletePopup
                 isOpen={!!skillToDelete}
                 skillName={skillToDelete ?? ""}
                 onConfirm={handleDeleteConfirm}
-                onClose={() => setSkillToDelete(null)}
+                onClose={() => { setSkillToDelete(null); setSkillAction(skillAction ?? { name: skillToDelete ?? "" } as SoftSkill); }}
                 isLoading={isDeleting}
             />
         </div>

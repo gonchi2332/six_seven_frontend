@@ -12,7 +12,7 @@ interface AddSkillPopupProps {
 }
 
 const styles = {
-    overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 z-50",
+    overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 py-4 z-50",
     formWrapper: "flex flex-col gap-4 px-6 sm:px-8 pb-2",
     buttonsWrapper: "flex gap-4 justify-center mt-2 px-6 sm:px-8 pb-6",
     label: "text-[16px] font-nunito text-surface mb-0.5",
@@ -43,11 +43,9 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
         return `${styles.inputBase} ${styles.inputNormal}`;
     };
 
-   
-
     return (
         <div className={styles.overlay}>
-            <div className="w-full max-w-xs sm:max-w-sm">
+            <div className="w-full max-w-xs sm:max-w-sm max-h-[90vh] overflow-y-auto">
                 <PopUpCard title="Registrar Habilidad Técnica">
                     {topError && (
                         <div className="mx-6 sm:mx-8 mb-2 p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center">

@@ -24,7 +24,7 @@ const ConfirmDeletePopup = ({ isOpen, skillName, onConfirm, onClose, isLoading =
             <div className="w-full max-w-xs sm:max-w-sm">
                 <PopUpCard title="Eliminar Habilidad">
                     <p className={styles.message}>
-                        ¿Estás seguro que quieres eliminar{" "}
+                        ¿Estás seguro que deseas eliminar{" "}
                         <span className={styles.highlight}>{skillName}</span>?
                     </p>
                     <div className={styles.buttonsWrapper}>

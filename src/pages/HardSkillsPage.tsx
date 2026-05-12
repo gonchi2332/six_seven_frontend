@@ -149,26 +149,29 @@ const HardSkillsPage = () => {
             )}
 
             {skillToView && (
-                <ViewHardSkillPopup skill={skillToView} onClose={() => setSkillToView(null)} />
-            )}
+                    <ViewHardSkillPopup
+                        skill={skillToView}
+                        onClose={() => { setSkillToView(null); setSkillAction(skillToView); }}
+                    />
+                )}
 
-            {skillToEdit && (
-                <EditSkillPopup
-                    skill={skillToEdit}
-                    onSubmit={handleEditSubmit}
-                    onClose={() => setSkillToEdit(null)}
-                    serverError={editError}
-                    isSubmitting={isEditSubmitting}
+                {skillToEdit && (
+                    <EditSkillPopup
+                        skill={skillToEdit}
+                        onSubmit={handleEditSubmit}
+                        onClose={() => { setSkillToEdit(null); setSkillAction(skillToEdit); }}
+                        serverError={editError}
+                        isSubmitting={isEditSubmitting}
+                    />
+                )}
+
+                <ConfirmDeletePopup
+                    isOpen={!!skillToDelete}
+                    skillName={skillToDelete?.name ?? ""}
+                    onConfirm={handleDeleteConfirm}
+                    onClose={() => { setSkillToDelete(null); setSkillAction(skillToDelete); }}
+                    isLoading={isDeleting}
                 />
-            )}
-
-            <ConfirmDeletePopup
-                isOpen={!!skillToDelete}
-                skillName={skillToDelete?.name ?? ""}
-                onConfirm={handleDeleteConfirm}
-                onClose={() => setSkillToDelete(null)}
-                isLoading={isDeleting}
-            />
         </div>
     );
 };
