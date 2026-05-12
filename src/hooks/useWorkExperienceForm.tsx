@@ -117,7 +117,7 @@ export const useWorkExperienceForm = (initialData?: WorkExperienceFormData) => {
         } 
         // Si se desmarca, validar endDate si está vacío
         else if (!formData.endDate) {
-            setErrors(prev => ({ ...prev, endDate: 'La fecha de fin es obligatoria' }));
+            setErrors(prev => ({ ...prev, endDate: 'La fecha de finalizacion es obligatoria' }));
         }
     };
 

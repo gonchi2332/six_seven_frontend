@@ -32,7 +32,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         : "border-primary hover:border-secondary"
     }`,
     REMOVE_BUTTON:
-      "absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors shadow-md",
+      "absolute top-2 right-2 bg-secondary text-white p-1 rounded-full hover:bg-primary transition-colors shadow-md",
     IMAGE: "w-full h-full object-cover",
     PLACEHOLDER: "flex flex-col items-center justify-center p-4 text-center",
     ICON: `w-8 h-8 mb-2 transition-colors ${
@@ -87,21 +87,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             <button
               onClick={handleRemoveImage}
               className={styles.REMOVE_BUTTON}
-              title="Eliminar imagen"
+              title="Cambiar imagen"
               type="button"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              Cambiar
             </button>
           </div>
         ) : (

@@ -78,9 +78,9 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
         if (!company.trim()) newErrors.company = 'La empresa es obligatoria';
         if (!description.trim()) newErrors.description = 'La descripción es obligatoria';
         if (!startDate) newErrors.startDate = 'La fecha de inicio es obligatoria';
-        if (!isCurrent && !endDate) newErrors.endDate = 'La fecha de fin es obligatoria';
+        if (!isCurrent && !endDate) newErrors.endDate = 'La fecha de finalizacion es obligatoria';
         if (startDate && endDate && !isCurrent && startDate >= endDate)
-            newErrors.startDate = 'La fecha de inicio debe ser anterior a la fecha de fin';
+            newErrors.startDate = 'La fecha de inicio no puede ser luego de la fecha de finalización';
         
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -144,7 +144,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                         {/* Fila: Fechas */}
                         <div className={styles.row}>
                             <TextField
-                                label="Fecha de Inicio:*"
+                                label="Fecha de inicio:*"
                                 type="date"
                                 value={startDate}
                                 onChange={(e) => setStartDate(e.target.value)}
@@ -153,7 +153,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                             />
 
                             <TextField
-                                label="Fecha de Finalizacion:"
+                                label="Fecha de finalizacion:*"
                                 type="date"
                                 placeholder={"dd/mm/aaaa"}
                                 value={isCurrent ? '' : endDate}
@@ -198,7 +198,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                             disabled={isSubmitting || !hasChanges()} 
                             fullWidth
                         >
-                            {isSubmitting ? 'Guardando...' : 'Aceptar'}
+                            {isSubmitting ? 'Guardando...' : 'Modificar'}
                         </Button>
                     </div>
                 </PopUpCard>
