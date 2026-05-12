@@ -87,9 +87,9 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
         }
 
         if (field === 'role' && typeof value === 'string') {
-            if (value.length > 50) return;
+            if (value.length > 30) return;
             newValue = value;
-            if (value.length > 0 && value.length > 50) {
+            if (value.length > 0 && value.length > 30) {
                 setErrors((prev) => ({ ...prev, [field]: "El rol supera el límite de 50 caracteres" }));
             } else if (value.length === 0) {
                 setErrors((prev) => ({ ...prev, [field]: "El rol es obligatorio" }));
