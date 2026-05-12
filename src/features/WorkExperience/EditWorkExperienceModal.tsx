@@ -40,7 +40,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
     const [apiError, setApiError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (experience) {
+        if (experience && isOpen) {
             setPosition(experience.position);
             setCompany(experience.company_name);
             setDescription(experience.description);
@@ -48,7 +48,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
             setEndDate(formatDateForInput(experience.end_date));
             setIsCurrent(!experience.end_date);
         }
-    }, [experience]);
+    }, [experience, isOpen]);
 
     /**
      * Lógica para deshabilitar el botón si no hay cambios reales
@@ -84,6 +84,16 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
         
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
+    };
+
+    const isFormValid = (): boolean => {
+        return (
+            position.trim() !== '' &&
+            company.trim() !== '' &&
+            description.trim() !== '' &&
+            startDate !== '' &&
+            (isCurrent || endDate !== '')
+        );
     };
 
     const handleSubmit = async () => {
@@ -195,10 +205,10 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                         <Button 
                             variant="primary" 
                             onClick={handleSubmit} 
-                            disabled={isSubmitting || !hasChanges()} 
+                            disabled={isSubmitting || !hasChanges() || !isFormValid()} 
                             fullWidth
                         >
-                            {isSubmitting ? 'Guardando...' : 'Aceptar'}
+                            {isSubmitting ? 'Guardando...' : 'Modificar'}
                         </Button>
                     </div>
                 </PopUpCard>

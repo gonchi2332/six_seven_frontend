@@ -87,7 +87,6 @@ const WorkExperienceList = () => {
 
     const handleDeleteClick = (id: number) => {
         setIsDetailModalOpen(false);
-        setSelectedExperience(null);
         setExperienceToDelete(id);
         setIsConfirmModalOpen(true);
     };
@@ -239,10 +238,19 @@ const WorkExperienceList = () => {
                 onClose={() => {
                     setIsConfirmModalOpen(false);
                     setExperienceToDelete(null);
+                    setSelectedExperience(null);
                 }}
                 onConfirm={handleConfirmDelete}
                 title="Eliminar Experiencia Laboral"
-                message="¿Estás seguro de que deseas eliminar esta experiencia laboral?"
+                message={
+                    selectedExperience ? (
+                        <>
+                            ¿Estás seguro de que deseas eliminar <strong>{selectedExperience.position} de {selectedExperience.company_name}</strong>?
+                        </>
+                    ) : (
+                        "¿Estás seguro de que deseas eliminar esta experiencia laboral?"
+                    )
+                }
             />
         </div>
     );
