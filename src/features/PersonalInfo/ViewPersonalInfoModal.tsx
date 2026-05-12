@@ -1,4 +1,4 @@
-import { MapPin, Mail, Phone, User, Hash, Globe } from 'lucide-react';
+import { MapPin, Mail, Phone, User, Hash, ArrowLeft, Globe } from 'lucide-react';
 import Button from '../../components/Button';
 import PopUpCard from '../../components/PopUpCard';
 import { parseProfilePicture } from '../../services/decodeBase64';
@@ -11,33 +11,33 @@ const defAvatar = '/defAvatar.png';
 // ============================================
 
 const styles = {
-    overlay: 'fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center px-4 z-50 overflow-y-auto py-4',
-    container: 'min-h-screen flex items-center justify-center p-2',
+    overlay: 'fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center px-3 sm:px-4 z-50 overflow-y-auto py-4 sm:py-6',
+    container: 'min-h-screen flex items-center justify-center p-2 sm:p-4',
     
-    // Avatar y nombre - más compacto
-    avatarSection: 'flex flex-col items-center gap-2 px-6 pt-4 pb-3 border-b border-white/10 bg-black/20',
+    // Avatar y nombre
+    avatarSection: 'flex flex-col items-center gap-3 sm:gap-4 px-4 sm:px-6 pt-6 sm:pt-8 pb-4 sm:pb-6 border-b border-white/10 bg-black/20',
     avatarWrapper: 'relative',
-    avatar: 'w-16 h-16 rounded-full object-cover border-3 border-[#90DDF0]/40 shadow-lg shadow-black/40',
-    fullName: 'text-lg font-bold font-inter text-white text-center',
-    username: 'text-[#90DDF0] font-nunito text-xs font-semibold',
+    avatar: 'w-20 h-20 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-[#90DDF0]/40 shadow-lg shadow-black/40',
+    fullName: 'text-xl sm:text-2xl font-bold font-inter text-white text-center',
+    username: 'text-[#90DDF0] font-nunito text-sm sm:text-base font-semibold',
 
-    // Grid de datos
-    body: 'px-6 py-3',
-    grid: 'grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-0',
-    sectionLabel: 'text-[#90DDF0] font-bold text-[10px] uppercase tracking-widest flex items-center gap-1.5 mb-1 mt-2 first:mt-0 col-span-full',
-    divider: 'border-t border-white/10 my-1.5 col-span-full',
+    // Grid de datos (2 columnas en desktop, 1 en móvil)
+    body: 'px-4 sm:px-6 py-4 sm:py-5',
+    grid: 'grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1',
+    sectionLabel: 'text-[#90DDF0] font-bold text-[10px] sm:text-xs uppercase tracking-widest flex items-center gap-2 mb-2 sm:mb-3 mt-3 sm:mt-4 col-span-full',
+    divider: 'border-t border-white/10 my-2 sm:my-3 col-span-full',
 
-    // Filas de datos - más compactas
-    row: 'flex items-start gap-2 py-1',
-    iconBox: 'w-6 h-6 rounded-lg bg-[#2C666E]/50 flex items-center justify-center shrink-0 mt-0.5',
-    icon: 'text-[#90DDF0] w-3 h-3',
+    // Filas de datos
+    row: 'flex items-start gap-3 py-2 sm:py-2.5',
+    iconBox: 'w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#2C666E]/50 flex items-center justify-center shrink-0 mt-0.5',
+    icon: 'text-[#90DDF0] w-3.5 h-3.5 sm:w-4 sm:h-4',
     textGroup: 'flex flex-col',
-    label: 'text-white/40 text-[8px] uppercase tracking-wide font-bold',
-    value: 'text-white font-nunito text-xs mt-0 leading-snug',
-    emptyValue: 'text-white/25 italic font-nunito text-xs mt-0',
+    label: 'text-white/40 text-[10px] sm:text-[12px] uppercase tracking-wide font-bold',
+    value: 'text-white font-nunito  sm:text-sm mt-0.5 leading-snug',
+    emptyValue: 'text-white/25 italic font-nunito text-xs sm:text-sm mt-0.5',
 
-    // Footer - más compacto
-    footer: 'px-6 py-3 border-t border-white/10 bg-black/20',
+    // Footer
+    footer: 'px-4 sm:px-6 py-4 sm:py-5 border-t border-white/10 bg-black/20',
 };
 
 // ============================================
@@ -157,6 +157,7 @@ const ViewPersonalInfoModal = ({ isOpen, onClose, userInfo }: ViewPersonalInfoMo
                             onClick={onClose}
                             fullWidth
                         >
+                            <ArrowLeft size={16} className="inline mr-2" />
                             Atrás
                         </Button>
                     </div>
