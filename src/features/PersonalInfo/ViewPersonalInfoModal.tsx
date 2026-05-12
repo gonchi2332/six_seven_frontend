@@ -1,4 +1,4 @@
-import { MapPin, Mail, Phone, User, Hash, ArrowLeft, Globe } from 'lucide-react';
+import { MapPin, Mail, Phone, User, Hash,  Globe } from 'lucide-react';
 import Button from '../../components/Button';
 import PopUpCard from '../../components/PopUpCard';
 import { parseProfilePicture } from '../../services/decodeBase64';
