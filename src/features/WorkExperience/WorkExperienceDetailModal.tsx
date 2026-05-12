@@ -1,4 +1,4 @@
-import { Briefcase, Building, FileText, Calendar, X } from 'lucide-react';
+import { Briefcase, Building, FileText, Calendar} from 'lucide-react';
 import Button from '../../components/Button';
 import PopUpCard from '../../components/PopUpCard';
 import type { WorkExperience } from '../../hooks/useWorkExperiences';
@@ -88,9 +88,6 @@ const WorkExperienceDetailModal = ({ isOpen, experience, onClose }: WorkExperien
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
                 <PopUpCard title="Experiencia Laboral">
                     {/* Botón cerrar */}
-                    <button onClick={onClose} className={styles.closeButton}>
-                        <X size={20} />
-                    </button>
                     
                     <div className={styles.content}>
                         {/* Puesto y Empresa - Grid responsivo */}
