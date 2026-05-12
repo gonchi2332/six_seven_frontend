@@ -157,7 +157,6 @@ const ViewPersonalInfoModal = ({ isOpen, onClose, userInfo }: ViewPersonalInfoMo
                             onClick={onClose}
                             fullWidth
                         >
-                            <ArrowLeft size={16} className="inline mr-2" />
                             Atrás
                         </Button>
                     </div>
