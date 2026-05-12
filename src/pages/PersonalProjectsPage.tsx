@@ -307,9 +307,8 @@ const ProjectsPage = () => {
                         <PopUpCard title="Eliminar Proyecto Personal">
                             <div className="flex flex-col gap-6 p-6">
                                 <p className="text-white/90 font-nunito text-center text-base">
-                                    {`¿Estás seguro de que deseas eliminar ${selectedProject.name}?`}
+                                    ¿Estás seguro de que deseas eliminar <b className="font-bold ">{selectedProject.name}</b>?
                                 </p>
-
                                 <div className="grid grid-cols-2 gap-3 mt-2">
                                     <Button
                                         variant="secondary"
