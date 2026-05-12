@@ -3,6 +3,7 @@ import { Search } from "lucide-react";
 import { useEducation } from "../hooks/useEducation";
 import EducationCard from "../features/Education/EducationCard";
 import type { EducationEntry } from "../services/educationService";
+import Button from "../components/Button";
 
 const PAGE_SIZE = 10;
 
@@ -30,15 +31,15 @@ const styles = {
 };
 
 const EducationPage = () => {
-    const { entries, isLoading, error, successMessage} = useEducation();
-    
+    const { entries, isLoading, error, successMessage } = useEducation();
+
     // Estados de búsqueda y paginación
     const [searchInput, setSearchInput] = useState("");
     const [activeSearch, setActiveSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
 
-    const [isMenuOpen, setIsMenuOpen] = useState(false); 
-    
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
     const [selectedEntry, setSelectedEntry] = useState<EducationEntry | null>(null);
     const [formError] = useState<string | null>(null);
 
@@ -80,7 +81,7 @@ const EducationPage = () => {
                     <div className={styles.greenContainer}>
                         <div className={styles.header}>
                             <h1 className={styles.title}>Formacion Académica</h1>
-                            
+
                             <div className={styles.searchRow}>
                                 <div className={styles.searchInputWrapper}>
                                     <Search size={16} className={styles.searchIcon} />
@@ -93,10 +94,16 @@ const EducationPage = () => {
                                         className={styles.searchInput}
                                     />
                                 </div>
-                                    <div className={styles.actionRow}>
-                                    <button type="button" onClick={handleSearch} className={styles.searchBtn}>
+                                <div className={styles.actionRow}>
+                                    <Button
+                                        variant="secondary"
+                                        onClick={handleSearch}
+                                        disabled={isLoading}
+                                        fullWidth
+                                    >
                                         Buscar
-                                    </button>
+                                    </Button>
+
                                 </div>
                             </div>
                         </div>
@@ -121,9 +128,9 @@ const EducationPage = () => {
                         ) : (
                             <div className={styles.listWrapper}>
                                 {paginated.map((entry) => (
-                                    <EducationCard 
-                                        key={entry.id} 
-                                        entry={entry} 
+                                    <EducationCard
+                                        key={entry.id}
+                                        entry={entry}
                                         onView={handleCardClick} />
                                 ))}
                             </div>

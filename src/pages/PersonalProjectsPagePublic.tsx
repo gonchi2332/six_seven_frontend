@@ -4,6 +4,8 @@ import { useProjects } from "../features/PersonalProjects/hooks/useProjects";
 import ProjectCard from "../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectCard";
 import PopUpCard from "../components/PopUpCard";
 import type { ProjectEntry } from "../features/PersonalProjects/services/personalProjectsService";
+import Button from "../components/Button";
+
 const PAGE_SIZE = 10;
 
 const styles = {
@@ -100,9 +102,15 @@ const ProjectsPage = () => {
                                     />
                                 </div>
                                 <div className={styles.actionRow}>
-                                    <button type="button" onClick={handleSearch} className={styles.searchBtn}>
+                                    <Button
+                                        variant="secondary"
+                                        onClick={handleSearch}
+                                        disabled={isLoading}
+                                        fullWidth
+                                    >
                                         Buscar
-                                    </button>
+                                    </Button>
+
                                 </div>
                             </div>
                         </div>
