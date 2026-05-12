@@ -1,4 +1,4 @@
-import { Briefcase, Building, FileText, Calendar} from 'lucide-react';
+import { Briefcase, Building, FileText, Calendar } from 'lucide-react';
 import Button from '../../components/Button';
 import PopUpCard from '../../components/PopUpCard';
 import type { WorkExperience } from '../../hooks/useWorkExperiences';
@@ -14,7 +14,7 @@ const styles = {
     container: "w-full max-w-2xl min-h-screen flex items-center justify-center p-4",
     content: "px-6 py-4",
     
-    // Filas de datos - más grandes
+    // Filas de datos
     row: 'flex items-start gap-4 py-3',
     iconBox: 'w-10 h-10 rounded-xl bg-[#2C666E]/40 flex items-center justify-center shrink-0 mt-0.5',
     icon: 'text-[#90DDF0] w-5 h-5',
@@ -40,11 +40,17 @@ const formatDateLong = (dateStr: string | null): string => {
     try {
         const year = dateStr.substring(0, 4);
         const monthStr = dateStr.substring(5, 7);
+        const dayStr = dateStr.substring(8, 10);
         const month = parseInt(monthStr, 10);
+        const day = parseInt(dayStr, 10);
         
         if (isNaN(month) || month < 1 || month > 12) return dateStr;
         
         const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        
+        if (!isNaN(day) && day >= 1 && day <= 31) {
+            return `${day} de ${monthNames[month - 1]} de ${year}`;
+        }
         return `${monthNames[month - 1]} ${year}`;
     } catch {
         return dateStr;
@@ -87,7 +93,7 @@ const WorkExperienceDetailModal = ({ isOpen, experience, onClose }: WorkExperien
         <div className={styles.overlay} onClick={onClose}>
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
                 <PopUpCard title="Experiencia Laboral">
-                    {/* Botón cerrar */}
+                    <button onClick={onClose} className={styles.closeButton}>✕</button>
                     
                     <div className={styles.content}>
                         {/* Puesto y Empresa - Grid responsivo */}
@@ -96,13 +102,13 @@ const WorkExperienceDetailModal = ({ isOpen, experience, onClose }: WorkExperien
                             <InfoRow icon={Building} label="Empresa" value={experience.company_name} />
                         </div>
                         
-                        {/* Fechas */}
+                        {/* Fechas con día */}
                         <div className={styles.dates}>
                             <InfoRow icon={Calendar} label="Fecha de inicio" value={startDateFormatted} />
                             <InfoRow icon={Calendar} label="Fecha de finalización" value={endDateFormatted} />
                         </div>
                         
-                        {/* Descripción - con fondo destacado */}
+                        {/* Descripción */}
                         <div className={styles.descriptionBox}>
                             <InfoRow icon={FileText} label="Descripción" value={experience.description} isDescription />
                         </div>
