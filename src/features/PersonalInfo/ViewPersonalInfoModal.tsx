@@ -134,7 +134,7 @@ const ViewPersonalInfoModal = ({ isOpen, onClose, userInfo }: ViewPersonalInfoMo
                                 <Phone size={12} /> Contacto
                             </p>
                             <InfoRow icon={Mail} label="Correo de Contacto" value={userInfo.contact_email} />
-                            <InfoRow icon={Phone} label="Teléfono / WhatsApp" value={userInfo.phone_number} />
+                            <InfoRow icon={Phone} label="Teléfono" value={userInfo.phone_number} />
 
                             <div className={styles.divider} />
 

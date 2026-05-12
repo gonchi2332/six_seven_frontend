@@ -57,7 +57,7 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
                     <div className={styles.formWrapper}>
                         <div className="relative flex flex-col" ref={containerRef}>
                             <label className="mb-1 text-xl font-inter text-white">
-                                Nombre de habilidad:<span className={styles.required}>*</span>
+                                Seleccionar habilidad:<span className={styles.required}></span>
                             </label>
                             <input
                                 type="text"
@@ -107,7 +107,7 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
 
                         <div>
                             <p className={styles.label}>
-                                Nivel de Conocimiento:<span className={styles.required}>*</span>
+                                Nivel de conocimiento:<span className={styles.required}>*</span>
                             </p>
                             <SkillLevelSelector value={level} onChange={setLevel} />
                         </div>

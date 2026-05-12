@@ -54,7 +54,7 @@ const RegisterForm = () => {
                 </div>
                 <div onBlur={handlePaternalLastNameBlur} className={FIELD_WRAPPER}>
                     <TextField
-                        label="Primer Apellido*"
+                        label="Primer apellido*"
                         type="text"
                         value={formData.paternalLastName}
                         onChange={handlePaternalLastNameChange}

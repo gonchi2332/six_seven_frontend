@@ -136,7 +136,7 @@ const PersonalInfo = () => {
                                     <div className="flex flex-col gap-5">
                                         <InfoRow icon={User} label="Nombre Completo" value={fullName} />
                                         <InfoRow icon={Hash} label="Nombre de Usuario" value={userInfo?.username} />
-                                        <InfoRow icon={Mail} label="Correo Principal" value={userInfo?.main_registration_email} />
+                                        <InfoRow icon={Mail} label="Correo de Registro" value={userInfo?.main_registration_email} />
                                     </div>
                                 </div>
 
@@ -147,8 +147,8 @@ const PersonalInfo = () => {
                                     </p>
                                     <div className="flex flex-col gap-5">
                                         <InfoRow icon={MapPin} label="Residencia Actual" value={residence} />
-                                        <InfoRow icon={Mail} label="Correo Secundario" value={userInfo?.contact_email} />
-                                        <InfoRow icon={Phone} label="Teléfono / WhatsApp" value={userInfo?.phone_number} />
+                                        <InfoRow icon={Mail} label="Correo de Contacto" value={userInfo?.contact_email} />
+                                        <InfoRow icon={Phone} label="Teléfono" value={userInfo?.phone_number} />
                                     </div>
                                 </div>
 

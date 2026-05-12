@@ -38,7 +38,7 @@ const EditSkillPopup = ({ skill, onSubmit, onClose, serverError, isSubmitting = 
                     <div className={styles.formWrapper}>
                         <div>
                             <p className={styles.label}>
-                                Nivel de Conocimiento:<span className={styles.required}>*</span>
+                                Nivel de conocimiento:<span className={styles.required}>*</span>
                             </p>
                             <SkillLevelSelector value={level} onChange={setLevel} />
                         </div>
