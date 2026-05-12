@@ -3,6 +3,8 @@ import { Search } from 'lucide-react';
 import { useWorkExperiences } from '../../hooks/useWorkExperiences';
 import WorkExperienceItem from './WorkExperienceItem';
 import type { WorkExperience } from '../../hooks/useWorkExperiences';
+import Button from '../../components/Button';
+
 
 const PAGE_SIZE = 10;
 
@@ -79,11 +81,17 @@ const WorkExperienceList = () => {
                                         className={styles.searchInput}
                                     />
                                 </div>
-                                   <div className={styles.actionRow}>
-                                    <button type="button" onClick={handleSearch} className={styles.searchBtn}>
+                                <div className={styles.actionRow}>
+                                    <Button
+                                        variant="secondary"
+                                        onClick={handleSearch}
+                                        disabled={isLoading}
+                                        fullWidth
+                                    >
                                         Buscar
-                                    </button>
-                                    </div>
+                                    </Button>
+
+                                </div>
                             </div>
                         </div>
 
