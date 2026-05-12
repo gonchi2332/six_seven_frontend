@@ -34,7 +34,7 @@ const ResultPopup = ({ type, onClose }: Props) => {
                     {subtitle && <p className={SUBTITLE}>{subtitle}</p>}
                     <div className={BUTTONS_WRAPPER}>
                         <Button variant="primary" onClick={onClose} fullWidth>
-                            Aceptar
+                            Registrar
                         </Button>
                     </div>
                 </PopUpCard>

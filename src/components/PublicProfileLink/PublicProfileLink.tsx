@@ -30,7 +30,7 @@ const ShareProfileModal = ({ username, onClose }: ShareProfileModalProps) => {
   };
 
   return (
-    <PopUpCard title="Generar enlace a perfil publico">
+    <PopUpCard title="Generar Enlace a Portafolio Público">
       <div className={STYLES.CONTAINER}>
         <p className={STYLES.DESCRIPTION}>
           Cualquier persona con este enlace podrá ver tu portafolio profesional, habilidades y experiencia.

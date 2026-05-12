@@ -32,7 +32,7 @@ const styles = {
 const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills = [] }: AddSkillPopupProps) => {
     const {
         search, suggestions, showDropdown, setShowDropdown, isOther, otherName,
-        level, setLevel, inlineError, hasFieldError, loading, containerRef,
+        level, setLevel, topError, inlineError, hasFieldError, loading, containerRef,
         isDisabled, handleSearchChange, handleSelectSuggestion, handleToggleOther,
         handleOtherNameChange, handleConfirm,
     } = useAddSkill(onSubmit, onClose, catalogSkills);
@@ -49,10 +49,15 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
         <div className={styles.overlay}>
             <div className="w-full max-w-xs sm:max-w-sm">
                 <PopUpCard title="Registrar Habilidad Técnica">
+                    {topError && (
+                        <div className="mx-6 sm:mx-8 mb-2 p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center">
+                            {topError}
+                        </div>
+                    )}
                     <div className={styles.formWrapper}>
                         <div className="relative flex flex-col" ref={containerRef}>
                             <label className="mb-1 text-xl font-inter text-white">
-                                Nombre de habilidad:<span className={styles.required}>*</span>
+                                Seleccionar habilidad:<span className={styles.required}></span>
                             </label>
                             <input
                                 type="text"
@@ -102,7 +107,7 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
 
                         <div>
                             <p className={styles.label}>
-                                Nivel de Conocimiento:<span className={styles.required}>*</span>
+                                Nivel de conocimiento:<span className={styles.required}>*</span>
                             </p>
                             <SkillLevelSelector value={level} onChange={setLevel} />
                         </div>

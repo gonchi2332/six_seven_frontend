@@ -85,7 +85,7 @@ const SoftSkillModal = ({
                                 disabled={isDisabled}
                                 fullWidth
                             >
-                                {isSubmitting ? 'Guardando...' : 'Aceptar'}
+                                {isSubmitting ? 'Guardando...' : isEditing? 'Modificar' : 'Registrar'}
                             </Button>
                         </div>
                     </form>

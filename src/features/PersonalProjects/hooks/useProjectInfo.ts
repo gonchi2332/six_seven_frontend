@@ -68,7 +68,7 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
             if (value.length > 0 && value.length > 50) {
                 setErrors((prev) => ({ ...prev, [field]: "El nombre del proyecto supera el límite de 50 caracteres" }));
             } else if (value.length === 0) {
-                setErrors((prev) => ({ ...prev, [field]: "El nombre del proyecto es obligatorio" }));
+                setErrors((prev) => ({ ...prev, [field]: "El titulo del proyecto es obligatorio" }));
             } else {
                 setErrors((prev) => ({ ...prev, [field]: undefined }));
             }
@@ -87,9 +87,9 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
         }
 
         if (field === 'role' && typeof value === 'string') {
-            if (value.length > 50) return;
+            if (value.length > 30) return;
             newValue = value;
-            if (value.length > 0 && value.length > 50) {
+            if (value.length > 0 && value.length > 30) {
                 setErrors((prev) => ({ ...prev, [field]: "El rol supera el límite de 50 caracteres" }));
             } else if (value.length === 0) {
                 setErrors((prev) => ({ ...prev, [field]: "El rol es obligatorio" }));
@@ -101,7 +101,7 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
         if (field === 'topic' && typeof value === 'string') {
             newValue = value;
             if (value.length === 0) {
-                setErrors((prev) => ({ ...prev, [field]: "El área es obligatoria" }));
+                setErrors((prev) => ({ ...prev, [field]: "La temática es obligatoria" }));
             } else {
                 setErrors((prev) => ({ ...prev, [field]: undefined }));
             }
@@ -155,9 +155,9 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
         const e: FormErrors = {};
 
         if (!formData.name.trim())
-            e.name = "El nombre del proyecto es obligatorio";
+            e.name = "El titulo del proyecto es obligatorio";
         else if (formData.name.length > 50)
-            e.name = "El nombre del proyecto supera el límite de 50 caracteres";
+            e.name = "El titulo del proyecto supera el límite de 50 caracteres";
 
         if (!formData.description.trim())
             e.description = "La descripción es obligatoria";
@@ -165,7 +165,7 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
             e.description = "La descripción supera el límite de 200 caracteres";
 
         if (!formData.topic.trim())
-            e.topic = "El área es obligatoria";
+            e.topic = "La temática es obligatoria";
 
         if (!formData.role.trim())
             e.role = "El rol es obligatorio";

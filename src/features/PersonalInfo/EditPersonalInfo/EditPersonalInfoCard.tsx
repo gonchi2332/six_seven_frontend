@@ -94,7 +94,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
               {/* Primer Apellido - SIEMPRE visible */}
               {shouldShowField('firstSurname') && (
                 <TextField
-                  label="Primer Apellido*:"
+                  label="Primer apellido*:"
                   value={formData.firstSurname}
                   onChange={(e) => handleChange("firstSurname", e.target.value)}
                   error={errors.firstSurname}
@@ -104,7 +104,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
               {/* Segundo Apellido - Solo si existía originalmente */}
               {shouldShowField('secondSurname') && (
                   <TextField
-                      label="Segundo Apellido:"
+                      label="Segundo apellido*:"
                       value={formData.secondSurname ?? ''}
                       onChange={(e) => handleChange("secondSurname", e.target.value)}
                       error={errors.secondSurname}
@@ -115,7 +115,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
               {/* Ciudad - Solo si existía originalmente */}
               {shouldShowField('city') && (
                   <TextField
-                      label="Ciudad:"
+                      label="Ciudad*:"
                       value={formData.city ?? ''}
                       onChange={(e) => handleChange("city", e.target.value)}
                       error={errors.city}
@@ -126,7 +126,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
               {/* Correo - Solo si existía originalmente */}
               {shouldShowField('email') && (
                   <TextField
-                      label="Correo de contacto:"
+                      label="Correo de contacto*:"
                       value={formData.email ?? ''}
                       onChange={(e) => handleChange("email", e.target.value)}
                       placeholder="Ej: juan@ejemplo.com"
@@ -139,7 +139,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
               {/* Teléfono - Solo si existía originalmente */}
               {shouldShowField('phone') && (
                   <TextField
-                      label="Teléfono:"
+                      label="Teléfono*:"
                       value={formData.phone ?? ''}
                       onChange={(e) => handleChange("phone", e.target.value)}
                       placeholder="Ej: +591 77123456"
@@ -152,7 +152,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
               {/* País de residencia - Solo si existe */}
               {formData.country && formData.country.trim() !== '' && (
                 <div className="flex flex-col justify-start">
-                  <label className={STYLES.INPUT_LABEL}>País de residencia:</label>
+                  <label className={STYLES.INPUT_LABEL}>País de residencia*:</label>
                   <select
                     value={formData.country}
                     onChange={(e) => handleChange("country", e.target.value)}
@@ -175,7 +175,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
 
               {/* Imagen de perfil - Siempre visible */}
               <div className={STYLES.IMAGE_WRAPPER}>
-                <span className={STYLES.INPUT_LABEL}>Imagen de perfil:</span>
+                <span className={STYLES.INPUT_LABEL}>Imagen de perfil*:</span>
                 <ImageUpload
                   onImageSelect={(file) => handleChange("profileImage", file)}
                   initialImageUrl={formData.profileImageUrl ?? null}

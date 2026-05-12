@@ -70,7 +70,7 @@ const AddSoftSkillPopup = ({
                     <div className={styles.formWrapper}>
                         <div className="relative flex flex-col" ref={containerRef}>
                             <label className="mb-1 text-xl font-inter text-white">
-                                Nombre de la habilidad:<span className={styles.required}>*</span>
+                                Seleccionar habilidad:<span className={styles.required}>*</span>
                             </label>
                             <input
                                 type="text"

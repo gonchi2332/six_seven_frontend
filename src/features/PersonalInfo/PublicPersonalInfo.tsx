@@ -1,15 +1,7 @@
 import { useState } from 'react';
 import { useNavbarInfo } from '../../hooks/useNavbarInfo';
-import { usePersonalInfoSubmit, type DeletableField } from '../../hooks/usePersonalInfoSubmit';
-import Button from '../../components/Button';
 import { MapPin, Mail, Phone, User, Hash } from 'lucide-react';
-import EditPersonalInfoCard from './EditPersonalInfo/EditPersonalInfoCard';
-import AddInfoModal from './AddPersonalInfo/AddInfoModal';
-import ViewPersonalInfoModal from './ViewPersonalInfoModal';
-
-// ============================================
-// CONSTANTES DE ESTILOS ESTANDARIZADOS
-// ============================================
+import type { DeletableField } from '../../hooks/usePersonalInfoSubmit';
 
 const styles = {
     wrapper: "flex-1 flex flex-col overflow-hidden",
@@ -39,10 +31,6 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
-// ============================================
-// COMPONENTES AUXILIARES
-// ============================================
-
 const InfoRow = ({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string | null | undefined }) => (
     <div className={styles.field}>
         <Icon size={18} className={styles.icon} />
@@ -57,20 +45,10 @@ const InfoRow = ({ icon: Icon, label, value }: { icon: React.ElementType; label:
     </div>
 );
 
-// ============================================
-// COMPONENTE PRINCIPAL
-// ============================================
 
 const PersonalInfo = () => {
-    const [refreshKey, setRefreshKey] = useState(0);
+    const [refreshKey] = useState(0);
     const { userInfo, isLoading } = useNavbarInfo(refreshKey);
-    const { addField, isSubmitting } = usePersonalInfoSubmit();
-
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-
-    const refreshData = () => setRefreshKey(prev => prev + 1);
 
     const emptyFields: DeletableField[] = [];
     if (!userInfo?.second_surname) emptyFields.push('secondSurname');
@@ -78,12 +56,6 @@ const PersonalInfo = () => {
     if (!userInfo?.contact_email) emptyFields.push('email');
     if (!userInfo?.phone_number) emptyFields.push('phone');
     if (!userInfo?.residence_country_name) emptyFields.push('country');
-
-    const handleAdd = async (field: DeletableField, value: string) => {
-        await addField(field, value, userInfo);
-        refreshData();
-    };
-
     const fullName = [userInfo?.names, userInfo?.first_surname, userInfo?.second_surname]
         .filter(Boolean)
         .join(" ");
@@ -101,27 +73,6 @@ const PersonalInfo = () => {
                         {/* Header Estandarizado */}
                         <div className={styles.header}>
                             <h1 className={styles.title}>Información Personal</h1>
-                            <div className={styles.actionRow}>
-                                <Button
-                                    variant="secondary"
-                                    onClick={() => setIsViewModalOpen(true)}
-                                >
-                                    Ver
-                                </Button>
-                                <Button
-                                    variant="quaternary"
-                                    onClick={() => setIsEditModalOpen(true)}
-                                >
-                                    Modificar
-                                </Button>
-                                <Button
-                                    variant="quaternary"
-                                    onClick={() => setIsAddModalOpen(true)}
-                                    disabled={emptyFields.length === 0 || isSubmitting}
-                                >
-                                    Ingresar Información
-                                </Button>
-                            </div>
                         </div>
                         {isLoading ? (
                             <div className={styles.loading}>Cargando información personal...</div>
@@ -136,7 +87,7 @@ const PersonalInfo = () => {
                                     <div className="flex flex-col gap-5">
                                         <InfoRow icon={User} label="Nombre Completo" value={fullName} />
                                         <InfoRow icon={Hash} label="Nombre de Usuario" value={userInfo?.username} />
-                                        <InfoRow icon={Mail} label="Correo de Registro" value={userInfo?.main_registration_email} />
+                                        <InfoRow icon={Mail} label="Correo Principal" value={userInfo?.main_registration_email} />
                                     </div>
                                 </div>
 
@@ -147,8 +98,8 @@ const PersonalInfo = () => {
                                     </p>
                                     <div className="flex flex-col gap-5">
                                         <InfoRow icon={MapPin} label="Residencia Actual" value={residence} />
-                                        <InfoRow icon={Mail} label="Correo de Contacto" value={userInfo?.contact_email} />
-                                        <InfoRow icon={Phone} label="Teléfono" value={userInfo?.phone_number} />
+                                        <InfoRow icon={Mail} label="Correo Secundario" value={userInfo?.contact_email} />
+                                        <InfoRow icon={Phone} label="Teléfono / WhatsApp" value={userInfo?.phone_number} />
                                     </div>
                                 </div>
 
@@ -157,36 +108,6 @@ const PersonalInfo = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Modal de Edición (Overlay estandarizado) */}
-            {isEditModalOpen && (
-                <div className={styles.overlay} onClick={() => setIsEditModalOpen(false)}>
-                    <div
-                        className="w-full max-w-4xl max-h-[90vh] overflow-y-auto"
-                        onClick={e => e.stopPropagation()}
-                    >
-                        <EditPersonalInfoCard onClose={() => {
-                            setIsEditModalOpen(false);
-                            refreshData();
-                        }} />
-                    </div>
-                </div>
-            )}
-
-            {/* Modal Ver Información */}
-            <ViewPersonalInfoModal
-                isOpen={isViewModalOpen}
-                onClose={() => setIsViewModalOpen(false)}
-                userInfo={userInfo}
-            />
-
-            {/* Modal de Agregar */}
-            <AddInfoModal
-                isOpen={isAddModalOpen}
-                onClose={() => setIsAddModalOpen(false)}
-                onAdd={handleAdd}
-                emptyFields={emptyFields}
-            />
         </div>
     );
 };

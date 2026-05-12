@@ -74,10 +74,10 @@ export const validateStartDate = (value: string): string => {
 
 export const validateEndDate = (value: string | null | undefined, isCurrent: boolean): string => {
     if (isCurrent) return '';
-    if (!value) return 'La fecha de fin es obligatoria';
+    if (!value) return 'La fecha de finalizacion es obligatoria';
     if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return 'Formato: YYYY-MM-DD';
     const today = getTodayDateString();
-    if (value > today) return 'La fecha de fin no puede ser futura';
+    if (value > today) return 'La fecha de finalizacion no puede ser futura';
     return '';
 };
 

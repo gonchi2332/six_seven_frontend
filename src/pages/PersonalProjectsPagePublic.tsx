@@ -1,14 +1,9 @@
-// ProjectsPage.tsx (versión corregida)
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { useProjects } from "../features/PersonalProjects/hooks/useProjects";
 import ProjectCard from "../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectCard";
-import ViewProjectPopup from "../features/PersonalProjects/components/PersonalProjectsModal/ViewProjectPopup";
-import PersonalProjectsModal from "../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectsModal";
 import PopUpCard from "../components/PopUpCard";
-import Button from "../components/Button";
-import type { ProjectEntry, CreateProjectPayload, UpdateProjectPayload } from "../features/PersonalProjects/services/personalProjectsService";
-
+import type { ProjectEntry } from "../features/PersonalProjects/services/personalProjectsService";
 const PAGE_SIZE = 10;
 
 const styles = {
@@ -36,16 +31,13 @@ const styles = {
 };
 
 const ProjectsPage = () => {
-    const { projects, isLoading, error, successMessage, addProject, editProject, deleteProject } = useProjects();
+    const { projects, isLoading, error, successMessage } = useProjects();
     const [searchInput, setSearchInput] = useState("");
     const [activeSearch, setActiveSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [showAdd, setShowAdd] = useState(false);
     const [selectedProject, setSelectedProject] = useState<ProjectEntry | null>(null);
     const [showOptionsModal, setShowOptionsModal] = useState(false);
-    const [showViewModal, setShowViewModal] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [showDeleteConfirm] = useState(false);
     const [localError, setLocalError] = useState<string | null>(null);
     const [localSuccess, setLocalSuccess] = useState<string | null>(null);
 
@@ -74,81 +66,9 @@ const ProjectsPage = () => {
         if (e.key === "Enter") handleSearch();
     };
 
-    const handleAddProject = async (data: CreateProjectPayload) => {
-        await addProject(data);
-        setShowAdd(false);
-    };
-
-    const handleEditProject = async (data: UpdateProjectPayload, id: string) => {
-        await editProject(id, data);
-        closeAllModals(); // Cierra todo después de editar
-    };
-
-    const handleDeleteClick = () => {
-        setShowOptionsModal(false);
-        setShowDeleteConfirm(true);
-    };
-
-    const handleConfirmDelete = async () => {
-        if (selectedProject) {
-            await deleteProject(selectedProject.id);
-            closeAllModals(); // Cierra todo después de eliminar
-        }
-    };
-
-    const handleCancelDelete = () => {
-        setShowDeleteConfirm(false);
-        setShowOptionsModal(true); // Solo volver al modal de opciones si cancela la eliminación
-    };
-
-    const handleViewBack = () => {
-        setShowViewModal(false);
-        setShowOptionsModal(true); // Volver al modal de opciones cuando da "Atrás" en vista
-    };
-
-    const closeAllModals = () => {
-        setShowOptionsModal(false);
-        setShowViewModal(false);
-        setShowEditModal(false);
-        setShowAdd(false);
-        setShowDeleteConfirm(false);
-        setSelectedProject(null);
-    };
-
     const handleCardClick = (project: ProjectEntry) => {
         setSelectedProject(project);
         setShowOptionsModal(true);
-    };
-
-    const handleView = () => {
-        setShowOptionsModal(false);
-        setShowViewModal(true);
-    };
-
-    const handleEdit = () => {
-        setShowOptionsModal(false);
-        setShowEditModal(true);
-    };
-
-    const handleCancel = () => {
-        closeAllModals(); // Cancelar cierra todo completamente
-    };
-
-    const handleEditModalClose = () => {
-        setShowEditModal(false);
-        setShowOptionsModal(true); // Volver a opciones si cierra sin guardar
-    };
-
-    const transformProjectToPayload = (project: ProjectEntry): Partial<CreateProjectPayload> => {
-        return {
-            name: project.name,
-            description: project.description,
-            topic: project.topic,
-            role: project.role,
-            status: project.status,
-            links: project.links,
-            image: project.imageUrl,
-        };
     };
 
     const filtered = projects.filter((p) =>
@@ -182,9 +102,6 @@ const ProjectsPage = () => {
                                 <div className={styles.actionRow}>
                                     <button type="button" onClick={handleSearch} className={styles.searchBtn}>
                                         Buscar
-                                    </button>
-                                    <button type="button" onClick={() => setShowAdd(true)} className={styles.addBtn}>
-                                        Registrar
                                     </button>
                                 </div>
                             </div>
@@ -260,43 +177,6 @@ const ProjectsPage = () => {
             {/* Modal de opciones */}
             {showOptionsModal && selectedProject && (
                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-                    <div className="w-full max-w-2xl">
-                        <PopUpCard title={selectedProject.name}>
-                            <div className="flex flex-col gap-6 p-6">
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                    <Button
-                                        variant="secondary"
-                                        onClick={handleCancel}
-                                        fullWidth
-                                    >
-                                        Cancelar
-                                    </Button>
-                                    <Button
-                                        variant="secondary"
-                                        onClick={handleDeleteClick}
-                                        disabled={isLoading}
-                                        fullWidth
-                                    >
-                                        Eliminar
-                                    </Button>
-                                    <Button
-                                        variant="primary"
-                                        onClick={handleView}
-                                        fullWidth
-                                    >
-                                        Ver
-                                    </Button>
-                                    <Button
-                                        variant="primary"
-                                        onClick={handleEdit}
-                                        fullWidth
-                                    >
-                                        Modificar
-                                    </Button>
-                                </div>
-                            </div>
-                        </PopUpCard>
-                    </div>
                 </div>
             )}
 
@@ -304,63 +184,15 @@ const ProjectsPage = () => {
             {showDeleteConfirm && selectedProject && (
                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
                     <div className="w-full max-w-md">
-                        <PopUpCard title="Eliminar Proyecto Personal">
+                        <PopUpCard title="Eliminar Proyecto">
                             <div className="flex flex-col gap-6 p-6">
                                 <p className="text-white/90 font-nunito text-center text-base">
-                                    {`¿Estás seguro de que deseas eliminar ${selectedProject.name}?`}
+                                    ¿Estás seguro de que deseas eliminar este proyecto?
                                 </p>
-
-                                <div className="grid grid-cols-2 gap-3 mt-2">
-                                    <Button
-                                        variant="secondary"
-                                        onClick={handleCancelDelete}
-                                        disabled={isLoading}
-                                        fullWidth
-                                    >
-                                        Cancelar
-                                    </Button>
-                                    <Button
-                                        variant="primary"
-                                        onClick={handleConfirmDelete}
-                                        disabled={isLoading}
-                                        fullWidth
-                                    >
-                                        {isLoading ? "Eliminando..." : "Eliminar"}
-                                    </Button>
-                                </div>
                             </div>
                         </PopUpCard>
                     </div>
                 </div>
-            )}
-
-            {showAdd && (
-                <PersonalProjectsModal
-                    mode="create"
-                    onClose={() => setShowAdd(false)}
-                    onSubmit={(data, _id) => handleAddProject(data as CreateProjectPayload)}
-                    isSubmitting={isLoading}
-                    error={error}
-                />
-            )}
-
-            {showViewModal && selectedProject && (
-                <ViewProjectPopup
-                    project={selectedProject}
-                    onBack={handleViewBack}
-                />
-            )}
-
-            {showEditModal && selectedProject && (
-                <PersonalProjectsModal
-                    mode="edit"
-                    projectId={selectedProject.id}
-                    initialData={transformProjectToPayload(selectedProject)}
-                    onClose={handleEditModalClose}
-                    onSubmit={(data, id) => handleEditProject(data as UpdateProjectPayload, id!)}
-                    isSubmitting={isLoading}
-                    error={error}
-                />
             )}
         </div>
     );

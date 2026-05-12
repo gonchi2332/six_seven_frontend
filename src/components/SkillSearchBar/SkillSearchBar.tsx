@@ -8,6 +8,7 @@ interface SkillSearchBarProps {
     onAdd: () => void;
     placeholder?: string;
     addLabel?: string;
+    isPublic?: boolean;
 }
 
 const styles = {
@@ -22,6 +23,7 @@ const styles = {
 const SkillSearchBar = ({
     value, onChange, onSearch, onKeyDown, onAdd,
     placeholder = "Buscar...", addLabel = "Agregar",
+    isPublic = false
 }: SkillSearchBarProps) => {
     return (
         <div className={styles.searchRow}>
@@ -39,9 +41,11 @@ const SkillSearchBar = ({
             <button type="button" onClick={onSearch} className={styles.searchBtn}>
                 Buscar
             </button>
-            <button type="button" onClick={onAdd} className={styles.addBtn}>
-                {addLabel}
-            </button>
+            {!isPublic && (
+                <button type="button" onClick={onAdd} className={styles.addBtn}>
+                    {addLabel}
+                </button>
+            )}
         </div>
     );
 };
