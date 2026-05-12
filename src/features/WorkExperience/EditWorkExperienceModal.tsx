@@ -32,6 +32,14 @@ const formatDateForInput = (dateStr: string | null | undefined): string => {
 // VALIDACIONES EN TIEMPO REAL
 // ============================================
 
+const getTodayDateString = (): string => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
 const validatePosition = (value: string): string => {
     if (!value.trim()) return 'El puesto es obligatorio';
     return '';
@@ -44,11 +52,18 @@ const validateDescription = (value: string): string => {
 
 const validateStartDate = (value: string): string => {
     if (!value) return 'La fecha de inicio es obligatoria';
+    const today = getTodayDateString();
+    if (value > today) return 'La fecha de inicio no puede ser futura';
     return '';
 };
 
+// 3. Actualiza validateEndDate
 const validateEndDate = (value: string, isCurrent: boolean): string => {
     if (!isCurrent && !value) return 'La fecha de finalización es obligatoria';
+    if (value) {
+        const today = getTodayDateString();
+        if (value > today) return 'La fecha de finalización no puede ser futura';
+    }
     return '';
 };
 
