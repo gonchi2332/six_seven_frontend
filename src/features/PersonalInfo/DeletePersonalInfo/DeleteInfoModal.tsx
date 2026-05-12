@@ -78,7 +78,7 @@ const DeleteInfoModal = ({ isOpen, onClose, onDelete, fieldsWithValues }: Delete
                     <div className={styles.modal}>
                         <h2 className={styles.title}>Eliminar Información Personal</h2>
                         <p className="text-main font-nunito mb-6">
-                            ¿Estás seguro que quieres eliminar {selectedOption.label}?
+                            ¿Estás seguro que deseas eliminar {selectedOption.label}?
                         </p>
                         <div className={styles.buttonContainer}>
                             <Button variant="secondary" onClick={() => setShowConfirm(false)} fullWidth>

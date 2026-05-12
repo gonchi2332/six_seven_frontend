@@ -19,7 +19,7 @@ const CONTENT: Record<SoftSkillResultType, { title: string; message: string }> =
 };
 
 const styles = {
-    overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 z-50",
+    overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 py-4 z-50",
     message: "text-[15px] font-nunito text-white text-center px-6 sm:px-8 pb-4",
     buttonsWrapper: "flex gap-4 justify-center mt-2 px-6 sm:px-8 pb-6",
 };
@@ -28,7 +28,7 @@ const SoftSkillResultPopup = ({ type, onClose }: SoftSkillResultPopupProps) => {
     const { title, message } = CONTENT[type];
     return (
         <div className={styles.overlay}>
-            <div className="w-full max-w-xs sm:max-w-sm">
+            <div className="w-full max-w-xs sm:max-w-sm max-h-[90vh] overflow-y-auto">
                 <PopUpCard title={title}>
                     <p className={styles.message}>{message}</p>
                     <div className={styles.buttonsWrapper}>

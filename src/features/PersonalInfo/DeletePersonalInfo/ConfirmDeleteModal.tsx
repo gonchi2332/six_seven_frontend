@@ -26,7 +26,7 @@ const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm, fieldLabel, isDeleting
                 <div className={styles.modal}>
                     <h2 className={styles.title}>Eliminar Información Personal</h2>
                     <p className={styles.message}>
-                        ¿Estás seguro que quieres eliminar {fieldLabel}?
+                        ¿Estás seguro que deseas eliminar {fieldLabel}?
                     </p>
                     <div className={styles.buttonContainer}>
                         <Button variant="secondary" onClick={onClose} fullWidth>
