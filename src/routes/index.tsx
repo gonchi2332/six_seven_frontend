@@ -11,9 +11,16 @@ import SoftSkillsPage from "../pages/SoftSkillsPage";
 import EducationPage from "../pages/EducationPage";
 
 import PersonalProjectsPage from "../pages/PersonalProjectsPage";
+import PersonalProjectsPagePublic from "../pages/PersonalProjectsPagePublic";
 import Experience from "../pages/WorkExperiencePage";
 
 import MainLayout from "../pages/MainLayout";
+import PersonalInfoPublic from "../pages/PersonalInfoPublic";
+import SoftSkillsPagePublic from "../pages/SoftSkillsPagePublic";
+import HardSkillsPagePublic from "../pages/HardSkillsPagePublic";
+import EducationPagePublic from "../pages/EducationPagePublic";
+import { WorkExperienceList } from "../features/WorkExperience";
+import WorkExperiencePagePublic from "../pages/WorkExperiencePagePublic";
 
 const Router = () => {
 
@@ -23,7 +30,6 @@ const Router = () => {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
-                <Route path="/ver/:username" element={<PublicDashboard />} />
                 <Route path="/verification" element={<VerificationPage />} />
                 <Route path="/changePassword" element={<PasswordResetPage />} />
                 <Route element={<MainLayout />}>
@@ -33,6 +39,13 @@ const Router = () => {
                     <Route path="/proyectos" element={<PersonalProjectsPage />} />
                     <Route path="/educacion" element={<EducationPage />} />
                     <Route path="/experiencia-laboral" element={<Experience />} />
+
+                    <Route path="ver/:username" element={<PersonalInfoPublic />} />
+                    <Route path="ver/:username/habilidades-tecnicas" element={<HardSkillsPagePublic />} />
+                    <Route path="ver/:username/habilidades-blandas" element={<SoftSkillsPagePublic />} />
+                    <Route path="ver/:username/proyectos" element={<PersonalProjectsPagePublic />} />
+                    <Route path="ver/:username/educacion" element={<EducationPagePublic />} />
+                    <Route path="ver/:username/experiencia-laboral" element={<WorkExperiencePagePublic />} />
                 </Route>
             </Routes>
         </BrowserRouter>
