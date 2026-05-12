@@ -7,6 +7,7 @@ import ViewEducationPopup from "../features/Education/ViewEducationPopup";
 import EducationPopup from "../features/Education/EducationPopup";
 import ConfirmDeleteModal from "../features/Education/DeleteEducationPopup";
 import type { EducationEntry } from "../services/educationService";
+import Button from "../components/Button";
 
 const PAGE_SIZE = 10;
 
@@ -35,7 +36,7 @@ const styles = {
 
 const EducationPage = () => {
     const { entries, academicDegrees, isLoading, error, successMessage, addEntry, editEntry, deleteEntry } = useEducation();
-    
+
     // Estados de búsqueda y paginación
     const [searchInput, setSearchInput] = useState("");
     const [activeSearch, setActiveSearch] = useState("");
@@ -44,10 +45,10 @@ const EducationPage = () => {
     // Estados de Modales
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(false); 
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
-    const [isViewOpen, setIsViewOpen] = useState(false); 
-    
+    const [isViewOpen, setIsViewOpen] = useState(false);
+
     const [selectedEntry, setSelectedEntry] = useState<EducationEntry | null>(null);
     const [formError, setFormError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -150,7 +151,7 @@ const EducationPage = () => {
                     <div className={styles.greenContainer}>
                         <div className={styles.header}>
                             <h1 className={styles.title}>Formacion Académica</h1>
-                            
+
                             <div className={styles.searchRow}>
                                 <div className={styles.searchInputWrapper}>
                                     <Search size={16} className={styles.searchIcon} />
@@ -163,13 +164,25 @@ const EducationPage = () => {
                                         className={styles.searchInput}
                                     />
                                 </div>
+
+
                                 <div className={styles.actionRow}>
-                                    <button type="button" onClick={handleSearch} className={styles.searchBtn}>
+                                    <Button
+                                        variant="secondary"
+                                        onClick={handleSearch}
+                                        disabled={isLoading}
+                                        fullWidth
+                                    >
                                         Buscar
-                                    </button>
-                                    <button type="button" onClick={() => { setFormError(null); setIsAddOpen(true); }} className={styles.addBtn}>
+                                    </Button>
+                                    <Button
+                                        variant="quaternary"
+                                        onClick={() => { setFormError(null); setIsAddOpen(true); }}
+                                        disabled={isLoading}
+                                        fullWidth
+                                    >
                                         Registrar
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
                         </div>
@@ -194,9 +207,9 @@ const EducationPage = () => {
                         ) : (
                             <div className={styles.listWrapper}>
                                 {paginated.map((entry) => (
-                                    <EducationCard 
-                                        key={entry.id} 
-                                        entry={entry} 
+                                    <EducationCard
+                                        key={entry.id}
+                                        entry={entry}
                                         onView={handleCardClick} />
                                 ))}
                             </div>
@@ -235,7 +248,7 @@ const EducationPage = () => {
                     entry={selectedEntry}
                     onClose={() => {
                         setIsViewOpen(false);
-                        setIsMenuOpen(true); 
+                        setIsMenuOpen(true);
                     }}
                 />
             )}

@@ -8,6 +8,8 @@ import EditWorkExperienceModal from './EditWorkExperienceModal';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
 import type { WorkExperience } from '../../hooks/useWorkExperiences';
 import WorkExperienceDetailModal from './WorkExperienceDetailModal';
+import Button from '../../components/Button';
+
 
 const PAGE_SIZE = 10;
 
@@ -131,12 +133,22 @@ const WorkExperienceList = () => {
                                     />
                                 </div>
                                 <div className={styles.actionRow}>
-                                    <button type="button" onClick={handleSearch} className={styles.searchBtn}>
+                                    <Button
+                                        variant="secondary"
+                                        onClick={handleSearch}
+                                        disabled={isLoading}
+                                        fullWidth
+                                    >
                                         Buscar
-                                    </button>
-                                    <button type="button" onClick={handleAdd} className={styles.addBtn}>
+                                    </Button>
+                                    <Button
+                                        variant="quaternary"
+                                        onClick={handleAdd}
+                                        disabled={isLoading}
+                                        fullWidth
+                                    >
                                         Registrar
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
                         </div>

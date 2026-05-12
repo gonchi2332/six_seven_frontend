@@ -9,6 +9,7 @@ import PopUpCard from "../components/PopUpCard";
 import Button from "../components/Button";
 import type { ProjectEntry, CreateProjectPayload, UpdateProjectPayload } from "../features/PersonalProjects/services/personalProjectsService";
 
+
 const PAGE_SIZE = 10;
 
 const styles = {
@@ -180,12 +181,23 @@ const ProjectsPage = () => {
                                     />
                                 </div>
                                 <div className={styles.actionRow}>
-                                    <button type="button" onClick={handleSearch} className={styles.searchBtn}>
+
+                                    <Button
+                                        variant="secondary"
+                                        onClick={handleSearch}
+                                        disabled={isLoading}
+                                        fullWidth
+                                    >
                                         Buscar
-                                    </button>
-                                    <button type="button" onClick={() => setShowAdd(true)} className={styles.addBtn}>
+                                    </Button>
+                                    <Button
+                                        variant="quaternary"
+                                        onClick={() => setShowAdd(true)}
+                                        disabled={isLoading}
+                                        fullWidth
+                                    >
                                         Registrar
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
                         </div>

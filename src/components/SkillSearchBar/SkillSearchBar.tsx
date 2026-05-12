@@ -1,5 +1,6 @@
 import { Search } from "lucide-react";
 
+import Button from "../Button";
 interface SkillSearchBarProps {
     value: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -36,12 +37,21 @@ const SkillSearchBar = ({
                     className={styles.searchInput}
                 />
             </div>
-            <button type="button" onClick={onSearch} className={styles.searchBtn}>
+            <Button
+                variant="secondary"
+                onClick={onSearch}
+                fullWidth
+            >
                 Buscar
-            </button>
-            <button type="button" onClick={onAdd} className={styles.addBtn}>
-                {addLabel}
-            </button>
+            </Button>
+            <Button
+                variant="quaternary"
+                onClick={onAdd}
+                fullWidth
+            >
+                Registrar
+            </Button>
+
         </div>
     );
 };
