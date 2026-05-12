@@ -1,3 +1,4 @@
+import { Briefcase, Building, FileText, Calendar, X } from 'lucide-react';
 import Button from '../../components/Button';
 import PopUpCard from '../../components/PopUpCard';
 import type { WorkExperience } from '../../hooks/useWorkExperiences';
@@ -9,17 +10,28 @@ interface WorkExperienceDetailModalProps {
 }
 
 const styles = {
-    overlay: "fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto",
-    container: "min-h-screen flex items-center justify-center p-4",
+    overlay: "fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 overflow-y-auto",
+    container: "w-full max-w-2xl min-h-screen flex items-center justify-center p-4",
     content: "px-6 py-4",
-    field: "mb-5",
-    label: "text-accent text-xs uppercase tracking-wide font-bold mb-1",
-    value: "text-surface font-nunito text-base",
-    descriptionValue: "text-surface font-nunito text-base leading-relaxed whitespace-pre-wrap",
-    dates: "flex gap-6 mb-5",
-    dateField: "flex-1",
+    
+    // Filas de datos - más grandes
+    row: 'flex items-start gap-4 py-3',
+    iconBox: 'w-10 h-10 rounded-xl bg-[#2C666E]/40 flex items-center justify-center shrink-0 mt-0.5',
+    icon: 'text-[#90DDF0] w-5 h-5',
+    textGroup: 'flex flex-col flex-1',
+    label: 'text-[#90DDF0] text-xs uppercase tracking-wide font-bold mb-1',
+    value: 'text-white font-nunito text-base sm:text-lg font-medium leading-snug',
+    descriptionValue: 'text-white font-nunito text-base sm:text-lg leading-relaxed whitespace-pre-wrap',
+    emptyValue: 'text-white/30 italic font-nunito text-base sm:text-lg',
+    
+    // Grid para fechas
+    dates: "grid grid-cols-1 sm:grid-cols-2 gap-4 mb-2",
+    
+    // Descripción con fondo sutil
+    descriptionBox: "bg-black/20 rounded-xl p-4 mt-2 border border-white/5",
+    
     buttonContainer: "flex gap-3 px-6 pb-6",
-    closeIcon: "absolute right-4 top-4 text-gray-400 hover:text-gray-600 transition-colors text-2xl cursor-pointer",
+    closeButton: "absolute right-4 top-4 text-white/50 hover:text-[#90DDF0] transition-colors p-1 hover:bg-white/10 rounded-lg",
 };
 
 const formatDateLong = (dateStr: string | null): string => {
@@ -39,7 +51,33 @@ const formatDateLong = (dateStr: string | null): string => {
     }
 };
 
-const WorkExperienceDetailModal = ({ isOpen, experience, onClose}: WorkExperienceDetailModalProps) => {
+const InfoRow = ({
+    icon: Icon,
+    label,
+    value,
+    isDescription = false,
+}: {
+    icon: React.ElementType;
+    label: string;
+    value: string | null | undefined;
+    isDescription?: boolean;
+}) => (
+    <div className={styles.row}>
+        <div className={styles.iconBox}>
+            <Icon className={styles.icon} />
+        </div>
+        <div className={styles.textGroup}>
+            <p className={styles.label}>{label}</p>
+            {value ? (
+                <p className={isDescription ? styles.descriptionValue : styles.value}>{value}</p>
+            ) : (
+                <p className={styles.emptyValue}>No especificado</p>
+            )}
+        </div>
+    </div>
+);
+
+const WorkExperienceDetailModal = ({ isOpen, experience, onClose }: WorkExperienceDetailModalProps) => {
     if (!isOpen || !experience) return null;
 
     const startDateFormatted = formatDateLong(experience.start_date);
@@ -49,35 +87,27 @@ const WorkExperienceDetailModal = ({ isOpen, experience, onClose}: WorkExperienc
         <div className={styles.overlay} onClick={onClose}>
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
                 <PopUpCard title="Experiencia Laboral">
-                    <button onClick={onClose} className={styles.closeIcon}>✕</button>
+                    {/* Botón cerrar */}
+                    <button onClick={onClose} className={styles.closeButton}>
+                        <X size={20} />
+                    </button>
                     
                     <div className={styles.content}>
+                        {/* Puesto y Empresa - Grid responsivo */}
                         <div className={styles.dates}>
-                            <div className={styles.dateField}>
-                                <p className={styles.label}>Puesto</p>
-                                <p className={styles.value}>{experience.position}</p>
-                            </div>
-                            
-                            <div className={styles.dateField}>
-                                <p className={styles.label}>Empresa</p>
-                                <p className={styles.value}>{experience.company_name}</p>
-                            </div>
+                            <InfoRow icon={Briefcase} label="Puesto" value={experience.position} />
+                            <InfoRow icon={Building} label="Empresa" value={experience.company_name} />
                         </div>
                         
-                        <div className={styles.field}>
-                            <p className={styles.label}>Descripción</p>
-                            <p className={styles.descriptionValue}>{experience.description}</p>
+                        {/* Fechas */}
+                        <div className={styles.dates}>
+                            <InfoRow icon={Calendar} label="Fecha de inicio" value={startDateFormatted} />
+                            <InfoRow icon={Calendar} label="Fecha de finalización" value={endDateFormatted} />
                         </div>
                         
-                        <div className={styles.dates}>
-                            <div className={styles.dateField}>
-                                <p className={styles.label}>Fecha de inicio</p>
-                                <p className={styles.value}>{startDateFormatted}</p>
-                            </div>
-                            <div className={styles.dateField}>
-                                <p className={styles.label}>Fecha de finalizacion</p>
-                                <p className={styles.value}>{endDateFormatted}</p>
-                            </div>
+                        {/* Descripción - con fondo destacado */}
+                        <div className={styles.descriptionBox}>
+                            <InfoRow icon={FileText} label="Descripción" value={experience.description} isDescription />
                         </div>
                     </div>
                     
@@ -87,7 +117,7 @@ const WorkExperienceDetailModal = ({ isOpen, experience, onClose}: WorkExperienc
                             onClick={onClose}
                             fullWidth
                         >
-                            Atras
+                            Atrás
                         </Button>
                     </div>
                 </PopUpCard>

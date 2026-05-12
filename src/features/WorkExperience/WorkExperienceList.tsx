@@ -238,7 +238,7 @@ const WorkExperienceList = () => {
                 onClose={() => {
                     setIsConfirmModalOpen(false);
                     setExperienceToDelete(null);
-                    setSelectedExperience(null);
+                    setIsDetailModalOpen(true);
                 }}
                 onConfirm={handleConfirmDelete}
                 title="Eliminar Experiencia Laboral"
