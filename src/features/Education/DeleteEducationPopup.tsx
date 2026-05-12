@@ -27,7 +27,7 @@ const DeleteEducationPopup = ({ degree, onConfirm, onClose, onBack, isSubmitting
             <div className="w-full max-w-xs sm:max-w-sm">
                 <PopUpCard title="Eliminar Formación Académica">
                     <p className={styles.message}>
-                        ¿Estás seguro que quieres eliminar
+                        ¿Estás seguro que deseas eliminar
                         <span className={styles.highlight}> {degree}</span>?
                     </p>
                     <div className={styles.buttonsWrapper}>
