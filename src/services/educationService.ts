@@ -27,6 +27,8 @@ const jsonHeaders = () => ({
     "Content-Type": "application/json",
 });
 
+const toISO = (year: string) => `${year}-12-15T00:00:00Z`;
+
 export const fetchAcademicDegrees = async (): Promise<AcademicDegree[]> => {
     const res = await fetch(`${BASE_URL}/education_degree`, {
         headers: jsonHeaders(),
@@ -88,13 +90,13 @@ export const updateEducation = async (
     data: Omit<EducationEntry, "id">
 ): Promise<EducationEntry[]> => {
     const body: Record<string, unknown> = {
-        startDate: data.startDate,
+        startDate: toISO(data.startDate),
+        endDate: data.endDate ? toISO(data.endDate) : "",
     };
     if (data.academicLevelId && data.academicLevelId !== 0) {
         body.academyDegreeId = data.academicLevelId;
     }
     if (data.institution) body.institution = data.institution;
-    if (data.endDate) body.endDate = data.endDate;
 
     const res = await fetch(`${BASE_URL}/users/education?id=${id}`, {
         method: "PATCH",

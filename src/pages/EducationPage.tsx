@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Search } from "lucide-react";
 import { useEducation } from "../hooks/useEducation";
 import EducationCard from "../features/Education/EducationCard";
@@ -66,13 +66,6 @@ const EducationPage = () => {
         setIsViewOpen(false);
         setIsMenuOpen(true);
     };
-
-    useEffect(() => {
-        if (searchInput === "") {
-            setActiveSearch("");
-            setCurrentPage(1);
-        }
-    }, [searchInput]);
 
     const handleSearch = () => {
         setActiveSearch(searchInput);
@@ -181,10 +174,10 @@ const EducationPage = () => {
                         </div>
 
                         {error && (
-    <p className={`${styles.toast} bg-red-500/10 border border-red-500 text-red-400`}>
-        {error}
-    </p>
-)}
+                            <p className={`${styles.toast} bg-red-500/10 border border-red-500 text-red-400`}>
+                                {error}
+                            </p>
+                        )}
                         {successMessage && (
                             <p className={`${styles.toast} bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]`}>
                                 {successMessage}
@@ -258,6 +251,7 @@ const EducationPage = () => {
                     academicDegrees={academicDegrees}
                     onSubmit={handleEditSubmit}
                     onClose={closeAll}
+                    onBack={goToMenu}
                     serverError={formError}
                     isSubmitting={isSubmitting}
                 />
@@ -268,6 +262,7 @@ const EducationPage = () => {
                     degree={selectedEntry.degree}
                     onConfirm={handleConfirmDelete}
                     onClose={closeAll}
+                    onBack={goToMenu}
                     isSubmitting={isSubmitting}
                 />
             )}

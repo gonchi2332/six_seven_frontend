@@ -5,6 +5,7 @@ interface Props {
     degree: string;
     onConfirm: () => void;
     onClose: () => void;
+    onBack?: () => void;
     isSubmitting?: boolean;
 }
 
@@ -15,7 +16,12 @@ const styles = {
     buttonsWrapper: "flex gap-3 justify-center mt-2 px-4 sm:px-8 pb-6",
 };
 
-const DeleteEducationPopup = ({ degree, onConfirm, onClose, isSubmitting = false }: Props) => {
+const DeleteEducationPopup = ({ degree, onConfirm, onClose, onBack, isSubmitting = false }: Props) => {
+    const handleCancel = () => {
+        if (onBack) onBack();
+        else onClose();
+    };
+
     return (
         <div className={styles.overlay}>
             <div className="w-full max-w-xs sm:max-w-sm">
@@ -25,7 +31,7 @@ const DeleteEducationPopup = ({ degree, onConfirm, onClose, isSubmitting = false
                         <span className={styles.highlight}> {degree}</span>?
                     </p>
                     <div className={styles.buttonsWrapper}>
-                        <Button type="button" variant="secondary" onClick={onClose} fullWidth disabled={isSubmitting}>
+                        <Button type="button" variant="secondary" onClick={handleCancel} fullWidth disabled={isSubmitting}>
                             Cancelar
                         </Button>
                         <Button type="button" variant="primary" onClick={onConfirm} fullWidth disabled={isSubmitting}>
