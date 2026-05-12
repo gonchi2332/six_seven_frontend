@@ -7,6 +7,7 @@ import ViewEducationPopup from "../features/Education/ViewEducationPopup";
 import EducationPopup from "../features/Education/EducationPopup";
 import ConfirmDeleteModal from "../features/Education/DeleteEducationPopup";
 import type { EducationEntry } from "../services/educationService";
+import Button from "../components/Button";
 
 const PAGE_SIZE = 10;
 
@@ -35,6 +36,7 @@ const styles = {
 
 const EducationPage = () => {
     const { entries, academicDegrees, isLoading, error, successMessage, addEntry, editEntry, deleteEntry } = useEducation();
+
 
     const [searchInput, setSearchInput] = useState("");
     const [activeSearch, setActiveSearch] = useState("");
@@ -166,9 +168,25 @@ const EducationPage = () => {
                                         className={styles.searchInput}
                                     />
                                 </div>
+
+
                                 <div className={styles.actionRow}>
-                                    <button type="button" onClick={handleSearch} className={styles.searchBtn}>Buscar</button>
-                                    <button type="button" onClick={() => { setFormError(null); setIsAddOpen(true); }} className={styles.addBtn}>Registrar</button>
+                                    <Button
+                                        variant="secondary"
+                                        onClick={handleSearch}
+                                        disabled={isLoading}
+                                        fullWidth
+                                    >
+                                        Buscar
+                                    </Button>
+                                    <Button
+                                        variant="quaternary"
+                                        onClick={() => { setFormError(null); setIsAddOpen(true); }}
+                                        disabled={isLoading}
+                                        fullWidth
+                                    >
+                                        Registrar
+                                    </Button>
                                 </div>
                             </div>
                         </div>
