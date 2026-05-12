@@ -1,12 +1,14 @@
 import Button from '../../components/Button';
 import PopUpCard from '../../components/PopUpCard';
 
+import React from 'react';
+
 interface ConfirmDeleteModalProps {
     isOpen: boolean;
     onClose: () => void;
     onConfirm: () => void;
     title: string;
-    message: string;
+    message: React.ReactNode;
 }
 
 const styles = {
