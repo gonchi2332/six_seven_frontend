@@ -8,7 +8,6 @@ import PopUpCard from "../../../../components/PopUpCard";
 import ImageUpload from "../../../UploadFile/components/uploadFile";
 import TextAreaField from "../../../../components/TextAreaField";
 
-
 interface PersonalProjectsModalProps {
     mode: "create" | "edit";
     projectId?: string;
@@ -87,10 +86,36 @@ const PersonalProjectsModal = ({
         }
     };
 
+    // Función para verificar si todos los campos requeridos están llenos
+    const isFormComplete = () => {
+        if (isEditing) return true; // Para edición, solo verificamos cambios después
+
+        // Para crear, verificamos que todos los campos requeridos tengan valor
+        const hasName = formData.name && formData.name.trim() !== "";
+        const hasDescription = formData.description && formData.description.trim() !== "";
+        const hasTopic = formData.topic && formData.topic.trim() !== "";
+        const hasRole = formData.role && formData.role.trim() !== "";
+        const hasImage = formData.image !== null && formData.image !== undefined && formData.image !== "";
+
+        // Verificar que todos los enlaces tengan nombre y URL
+        const areLinksValid = formData.links.every(link =>
+            link.label && link.label.trim() !== "" &&
+            link.url && link.url.trim() !== ""
+        );
+
+        return hasName && hasDescription && hasTopic && hasRole && hasImage && areLinksValid;
+    };
+
+    // Verificar si hay algún error en los campos
+    const hasErrors = () => {
+        return Object.keys(errors).length > 0;
+    };
+
     // Determinar si el botón debe estar deshabilitado
     const isSubmitDisabled = () => {
         if (isSubmitting) return true;
         if (isEditing && !hasChanges) return true;
+        if (!isEditing && (!isFormComplete() || hasErrors())) return true;
         return false;
     };
 

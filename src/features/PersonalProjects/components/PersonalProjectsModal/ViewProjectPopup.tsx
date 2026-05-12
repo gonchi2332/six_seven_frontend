@@ -1,3 +1,4 @@
+import React from 'react';
 import { Globe, Link as LinkIcon, BookOpen, Target, Tag } from 'lucide-react';
 import PopUpCard from "../../../../components/PopUpCard";
 import Button from "../../../../components/Button";
@@ -27,12 +28,9 @@ const styles = {
     sectionLabel: 'text-[#90DDF0] font-bold text-[10px] uppercase tracking-widest flex items-center gap-1.5 mb-1 mt-2 first:mt-0 col-span-full',
     divider: 'border-t border-white/10 my-1.5 col-span-full',
 
-    // Filas de datos - más compactas
-    row: 'flex items-start gap-2 py-1',
-    iconBox: 'w-6 h-6 rounded-lg bg-[#2C666E]/50 flex items-center justify-center shrink-0 mt-0.5',
-    icon: 'text-[#90DDF0] w-3 h-3',
+    // Filas de datos - sin label repetido
+    row: 'flex items-start py-1',
     textGroup: 'flex flex-col flex-1',
-    label: 'text-white/40 text-[8px] uppercase tracking-wide font-bold',
     value: 'text-white font-nunito text-xs mt-0 leading-snug',
     emptyValue: 'text-white/25 italic font-nunito text-xs mt-0',
 
@@ -44,22 +42,17 @@ const styles = {
     footer: 'px-6 py-3 border-t border-white/10 bg-black/20',
 };
 
+// Datos de las secciones
+const SECTIONS = [
+    { id: 'description', icon: BookOpen, title: 'Descripción', valueKey: 'description' as const },
+    { id: 'status', icon: Target, title: 'Estado', valueKey: 'status' as const },
+    { id: 'role', icon: Globe, title: 'Rol', valueKey: 'role' as const },
+] as const;
 
-const InfoRow = ({
-    icon: Icon,
-    label,
-    value,
-}: {
-    icon: React.ElementType;
-    label: string;
-    value: string | null | undefined;
-}) => (
+// InfoRow sin label (solo muestra el valor)
+const InfoRow = ({ value }: { value: string | null | undefined }) => (
     <div className={styles.row}>
-        <div className={styles.iconBox}>
-            <Icon className={styles.icon} />
-        </div>
         <div className={styles.textGroup}>
-            <p className={styles.label}>{label}</p>
             {value ? (
                 <p className={styles.value}>{value}</p>
             ) : (
@@ -68,7 +61,6 @@ const InfoRow = ({
         </div>
     </div>
 );
-
 
 const ViewProjectPopup = ({ project, onBack }: ViewProjectPopupProps) => {
     return (
@@ -97,37 +89,25 @@ const ViewProjectPopup = ({ project, onBack }: ViewProjectPopupProps) => {
 
                     <div className={styles.body}>
                         <div className={styles.grid}>
-                            {/* Sección Descripción */}
-                            <p className={styles.sectionLabel}>
-                                <BookOpen size={12} /> Descripción
-                            </p>
-                            <InfoRow icon={BookOpen} label="Descripción" value={project.description} />
+                            {/* Renderizar secciones dinámicamente */}
+                            {SECTIONS.map((section, index) => (
+                                <React.Fragment key={section.id}>
+                                    {index > 0 && <div className={styles.divider} />}
+                                    <p className={styles.sectionLabel}>
+                                        <section.icon size={12} /> {section.title}
+                                    </p>
+                                    <InfoRow value={project[section.valueKey]} />
+                                </React.Fragment>
+                            ))}
 
                             <div className={styles.divider} />
 
-                            <p className={styles.sectionLabel}>
-                                <Target size={12} /> Estado
-                            </p>
-                            <InfoRow icon={Target} label="Estado del proyecto" value={project.status} />
-
-                            <div className={styles.divider} />
-
-                            <p className={styles.sectionLabel}>
-                                <Globe size={12} /> Rol
-                            </p>
-                            <InfoRow icon={Globe} label="Rol en el proyecto" value={project.role} />
-
-                            <div className={styles.divider} />
-
+                            {/* Sección de Enlaces */}
                             <p className={styles.sectionLabel}>
                                 <LinkIcon size={12} /> Enlaces
                             </p>
                             <div className={styles.row}>
-                                <div className={styles.iconBox}>
-                                    <LinkIcon className={styles.icon} />
-                                </div>
                                 <div className={styles.textGroup}>
-                                    <p className={styles.label}>Enlaces del proyecto</p>
                                     <div className={styles.linksContainer}>
                                         {project.links && project.links.length > 0 ? (
                                             project.links.map((link, index) => (
@@ -152,11 +132,7 @@ const ViewProjectPopup = ({ project, onBack }: ViewProjectPopupProps) => {
                     </div>
 
                     <div className={styles.footer}>
-                        <Button
-                            variant="secondary"
-                            onClick={onBack}
-                            fullWidth
-                        >
+                        <Button variant="secondary" onClick={onBack} fullWidth>
                             Atrás
                         </Button>
                     </div>

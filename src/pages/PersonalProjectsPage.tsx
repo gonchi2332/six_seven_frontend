@@ -1,3 +1,4 @@
+// ProjectsPage.tsx (versión corregida)
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { useProjects } from "../features/PersonalProjects/hooks/useProjects";
@@ -80,7 +81,7 @@ const ProjectsPage = () => {
 
     const handleEditProject = async (data: UpdateProjectPayload, id: string) => {
         await editProject(id, data);
-        closeAllModals();
+        closeAllModals(); // Cierra todo después de editar
     };
 
     const handleDeleteClick = () => {
@@ -91,14 +92,18 @@ const ProjectsPage = () => {
     const handleConfirmDelete = async () => {
         if (selectedProject) {
             await deleteProject(selectedProject.id);
-            setShowDeleteConfirm(false);
-            closeAllModals();
+            closeAllModals(); // Cierra todo después de eliminar
         }
     };
 
     const handleCancelDelete = () => {
         setShowDeleteConfirm(false);
-        setShowOptionsModal(true);
+        setShowOptionsModal(true); // Solo volver al modal de opciones si cancela la eliminación
+    };
+
+    const handleViewBack = () => {
+        setShowViewModal(false);
+        setShowOptionsModal(true); // Volver al modal de opciones cuando da "Atrás" en vista
     };
 
     const closeAllModals = () => {
@@ -126,12 +131,12 @@ const ProjectsPage = () => {
     };
 
     const handleCancel = () => {
-        closeAllModals();
+        closeAllModals(); // Cancelar cierra todo completamente
     };
 
     const handleEditModalClose = () => {
         setShowEditModal(false);
-        setSelectedProject(null);
+        setShowOptionsModal(true); // Volver a opciones si cierra sin guardar
     };
 
     const transformProjectToPayload = (project: ProjectEntry): Partial<CreateProjectPayload> => {
@@ -272,7 +277,7 @@ const ProjectsPage = () => {
                                         disabled={isLoading}
                                         fullWidth
                                     >
-                                        {"Eliminar"}
+                                        Eliminar
                                     </Button>
                                     <Button
                                         variant="primary"
@@ -299,10 +304,10 @@ const ProjectsPage = () => {
             {showDeleteConfirm && selectedProject && (
                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
                     <div className="w-full max-w-md">
-                        <PopUpCard title="Eliminar Proyecto">
+                        <PopUpCard title="Eliminar Proyecto Personal">
                             <div className="flex flex-col gap-6 p-6">
                                 <p className="text-white/90 font-nunito text-center text-base">
-                                    ¿Estás seguro de que deseas eliminar este proyecto?
+                                    {`¿Estás seguro de que deseas eliminar ${selectedProject.name}?`}
                                 </p>
 
                                 <div className="grid grid-cols-2 gap-3 mt-2">
@@ -342,12 +347,10 @@ const ProjectsPage = () => {
             {showViewModal && selectedProject && (
                 <ViewProjectPopup
                     project={selectedProject}
-                    onBack={() => {
-                        setShowViewModal(false);
-                        setShowOptionsModal(true);
-                    }}
+                    onBack={handleViewBack}
                 />
             )}
+
             {showEditModal && selectedProject && (
                 <PersonalProjectsModal
                     mode="edit"
