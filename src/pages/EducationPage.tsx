@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Search } from "lucide-react";
 import { useEducation } from "../hooks/useEducation";
 import EducationCard from "../features/Education/EducationCard";
@@ -35,29 +35,37 @@ const styles = {
 
 const EducationPage = () => {
     const { entries, academicDegrees, isLoading, error, successMessage, addEntry, editEntry, deleteEntry } = useEducation();
-    
-    // Estados de búsqueda y paginación
+
     const [searchInput, setSearchInput] = useState("");
     const [activeSearch, setActiveSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
 
-    // Estados de Modales
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(false); 
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
-    const [isViewOpen, setIsViewOpen] = useState(false); 
-    
+    const [isViewOpen, setIsViewOpen] = useState(false);
+
     const [selectedEntry, setSelectedEntry] = useState<EducationEntry | null>(null);
     const [formError, setFormError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    useEffect(() => {
-        if (searchInput === "") {
-            setActiveSearch("");
-            setCurrentPage(1);
-        }
-    }, [searchInput]);
+    const closeAll = () => {
+        setIsAddOpen(false);
+        setIsEditOpen(false);
+        setIsMenuOpen(false);
+        setIsConfirmDeleteOpen(false);
+        setIsViewOpen(false);
+        setSelectedEntry(null);
+    };
+
+    const goToMenu = () => {
+        setIsAddOpen(false);
+        setIsEditOpen(false);
+        setIsConfirmDeleteOpen(false);
+        setIsViewOpen(false);
+        setIsMenuOpen(true);
+    };
 
     const handleSearch = () => {
         setActiveSearch(searchInput);
@@ -77,7 +85,6 @@ const EducationPage = () => {
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-    // Flujo de Modales
     const handleCardClick = (entry: EducationEntry) => {
         setSelectedEntry(entry);
         setIsMenuOpen(true);
@@ -101,15 +108,14 @@ const EducationPage = () => {
         setIsConfirmDeleteOpen(true);
     };
 
-    // Acciones de Formulario
     const handleAddSubmit = async (data: Omit<EducationEntry, "id">) => {
         setIsSubmitting(true);
         setFormError(null);
         try {
             await addEntry(data);
-            setIsAddOpen(false);
+            closeAll();
         } catch (err: any) {
-            setFormError(err.message || "Error al registrar Formacion Academica");
+            setFormError(err.message || "Error al registrar Formación Académica");
         } finally {
             setIsSubmitting(false);
         }
@@ -121,10 +127,9 @@ const EducationPage = () => {
         setFormError(null);
         try {
             await editEntry(selectedEntry.id, data);
-            setIsEditOpen(false);
-            setSelectedEntry(null);
+            closeAll();
         } catch (err: any) {
-            setFormError(err.message || "Error al modificar Formacion Academica");
+            setFormError(err.message || "Error al modificar Formación Académica");
         } finally {
             setIsSubmitting(false);
         }
@@ -136,8 +141,7 @@ const EducationPage = () => {
         try {
             await deleteEntry(selectedEntry.id);
             if (paginated.length === 1 && currentPage > 1) setCurrentPage((p) => p - 1);
-            setIsConfirmDeleteOpen(false);
-            setSelectedEntry(null);
+            closeAll();
         } finally {
             setIsSubmitting(false);
         }
@@ -149,8 +153,7 @@ const EducationPage = () => {
                 <div className={styles.outerCard}>
                     <div className={styles.greenContainer}>
                         <div className={styles.header}>
-                            <h1 className={styles.title}>Formacion Académica</h1>
-                            
+                            <h1 className={styles.title}>Formación Académica</h1>
                             <div className={styles.searchRow}>
                                 <div className={styles.searchInputWrapper}>
                                     <Search size={16} className={styles.searchIcon} />
@@ -164,19 +167,15 @@ const EducationPage = () => {
                                     />
                                 </div>
                                 <div className={styles.actionRow}>
-                                    <button type="button" onClick={handleSearch} className={styles.searchBtn}>
-                                        Buscar
-                                    </button>
-                                    <button type="button" onClick={() => { setFormError(null); setIsAddOpen(true); }} className={styles.addBtn}>
-                                        Registrar
-                                    </button>
+                                    <button type="button" onClick={handleSearch} className={styles.searchBtn}>Buscar</button>
+                                    <button type="button" onClick={() => { setFormError(null); setIsAddOpen(true); }} className={styles.addBtn}>Registrar</button>
                                 </div>
                             </div>
                         </div>
 
-                        {(error || formError) && (
+                        {error && (
                             <p className={`${styles.toast} bg-red-500/10 border border-red-500 text-red-400`}>
-                                {error || formError}
+                                {error}
                             </p>
                         )}
                         {successMessage && (
@@ -194,10 +193,7 @@ const EducationPage = () => {
                         ) : (
                             <div className={styles.listWrapper}>
                                 {paginated.map((entry) => (
-                                    <EducationCard 
-                                        key={entry.id} 
-                                        entry={entry} 
-                                        onView={handleCardClick} />
+                                    <EducationCard key={entry.id} entry={entry} onView={handleCardClick} />
                                 ))}
                             </div>
                         )}
@@ -217,12 +213,11 @@ const EducationPage = () => {
                 </div>
             </div>
 
-            {/* Renderizado de Modales */}
             {isMenuOpen && selectedEntry && (
                 <EducationPopup
                     isOpen={isMenuOpen}
                     entry={selectedEntry}
-                    onClose={() => setIsMenuOpen(false)}
+                    onClose={closeAll}
                     onEdit={handleEditClick}
                     onDelete={handleDeleteClick}
                     onView={handleViewDetail}
@@ -233,10 +228,8 @@ const EducationPage = () => {
                 <ViewEducationPopup
                     isOpen={isViewOpen}
                     entry={selectedEntry}
-                    onClose={() => {
-                        setIsViewOpen(false);
-                        setIsMenuOpen(true); 
-                    }}
+                    onClose={closeAll}
+                    onBack={goToMenu}
                 />
             )}
 
@@ -245,7 +238,7 @@ const EducationPage = () => {
                     mode="add"
                     academicDegrees={academicDegrees}
                     onSubmit={handleAddSubmit}
-                    onClose={() => setIsAddOpen(false)}
+                    onClose={closeAll}
                     serverError={formError}
                     isSubmitting={isSubmitting}
                 />
@@ -257,10 +250,8 @@ const EducationPage = () => {
                     initial={selectedEntry}
                     academicDegrees={academicDegrees}
                     onSubmit={handleEditSubmit}
-                    onClose={() => {
-                        setIsEditOpen(false);
-                        setIsMenuOpen(true);
-                    }}
+                    onClose={closeAll}
+                    onBack={goToMenu}
                     serverError={formError}
                     isSubmitting={isSubmitting}
                 />
@@ -270,10 +261,8 @@ const EducationPage = () => {
                 <ConfirmDeleteModal
                     degree={selectedEntry.degree}
                     onConfirm={handleConfirmDelete}
-                    onClose={() => {
-                        setIsConfirmDeleteOpen(false);
-                        setIsMenuOpen(true); // Al cancelar borrar, regresa al menú
-                    }}
+                    onClose={closeAll}
+                    onBack={goToMenu}
                     isSubmitting={isSubmitting}
                 />
             )}
