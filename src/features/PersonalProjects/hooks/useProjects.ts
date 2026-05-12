@@ -60,7 +60,7 @@ export const useProjects = (): UseProjectsReturn => {
 
         try {
             await createProjectService(payload);
-            setSuccessMessage("Proyecto creado exitosamente");
+            setSuccessMessage("Proyecto personal registrado correctamente");
             await fetchProjects();
         } catch (err) {
             const message = err instanceof Error ? err.message : "Error al crear el proyecto";
@@ -78,7 +78,7 @@ export const useProjects = (): UseProjectsReturn => {
 
         try {
             await updateProjectService(id, payload);
-            setSuccessMessage("Proyecto actualizado exitosamente");
+            setSuccessMessage("Proyecto modificado correctamente");
             await fetchProjects();
         } catch (err) {
             const message = err instanceof Error ? err.message : "Error al actualizar el proyecto";
@@ -96,7 +96,7 @@ export const useProjects = (): UseProjectsReturn => {
 
         try {
             await deleteProjectService(id);
-            setSuccessMessage("Proyecto eliminado exitosamente");
+            setSuccessMessage("Proyecto eliminado correctamente");
             setProjects(prev => prev.filter(project => project.id !== id));
         } catch (err) {
             const message = err instanceof Error ? err.message : "Error al eliminar el proyecto";

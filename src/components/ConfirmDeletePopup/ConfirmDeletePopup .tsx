@@ -32,7 +32,7 @@ const ConfirmDeletePopup = ({ isOpen, skillName, onConfirm, onClose, isLoading =
                             Cancelar
                         </Button>
                         <Button type="button" variant="primary" onClick={onConfirm} fullWidth disabled={isLoading}>
-                            {isLoading ? "Eliminando..." : "Aceptar"}
+                            {isLoading ? "Eliminando..." : "Eliminar"}
                         </Button>
                     </div>
                 </PopUpCard>

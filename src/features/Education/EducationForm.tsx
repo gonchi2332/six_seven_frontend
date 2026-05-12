@@ -206,7 +206,7 @@ const EducationForm = ({
                             // Deshabilitar si está enviando o si no hay cambios en modo edición
                             disabled={isSubmitting || (mode === "edit" && !hasChanges())}
                         >
-                            {isSubmitting ? "Guardando..." : mode === "add" ? "Registrar" : "Aceptar"}
+                            {isSubmitting ? "Guardando..." : mode === "add" ? "Registrar" : "Eliminar"}
                         </Button>
                     </div>
                 </PopUpCard>

@@ -74,7 +74,7 @@ const ViewProjectPopup = ({ project, onBack }: ViewProjectPopupProps) => {
     return (
         <div className={styles.overlay} onClick={onBack}>
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
-                <PopUpCard title="Detalles del Proyecto">
+                <PopUpCard title="Proyecto Personal">
                     {/* Header con topic y nombre */}
                     <div className={styles.headerSection}>
                         <div className={styles.topicBadge}>
