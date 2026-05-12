@@ -57,7 +57,6 @@ const validateStartDate = (value: string): string => {
     return '';
 };
 
-// 3. Actualiza validateEndDate
 const validateEndDate = (value: string, isCurrent: boolean): string => {
     if (!isCurrent && !value) return 'La fecha de finalización es obligatoria';
     if (value) {
