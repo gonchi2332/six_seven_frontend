@@ -12,7 +12,7 @@ const defAvatar = '/defAvatar.png';
 
 const styles = {
     overlay: 'fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center px-3 sm:px-4 z-50 overflow-y-auto py-4 sm:py-6',
-    container: 'min-h-screen flex items-center justify-center p-2 sm:p-4',
+    container: 'w-full max-w-lg md:max-w-2xl min-h-screen flex items-center justify-center p-2 sm:p-4',
     
     // Avatar y nombre
     avatarSection: 'flex flex-col items-center gap-3 sm:gap-4 px-4 sm:px-6 pt-6 sm:pt-8 pb-4 sm:pb-6 border-b border-white/10 bg-black/20',
