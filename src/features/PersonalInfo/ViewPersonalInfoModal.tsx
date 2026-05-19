@@ -1,4 +1,4 @@
-import { MapPin, Mail, Phone, User, Hash, Globe, X } from 'lucide-react';
+import { MapPin, Mail, Phone, User, Hash, Globe } from 'lucide-react';
 import Button from '../../components/Button';
 import PopUpCard from '../../components/PopUpCard';
 import { parseProfilePicture } from '../../services/decodeBase64';
@@ -98,10 +98,7 @@ const ViewPersonalInfoModal = ({ isOpen, onClose, userInfo }: ViewPersonalInfoMo
         <div className={styles.overlay} onClick={onClose}>
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
                 <PopUpCard title="Mi Perfil">
-                    {/* Botón cerrar */}
-                    <button onClick={onClose} className={styles.closeButton}>
-                        <X size={20} />
-                    </button>
+
 
                     {/* Avatar y nombre */}
                     <div className={styles.avatarSection}>
@@ -124,19 +121,13 @@ const ViewPersonalInfoModal = ({ isOpen, onClose, userInfo }: ViewPersonalInfoMo
                         <div className={styles.grid}>
                             {/* Sección Identidad */}
                             <p className={styles.sectionLabel}>
-                                <User size={12} /> Identidad
+                                <User size={12} /> Datos del Usuario
                             </p>
                             <InfoRow icon={Hash} label="Nombre de Usuario" value={userInfo.username} />
+                             <InfoRow icon={Phone} label="Teléfono" value={userInfo.phone_number} />
                             <InfoRow icon={Mail} label="Correo de Registro" value={userInfo.main_registration_email} />
-
-                            <div className={styles.divider} />
-
-                            {/* Sección Contacto */}
-                            <p className={styles.sectionLabel}>
-                                <Phone size={12} /> Contacto
-                            </p>
                             <InfoRow icon={Mail} label="Correo de Contacto" value={userInfo.contact_email} />
-                            <InfoRow icon={Phone} label="Teléfono" value={userInfo.phone_number} />
+                           
 
                             <div className={styles.divider} />
 
