@@ -18,9 +18,9 @@ const styles = {
 };
 
 const EducationCard = ({ entry, onView }: Props) => {
-    const dateRange = entry.endDate
-        ? `${entry.startDate} — ${entry.endDate}`
-        : `${entry.startDate} — Presente`;
+    const dateDisplay = entry.educationState === "cursando" 
+        ? `${entry.startDate} - Presente`
+        : entry.startDate;
 
     return (
         <div className={styles.container} onClick={() => onView(entry)}>
@@ -30,7 +30,7 @@ const EducationCard = ({ entry, onView }: Props) => {
                     <div className={styles.infoRow}>
                         <span className={styles.academicLevel}>{entry.academicLevel}</span>
                         <span className={styles.separator}>|</span>
-                        <span className={styles.date}>{dateRange}</span>
+                        <span className={styles.date}>{dateDisplay}</span>
                     </div>
                 </div>
                 <p className={styles.institution}>{entry.institution}</p>
