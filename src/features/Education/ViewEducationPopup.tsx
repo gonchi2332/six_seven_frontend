@@ -1,5 +1,5 @@
-import Button from "../../components/Button/Button";
-import PopUpCard from "../../components/PopUpCard/PopUpCard";
+import Button from "../../components/Button";
+import PopUpCard from "../../components/PopUpCard";
 import type { EducationEntry } from "../../services/educationService";
 
 interface Props {
@@ -13,17 +13,20 @@ const styles = {
     overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 z-50 overflow-y-auto",
     content: "px-4 sm:px-6 pb-5 pt-0 flex flex-col gap-4 sm:gap-5",
     field: "flex flex-col gap-1",
-    label: "text-secondary   text-xs uppercase tracking-wide font-bold mb-1",
-    value: "text-surface font-nunito text-sm sm:text-base",
+    label: "text-[#90DDF0] text-xs uppercase tracking-wide font-bold mb-1",
+    value: "text-white font-nunito text-sm sm:text-base",
     datesRow: "flex flex-col sm:flex-row gap-4 sm:gap-6",
     buttonContainer: "flex gap-3 px-4 sm:px-6 pb-6",
-    closeIcon: "absolute right-4 top-4 text-gray-400 hover:text-white transition-colors text-2xl cursor-pointer bg-transparent border-none",
 };
 
 const ViewEducationPopup = ({ isOpen, entry, onClose, onBack }: Props) => {
     if (!isOpen || !entry) return null;
 
-    const dateRange = entry.endDate ? entry.endDate : "Presente";
+    const dateDisplay = entry.educationState === "cursando" 
+        ? `${entry.startDate} - Presente`
+        : entry.startDate;
+
+    const stateLabel = entry.educationState === "cursando" ? "En curso" : "Egresado";
 
     return (
         <div className={styles.overlay} onClick={onClose}>
@@ -46,12 +49,12 @@ const ViewEducationPopup = ({ isOpen, entry, onClose, onBack }: Props) => {
                         </div>
                         <div className={styles.datesRow}>
                             <div className="flex-1">
-                                <p className={styles.label}>Año de Inicio</p>
-                                <p className={styles.value}>{entry.startDate}</p>
+                                <p className={styles.label}>Estado</p>
+                                <p className={styles.value}>{stateLabel}</p>
                             </div>
                             <div className="flex-1">
-                                <p className={styles.label}>Año de Finalización</p>
-                                <p className={styles.value}>{dateRange}</p>
+                                <p className={styles.label}>Año</p>
+                                <p className={styles.value}>{dateDisplay}</p>
                             </div>
                         </div>
                     </div>

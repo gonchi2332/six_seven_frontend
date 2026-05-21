@@ -11,26 +11,30 @@ const styles = {
     header: "mb-2 sm:mb-3",
     title: "text-surface font-inter font-bold text-base sm:text-lg leading-tight line-clamp-2",
     infoRow: "flex items-center flex-wrap gap-2 mt-1.5",
-    academicLevel: "text-accent font-nunito text-xs sm:text-sm font-semibold",
+    educationState: "text-accent font-nunito text-xs sm:text-sm font-semibold",
     date: "text-white/40 font-nunito text-xs",
     institution: "text-surface font-nunito text-[13px] sm:text-[15px] mt-2 sm:mt-3 italic line-clamp-1",
     separator: "text-white/50 font-nunito text-xs",
+    academicLevel : "text-surface font-inter text-sm sm:text-base leading-tight line-clamp-1"
 };
 
 const EducationCard = ({ entry, onView }: Props) => {
-    const dateRange = entry.endDate
-        ? `${entry.startDate} — ${entry.endDate}`
-        : `${entry.startDate} — Presente`;
+    const dateDisplay = entry.educationState === "cursando" 
+        ? `${entry.startDate} - Presente`
+        : entry.startDate;
 
     return (
         <div className={styles.container} onClick={() => onView(entry)}>
             <div className={styles.content}>
                 <div className={styles.header}>
                     <h3 className={styles.title}>{entry.degree}</h3>
+                    <h3 className={styles.academicLevel}>
+                        {entry.academicLevel}
+                    </h3>
                     <div className={styles.infoRow}>
-                        <span className={styles.academicLevel}>{entry.academicLevel}</span>
+                        <span className={styles.educationState}>{entry.educationState}</span>
                         <span className={styles.separator}>|</span>
-                        <span className={styles.date}>{dateRange}</span>
+                        <span className={styles.date}>{dateDisplay}</span>
                     </div>
                 </div>
                 <p className={styles.institution}>{entry.institution}</p>

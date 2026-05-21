@@ -205,6 +205,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                                 onChange={(e) => handlePositionChange(e.target.value)}
                                 placeholder="Ej: Full Stack Developer"
                                 error={positionError}
+                                disabled = {true}
                             />
                             
                             <TextField
