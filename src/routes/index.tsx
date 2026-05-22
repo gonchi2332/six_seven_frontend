@@ -6,6 +6,7 @@ import VerificationPage from "../pages/VerificationPage";
 import PasswordResetPage from "../pages/PasswordResetPage";
 import Dashboard from "../pages/Dashboard";
 import PublicDashboard from "../pages/PublicDashboard";
+import CertificatesPage from "../pages/CertificatesPage";
 import HardSkillsPage from "../pages/HardSkillsPage";
 import SoftSkillsPage from "../pages/SoftSkillsPage";
 import EducationPage from "../pages/EducationPage";
@@ -39,7 +40,7 @@ const Router = () => {
                     <Route path="/proyectos" element={<PersonalProjectsPage />} />
                     <Route path="/educacion" element={<EducationPage />} />
                     <Route path="/experiencia-laboral" element={<Experience />} />
-
+                    <Route path="/certificados" element={<CertificatesPage />} />
                     <Route path="ver/:username" element={<PersonalInfoPublic />} />
                     <Route path="ver/:username/habilidades-tecnicas" element={<HardSkillsPagePublic />} />
                     <Route path="ver/:username/habilidades-blandas" element={<SoftSkillsPagePublic />} />
