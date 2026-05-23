@@ -25,10 +25,20 @@ export const useSkills = () => {
             setError(null);
             try {
                 const [data, catalog] = await Promise.all([fetchSkills(), fetchCatalogSkills()]);
-                const list: { name: string; punctuation: number }[] = data.skills ?? [];
-                setSkills(list.map((s) => ({ id: s.name, name: s.name, level: s.punctuation })));
+                const list = data.skills ?? [];
+                
+                const formattedSkills: Skill[] = list.map((s: any) => ({ 
+                    skill_id: Number(s.skill_id), 
+                    name: s.name, 
+                    level: s.punctuation ?? s.level,
+                    // Evita el false falso forzando la evaluación estricta
+                    visible: s.visible === true || s.visible === 1 || String(s.visible) === "true"
+                }));
+
+                setSkills(formattedSkills);
                 setCatalogSkills(catalog);
-            } catch {
+            } catch (err) {
+                console.error(err);
                 showError("No se pudieron cargar las habilidades");
             } finally {
                 setIsLoading(false);
@@ -38,24 +48,44 @@ export const useSkills = () => {
     }, []);
 
     const addSkill = (name: string, level: number) => {
-        setSkills((prev) => [...prev, { id: name, name, level }]);
+        const tempId = Date.now(); // ID temporal numérico para cumplir con la interfaz Skill
+        const newSkill: Skill = { 
+            skill_id: tempId, 
+            name, 
+            level, 
+            visible: true 
+        };
+        
+        setSkills((prev) => [...prev, newSkill]);
         showSuccess("Habilidad registrada correctamente");
     };
 
-    const editSkill = async (id: string, name: string, level: number) => {
+    const editSkill = async (skillId: number | string, name: string, level: number) => {
         try {
+            // 🔑 TU SERVICIO NECESITA EL NOMBRE: Se lo mandamos correctamente
             await patchSkill(name, level);
-            setSkills((prev) => prev.map((s) => (s.id === id ? { id: name, name, level } : s)));
+            
+            // Modificamos el estado local de React buscando por el skill_id del tipo
+            setSkills((prev) => 
+                prev.map((s) => (s.skill_id === Number(skillId) ? { ...s, name, level } : s))
+            );
             showSuccess("Habilidad modificada correctamente");
         } catch (err) {
             throw err;
         }
     };
 
-    const deleteSkill = async (id: string) => {
+    const deleteSkill = async (skillId: number | string) => {
         try {
-            await apiDeleteSkill(id);
-            setSkills((prev) => prev.filter((s) => s.id !== id));
+            // Buscamos la habilidad local antes de borrarla para obtener su nombre real
+            const targetSkill = skills.find(s => s.skill_id === Number(skillId));
+            const identifierForApi = targetSkill ? targetSkill.name : String(skillId);
+
+            // 🔑 TU SERVICIO NECESITA EL NOMBRE (ej: "React") para ejecutar el DELETE:
+            await apiDeleteSkill(identifierForApi);
+            
+            // Filtramos en la UI usando el skill_id numérico
+            setSkills((prev) => prev.filter((s) => s.skill_id !== Number(skillId)));
             showSuccess("Habilidad eliminada correctamente");
         } catch (err) {
             throw err;
