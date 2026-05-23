@@ -119,8 +119,8 @@ const CertificatesPublicPage = () => {
                         ) : paginated.length === 0 ? (
                             <div className={styles.empty}>
                                 {activeSearch
-                                    ? "No se encontraron certificados que coincidan con tu búsqueda."
-                                    : "No hay certificados públicos disponibles por el momento."}
+                                    ? "No se encontraron certificados que coincidan con tu búsqueda"
+                                    : "No hay certificados para mostrar"}
                             </div>
                         ) : (
                             <>

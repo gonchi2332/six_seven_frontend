@@ -113,7 +113,7 @@ const WorkExperienceList = () => {
                             <p className={styles.loading}>Cargando...</p>
                         ) : paginatedExperiences.length === 0 ? (
                             <p className={styles.empty}>
-                                {activeSearch ? 'No se encontraron registros.' : 'No hay experiencias laborales registradas aún.'}
+                                {activeSearch ? 'No se encontraron registros' : 'No hay experiencias laborales para mostrar'}
                             </p>
                         ) : (
                             <div className={styles.listWrapper}>

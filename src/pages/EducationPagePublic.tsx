@@ -126,7 +126,7 @@ const EducationPage = () => {
                             <p className={styles.loading}>Cargando...</p>
                         ) : paginated.length === 0 ? (
                             <p className={styles.empty}>
-                                {activeSearch ? "No se encontraron registros." : "No hay experiencias académicas aún."}
+                                {activeSearch ? "No se encontraron registros." : "No hay formaciones academicas para mostrar"}
                             </p>
                         ) : (
                             <div className={styles.listWrapper}>

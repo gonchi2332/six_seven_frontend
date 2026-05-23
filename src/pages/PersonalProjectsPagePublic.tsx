@@ -118,7 +118,7 @@ const ProjectsPage = () => {
                                     "No se encontraron proyectos."
                                 ) : (
                                     <div className="flex flex-col items-center gap-2">
-                                        <p>No hay proyectos personales registrados aún.</p>
+                                        <p>No hay proyectos personales para mostrar</p>
                                     </div>
                                 )}
                             </div>

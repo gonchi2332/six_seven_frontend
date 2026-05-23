@@ -27,17 +27,17 @@ const styles = {
     toastError: "bg-red-500/10 border border-red-500 text-red-400",
 };
 
-const ConfigInfoRow = ({ 
-    icon: Icon, 
-    label, 
-    value, 
-    fieldKey, 
-    currentVisibility, 
-    onToggle 
-}: { 
-    icon: React.ElementType; 
-    label: string; 
-    value: string; 
+const ConfigInfoRow = ({
+    icon: Icon,
+    label,
+    value,
+    fieldKey,
+    currentVisibility,
+    onToggle
+}: {
+    icon: React.ElementType;
+    label: string;
+    value: string;
     fieldKey: string;
     currentVisibility: boolean;
     onToggle: (key: string) => void;
@@ -51,7 +51,7 @@ const ConfigInfoRow = ({
             </div>
         </div>
         <div>
-            <Switch 
+            <Switch
                 key={`${fieldKey}-${currentVisibility}`}
                 id={fieldKey}
                 initialState={currentVisibility}
@@ -148,7 +148,7 @@ const PersonalInfoConfigPage = () => {
                     <div className={styles.greenContainer}>
                         <div className={styles.header}>
                             <h1 className={styles.title}>Configuración de visibilidad de Información Personal</h1>
-                            
+
                             <div className={styles.actionRow}>
                                 <Button
                                     variant="secondary"
@@ -181,8 +181,7 @@ const PersonalInfoConfigPage = () => {
                             <div className={styles.listWrapper}>
                                 <div className={styles.infoCard}>
                                     <p className={styles.sectionTitle}>
-                                        <User size={14} /> Identidad Profesional
-                                    </p>
+                                        <User size={14} /> Datos Personales</p>
                                     <div className="flex flex-col gap-4">
                                         {fullName && (
                                             <InfoRowStatic icon={User} label="Nombre Completo" value={fullName} badgeText="Siempre Público" />
@@ -202,9 +201,9 @@ const PersonalInfoConfigPage = () => {
                                     </p>
                                     <div className="flex flex-col gap-4">
                                         {residence && (
-                                            <ConfigInfoRow 
-                                                icon={MapPin} 
-                                                label="Residencia Actual" 
+                                            <ConfigInfoRow
+                                                icon={MapPin}
+                                                label="Residencia Actual"
                                                 value={residence}
                                                 fieldKey="show_residence"
                                                 currentVisibility={getVisibility("show_residence")}
@@ -212,9 +211,9 @@ const PersonalInfoConfigPage = () => {
                                             />
                                         )}
                                         {userInfo?.contact_email && (
-                                            <ConfigInfoRow 
-                                                icon={Mail} 
-                                                label="Correo Secundario" 
+                                            <ConfigInfoRow
+                                                icon={Mail}
+                                                label="Correo Secundario"
                                                 value={userInfo.contact_email}
                                                 fieldKey="show_contact_email"
                                                 currentVisibility={getVisibility("show_contact_email")}
@@ -222,9 +221,9 @@ const PersonalInfoConfigPage = () => {
                                             />
                                         )}
                                         {userInfo?.phone_number && (
-                                            <ConfigInfoRow 
-                                                icon={Phone} 
-                                                label="Teléfono / WhatsApp" 
+                                            <ConfigInfoRow
+                                                icon={Phone}
+                                                label="Teléfono / WhatsApp"
                                                 value={userInfo.phone_number}
                                                 fieldKey="show_phone"
                                                 currentVisibility={getVisibility("show_phone")}
