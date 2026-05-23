@@ -20,7 +20,6 @@ import PersonalInfoPublic from "../pages/PersonalInfoPublic";
 import SoftSkillsPagePublic from "../pages/SoftSkillsPagePublic";
 import HardSkillsPagePublic from "../pages/HardSkillsPagePublic";
 import EducationPagePublic from "../pages/EducationPagePublic";
-import { WorkExperienceList } from "../features/WorkExperience";
 import WorkExperiencePagePublic from "../pages/WorkExperiencePagePublic";
 
 const Router = () => {
