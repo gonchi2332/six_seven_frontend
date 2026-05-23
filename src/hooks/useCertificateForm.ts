@@ -1,28 +1,6 @@
 import { useState, useRef } from "react";
 import type { Certificate } from "../services/certificateService";
 
-
-const getToday = (): string => {
-    const d = new Date();
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-};
-
-const getMinDate = (): string => {
-    const d = new Date();
-    d.setFullYear(d.getFullYear() - 100);
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-};
-
-export const TODAY = getToday();
-export const MIN_DATE = getMinDate();
-
-export const getDateError = (date: string): string => {
-    if (!date) return "La fecha de certificación es obligatoria";
-    if (date > TODAY) return "La fecha de certificación no puede ser futura";
-    if (date < MIN_DATE) return "La fecha de certificación tiene que estar dentro del rango de hoy y hace 100 años";
-    return "";
-};
-
 interface UseCertificateFormProps {
     mode: "add" | "edit";
     initial?: Certificate;
@@ -50,13 +28,11 @@ const useCertificateForm = ({ mode, initial, onSubmit }: UseCertificateFormProps
 
     const fileRef = useRef<HTMLInputElement>(null);
 
-    const isDateValid = issueDate !== "" && issueDate <= TODAY && issueDate >= MIN_DATE;
-
     const isFormValid =
         title.trim() !== "" &&
         description.trim() !== "" &&
         area.trim() !== "" &&
-        isDateValid &&
+        issueDate !== "" &&
         (mode === "edit" ? (coverImage !== null || !!initial?.coverImage) : coverImage !== null);
 
     const hasChanges =
@@ -87,11 +63,12 @@ const useCertificateForm = ({ mode, initial, onSubmit }: UseCertificateFormProps
     const handleDateChange = (v: string) => {
         setIssueDate(v);
         setDateTouched(true);
-        setDateError(getDateError(v));
+        setDateError("");
     };
     const handleDateBlur = () => {
         setDateTouched(true);
-        setDateError(getDateError(issueDate));
+        if (!issueDate) setDateError("La fecha de certificación es obligatoria");
+        else setDateError("");
     };
 
     const handleImageChange = (file: File | null) => {
