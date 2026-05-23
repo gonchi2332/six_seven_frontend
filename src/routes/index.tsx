@@ -21,6 +21,11 @@ import HardSkillsPagePublic from "../pages/HardSkillsPagePublic";
 import EducationPagePublic from "../pages/EducationPagePublic";
 import { WorkExperienceList } from "../features/WorkExperience";
 import WorkExperiencePagePublic from "../pages/WorkExperiencePagePublic";
+import HardSkillsConfigPage from "../pages/HardSkillsConfigPage"
+import SoftSkillsConfigPage from "../pages/SoftSkillsConfigPage";
+import PersonalProjectsConfigPage from "../pages/PersonalProjectsConfigPage";
+import EducationConfigPage from "../pages/EducationConfigPage";
+import WorkExperienceListConfig from "../features/WorkExperience/WorkExperienceListConfig";
 
 const Router = () => {
 
@@ -46,6 +51,12 @@ const Router = () => {
                     <Route path="ver/:username/proyectos" element={<PersonalProjectsPagePublic />} />
                     <Route path="ver/:username/educacion" element={<EducationPagePublic />} />
                     <Route path="ver/:username/experiencia-laboral" element={<WorkExperiencePagePublic />} />
+
+                    <Route path="configurar/habilidades-tecnicas" element={<HardSkillsConfigPage />} />
+                    <Route path="configurar/habilidades-blandas" element={<SoftSkillsConfigPage />} />
+                    <Route path="configurar/proyectos-personales" element={<PersonalProjectsConfigPage />} />
+                    <Route path="configurar/educacion" element={<EducationConfigPage />} />
+                    <Route path="configurar/experiencia-laboral" element={<WorkExperienceListConfig />} />
                 </Route>
             </Routes>
         </BrowserRouter>
