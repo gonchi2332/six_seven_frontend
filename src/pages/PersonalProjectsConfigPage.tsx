@@ -101,8 +101,6 @@ const PersonalProjectsConfigPage = () => {
                 payload[idStr] = visibilityMap[idStr] !== undefined ? visibilityMap[idStr] : p.visible;
             });
 
-            console.log("PAYLOAD SANITIZADO Y COMBINADO COMPLETAMENTE:", payload);
-
             const res = await visibilityService.updateProject(payload);
             setLocalSuccess(res.message || "Cambios guardados exitosamente.");
             setTimeout(() => setLocalSuccess(null), 3000);

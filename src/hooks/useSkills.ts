@@ -40,7 +40,6 @@ export const useSkills = () => {
                 setSkills(formattedSkills);
                 setCatalogSkills(catalog);
             } catch (err) {
-                console.error(err);
                 showError("No se pudieron cargar las habilidades");
             } finally {
                 setIsLoading(false);

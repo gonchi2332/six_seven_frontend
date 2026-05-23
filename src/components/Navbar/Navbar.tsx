@@ -65,7 +65,9 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
     education: "/configurar/educacion",
     experience: "/configurar/experiencia-laboral",
     skillsTech: "/configurar/habilidades-tecnicas",
-    skillsSoft: "/configurar/habilidades-blandas"
+    skillsSoft: "/configurar/habilidades-blandas",
+    certificates: "/configurar/certificados",
+    personalInfo: "/configurar/informacion-personal",
   };
 
   const mainTabs = [
@@ -181,10 +183,28 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                   {isVisibilityDropdownOpen && (
                     <div className={STYLES.dropdownMenu}>
                       <button
+                        onClick={() => navigate(configPaths.personalInfo)}
+                        className={`${STYLES.dropdownItem} ${location.pathname === configPaths.projects ? STYLES.dropdownItemActive : ''}`}
+                      >
+                        Informacion Personal
+                      </button>
+                      <button
                         onClick={() => navigate(configPaths.experience)}
                         className={`${STYLES.dropdownItem} ${location.pathname === configPaths.experience ? STYLES.dropdownItemActive : ''}`}
                       >
-                        Visibilidad Experiencia
+                        Visibilidad Exp. Laboral
+                      </button>
+                      <button
+                        onClick={() => navigate(configPaths.skillsTech)}
+                        className={`${STYLES.dropdownItem} ${location.pathname === configPaths.skillsTech ? STYLES.dropdownItemActive : ''}`}
+                      >
+                        Visibilidad Hab. Técnicas
+                      </button>
+                      <button
+                        onClick={() => navigate(configPaths.skillsSoft)}
+                        className={`${STYLES.dropdownItem} ${location.pathname === configPaths.skillsSoft ? STYLES.dropdownItemActive : ''}`}
+                      >
+                        Visibilidad Hab. Blandas
                       </button>
                       <button
                         onClick={() => navigate(configPaths.projects)}
@@ -199,16 +219,10 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                         Visibilidad Educación
                       </button>
                       <button
-                        onClick={() => navigate(configPaths.skillsTech)}
-                        className={`${STYLES.dropdownItem} ${location.pathname === configPaths.skillsTech ? STYLES.dropdownItemActive : ''}`}
-                      >
-                        Visibilidad Hab. Técnicas
-                      </button>
-                      <button
-                        onClick={() => navigate(configPaths.skillsSoft)}
+                        onClick={() => navigate(configPaths.certificates)}
                         className={`${STYLES.dropdownItem} ${location.pathname === configPaths.skillsSoft ? STYLES.dropdownItemActive : ''}`}
                       >
-                        Visibilidad Hab. Blandas
+                        Visibilidad Certificados
                       </button>
                     </div>
                   )}

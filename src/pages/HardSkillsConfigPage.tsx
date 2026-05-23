@@ -79,8 +79,6 @@ const HardSkillsConfigPage = () => {
         // 3. Invertimos el valor actual (si era true pasa a false, y viceversa)
         const finalValue = !currentVal;
 
-        console.log(`[Switch Cambiado] ID Skill: ${idStr} | Estado anterior: ${currentVal} -> Nuevo Estado: ${finalValue}`);
-
         return {
             ...prev,
             [idStr]: finalValue,

@@ -5,7 +5,6 @@ import RegisterPage from "../pages/RegisterPage";
 import VerificationPage from "../pages/VerificationPage";
 import PasswordResetPage from "../pages/PasswordResetPage";
 import Dashboard from "../pages/Dashboard";
-import PublicDashboard from "../pages/PublicDashboard";
 import CertificatesPage from "../pages/CertificatesPage";
 import HardSkillsPage from "../pages/HardSkillsPage";
 import SoftSkillsPage from "../pages/SoftSkillsPage";
@@ -20,12 +19,14 @@ import PersonalInfoPublic from "../pages/PersonalInfoPublic";
 import SoftSkillsPagePublic from "../pages/SoftSkillsPagePublic";
 import HardSkillsPagePublic from "../pages/HardSkillsPagePublic";
 import EducationPagePublic from "../pages/EducationPagePublic";
-import WorkExperiencePagePublic from "../pages/WorkExperiencePagePublic";
+import WorkExperiencieConfigPage from "../pages/WorkExperienceConfigPage";
 import HardSkillsConfigPage from "../pages/HardSkillsConfigPage"
 import SoftSkillsConfigPage from "../pages/SoftSkillsConfigPage";
 import PersonalProjectsConfigPage from "../pages/PersonalProjectsConfigPage";
 import EducationConfigPage from "../pages/EducationConfigPage";
 import WorkExperienceListConfig from "../features/WorkExperience/WorkExperienceListConfig";
+import CertificatesConfigPage from "../pages/CertificatesConfigPage";
+import PersonalInfoConfigPage from "../pages/PersonalInfoConfigPage";
 
 const Router = () => {
 
@@ -51,7 +52,7 @@ const Router = () => {
                     <Route path="ver/:username/habilidades-blandas" element={<SoftSkillsPagePublic />} />
                     <Route path="ver/:username/proyectos" element={<PersonalProjectsPagePublic />} />
                     <Route path="ver/:username/educacion" element={<EducationPagePublic />} />
-                    <Route path="ver/:username/experiencia-laboral" element={<WorkExperiencePagePublic />} />
+                    <Route path="ver/:username/experiencia-laboral" element={<WorkExperiencieConfigPage />} />
                     <Route path="ver/:username/certificados" />
 
                     <Route path="configurar/habilidades-tecnicas" element={<HardSkillsConfigPage />} />
@@ -59,6 +60,8 @@ const Router = () => {
                     <Route path="configurar/proyectos-personales" element={<PersonalProjectsConfigPage />} />
                     <Route path="configurar/educacion" element={<EducationConfigPage />} />
                     <Route path="configurar/experiencia-laboral" element={<WorkExperienceListConfig />} />
+                    <Route path="configurar/certificados" element={<CertificatesConfigPage />} />
+                    <Route path="configurar/informacion-personal" element={<PersonalInfoConfigPage />} />
                 </Route>
             </Routes>
         </BrowserRouter>

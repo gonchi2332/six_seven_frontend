@@ -20,7 +20,6 @@ export const useGitHub = (appUsername: string) => {
                     setError(data.message ?? "Error al cargar perfil de GitHub");
                 }
             } catch (err: any) {
-                console.error("Error cargando GitHub:", err);
                 setError(err.message || "Error al cargar perfil de GitHub");
             } finally {
                 setIsLoading(false);

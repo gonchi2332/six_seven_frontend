@@ -1,3 +1,5 @@
+import type { updateCertificate } from "./certificateService";
+
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const getToken = () => localStorage.getItem("token") ?? "";
@@ -29,7 +31,7 @@ export const visibilityService = {
     },
 
     updateWorkExperience: async (visibilities: Record<string | number, boolean>) => {
-        const response = await fetch(`${API_BASE_URL}/api/v1/portfolio/users/experiences/visibility`, {
+        const response = await fetch(`${API_BASE_URL}/api/v1/portfolio/users/laboral-experience/visibility`, {
             method: "PATCH",
             headers: getHeaders(),
             body: JSON.stringify({ visibilities }),
@@ -43,6 +45,26 @@ export const visibilityService = {
             method: "PATCH",
             headers: getHeaders(),
             body: JSON.stringify({ visibilities }),
+        });
+        if (!response.ok) throw new Error("Error al actualizar visibilidad de habilidades");
+        return response.json();
+    },
+
+    updateCertificate: async (visibilities: Record<string | number, boolean>) => {
+        const response = await fetch(`${API_BASE_URL}/api/v1/portfolio/users/certificates/visibility`, {
+            method: "PATCH",
+            headers: getHeaders(),
+            body: JSON.stringify({ visibilities }),
+        });
+        if (!response.ok) throw new Error("Error al actualizar visibilidad de habilidades");
+        return response.json();
+    },
+
+    updatePersonalInfo: async (visibilities: Record<string | number, boolean>) => {
+        const response = await fetch(`${API_BASE_URL}/api/v2/register/users/personal-info/visibility`, {
+            method: "PATCH",
+            headers: getHeaders(),
+            body: JSON.stringify( visibilities ),
         });
         if (!response.ok) throw new Error("Error al actualizar visibilidad de habilidades");
         return response.json();
