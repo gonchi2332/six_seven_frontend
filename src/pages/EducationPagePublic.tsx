@@ -4,6 +4,7 @@ import { useEducation } from "../hooks/useEducation";
 import EducationCard from "../features/Education/EducationCard";
 import type { EducationEntry } from "../services/educationService";
 import Button from "../components/Button";
+import { useParams } from "react-router-dom";
 
 const PAGE_SIZE = 10;
 
@@ -31,7 +32,13 @@ const styles = {
 };
 
 const EducationPage = () => {
-    const { entries, isLoading, error, successMessage } = useEducation();
+    const { username } = useParams<{ username: string }>();
+    const {
+        publicEntries,
+        isLoadingPublic,
+        publicError,
+        setPublicUser
+    } = useEducation();
 
     // Estados de búsqueda y paginación
     const [searchInput, setSearchInput] = useState("");
@@ -39,9 +46,11 @@ const EducationPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
     const [selectedEntry, setSelectedEntry] = useState<EducationEntry | null>(null);
-    const [formError] = useState<string | null>(null);
+
+    useEffect(() => {
+        setPublicUser(username ?? null);
+    }, [username, setPublicUser]);
 
     useEffect(() => {
         if (searchInput === "") {
@@ -59,7 +68,7 @@ const EducationPage = () => {
         if (e.key === "Enter") handleSearch();
     };
 
-    const filtered = entries.filter((e) => {
+    const filtered = publicEntries.filter((e) => {
         if (!activeSearch.trim()) return true;
         const term = activeSearch.toLowerCase();
         return e.degree.toLowerCase().includes(term) || e.institution.toLowerCase().includes(term);
@@ -98,32 +107,26 @@ const EducationPage = () => {
                                     <Button
                                         variant="secondary"
                                         onClick={handleSearch}
-                                        disabled={isLoading}
+                                        disabled={isLoadingPublic}
                                         fullWidth
                                     >
                                         Buscar
                                     </Button>
-
                                 </div>
                             </div>
                         </div>
 
-                        {(error || formError) && (
+                        {publicError && (
                             <p className={`${styles.toast} bg-red-500/10 border border-red-500 text-red-400`}>
-                                {error || formError}
-                            </p>
-                        )}
-                        {successMessage && (
-                            <p className={`${styles.toast} bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]`}>
-                                {successMessage}
+                                {publicError}
                             </p>
                         )}
 
-                        {isLoading ? (
+                        {isLoadingPublic ? (
                             <p className={styles.loading}>Cargando...</p>
                         ) : paginated.length === 0 ? (
                             <p className={styles.empty}>
-                                {activeSearch ? "No se encontraron registros." : "No tienes experiencias académicas aún."}
+                                {activeSearch ? "No se encontraron registros." : "No hay experiencias académicas aún."}
                             </p>
                         ) : (
                             <div className={styles.listWrapper}>
@@ -131,7 +134,8 @@ const EducationPage = () => {
                                     <EducationCard
                                         key={entry.id}
                                         entry={entry}
-                                        onView={handleCardClick} />
+                                        onView={handleCardClick}
+                                    />
                                 ))}
                             </div>
                         )}
