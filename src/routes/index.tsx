@@ -5,7 +5,6 @@ import RegisterPage from "../pages/RegisterPage";
 import VerificationPage from "../pages/VerificationPage";
 import PasswordResetPage from "../pages/PasswordResetPage";
 import Dashboard from "../pages/Dashboard";
-import PublicDashboard from "../pages/PublicDashboard";
 import HardSkillsPage from "../pages/HardSkillsPage";
 import SoftSkillsPage from "../pages/SoftSkillsPage";
 import EducationPage from "../pages/EducationPage";
@@ -19,7 +18,6 @@ import PersonalInfoPublic from "../pages/PersonalInfoPublic";
 import SoftSkillsPagePublic from "../pages/SoftSkillsPagePublic";
 import HardSkillsPagePublic from "../pages/HardSkillsPagePublic";
 import EducationPagePublic from "../pages/EducationPagePublic";
-import { WorkExperienceList } from "../features/WorkExperience";
 import WorkExperiencePagePublic from "../pages/WorkExperiencePagePublic";
 
 const Router = () => {
