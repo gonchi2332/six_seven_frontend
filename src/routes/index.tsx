@@ -26,6 +26,7 @@ import PersonalProjectsConfigPage from "../pages/PersonalProjectsConfigPage";
 import EducationConfigPage from "../pages/EducationConfigPage";
 import WorkExperienceListConfig from "../features/WorkExperience/WorkExperienceListConfig";
 import CertificatesConfigPage from "../pages/CertificatesConfigPage";
+import CertificatesPublicPage from "../pages/CertificatesPagePublic";
 import PersonalInfoConfigPage from "../pages/PersonalInfoConfigPage";
 
 const Router = () => {
@@ -46,14 +47,14 @@ const Router = () => {
                     <Route path="/educacion" element={<EducationPage />} />
                     <Route path="/experiencia-laboral" element={<Experience />} />
                     <Route path="/certificados" element={<CertificatesPage />} />
-                    
+
                     <Route path="ver/:username" element={<PersonalInfoPublic />} />
                     <Route path="ver/:username/habilidades-tecnicas" element={<HardSkillsPagePublic />} />
                     <Route path="ver/:username/habilidades-blandas" element={<SoftSkillsPagePublic />} />
                     <Route path="ver/:username/proyectos" element={<PersonalProjectsPagePublic />} />
                     <Route path="ver/:username/educacion" element={<EducationPagePublic />} />
                     <Route path="ver/:username/experiencia-laboral" element={<WorkExperiencieConfigPage />} />
-                    <Route path="ver/:username/certificados" />
+                    <Route path="ver/:username/certificados" element={<CertificatesPublicPage />} />
 
                     <Route path="configurar/habilidades-tecnicas" element={<HardSkillsConfigPage />} />
                     <Route path="configurar/habilidades-blandas" element={<SoftSkillsConfigPage />} />
@@ -64,7 +65,7 @@ const Router = () => {
                     <Route path="configurar/informacion-personal" element={<PersonalInfoConfigPage />} />
                 </Route>
             </Routes>
-        </BrowserRouter>
+        </BrowserRouter >
     );
 };
 
