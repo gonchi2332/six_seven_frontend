@@ -7,6 +7,7 @@ export interface Certificate {
     area: string;
     issueDate: string;
     coverImage: string;
+    visible:boolean;
 }
 
 const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/portfolio`;
@@ -49,6 +50,7 @@ export const fetchCertificates = async (): Promise<Certificate[]> => {
         area: string;
         issue_date: string;
         file: string;
+        visible:boolean
     }) => ({
         id: c.id,
         title: c.title,
@@ -56,6 +58,7 @@ export const fetchCertificates = async (): Promise<Certificate[]> => {
         area: c.area,
         issueDate: c.issue_date.split("T")[0],
         coverImage: parseProfilePicture(c.file) ?? "",
+        visible: c.visible,
     }));
 };
 
