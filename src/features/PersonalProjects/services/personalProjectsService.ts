@@ -106,13 +106,46 @@ export const createProjectService = async (
     return JSON.parse(responseText);
 };
 
+
+export const fetchPublicProjectsService = async (username: string): Promise<ProjectEntry[]> => {
+    const response = await fetch(`${API_URL}/api/v1/portfolio/users/${username}/projects`);
+    if (!response.ok) {
+        let errorMessage = "Error al obtener los proyectos";
+        try {
+            const errorData = await response.json();
+            errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+            errorMessage = `Error ${response.status}: ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
+    }
+    const data: FetchProjectsResponse = await response.json();
+
+    return data.projects.map((project: any) => ({
+        id: String(project.id),
+        name: project.name,
+        description: project.description,
+        topic: project.topic,
+        role: project.role,
+        status: project.status,
+        links: project.links || [],
+        image: project.image || null,
+        imageUrl: project.image || "",
+        createdAt: project.createdAt || new Date().toISOString(),
+        updatedAt: project.updatedAt || new Date().toISOString(),
+        visible: project.visible
+    }));
+};
+
+
+
 // Obtener proyectos del usuario autenticado
 export const fetchProjectsService = async (): Promise<ProjectEntry[]> => {
     const username = getUsernameFromToken();
     const token = localStorage.getItem("token");
     const response = await fetch(`${API_URL}/api/v1/portfolio/users/projects?username=${username}`, {
         method: "GET",
-        headers:{
+        headers: {
             Authorization: `Bearer ${token}`,
         }
 

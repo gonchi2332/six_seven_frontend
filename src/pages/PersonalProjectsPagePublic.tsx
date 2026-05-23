@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { useProjects } from "../features/PersonalProjects/hooks/useProjects";
 import ProjectCard from "../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectCard";
-import PopUpCard from "../components/PopUpCard";
 import type { ProjectEntry } from "../features/PersonalProjects/services/personalProjectsService";
 import Button from "../components/Button";
+import { useParams } from "react-router-dom";
 
 const PAGE_SIZE = 10;
 
@@ -33,31 +33,23 @@ const styles = {
 };
 
 const ProjectsPage = () => {
-    const { projects, isLoading, error, successMessage } = useProjects();
+    const { username } = useParams<{ username: string }>();
+    const {
+        publicProjects,
+        isLoadingPublic,
+        publicError,
+        setPublicUser
+    } = useProjects();
+
     const [searchInput, setSearchInput] = useState("");
     const [activeSearch, setActiveSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedProject, setSelectedProject] = useState<ProjectEntry | null>(null);
     const [showOptionsModal, setShowOptionsModal] = useState(false);
-    const [showDeleteConfirm] = useState(false);
-    const [localError, setLocalError] = useState<string | null>(null);
-    const [localSuccess, setLocalSuccess] = useState<string | null>(null);
 
     useEffect(() => {
-        if (successMessage) {
-            setLocalSuccess(successMessage);
-            const timer = setTimeout(() => setLocalSuccess(null), 3000);
-            return () => clearTimeout(timer);
-        }
-    }, [successMessage]);
-
-    useEffect(() => {
-        if (error) {
-            setLocalError(error);
-            const timer = setTimeout(() => setLocalError(null), 3000);
-            return () => clearTimeout(timer);
-        }
-    }, [error]);
+        setPublicUser(username ?? null);
+    }, [username, setPublicUser]);
 
     const handleSearch = () => {
         setActiveSearch(searchInput);
@@ -73,7 +65,7 @@ const ProjectsPage = () => {
         setShowOptionsModal(true);
     };
 
-    const filtered = projects.filter((p) =>
+    const filtered = publicProjects.filter((p) =>
         p.name.toLowerCase().includes(activeSearch.toLowerCase()) ||
         p.topic.toLowerCase().includes(activeSearch.toLowerCase())
     );
@@ -105,24 +97,20 @@ const ProjectsPage = () => {
                                     <Button
                                         variant="secondary"
                                         onClick={handleSearch}
-                                        disabled={isLoading}
+                                        disabled={isLoadingPublic}
                                         fullWidth
                                     >
                                         Buscar
                                     </Button>
-
                                 </div>
                             </div>
                         </div>
 
-                        {localError && (
-                            <p className={`${styles.toast} ${styles.toastError}`}>{localError}</p>
+                        {publicError && (
+                            <p className={`${styles.toast} ${styles.toastError}`}>{publicError}</p>
                         )}
 
-                        {localSuccess && (
-                            <p className={`${styles.toast} ${styles.toastSuccess}`}>{localSuccess}</p>
-                        )}
-                        {isLoading ? (
+                        {isLoadingPublic ? (
                             <p className={styles.empty}>Cargando proyectos...</p>
                         ) : paginated.length === 0 ? (
                             <div className={styles.empty}>
@@ -130,7 +118,7 @@ const ProjectsPage = () => {
                                     "No se encontraron proyectos."
                                 ) : (
                                     <div className="flex flex-col items-center gap-2">
-                                        <p>No tienes proyectos personales registrados.</p>
+                                        <p>No hay proyectos personales registrados aún.</p>
                                     </div>
                                 )}
                             </div>
@@ -185,21 +173,7 @@ const ProjectsPage = () => {
             {/* Modal de opciones */}
             {showOptionsModal && selectedProject && (
                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-                </div>
-            )}
-
-            {/* Modal de confirmación de eliminación */}
-            {showDeleteConfirm && selectedProject && (
-                <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-                    <div className="w-full max-w-md">
-                        <PopUpCard title="Eliminar Proyecto">
-                            <div className="flex flex-col gap-6 p-6">
-                                <p className="text-white/90 font-nunito text-center text-base">
-                                    ¿Estás seguro de que deseas eliminar este proyecto?
-                                </p>
-                            </div>
-                        </PopUpCard>
-                    </div>
+                    {/* Contenido del modal */}
                 </div>
             )}
         </div>

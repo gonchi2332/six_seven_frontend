@@ -10,7 +10,7 @@ export interface EducationEntry {
     institution: string;
     startDate: string;
     educationState: string;
-    visible:boolean;
+    visible: boolean;
 }
 
 export interface AcademicDegree {
@@ -66,19 +66,13 @@ export const fetchAcademicDegrees = async (): Promise<AcademicDegree[]> => {
     return data.educationGrade ?? [];
 };
 
-// GET - Obtener formaciones académicas del usuario
-export const fetchEducation = async (): Promise<EducationEntry[]> => {
-    const username = getUsername();
-    if (!username) return [];
-    
-    const res = await fetch(`${BASE_URL}/users/education?username=${username}`, {
-        headers: authHeaders(),
-    });
+export const fetchPublicEducation = async (username: string): Promise<EducationEntry[]> => {
+    const res = await fetch(`${BASE_URL}/users/${username}/education`)
     if (!res.ok) throw new Error("Error al cargar formaciones académicas");
     const data = await res.json();
-    
+
     if (!data.education) return [];
-    
+
     return data.education.map((e: {
         id: number;
         title: string;
@@ -86,7 +80,43 @@ export const fetchEducation = async (): Promise<EducationEntry[]> => {
         academicdegree: string;
         start_date: string;
         education_state: string;
-        visible:string;
+        visible: string;
+    }) => ({
+        id: String(e.id),
+        degree: e.title,
+        academicLevel: e.academicdegree,
+        academicLevelId: 0, // Se actualizará con el ID correspondiente
+        institution: e.institution,
+        startDate: formatStartDate(e.start_date),
+        educationState: e.education_state || 'Culminado',
+        visible: e.visible
+    }));
+
+
+}
+
+
+// GET - Obtener formaciones académicas del usuario
+export const fetchEducation = async (): Promise<EducationEntry[]> => {
+    const username = getUsername();
+    if (!username) return [];
+
+    const res = await fetch(`${BASE_URL}/users/education?username=${username}`, {
+        headers: authHeaders(),
+    });
+    if (!res.ok) throw new Error("Error al cargar formaciones académicas");
+    const data = await res.json();
+
+    if (!data.education) return [];
+
+    return data.education.map((e: {
+        id: number;
+        title: string;
+        institution: string;
+        academicdegree: string;
+        start_date: string;
+        education_state: string;
+        visible: string;
     }) => ({
         id: String(e.id),
         degree: e.title,
@@ -116,10 +146,10 @@ export const createEducation = async (
         headers: authHeaders(),
         body: JSON.stringify(body),
     });
-    
+
     const resData = await res.json();
     if (!res.ok) throw new Error(resData.message ?? "Error al crear formación académica");
-    
+
     return fetchEducation();
 };
 
@@ -129,7 +159,7 @@ export const updateEducation = async (
     data: Omit<EducationEntry, "id">
 ): Promise<EducationEntry[]> => {
     const body: Record<string, unknown> = {};
-    
+
     if (data.degree) body.title = data.degree;
     if (data.academicLevelId && data.academicLevelId !== 0) body.academyDegreeId = data.academicLevelId;
     if (data.institution) body.institution = data.institution;
@@ -141,10 +171,10 @@ export const updateEducation = async (
         headers: authHeaders(),
         body: JSON.stringify(body),
     });
-    
+
     const resData = await res.json();
     if (!res.ok) throw new Error(resData.message ?? "Error al actualizar formación académica");
-    
+
     return fetchEducation();
 };
 
@@ -154,7 +184,7 @@ export const deleteEducation = async (id: string): Promise<void> => {
         method: "DELETE",
         headers: authHeaders(),
     });
-    
+
     if (!res.ok) {
         const data = await res.json();
         throw new Error(data.message ?? "Error al eliminar formación académica");

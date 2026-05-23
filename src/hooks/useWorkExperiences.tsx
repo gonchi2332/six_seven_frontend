@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { 
+import { useState, useEffect, useCallback } from 'react';
+import {
+    fetchPublicWorkExperience,
     getWorkExperiences,
     createWorkExperience,
     updateWorkExperience,
@@ -18,7 +19,7 @@ export interface CreateWorkExperienceDto {
     companyName: string;
     description: string;
     startDate: string;
-    endDate?: string | null;  
+    endDate?: string | null;
 }
 
 export interface UpdateWorkExperienceDto {
@@ -26,7 +27,7 @@ export interface UpdateWorkExperienceDto {
     companyName?: string;
     description?: string;
     startDate?: string;
-    endDate?: string | null;  
+    endDate?: string | null;
 }
 
 // ============================================
@@ -90,22 +91,22 @@ export const validateForm = (data: {
     isCurrent: boolean;
 }): ValidationErrors => {
     const errors: ValidationErrors = {};
-    
+
     const positionError = validatePosition(data.position);
     if (positionError) errors.position = positionError;
-    
+
     const companyError = validateCompany(data.company);
     if (companyError) errors.company = companyError;
-    
+
     const descriptionError = validateDescription(data.description);
     if (descriptionError) errors.description = descriptionError;
-    
+
     const startDateError = validateStartDate(data.startDate);
     if (startDateError) errors.startDate = startDateError;
-    
+
     const endDateError = validateEndDate(data.endDate, data.isCurrent);
     if (endDateError) errors.endDate = endDateError;
-    
+
     return errors;
 };
 
@@ -118,10 +119,14 @@ export const isFormValid = (errors: ValidationErrors): boolean => {
 // ============================================
 
 export const useWorkExperiences = () => {
+    const [publicExperiences, setPublicExperiences] = useState<WorkExperience[]>([]);
     const [experiences, setExperiences] = useState<WorkExperience[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingPublic, setIsLoadingPublic] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [publicError, setPublicError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [currentPublicUsername, setCurrentPublicUsername] = useState<string | null>(null);
 
     const showSuccess = (msg: string) => {
         setSuccessMessage(msg);
@@ -135,7 +140,7 @@ export const useWorkExperiences = () => {
     const loadExperiences = async () => {
         setIsLoading(true);
         setError(null);
-        
+
         const username = getUsername();
         if (!username) {
             setError('Usuario no identificado');
@@ -160,6 +165,44 @@ export const useWorkExperiences = () => {
 
     useEffect(() => {
         loadExperiences();
+    }, []);
+
+    // useEffect para cargar experiencias públicas automáticamente cuando cambia currentPublicUsername
+    useEffect(() => {
+        const fetchPublicUserExperiences = async () => {
+            if (!currentPublicUsername || currentPublicUsername.trim() === "") {
+                setPublicExperiences([]);
+                setIsLoadingPublic(false);
+                return;
+            }
+
+            setIsLoadingPublic(true);
+            setPublicError(null);
+            try {
+                const data = await fetchPublicWorkExperience(currentPublicUsername);
+                if (data.success && Array.isArray(data.laboralExperiences)) {
+                    setPublicExperiences(data.laboralExperiences);
+                } else {
+                    setPublicExperiences([]);
+                }
+            } catch (err: any) {
+                console.error(err);
+                // No mostrar error de autenticación en vista pública
+                if (!err.message?.includes("token") && !err.message?.includes("autenticacion") && !err.message?.includes("Authorization")) {
+                    setPublicError(err.message || 'Error al obtener experiencias laborales públicas');
+                }
+                setPublicExperiences([]);
+            } finally {
+                setIsLoadingPublic(false);
+            }
+        };
+
+        fetchPublicUserExperiences();
+    }, [currentPublicUsername]);
+
+    // Función pública para cambiar el usuario a visualizar
+    const setPublicUser = useCallback((username: string | null) => {
+        setCurrentPublicUsername(username);
     }, []);
 
     const addExperience = async (data: CreateWorkExperienceDto): Promise<void> => {
@@ -196,6 +239,7 @@ export const useWorkExperiences = () => {
         experiences,
         isLoading,
         error,
+        publicError,
         successMessage,
         addExperience,
         updateExperience,
@@ -208,5 +252,10 @@ export const useWorkExperiences = () => {
         validateEndDate,
         validateForm,
         isFormValid,
+        // Nuevos valores para público
+        publicExperiences,
+        isLoadingPublic,
+        setPublicUser,
+        currentPublicUsername,
     };
 };

@@ -11,6 +11,16 @@ const jsonHeaders = () => ({
     "Content-Type": "application/json",
 });
 
+export const fetchSkillsPublicNew = async (username: string) => {
+    const res = await fetch(`${BASE_URL}/users/${username}/hard-skills`);
+    if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message ?? "Error al obtener habilidades");
+    }
+    return res.json();
+}
+
+
 export const fetchSkills = async () => {
     const username = getUsername();
     const res = await fetch(`${BASE_URL}/users/hard-skills?username=${username}`, {
@@ -121,8 +131,8 @@ export const deleteSkill = async (skillName: string) => {
     }
 };
 
-export const fetchSkillsPublic = async (username: string) => {
-    const res = await fetch(`${BASE_URL}/users/hard-skills?username=${username}`, {
+export const fetchSkillsPublic = async () => {
+    const res = await fetch(`${BASE_URL}/users/hard-skills`, {
         headers: jsonHeaders(),
     });
     if (!res.ok) throw new Error("Error al obtener habilidades públicas");

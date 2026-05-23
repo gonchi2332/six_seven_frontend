@@ -36,6 +36,16 @@ export const getPersonalInfo = async (username: string): Promise<PersonalInfoRes
     return data.userPersonalInfo;
 };
 
+
+export const fetchPublicPersonalInfo = async (username: string): Promise<PersonalInfoResponse> => {
+    const response = await fetch(`${API_URL}/api/v2/register/users/${username}/personal-info`);
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+        throw new Error(data.message || "Error al obtener la información");
+    }
+    return data.userPersonalInfo;
+}
+
 export const updatePersonalInfo = async (formData: FormData) => {
     const token = localStorage.getItem("token")?.trim();
     const response = await fetch(`${API_URL}/api/v2/register/users/personal-info`, {

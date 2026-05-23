@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSkills } from "../hooks/useSkills";
 import useSearch from "../hooks/useSearch";
 import usePagination from "../hooks/usePagination";
@@ -6,6 +6,7 @@ import SkillSearchBar from "../components/SkillSearchBar";
 import SkillPagination from "../components/SkillPagination";
 import LevelBars from "../components/LevelBars/Levelbars ";
 import type { Skill } from "../features/skills/types/skill.types";
+import { useParams } from "react-router-dom";
 
 const PAGE_SIZE = 12;
 
@@ -26,18 +27,33 @@ const styles = {
 };
 
 const HardSkillsPage = () => {
-    const { skills, isLoading, error, successMessage } = useSkills();
+    const { username } = useParams<{ username: string }>();
+    const {
+        publicSkills,
+        isLoadingPublic,
+        error,
+        setPublicUser,
+    } = useSkills();
+
     const { searchInput, filtered, handleSearch, handleKeyDown, handleChange } = useSearch(
-        skills,
+        publicSkills,
         (s, q) => s.name.toLowerCase().includes(q.toLowerCase())
     );
+
     const { currentPage, totalPages, paginated, prevPage, nextPage, resetPage } = usePagination(filtered, PAGE_SIZE);
 
-    const [showAdd, setShowAdd] = useState(false);
     const [skillAction, setSkillAction] = useState<Skill | null>(null);
 
+    useEffect(() => {
+        if (username) {
+            setPublicUser(username);
+        }
+    }, [username, setPublicUser]);
 
-    const onSearch = () => { handleSearch(); resetPage(); };
+    const onSearch = () => {
+        handleSearch();
+        resetPage();
+    };
 
     return (
         <div className={styles.wrapper}>
@@ -51,7 +67,7 @@ const HardSkillsPage = () => {
                                 onChange={handleChange}
                                 onSearch={onSearch}
                                 onKeyDown={handleKeyDown}
-                                onAdd={() => setShowAdd(true)}
+                                onAdd={() => { }}
                                 placeholder="Buscar habilidad..."
                                 addLabel="Registrar"
                                 isPublic={true}
@@ -59,20 +75,19 @@ const HardSkillsPage = () => {
                         </div>
 
                         {error && <p className={`${styles.toast} bg-red-500/10 border border-red-500 text-red-400`}>{error}</p>}
-                        {successMessage && <p className={`${styles.toast} bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]`}>{successMessage}</p>}
 
-                        {isLoading ? (
+                        {isLoadingPublic ? (
                             <p className={styles.loading}>Cargando...</p>
                         ) : paginated.length === 0 ? (
                             <p className={styles.empty}>
-                                {filtered.length === 0 && skills.length > 0
+                                {filtered.length === 0 && publicSkills.length > 0
                                     ? "No se encontraron habilidades."
                                     : "No hay habilidades técnicas aún."}
                             </p>
                         ) : (
                             <div className={styles.listWrapper}>
                                 {paginated.map((skill) => (
-                                    <div key={skill.id} className={styles.skillRow} onClick={() => setSkillAction(skill)}>
+                                    <div key={skill.skill_id} className={styles.skillRow} onClick={() => setSkillAction(skill)}>
                                         <div className={styles.skillLeft}>
                                             <span className={styles.skillName}>{skill.name}</span>
                                             <LevelBars level={skill.level} size="sm" />
