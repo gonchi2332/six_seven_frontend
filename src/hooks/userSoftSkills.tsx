@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
     getSoftSkills,
     deleteSoftSkill,
     fetchCatalogSoftSkills,
+    fetchPublicSoftSkills,
 } from "../services/softSkillService";
 import type { SoftSkill } from "../services/softSkillService";
 import { useAuthContext } from "../context/AuthContext";
@@ -10,10 +11,13 @@ import { useAuthContext } from "../context/AuthContext";
 export const useSoftSkills = () => {
     const { username } = useAuthContext();
     const [skills, setSkills] = useState<SoftSkill[]>([]);
+    const [publicSkills, setPublicSkills] = useState<SoftSkill[]>([]);
     const [catalogSkills, setCatalogSkills] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [isLoadingPublic, setIsLoadingPublic] = useState(false);
+    const [currentPublicUsername, setCurrentPublicUsername] = useState<string | null>(null);
 
     const showSuccess = (msg: string) => {
         setSuccessMessage(msg);
@@ -47,8 +51,40 @@ export const useSoftSkills = () => {
         loadSkills();
     }, [username]);
 
+    // useEffect para cargar skills públicas automáticamente cuando cambia currentPublicUsername
+    useEffect(() => {
+        const fetchPublicUserSoftSkills = async () => {
+            if (!currentPublicUsername || currentPublicUsername.trim() === "") {
+                setPublicSkills([]);
+                setIsLoadingPublic(false);
+                return;
+            }
+
+            setIsLoadingPublic(true);
+            setError(null);
+            try {
+                const data = await fetchPublicSoftSkills(currentPublicUsername);
+                setPublicSkills(data);
+            } catch (err: unknown) {
+                console.error(err);
+                const errorMsg = err instanceof Error ? err.message : "Error al obtener habilidades blandas públicas";
+                setError(errorMsg);
+                setPublicSkills([]);
+            } finally {
+                setIsLoadingPublic(false);
+            }
+        };
+
+        fetchPublicUserSoftSkills();
+    }, [currentPublicUsername]);
+
+    // Función pública para cambiar el usuario a visualizar
+    const setPublicUser = useCallback((username: string | null) => {
+        setCurrentPublicUsername(username);
+    }, []);
+
     const addSkill = (name: string) => {
-        setSkills((prev) => [...prev, { name, visible:true, skill_id:"" }]);
+        setSkills((prev) => [...prev, { name, visible: true, skill_id: "" }]);
         showSuccess("Habilidad registrada correctamente");
     };
 
@@ -74,6 +110,10 @@ export const useSoftSkills = () => {
         addSkill,
         removeSkill,
         reloadSkills: loadSkills,
+        publicSkills,
+        isLoadingPublic,
+        setPublicUser,
+        currentPublicUsername,
     };
 };
 

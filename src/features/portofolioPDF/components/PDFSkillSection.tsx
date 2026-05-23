@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
-import { useSoftSkills } from "../hooks/userSoftSkills";
-import useSearch from "../hooks/useSearch";
-import usePagination from "../hooks/usePagination";
-import SkillSearchBar from "../components/SkillSearchBar";
-import SkillPagination from "../components/SkillPagination";
-import type { SoftSkill } from "../services/softSkillService";
-import { useParams } from "react-router-dom";
+
+import { useState } from "react";
+import { useSkills } from "../../../hooks/useSkills";
+import useSearch from "../../../hooks/useSearch";
+import usePagination from "../../../hooks/usePagination";
+import SkillSearchBar from "../../../components/SkillSearchBar";
+import SkillPagination from "../../../components/SkillPagination";
+import LevelBars from "../../../components/LevelBars/Levelbars ";
+import type { Skill } from "../../skills/types/skill.types";
 
 const PAGE_SIZE = 12;
 
@@ -19,37 +20,25 @@ const styles = {
     listWrapper: "flex flex-col gap-2 sm:gap-3",
     empty: "text-white/70 font-nunito text-sm sm:text-base text-center py-8 sm:py-12 bg-black/20 rounded-xl border border-white/10",
     loading: "text-white/70 font-nunito text-sm sm:text-base text-center py-8 sm:py-12 bg-black/20 rounded-xl border border-white/10",
-    skillRow: "flex items-center px-3 sm:px-5 py-3 sm:py-4 rounded-xl border border-white/20 bg-black/30 cursor-pointer hover:border-[#90DDF0]/60 hover:bg-white/5 transition-all",
-    skillName: "text-white font-nunito text-[14px] sm:text-[16px] truncate flex-1 min-w-0",
+    skillRow: "flex items-center gap-3 sm:gap-4 px-3 sm:px-5 py-3 sm:py-4 rounded-xl border border-white/20 bg-black/30 cursor-pointer hover:border-[#90DDF0]/60 hover:bg-white/5 transition-all",
+    skillLeft: "flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 flex-1 min-w-0",
+    skillName: "text-white font-nunito text-[14px] sm:text-[16px] sm:w-36 shrink-0 truncate",
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
-const SoftSkillsPage = () => {
-    const { username } = useParams<{ username: string }>();
-    const {
-        publicSkills,
-        isLoadingPublic,
-        error,
-        setPublicUser
-    } = useSoftSkills();
-
+const HardSkillsPage = () => {
+    const { skills, isLoading, error, successMessage } = useSkills();
     const { searchInput, filtered, handleSearch, handleKeyDown, handleChange } = useSearch(
-        publicSkills,
+        skills,
         (s, q) => s.name.toLowerCase().includes(q.toLowerCase())
     );
-
-    useEffect(() => {
-        setPublicUser(username ?? null);
-    }, [username, setPublicUser]);
-
     const { currentPage, totalPages, paginated, prevPage, nextPage, resetPage } = usePagination(filtered, PAGE_SIZE);
 
-    const [skillAction, setSkillAction] = useState<SoftSkill | null>(null);
+    const [showAdd, setShowAdd] = useState(false);
+    const [skillAction, setSkillAction] = useState<Skill | null>(null);
 
-    const onSearch = () => {
-        handleSearch();
-        resetPage();
-    };
+
+    const onSearch = () => { handleSearch(); resetPage(); };
 
     return (
         <div className={styles.wrapper}>
@@ -57,13 +46,13 @@ const SoftSkillsPage = () => {
                 <div className={styles.outerCard}>
                     <div className={styles.greenContainer}>
                         <div className={styles.header}>
-                            <h1 className={styles.title}>Habilidades Blandas</h1>
+                            <h1 className={styles.title}>Habilidades Técnicas</h1>
                             <SkillSearchBar
                                 value={searchInput}
                                 onChange={handleChange}
                                 onSearch={onSearch}
                                 onKeyDown={handleKeyDown}
-                                onAdd={() => { }}
+                                onAdd={() => setShowAdd(true)}
                                 placeholder="Buscar habilidad..."
                                 addLabel="Registrar"
                                 isPublic={true}
@@ -71,20 +60,24 @@ const SoftSkillsPage = () => {
                         </div>
 
                         {error && <p className={`${styles.toast} bg-red-500/10 border border-red-500 text-red-400`}>{error}</p>}
+                        {successMessage && <p className={`${styles.toast} bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]`}>{successMessage}</p>}
 
-                        {isLoadingPublic ? (
+                        {isLoading ? (
                             <p className={styles.loading}>Cargando...</p>
                         ) : paginated.length === 0 ? (
                             <p className={styles.empty}>
-                                {filtered.length === 0 && publicSkills.length > 0
+                                {filtered.length === 0 && skills.length > 0
                                     ? "No se encontraron habilidades."
-                                    : "No hay habilidades blandas aún."}
+                                    : "No hay habilidades técnicas aún."}
                             </p>
                         ) : (
                             <div className={styles.listWrapper}>
-                                {paginated.map((skill, i) => (
-                                    <div key={i} className={styles.skillRow} onClick={() => setSkillAction(skill)}>
-                                        <span className={styles.skillName}>{skill.name}</span>
+                                {paginated.map((skill) => (
+                                    <div key={skill.id} className={styles.skillRow} onClick={() => setSkillAction(skill)}>
+                                        <div className={styles.skillLeft}>
+                                            <span className={styles.skillName}>{skill.name}</span>
+                                            <LevelBars level={skill.level} size="sm" />
+                                        </div>
                                     </div>
                                 ))}
                             </div>
@@ -103,4 +96,4 @@ const SoftSkillsPage = () => {
     );
 };
 
-export default SoftSkillsPage;
+export default HardSkillsPage;
