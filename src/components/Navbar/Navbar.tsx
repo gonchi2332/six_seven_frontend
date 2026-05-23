@@ -1,21 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { parseProfilePicture } from "../../services/decodeBase64";
 import { useNavbarInfo } from "../../hooks/useNavbarInfo";
-import { Copy, LogOut, Menu, X } from "lucide-react";
+import { Copy, LogOut, Menu, X, ChevronDown } from "lucide-react"; 
 import PublicProfileLink from "../PublicProfileLink/PublicProfileLink";
 
 const defAvatar = "/defAvatar.png";
-
-// Rutas fijas para el modo edición (Privado)
-const PRIVATE_TABS = [
-  { name: "Perfil", path: "/info-personal" },
-  { name: "Habilidades Técnicas", path: "/habilidades-tecnicas" },
-  { name: "Habilidades Blandas", path: "/habilidades-blandas" },
-  { name: "Experiencia Laboral", path: "/experiencia-laboral" },
-  { name: "Proyectos Personales", path: "/proyectos" },
-  { name: "Educación", path: "/educacion" },
-];
 
 const STYLES = {
   NAVBAR: "w-full bg-secondary px-4 sm:px-6 py-3 text-white font-inter border-b border-white/5 sticky top-0 z-50",
@@ -25,7 +15,7 @@ const STYLES = {
   AVATAR: "w-9 h-9 object-cover rounded-full border border-white/20 shrink-0",
   USER_NAME: "font-bold text-base sm:text-lg whitespace-nowrap shrink-0",
   TABS_CONTAINER: "hidden lg:flex items-center gap-1",
-  TAB_BUTTON: "px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap",
+  TAB_BUTTON: "px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 duration-200 cursor-pointer whitespace-nowrap flex items-center gap-1.5",
   TAB_ACTIVE: "bg-accent text-secondary shadow-lg shadow-accent/20",
   TAB_INACTIVE: "text-white/60 hover:text-white hover:bg-white/5",
   ACTIONS_CONTAINER: "hidden lg:flex items-center gap-4 ml-auto",
@@ -36,6 +26,10 @@ const STYLES = {
   MOBILE_TAB: "w-full text-left px-4 py-3 rounded-xl text-sm font-medium",
   LOGIN_BUTTON: "bg-accent/10 text-accent px-4 py-2 rounded-xl hover:bg-accent hover:text-secondary transition-all text-sm font-bold",
   OVERLAY: "fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4",
+  dropdownWrapper: "relative inline-block",
+  dropdownMenu: "absolute top-full left-0 mt-2 w-56 bg-secondary border border-white/10 rounded-xl p-1.5 shadow-xl flex flex-col gap-0.5 animate-in fade-in slide-in-from-top-2 duration-200",
+  dropdownItem: "w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all cursor-pointer",
+  dropdownItemActive: "bg-accent/10 text-accent hover:bg-accent/15"
 };
 
 interface NavbarProps {
@@ -49,32 +43,61 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
   const location = useLocation(); 
   const { username: urlUsername } = useParams(); 
   const token = localStorage.getItem("token");
+  
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // --- LÓGICA DE RUTAS ---
-  // Obtenemos el username ya sea de los params o del prop ownerName (desde MainLayout)
+  
+  const [isSkillsDropdownOpen, setIsSkillsDropdownOpen] = useState(false);
+  const [isVisibilityDropdownOpen, setIsVisibilityDropdownOpen] = useState(false);
+  
+  const [isMobileSkillsOpen, setIsMobileSkillsOpen] = useState(false);
+  const [isMobileVisibilityOpen, setIsMobileVisibilityOpen] = useState(false);
+  
+  const skillsRef = useRef<HTMLDivElement>(null);
+  const visibilityRef = useRef<HTMLDivElement>(null);
   const activeUsername = urlUsername || ownerName;
 
-  const publicTabs = [
-    { name: "Perfil", path: `/ver/${activeUsername}` },
-    { name: "Habilidades Técnicas", path: `/ver/${activeUsername}/habilidades-tecnicas` },
-    { name: "Habilidades Blandas", path: `/ver/${activeUsername}/habilidades-blandas` },
-    { name: "Experiencia Laboral", path: `/ver/${activeUsername}/experiencia-laboral` },
-    { name: "Proyectos Personales", path: `/ver/${activeUsername}/proyectos` },
-    { name: "Educación", path: `/ver/${activeUsername}/educacion` },
+  const pathTech = isPublic ? `/ver/${activeUsername}/habilidades-tecnicas` : "/habilidades-tecnicas";
+  const pathSoft = isPublic ? `/ver/${activeUsername}/habilidades-blandas` : "/habilidades-blandas";
+
+  const configPaths = {
+    projects: "/configurar/proyectos-personales",
+    education: "/configurar/educacion",
+    experience: "/configurar/experiencia-laboral",
+    skillsTech: "/configurar/habilidades-tecnicas",
+    skillsSoft: "/configurar/habilidades-blandas"
+  };
+
+  const mainTabs = [
+    { name: "Perfil", path: isPublic ? `/ver/${activeUsername}` : "/info-personal" },
+    { name: "Experiencia Laboral", path: isPublic ? `/ver/${activeUsername}/experiencia-laboral` : "/experiencia-laboral" },
+    { name: "Proyectos Personales", path: isPublic ? `/ver/${activeUsername}/proyectos` : "/proyectos" },
+    { name: "Educación", path: isPublic ? `/ver/${activeUsername}/educacion` : "/educacion" },
   ];
 
-  // Si isPublic es true, usamos las rutas con /ver/...
-  const currentTabs = isPublic ? publicTabs : PRIVATE_TABS;
+  const isSkillsTabActive = location.pathname === pathTech || location.pathname === pathSoft;
+  const isVisibilityActive = Object.values(configPaths).includes(location.pathname);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (skillsRef.current && !skillsRef.current.contains(event.target as Node)) {
+        setIsSkillsDropdownOpen(false);
+      }
+      if (visibilityRef.current && !visibilityRef.current.contains(event.target as Node)) {
+        setIsVisibilityDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     setIsMenuOpen(false);
+    setIsSkillsDropdownOpen(false);
+    setIsVisibilityDropdownOpen(false);
   }, [location.pathname]);
 
-  const userFullName = [userInfo?.names, userInfo?.first_surname]
-    .filter(Boolean)
-    .join(" ");
+  const userFullName = [userInfo?.names, userInfo?.first_surname].filter(Boolean).join(" ");
 
   const handleLogout = () => {
     localStorage.clear();
@@ -87,7 +110,6 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
         <div className={STYLES.CONTAINER}>
           <div className={STYLES.LEFT_SECTION}>
             <div className={STYLES.USER_INFO}>
-              {/* Solo mostrar avatar si es sesión privada */}
               {!isPublic && (
                 <img
                   src={(userInfo?.profile_picture ? parseProfilePicture(userInfo.profile_picture) : defAvatar) ?? defAvatar}
@@ -99,24 +121,101 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                 {isPublic ? `Portafolio de ${ownerName || activeUsername}` : (userFullName || "Mi Panel")}
               </span>
             </div>
-
-            {/* Navegación Desktop */}
+            
             <div className={STYLES.TABS_CONTAINER}>
-              {currentTabs.map((tab) => (
+              <button
+                onClick={() => navigate(mainTabs[0]!.path)}
+                className={`${STYLES.TAB_BUTTON} ${location.pathname === mainTabs[0]!.path ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+              >
+                {mainTabs[0]!.name}
+              </button>
+              
+              <div className={STYLES.dropdownWrapper} ref={skillsRef}>
+                <button
+                  onClick={() => { setIsSkillsDropdownOpen(!isSkillsDropdownOpen); setIsVisibilityDropdownOpen(false); }}
+                  className={`${STYLES.TAB_BUTTON} ${isSkillsTabActive ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+                >
+                  <span>Habilidades</span>
+                  <ChevronDown size={14} className={`transition-transform duration-200 ${isSkillsDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {isSkillsDropdownOpen && (
+                  <div className={STYLES.dropdownMenu}>
+                    <button
+                      onClick={() => navigate(pathTech)}
+                      className={`${STYLES.dropdownItem} ${location.pathname === pathTech ? STYLES.dropdownItemActive : ''}`}
+                    >
+                      Habilidades Técnicas
+                    </button>
+                    <button
+                      onClick={() => navigate(pathSoft)}
+                      className={`${STYLES.dropdownItem} ${location.pathname === pathSoft ? STYLES.dropdownItemActive : ''}`}
+                    >
+                      Habilidades Blandas
+                    </button>
+                  </div>
+                )}
+              </div>
+              
+              {mainTabs.slice(1).map((tab) => (
                 <button
                   key={tab.path}
                   onClick={() => navigate(tab.path)}
-                  className={`${STYLES.TAB_BUTTON} ${
-                    location.pathname === tab.path ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE
-                  }`}
+                  className={`${STYLES.TAB_BUTTON} ${location.pathname === tab.path ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
                 >
                   {tab.name}
                 </button>
               ))}
+
+              {!isPublic && (
+                <div className={STYLES.dropdownWrapper} ref={visibilityRef}>
+                  <button
+                    onClick={() => { setIsVisibilityDropdownOpen(!isVisibilityDropdownOpen); setIsSkillsDropdownOpen(false); }}
+                    className={`${STYLES.TAB_BUTTON} ${isVisibilityActive ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+                  >
+                    <span>Configurar Visibilidad</span>
+                    <ChevronDown size={14} className={`transition-transform duration-200 ${isVisibilityDropdownOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {isVisibilityDropdownOpen && (
+                    <div className={STYLES.dropdownMenu}>
+                      <button
+                        onClick={() => navigate(configPaths.experience)}
+                        className={`${STYLES.dropdownItem} ${location.pathname === configPaths.experience ? STYLES.dropdownItemActive : ''}`}
+                      >
+                        Visibilidad Experiencia
+                      </button>
+                      <button
+                        onClick={() => navigate(configPaths.projects)}
+                        className={`${STYLES.dropdownItem} ${location.pathname === configPaths.projects ? STYLES.dropdownItemActive : ''}`}
+                      >
+                        Visibilidad Proyectos
+                      </button>
+                      <button
+                        onClick={() => navigate(configPaths.education)}
+                        className={`${STYLES.dropdownItem} ${location.pathname === configPaths.education ? STYLES.dropdownItemActive : ''}`}
+                      >
+                        Visibilidad Educación
+                      </button>
+                      <button
+                        onClick={() => navigate(configPaths.skillsTech)}
+                        className={`${STYLES.dropdownItem} ${location.pathname === configPaths.skillsTech ? STYLES.dropdownItemActive : ''}`}
+                      >
+                        Visibilidad Hab. Técnicas
+                      </button>
+                      <button
+                        onClick={() => navigate(configPaths.skillsSoft)}
+                        className={`${STYLES.dropdownItem} ${location.pathname === configPaths.skillsSoft ? STYLES.dropdownItemActive : ''}`}
+                      >
+                        Visibilidad Hab. Blandas
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
-
-          {/* Acciones Desktop */}
+          
           <div className={STYLES.ACTIONS_CONTAINER}>
             {!isPublic && userInfo?.username && (
               <button onClick={() => setIsShareModalOpen(true)} className={STYLES.COPY_BUTTON}>
@@ -136,28 +235,105 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
               </button>
             ) : null}
           </div>
-
-          {/* Botón menú móvil */}
+          
           <button className={STYLES.MOBILE_TOGGLE} onClick={() => setIsMenuOpen(!isMenuOpen)}>
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-
-        {/* Menú Móvil Dropdown */}
+        
         {isMenuOpen && (
           <div className={STYLES.MOBILE_MENU}>
             <div className="flex flex-col gap-1">
-              {currentTabs.map((tab) => (
+              <button
+                onClick={() => navigate(mainTabs[0]!.path)}
+                className={`${STYLES.MOBILE_TAB} ${location.pathname === mainTabs[0]!.path ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+              >
+                {mainTabs[0]!.name}
+              </button>
+              
+              <div>
+                <button
+                  onClick={() => { setIsMobileSkillsOpen(!isMobileSkillsOpen); setIsMobileVisibilityOpen(false); }}
+                  className={`${STYLES.MOBILE_TAB} ${isSkillsTabActive ? 'bg-white/5 text-white' : STYLES.TAB_INACTIVE} flex items-center justify-between`}
+                >
+                  <span>Habilidades</span>
+                  <ChevronDown size={16} className={`transition-transform ${isMobileSkillsOpen ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {isMobileSkillsOpen && (
+                  <div className="pl-4 flex flex-col gap-1 mt-1 bg-black/10 rounded-xl p-1 border border-white/5">
+                    <button
+                      onClick={() => navigate(pathTech)}
+                      className={`${STYLES.MOBILE_TAB} ${location.pathname === pathTech ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+                    >
+                      • Habilidades Técnicas
+                    </button>
+                    <button
+                      onClick={() => navigate(pathSoft)}
+                      className={`${STYLES.MOBILE_TAB} ${location.pathname === pathSoft ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+                    >
+                      • Habilidades Blandas
+                    </button>
+                  </div>
+                )}
+              </div>
+              
+              {mainTabs.slice(1).map((tab) => (
                 <button
                   key={tab.path}
                   onClick={() => navigate(tab.path)}
-                  className={`${STYLES.MOBILE_TAB} ${
-                    location.pathname === tab.path ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE
-                  }`}
+                  className={`${STYLES.MOBILE_TAB} ${location.pathname === tab.path ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
                 >
                   {tab.name}
                 </button>
               ))}
+
+              {!isPublic && (
+                <div>
+                  <button
+                    onClick={() => { setIsMobileVisibilityOpen(!isMobileVisibilityOpen); setIsMobileSkillsOpen(false); }}
+                    className={`${STYLES.MOBILE_TAB} ${isVisibilityActive ? 'bg-white/5 text-white' : STYLES.TAB_INACTIVE} flex items-center justify-between`}
+                  >
+                    <span>Configurar Visibilidad</span>
+                    <ChevronDown size={16} className={`transition-transform ${isMobileVisibilityOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {isMobileVisibilityOpen && (
+                    <div className="pl-4 flex flex-col gap-1 mt-1 bg-black/10 rounded-xl p-1 border border-white/5">
+                      <button
+                        onClick={() => navigate(configPaths.experience)}
+                        className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.experience ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+                      >
+                        • Visibilidad Experiencia
+                      </button>
+                      <button
+                        onClick={() => navigate(configPaths.projects)}
+                        className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.projects ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+                      >
+                        • Visibilidad Proyectos
+                      </button>
+                      <button
+                        onClick={() => navigate(configPaths.education)}
+                        className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.education ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+                      >
+                        • Visibilidad Educación
+                      </button>
+                      <button
+                        onClick={() => navigate(configPaths.skillsTech)}
+                        className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.skillsTech ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+                      >
+                        • Visibilidad Hab. Técnicas
+                      </button>
+                      <button
+                        onClick={() => navigate(configPaths.skillsSoft)}
+                        className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.skillsSoft ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+                      >
+                        • Visibilidad Hab. Blandas
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
             
             {!isPublic && (
@@ -182,8 +358,6 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
           </div>
         )}
       </nav>
-
-      {/* Modal de Compartir */}
       {isShareModalOpen && userInfo?.username && (
         <div className={STYLES.OVERLAY} onClick={() => setIsShareModalOpen(false)}>
           <div onClick={(e) => e.stopPropagation()} className="w-full max-w-lg">

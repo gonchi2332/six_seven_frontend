@@ -36,6 +36,7 @@ export interface ProjectEntry {
     image: string | null;
     createdAt: string;
     updatedAt: string;
+    visible: boolean
 }
 
 interface CreateProjectResponse {
@@ -108,8 +109,13 @@ export const createProjectService = async (
 // Obtener proyectos del usuario autenticado
 export const fetchProjectsService = async (): Promise<ProjectEntry[]> => {
     const username = getUsernameFromToken();
-    const response = await fetch(`${API_URL}/api/v1/portfolio/users/${username}/projects`, {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/api/v1/portfolio/users/projects?username=${username}`, {
         method: "GET",
+        headers:{
+            Authorization: `Bearer ${token}`,
+        }
+
     });
 
     if (!response.ok) {
@@ -137,6 +143,7 @@ export const fetchProjectsService = async (): Promise<ProjectEntry[]> => {
         imageUrl: project.image || "",
         createdAt: project.createdAt || new Date().toISOString(),
         updatedAt: project.updatedAt || new Date().toISOString(),
+        visible: project.visible
     }));
 };
 

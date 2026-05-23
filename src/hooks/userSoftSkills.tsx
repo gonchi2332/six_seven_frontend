@@ -48,7 +48,7 @@ export const useSoftSkills = () => {
     }, [username]);
 
     const addSkill = (name: string) => {
-        setSkills((prev) => [...prev, { name }]);
+        setSkills((prev) => [...prev, { name, visible:true, skill_id:"" }]);
         showSuccess("Habilidad registrada correctamente");
     };
 

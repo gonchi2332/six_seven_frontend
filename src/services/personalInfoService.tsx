@@ -15,13 +15,16 @@ export interface PersonalInfoResponse {
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+const getToken = () => localStorage.getItem("token") ?? "";
+
 export const getPersonalInfo = async (username: string): Promise<PersonalInfoResponse> => {
     const response = await fetch(
         `${API_URL}/api/v2/register/users/personal-info?username=${username}`,
         {
             method: "GET",
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getToken()}`,
             },
         }
     );

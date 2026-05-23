@@ -14,7 +14,7 @@ const jsonHeaders = () => ({
 export const fetchSkills = async () => {
     const username = getUsername();
     const res = await fetch(`${BASE_URL}/users/hard-skills?username=${username}`, {
-        headers: jsonHeaders(),
+        headers: authHeaders(),
     });
     if (!res.ok) {
         const data = await res.json();
