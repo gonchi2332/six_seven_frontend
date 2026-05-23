@@ -1,5 +1,7 @@
 export interface SoftSkill {
     name: string;
+    visible: boolean;
+    skill_id: string;
 }
 
 export interface CreateSoftSkillDto {
@@ -25,7 +27,7 @@ const jsonHeaders = () => ({
 
 export const getSoftSkills = async (username: string): Promise<SoftSkill[]> => {
     const res = await fetch(`${BASE_URL}/users/soft-skills?username=${username}`, {
-        headers: jsonHeaders(),
+        headers: authHeaders(),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message ?? "Error al obtener habilidades blandas");
