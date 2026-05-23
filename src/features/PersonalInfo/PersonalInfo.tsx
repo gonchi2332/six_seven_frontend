@@ -131,7 +131,7 @@ const PersonalInfo = () => {
                                 {/* Card Identidad */}
                                 <div className={styles.infoCard}>
                                     <p className={styles.sectionTitle}>
-                                        <User size={14} /> Identidad Profesional
+                                        <User size={14} /> Datos Personales
                                     </p>
                                     <div className="flex flex-col gap-5">
                                         <InfoRow icon={User} label="Nombre Completo" value={fullName} />

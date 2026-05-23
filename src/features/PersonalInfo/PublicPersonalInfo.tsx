@@ -83,8 +83,7 @@ const PersonalInfoPage = () => {
                                 {/* Card Identidad */}
                                 <div className={styles.infoCard}>
                                     <p className={styles.sectionTitle}>
-                                        <User size={14} /> Identidad Profesional
-                                    </p>
+                                        <User size={14} /> Datos Personales  </p>
                                     <div className="flex flex-col gap-5">
                                         <InfoRow icon={User} label="Nombre Completo" value={fullName} />
                                         <InfoRow icon={Hash} label="Nombre de Usuario" value={publicInfo?.username} />

@@ -28,6 +28,7 @@ import WorkExperienceListConfig from "../features/WorkExperience/WorkExperienceL
 import CertificatesConfigPage from "../pages/CertificatesConfigPage";
 import CertificatesPublicPage from "../pages/CertificatesPagePublic";
 import PersonalInfoConfigPage from "../pages/PersonalInfoConfigPage";
+import WorkExperiencePagePublic from "../pages/WorkExperiencePagePublic";
 
 const Router = () => {
 
@@ -53,7 +54,7 @@ const Router = () => {
                     <Route path="ver/:username/habilidades-blandas" element={<SoftSkillsPagePublic />} />
                     <Route path="ver/:username/proyectos" element={<PersonalProjectsPagePublic />} />
                     <Route path="ver/:username/educacion" element={<EducationPagePublic />} />
-                    <Route path="ver/:username/experiencia-laboral" element={<WorkExperiencieConfigPage />} />
+                    <Route path="ver/:username/experiencia-laboral" element={<WorkExperiencePagePublic />} />
                     <Route path="ver/:username/certificados" element={<CertificatesPublicPage />} />
 
                     <Route path="configurar/habilidades-tecnicas" element={<HardSkillsConfigPage />} />
