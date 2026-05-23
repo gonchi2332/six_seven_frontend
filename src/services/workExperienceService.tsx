@@ -52,7 +52,21 @@ const getHeaders = (): HeadersInit => {
 // SERVICIOS (SIN TRANSFORMAR)
 // ============================================
 
+export const fetchPublicWorkExperience = async (username: string): Promise<{ success: boolean; message: string; laboralExperiences: WorkExperienceBackend[] }> => {
+    const response = await fetch(`${API_URL}/api/v1/portfolio/users/${username}/laboral-experience`);
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.message || 'Error al obtener experiencias laborales');
+    }
+
+    return data;
+
+}
+
 // GET - Obtener experiencias laborales de un usuario
+
+
 export const getWorkExperiences = async (username: string): Promise<{ success: boolean; message: string; laboralExperiences: WorkExperienceBackend[] }> => {
     const response = await fetch(
         `${API_URL}/api/v1/portfolio/users/laboral-experience?username=${username}`,
@@ -65,7 +79,7 @@ export const getWorkExperiences = async (username: string): Promise<{ success: b
     );
 
     const data = await response.json();
-    
+
     if (!response.ok) {
         throw new Error(data.message || 'Error al obtener experiencias laborales');
     }
@@ -85,7 +99,7 @@ export const createWorkExperience = async (data: CreateWorkExperienceBackendDto)
     );
 
     const responseData = await response.json();
-    
+
     if (!response.ok) {
         throw new Error(responseData.message || 'Error al crear experiencia laboral');
     }
@@ -105,7 +119,7 @@ export const updateWorkExperience = async (id: number, data: UpdateWorkExperienc
     );
 
     const responseData = await response.json();
-    
+
     if (!response.ok) {
         throw new Error(responseData.message || 'Error al modificar experiencia laboral');
     }
@@ -124,7 +138,7 @@ export const deleteWorkExperience = async (id: number): Promise<{ success: boole
     );
 
     const responseData = await response.json();
-    
+
     if (!response.ok) {
         throw new Error(responseData.message || 'Error al eliminar experiencia laboral');
     }

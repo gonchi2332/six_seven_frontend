@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { useWorkExperiences } from '../../hooks/useWorkExperiences';
 import WorkExperienceItem from './WorkExperienceItem';
 import type { WorkExperience } from '../../hooks/useWorkExperiences';
 import Button from '../../components/Button';
-
+import { useParams } from 'react-router-dom';
 
 const PAGE_SIZE = 10;
 
@@ -32,12 +32,23 @@ const styles = {
 };
 
 const WorkExperienceList = () => {
-    const { experiences, isLoading, error, successMessage } = useWorkExperiences();
+    const { username } = useParams<{ username: string }>();
+    const {
+        publicExperiences,
+        isLoadingPublic,
+        publicError,
+        setPublicUser
+    } = useWorkExperiences();
+
     const [searchInput, setSearchInput] = useState('');
     const [activeSearch, setActiveSearch] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
     const [selectedExperience, setSelectedExperience] = useState<WorkExperience | null>(null);
+
+    useEffect(() => {
+        setPublicUser(username ?? null);
+    }, [username, setPublicUser]);
 
     const handleSearch = () => {
         setActiveSearch(searchInput);
@@ -48,7 +59,7 @@ const WorkExperienceList = () => {
         if (e.key === 'Enter') handleSearch();
     };
 
-    const filteredExperiences = experiences.filter((experience) =>
+    const filteredExperiences = publicExperiences.filter((experience) =>
         experience.position.toLowerCase().includes(activeSearch.toLowerCase()) ||
         experience.company_name.toLowerCase().includes(activeSearch.toLowerCase())
     );
@@ -85,30 +96,24 @@ const WorkExperienceList = () => {
                                     <Button
                                         variant="secondary"
                                         onClick={handleSearch}
-                                        disabled={isLoading}
+                                        disabled={isLoadingPublic}
                                         fullWidth
                                     >
                                         Buscar
                                     </Button>
-
                                 </div>
                             </div>
                         </div>
 
-                        {error && (
-                            <p className={`${styles.toast} bg-red-500/10 border border-red-500 text-red-400`}>{error}</p>
-                        )}
-                        {successMessage && (
-                            <p className={`${styles.toast} bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]`}>
-                                {successMessage}
-                            </p>
+                        {publicError && (
+                            <p className={`${styles.toast} bg-red-500/10 border border-red-500 text-red-400`}>{publicError}</p>
                         )}
 
-                        {isLoading ? (
+                        {isLoadingPublic ? (
                             <p className={styles.loading}>Cargando...</p>
                         ) : paginatedExperiences.length === 0 ? (
                             <p className={styles.empty}>
-                                {activeSearch ? 'No se encontraron registros.' : 'No tienes experiencias laborales registradas.'}
+                                {activeSearch ? 'No se encontraron registros.' : 'No hay experiencias laborales registradas aún.'}
                             </p>
                         ) : (
                             <div className={styles.listWrapper}>
