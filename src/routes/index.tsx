@@ -45,12 +45,14 @@ const Router = () => {
                     <Route path="/educacion" element={<EducationPage />} />
                     <Route path="/experiencia-laboral" element={<Experience />} />
                     <Route path="/certificados" element={<CertificatesPage />} />
+                    
                     <Route path="ver/:username" element={<PersonalInfoPublic />} />
                     <Route path="ver/:username/habilidades-tecnicas" element={<HardSkillsPagePublic />} />
                     <Route path="ver/:username/habilidades-blandas" element={<SoftSkillsPagePublic />} />
                     <Route path="ver/:username/proyectos" element={<PersonalProjectsPagePublic />} />
                     <Route path="ver/:username/educacion" element={<EducationPagePublic />} />
                     <Route path="ver/:username/experiencia-laboral" element={<WorkExperiencePagePublic />} />
+                    <Route path="ver/:username/certificados" />
 
                     <Route path="configurar/habilidades-tecnicas" element={<HardSkillsConfigPage />} />
                     <Route path="configurar/habilidades-blandas" element={<SoftSkillsConfigPage />} />

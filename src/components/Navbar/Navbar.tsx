@@ -73,6 +73,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
     { name: "Experiencia Laboral", path: isPublic ? `/ver/${activeUsername}/experiencia-laboral` : "/experiencia-laboral" },
     { name: "Proyectos Personales", path: isPublic ? `/ver/${activeUsername}/proyectos` : "/proyectos" },
     { name: "Educación", path: isPublic ? `/ver/${activeUsername}/educacion` : "/educacion" },
+    { name: "Certificados", path: isPublic ? `/ver/${activeUsername}/certificacdos`: "/certificados"}
   ];
 
   const isSkillsTabActive = location.pathname === pathTech || location.pathname === pathSoft;
