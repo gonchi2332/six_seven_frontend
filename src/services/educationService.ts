@@ -10,6 +10,7 @@ export interface EducationEntry {
     institution: string;
     startDate: string;
     educationState: string;
+    visible:boolean;
 }
 
 export interface AcademicDegree {
@@ -36,10 +37,6 @@ const authHeaders = (): HeadersInit => ({
     "Authorization": `Bearer ${getToken()}`,
 });
 
-const jsonHeaders = (): HeadersInit => ({
-    "Content-Type": "application/json",
-});
-
 // ============================================
 // FUNCIONES AUXILIARES
 // ============================================
@@ -62,7 +59,7 @@ const formatToISO = (year: string): string => {
 // GET - Obtener grados académicos (catálogo)
 export const fetchAcademicDegrees = async (): Promise<AcademicDegree[]> => {
     const res = await fetch(`${BASE_URL}/education_degree`, {
-        headers: jsonHeaders(),
+        headers: authHeaders(),
     });
     if (!res.ok) throw new Error("Error al obtener grados académicos");
     const data = await res.json();
@@ -75,7 +72,7 @@ export const fetchEducation = async (): Promise<EducationEntry[]> => {
     if (!username) return [];
     
     const res = await fetch(`${BASE_URL}/users/education?username=${username}`, {
-        headers: jsonHeaders(),
+        headers: authHeaders(),
     });
     if (!res.ok) throw new Error("Error al cargar formaciones académicas");
     const data = await res.json();
@@ -89,6 +86,7 @@ export const fetchEducation = async (): Promise<EducationEntry[]> => {
         academicdegree: string;
         start_date: string;
         education_state: string;
+        visible:string;
     }) => ({
         id: String(e.id),
         degree: e.title,
@@ -97,6 +95,7 @@ export const fetchEducation = async (): Promise<EducationEntry[]> => {
         institution: e.institution,
         startDate: formatStartDate(e.start_date),
         educationState: e.education_state || 'Culminado',
+        visible: e.visible
     }));
 };
 
