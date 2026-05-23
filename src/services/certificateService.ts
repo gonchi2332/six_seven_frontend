@@ -7,7 +7,7 @@ export interface Certificate {
     area: string;
     issueDate: string;
     coverImage: string;
-    visible:boolean;
+    visible: boolean;
 }
 
 const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/portfolio`;
@@ -31,6 +31,39 @@ const authHeaders = () => ({
     Authorization: `Bearer ${getToken()}`,
 });
 
+const jsonHeaders = () => ({
+    "Content-Type": "application/json",
+});
+
+// GET - Certificados públicos (NO requiere autenticación)
+export const fetchCertificatesPublic = async (username: string): Promise<Certificate[]> => {
+    const res = await fetch(`${BASE_URL}/users/${username}/certificates`, {
+        headers: jsonHeaders(),
+    });
+    const data = await res.json();
+    if (!res.ok) return [];
+    if (!data.certificates) return [];
+
+    return data.certificates.map((c: {
+        id: number;
+        title: string;
+        description: string;
+        area: string;
+        issue_date: string;
+        file: string;
+        visible: boolean
+    }) => ({
+        id: c.id,
+        title: c.title,
+        description: c.description,
+        area: c.area,
+        issueDate: c.issue_date.split("T")[0],
+        coverImage: parseProfilePicture(c.file) ?? "",
+        visible: c.visible,
+    }));
+}
+
+// GET - Certificados del usuario autenticado (requiere token)
 export const fetchCertificates = async (): Promise<Certificate[]> => {
     const username = getUsername();
     if (!username) return [];
@@ -50,7 +83,7 @@ export const fetchCertificates = async (): Promise<Certificate[]> => {
         area: string;
         issue_date: string;
         file: string;
-        visible:boolean
+        visible: boolean
     }) => ({
         id: c.id,
         title: c.title,
@@ -62,6 +95,7 @@ export const fetchCertificates = async (): Promise<Certificate[]> => {
     }));
 };
 
+// POST - Crear certificado
 export const createCertificate = async (
     data: Omit<Certificate, "id" | "coverImage"> & { coverImage: File }
 ): Promise<void> => {
@@ -91,6 +125,7 @@ export const createCertificate = async (
     }
 };
 
+// PATCH - Actualizar certificado
 export const updateCertificate = async (
     id: number,
     data: Omit<Certificate, "id" | "coverImage"> & { coverImage: File }
@@ -121,6 +156,7 @@ export const updateCertificate = async (
     }
 };
 
+// DELETE - Eliminar certificado
 export const deleteCertificate = async (id: number): Promise<void> => {
     const username = getUsername();
     if (!username) throw new Error("Usuario no autenticado.");
