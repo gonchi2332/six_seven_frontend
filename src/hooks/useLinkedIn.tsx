@@ -17,7 +17,6 @@ export const useLinkedin = (appUsername: string) => {
           setLinkedinUser(data.linkedinUsername);
         }
       } catch (err) {
-        console.error("Error cargando LinkedIn:", err);
       } finally {
         setIsLoading(false);
       }

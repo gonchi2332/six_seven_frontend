@@ -99,8 +99,6 @@ const CertificatesConfigPage = () => {
                 const currentOriginal = cert.visible ?? false;
                 changesMap[cert.id] = visibilityMap[cert.id] !== undefined ? (visibilityMap[cert.id] ?? currentOriginal) : currentOriginal;
             });
-
-            console.log("PAYLOAD ENVIADO A CERTIFICADOS:", changesMap);
             const res = await visibilityService.updateCertificate(changesMap);
             
             certificates.forEach((cert) => {
