@@ -5,7 +5,7 @@ const styles = {
     container: "w-full",
 };
 
-const WorkExperiencePage = () => {
+const WorkExperienceConfigPage = () => {
     return (
         <div className={styles.container}>
             <WorkExperienceListConfig />
@@ -13,4 +13,4 @@ const WorkExperiencePage = () => {
     );
 };
 
-export default WorkExperiencePage;
+export default WorkExperienceConfigPage;

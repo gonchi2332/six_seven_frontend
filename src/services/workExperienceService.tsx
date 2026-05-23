@@ -9,6 +9,7 @@ export interface WorkExperienceBackend {
     description: string;
     start_date: string;  // ISO format "2022-03-01T00:00:00.000Z"
     end_date: string | null;
+    visible:boolean
 }
 
 export interface CreateWorkExperienceBackendDto {
@@ -58,9 +59,7 @@ export const getWorkExperiences = async (username: string): Promise<{ success: b
         `${API_URL}/api/v1/portfolio/users/laboral-experience?username=${username}`,
         {
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers:  getHeaders(),
         }
     );
 
