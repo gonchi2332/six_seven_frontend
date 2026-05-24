@@ -44,7 +44,7 @@ const SoftSkillsPage = () => {
 
     const { currentPage, totalPages, paginated, prevPage, nextPage, resetPage } = usePagination(filtered, PAGE_SIZE);
 
-    const [skillAction, setSkillAction] = useState<SoftSkill | null>(null);
+    const [, setSkillAction] = useState<SoftSkill | null>(null);
 
     const onSearch = () => {
         handleSearch();
