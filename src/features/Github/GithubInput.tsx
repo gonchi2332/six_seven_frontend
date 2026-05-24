@@ -14,14 +14,26 @@ const STYLES = {
 
 function GithubInput({ onSuccess, onClose, initialValue = '' }: Props) {
     const [input, setInput] = useState(initialValue);
+    const [touched, setTouched] = useState(false);
+    
+    const isEmpty = input.trim().length === 0;
+    const isValid = !isEmpty;
+    const showError = touched && isEmpty;
 
     const handleAccept = () => {
+        if (!isValid) return;
+        
         const trimmedInput = input.trim();
-        if (trimmedInput.length > 0) {
-            const cleanUser = trimmedInput.split('/').filter(Boolean).pop() || "";
-            onSuccess(cleanUser);
-        }
+        const cleanUser = trimmedInput.split('/').filter(Boolean).pop() || "";
+        onSuccess(cleanUser);
     };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInput(e.target.value);
+        setTouched(true);
+    };
+
+
 
     return (
         <div className={STYLES.CONTAINER}>
@@ -29,13 +41,17 @@ function GithubInput({ onSuccess, onClose, initialValue = '' }: Props) {
                 label="Nombre de Usuario de GitHub"
                 placeholder="Ej: octocat"
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={handleChange}
+                error={showError ? "El nombre de usuario es obligatorio" : ""}
             />
             <div className='flex gap-4 w-full justify-center'>
                 <Button variant='secondary' onClick={onClose}>
                     Cancelar
                 </Button>
-                <Button onClick={handleAccept}>
+                <Button 
+                    onClick={handleAccept}
+                    disabled={!isValid}
+                >
                     {initialValue ? 'Actualizar' : 'Vincular'}
                 </Button>
             </div>
