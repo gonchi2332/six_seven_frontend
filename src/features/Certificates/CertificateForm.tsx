@@ -3,7 +3,7 @@ import PopUpCard from "../../components/PopUpCard";
 import TextField from "../../components/TextField";
 import TextAreaField from "../../components/TextAreaField";
 import DateField from "./DateField";
-import ImageUploadField from "./ImageUploadField";
+import ImageUpload from "../UploadFile/components/uploadFile";
 import useCertificateForm from "../../hooks/useCertificateForm";
 import type { Certificate } from "../../services/certificateService";
 
@@ -24,9 +24,9 @@ const styles = {
 };
 
 const CertificateForm = ({ mode, initial, onSubmit, onClose, serverError, isSubmitting = false }: Props) => {
-    const {title, titleError, handleTitleChange, handleTitleBlur, description, descError, handleDescChange, handleDescBlur,
+    const { title, titleError, handleTitleChange, handleTitleBlur, description, descError, handleDescChange, handleDescBlur,
         area, areaError, handleAreaChange, handleAreaBlur, issueDate, dateError, dateTouched, handleDateChange, handleDateBlur,
-        coverImage, imagePreview, imageError, imageTouched, handleImageChange,isFormValid, hasChanges, handleSubmit,
+        coverImage, imagePreview, imageError, imageTouched, handleImageChange, isFormValid, hasChanges, handleSubmit,
     } = useCertificateForm({ mode, initial, onSubmit });
     const formTitle = mode === "add" ? "Registrar Certificado" : `Modificar: ${initial?.title ?? ""}`;
 
@@ -46,6 +46,16 @@ const CertificateForm = ({ mode, initial, onSubmit, onClose, serverError, isSubm
                             error={titleError || undefined}
                             inputProps={{ onBlur: handleTitleBlur }}
                         />
+                        <TextField
+                            label="Área:*"
+                            value={area}
+                            onChange={(e) => handleAreaChange(e.target.value)}
+                            placeholder="Ej: Desarrollo Web, Cloud Computing..."
+                            maxLength={100}
+                            disabled={isSubmitting || mode === "edit"}
+                            error={areaError || undefined}
+                            inputProps={{ onBlur: handleAreaBlur }}
+                        />
                         <TextAreaField
                             label="Descripción:*"
                             value={description}
@@ -57,16 +67,6 @@ const CertificateForm = ({ mode, initial, onSubmit, onClose, serverError, isSubm
                             textareaProps={{ onBlur: handleDescBlur }}
                             rows={3}
                         />
-                        <TextField
-                            label="Área:*"
-                            value={area}
-                            onChange={(e) => handleAreaChange(e.target.value)}
-                            placeholder="Ej: Desarrollo Web, Cloud Computing..."
-                            maxLength={100}
-                            disabled={isSubmitting}
-                            error={areaError || undefined}
-                            inputProps={{ onBlur: handleAreaBlur }}
-                        />
                         <DateField
                             label="Fecha de Certificación:"
                             required
@@ -77,15 +77,10 @@ const CertificateForm = ({ mode, initial, onSubmit, onClose, serverError, isSubm
                             onChange={handleDateChange}
                             onBlur={handleDateBlur}
                         />
-                        <ImageUploadField
-                            label="Imagen:"
-                            required
-                            preview={imagePreview}
-                            error={imageError}
-                            touched={imageTouched}
-                            showCurrentHint={mode === "edit" && !coverImage && !!initial?.coverImage}
-                            disabled={isSubmitting}
-                            onChange={handleImageChange}
+                        <ImageUpload
+                            onImageSelect={handleImageChange}
+                            initialImageUrl={imagePreview}
+                            maxSizeMB={2}
                         />
                     </div>
                     <div className={styles.buttonsWrapper}>

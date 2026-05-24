@@ -4,7 +4,7 @@ import type { Certificate } from "../services/certificateService";
 interface UseCertificateFormProps {
     mode: "add" | "edit";
     initial?: Certificate;
-    onSubmit: (data: Omit<Certificate, "id" | "coverImage"> & { coverImage: File }) => Promise<void>;
+    onSubmit: (data: any) => Promise<void>;
 }
 
 const useCertificateForm = ({ mode, initial, onSubmit }: UseCertificateFormProps) => {
@@ -28,19 +28,23 @@ const useCertificateForm = ({ mode, initial, onSubmit }: UseCertificateFormProps
 
     const fileRef = useRef<HTMLInputElement>(null);
 
-    const isFormValid =
-        title.trim() !== "" &&
-        description.trim() !== "" &&
-        area.trim() !== "" &&
-        issueDate !== "" &&
-        (mode === "edit" ? (coverImage !== null || !!initial?.coverImage) : coverImage !== null);
+    const isFormValid = mode === "add"
+        ? title.trim() !== "" &&
+          description.trim() !== "" &&
+          area.trim() !== "" &&
+          issueDate !== "" &&
+          coverImage !== null
+        : description.trim() !== "" &&
+          issueDate !== "" &&
+          (coverImage !== null || !!initial?.coverImage);
+        //(mode === "edit" ? (coverImage !== null || !!initial?.coverImage) : coverImage !== null);
 
-    const hasChanges =
-        mode === "add" ||
-        description !== (initial?.description ?? "") ||
-        area !== (initial?.area ?? "") ||
-        issueDate !== (initial?.issueDate ?? "") ||
-        coverImage !== null;
+    const hasChanges = mode === "add"
+        ? true
+        : description !== (initial?.description ?? "") ||
+          //area !== (initial?.area ?? "") ||
+          issueDate !== (initial?.issueDate ?? "") ||
+          coverImage !== null;
 
     const handleTitleChange = (v: string) => {
         setTitle(v);
@@ -94,6 +98,24 @@ const useCertificateForm = ({ mode, initial, onSubmit }: UseCertificateFormProps
         }
         if (!imageToSend) return;
 
+        const baseData = {
+            description: description.trim(),
+            area: area.trim(),
+            issueDate,
+            coverImage: imageToSend,
+        };
+
+        if (mode === "add") {
+            await onSubmit({
+                ...baseData,
+                title: title.trim(),
+                //area: area.trim(),
+            });
+        } else {
+            await onSubmit(baseData as any);
+        }
+
+        /*
         await onSubmit({
             title: title.trim(),
             description: description.trim(),
@@ -101,6 +123,7 @@ const useCertificateForm = ({ mode, initial, onSubmit }: UseCertificateFormProps
             issueDate,
             coverImage: imageToSend,
         });
+        */
     };
 
     return {
