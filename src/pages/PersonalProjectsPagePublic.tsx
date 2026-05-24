@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { useProjects } from "../features/PersonalProjects/hooks/useProjects";
 import ProjectCard from "../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectCard";
+import ViewProjectPopup from "../features/PersonalProjects/components/PersonalProjectsModal/ViewProjectPopup";
 import type { ProjectEntry } from "../features/PersonalProjects/services/personalProjectsService";
 import Button from "../components/Button";
 import { useParams } from "react-router-dom";
@@ -45,7 +46,7 @@ const ProjectsPage = () => {
     const [activeSearch, setActiveSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedProject, setSelectedProject] = useState<ProjectEntry | null>(null);
-    const [showOptionsModal, setShowOptionsModal] = useState(false);
+    const [showViewModal, setShowViewModal] = useState(false);
 
     useEffect(() => {
         setPublicUser(username ?? null);
@@ -56,13 +57,18 @@ const ProjectsPage = () => {
         setCurrentPage(1);
     };
 
+    const handleViewBack = () => {
+        setShowViewModal(false);
+    };
+
+
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") handleSearch();
     };
 
     const handleCardClick = (project: ProjectEntry) => {
         setSelectedProject(project);
-        setShowOptionsModal(true);
+        setShowViewModal(true);
     };
 
     const filtered = publicProjects.filter((p) =>
@@ -170,11 +176,13 @@ const ProjectsPage = () => {
                 </div>
             </div>
 
-            {/* Modal de opciones */}
-            {showOptionsModal && selectedProject && (
-                <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-                    {/* Contenido del modal */}
-                </div>
+
+
+            {showViewModal && selectedProject && (
+                <ViewProjectPopup
+                    project={selectedProject}
+                    onBack={handleViewBack}
+                />
             )}
         </div>
     );

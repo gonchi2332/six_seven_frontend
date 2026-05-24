@@ -20,7 +20,7 @@ const styles = {
     searchInputWrapper: "flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl border border-white/10 bg-black/30 focus-within:border-[#90DDF0] transition-colors flex-1",
     searchIcon: "text-white shrink-0",
     searchInput: "bg-transparent outline-none text-white font-nunito text-[14px] sm:text-[15px] placeholder:text-white/40 w-full sm:w-48",
-    actionRow: "flex items-center gap-2",
+    actionRow: "flex items-center gap-2 flex-wrap sm:flex-nowrap",
     listWrapper: "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4",
     empty: "text-white/70 font-nunito text-sm sm:text-base text-center py-8 sm:py-12 bg-black/20 rounded-xl border border-white/10",
     loading: "text-white/70 font-nunito text-sm sm:text-base text-center py-8 sm:py-12 bg-black/20 rounded-xl border border-white/10",
@@ -41,6 +41,7 @@ const WorkExperienceListConfig = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [localError, setLocalError] = useState<string | null>(null);
     const [localSuccess, setLocalSuccess] = useState<string | null>(null);
+    const [initialVisibilityMap, setInitialVisibilityMap] = useState<Record<string | number, boolean>>({});
     const [visibilityMap, setVisibilityMap] = useState<Record<string | number, boolean>>({});
     const [isSaving, setIsSaving] = useState(false);
 
@@ -50,6 +51,7 @@ const WorkExperienceListConfig = () => {
             experiences.forEach((exp: any) => {
                 initialMap[exp.id] = exp.is_visible ?? exp.visible ?? false;
             });
+            setInitialVisibilityMap(initialMap);
             setVisibilityMap(initialMap);
         }
     }, [experiences]);
@@ -87,11 +89,22 @@ const WorkExperienceListConfig = () => {
         });
     };
 
+    const handleShowAll = () => {
+        setVisibilityMap((prev) => {
+            const updated = { ...prev };
+            Object.keys(updated).forEach((key) => {
+                updated[key] = true;
+            });
+            return updated;
+        });
+    };
+
     const handleSaveChanges = async () => {
         try {
             setIsSaving(true);
             setLocalError(null);
             const res = await visibilityService.updateWorkExperience(visibilityMap);
+            setInitialVisibilityMap(visibilityMap);
             setLocalSuccess(res.message || "Cambios guardados exitosamente.");
             setTimeout(() => setLocalSuccess(null), 3000);
         } catch (err: any) {
@@ -118,6 +131,12 @@ const WorkExperienceListConfig = () => {
 
     const totalPages = Math.max(1, Math.ceil(filteredExperiences.length / PAGE_SIZE));
     const paginatedExperiences = filteredExperiences.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+    const hasChanges = JSON.stringify(initialVisibilityMap) !== JSON.stringify(visibilityMap);
+
+    const visibilityValues = Object.values(visibilityMap);
+    const isAllVisible = visibilityValues.length > 0 && visibilityValues.every((v) => v === true);
+    const isAllHidden = visibilityValues.length > 0 && visibilityValues.every((v) => v === false);
 
     return (
         <div className={styles.wrapper}>
@@ -152,15 +171,22 @@ const WorkExperienceListConfig = () => {
                                 <div className={styles.actionRow}>
                                     <Button
                                         variant="secondary"
+                                        onClick={handleShowAll}
+                                        disabled={isLoading || isAllVisible || paginatedExperiences.length === 0}
+                                    >
+                                        <span>Mostrar todo</span>
+                                    </Button>
+                                    <Button
+                                        variant="secondary"
                                         onClick={handleHideAll}
-                                        disabled={isLoading || paginatedExperiences.length === 0}
+                                        disabled={isLoading || isAllHidden || paginatedExperiences.length === 0}
                                     >
                                         <span>Ocultar todo</span>
                                     </Button>
                                     <Button
                                         variant="secondary"
                                         onClick={handleSaveChanges}
-                                        disabled={isLoading || isSaving || paginatedExperiences.length === 0}
+                                        disabled={isLoading || isSaving || !hasChanges || paginatedExperiences.length === 0}
                                     >
                                         <span>Guardar</span>
                                     </Button>
@@ -228,7 +254,7 @@ const WorkExperienceListConfig = () => {
                                 ))}
                                 <button
                                     type="button"
-                                    onClick={() => setCurrentPage((page) => page - 1)}
+                                    onClick={() => setCurrentPage((page) => page + 1)}
                                     disabled={currentPage === totalPages}
                                     className={styles.pageArrow}
                                 >

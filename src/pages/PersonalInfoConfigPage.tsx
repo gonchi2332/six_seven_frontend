@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavbarInfo } from '../hooks/useNavbarInfo';
 import { MapPin, Mail, Phone, User, Hash } from 'lucide-react';
 import Button from '../components/Button';
@@ -40,7 +40,7 @@ const ConfigInfoRow = ({
     value: string;
     fieldKey: string;
     currentVisibility: boolean;
-    onToggle: (key: string) => void;
+    onToggle: (key: string, isChecked: boolean) => void;
 }) => (
     <div className={styles.fieldWrapper}>
         <div className={styles.field}>
@@ -55,43 +55,59 @@ const ConfigInfoRow = ({
                 key={`${fieldKey}-${currentVisibility}`}
                 id={fieldKey}
                 initialState={currentVisibility}
-                onChange={() => onToggle(fieldKey)}
+                onChange={(id, isChecked) => onToggle(String(id), isChecked)}
             />
         </div>
     </div>
 );
 
 const PersonalInfoConfigPage = () => {
-    const [refreshKey] = useState(0);
+    const [refreshKey, setRefreshKey] = useState(0);
     const { userInfo, isLoading } = useNavbarInfo(refreshKey);
 
     const [localError, setLocalError] = useState<string | null>(null);
     const [localSuccess, setLocalSuccess] = useState<string | null>(null);
     const [isSaving, setIsSaving] = useState(false);
+    
+    const [initialVisibilityMap, setInitialVisibilityMap] = useState<Record<string, boolean>>({});
     const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>({});
 
-    const handleLocalVisibilityChange = (fieldKey: string) => {
-        setVisibilityMap((prev) => {
-            let currentVal = prev[fieldKey];
-
-            if (currentVal === undefined && userInfo) {
-                currentVal = !!(userInfo as any)[fieldKey];
-            } else if (currentVal === undefined) {
-                currentVal = false;
-            }
-
-            return {
-                ...prev,
-                [fieldKey]: !currentVal,
+    useEffect(() => {
+        if (userInfo) {
+            const initialMap = {
+                show_contact_email: !!(userInfo as any).show_contact_email,
+                show_phone: !!(userInfo as any).show_phone,
+                show_residence: !!(userInfo as any).show_residence,
             };
-        });
+            setInitialVisibilityMap(initialMap);
+            setVisibilityMap(initialMap);
+        }
+    }, [userInfo]);
+
+    const handleLocalVisibilityChange = (fieldKey: string, isChecked: boolean) => {
+        setVisibilityMap((prev) => ({
+            ...prev,
+            [fieldKey]: isChecked,
+        }));
     };
 
     const handleHideAll = () => {
-        setVisibilityMap({
-            show_contact_email: false,
-            show_phone: false,
-            show_residence: false
+        setVisibilityMap((prev) => {
+            const updated = { ...prev };
+            Object.keys(updated).forEach((key) => {
+                updated[key] = false;
+            });
+            return updated;
+        });
+    };
+
+    const handleShowAll = () => {
+        setVisibilityMap((prev) => {
+            const updated = { ...prev };
+            Object.keys(updated).forEach((key) => {
+                updated[key] = true;
+            });
+            return updated;
         });
     };
 
@@ -102,23 +118,12 @@ const PersonalInfoConfigPage = () => {
 
             if (!userInfo) return;
 
-            const finalPayload: Record<string, boolean> = {
-                show_contact_email: visibilityMap.show_contact_email !== undefined ? visibilityMap.show_contact_email : !!(userInfo as any).show_contact_email,
-                show_phone: visibilityMap.show_phone !== undefined ? visibilityMap.show_phone : !!(userInfo as any).show_phone,
-                show_residence: visibilityMap.show_residence !== undefined ? visibilityMap.show_residence : !!(userInfo as any).show_residence,
-            };
-
-            const res = await visibilityService.updatePersonalInfo(finalPayload);
-
-            Object.keys(finalPayload).forEach((key) => {
-                if (key in userInfo) {
-                    (userInfo as any)[key] = finalPayload[key];
-                }
-            });
-
+            const res = await visibilityService.updatePersonalInfo(visibilityMap);
+            
+            setInitialVisibilityMap(visibilityMap);
             setLocalSuccess(res.message || "Visibilidad de información personal actualizada.");
+            setRefreshKey((prev) => prev + 1); // Forzar actualización limpia si el hook lo requiere
             setTimeout(() => setLocalSuccess(null), 3000);
-            setVisibilityMap({});
         } catch (err: any) {
             setLocalError(err.message || "Error al guardar los cambios.");
             setTimeout(() => setLocalError(null), 3000);
@@ -135,11 +140,13 @@ const PersonalInfoConfigPage = () => {
         .filter(Boolean)
         .join(", ");
 
-    const getVisibility = (key: string): boolean => {
-        if (visibilityMap[key] !== undefined) return visibilityMap[key];
-        if (userInfo) return !!(userInfo as any)[key];
-        return false;
-    };
+    const hasChanges = Object.keys(initialVisibilityMap).some(
+        (key) => initialVisibilityMap[key] !== visibilityMap[key]
+    );
+
+    const visibilityValues = Object.values(visibilityMap);
+    const isAllVisible = visibilityValues.length > 0 && visibilityValues.every((v) => v === true);
+    const isAllHidden = visibilityValues.length > 0 && visibilityValues.every((v) => v === false);
 
     return (
         <div className={styles.wrapper}>
@@ -152,15 +159,22 @@ const PersonalInfoConfigPage = () => {
                             <div className={styles.actionRow}>
                                 <Button
                                     variant="secondary"
+                                    onClick={handleShowAll}
+                                    disabled={isLoading || !userInfo || isAllVisible}
+                                >
+                                    <span>Mostrar todo</span>
+                                </Button>
+                                <Button
+                                    variant="secondary"
                                     onClick={handleHideAll}
-                                    disabled={isLoading || !userInfo}
+                                    disabled={isLoading || !userInfo || isAllHidden}
                                 >
                                     <span>Ocultar todo</span>
                                 </Button>
                                 <Button
                                     variant="secondary"
                                     onClick={handleSaveChanges}
-                                    disabled={isLoading || isSaving || !userInfo}
+                                    disabled={isLoading || isSaving || !userInfo || !hasChanges}
                                 >
                                     <span>Guardar</span>
                                 </Button>
@@ -181,7 +195,8 @@ const PersonalInfoConfigPage = () => {
                             <div className={styles.listWrapper}>
                                 <div className={styles.infoCard}>
                                     <p className={styles.sectionTitle}>
-                                        <User size={14} /> Datos Personales</p>
+                                        <User size={14} /> Datos Personales
+                                    </p>
                                     <div className="flex flex-col gap-4">
                                         {fullName && (
                                             <InfoRowStatic icon={User} label="Nombre Completo" value={fullName} badgeText="Siempre Público" />
@@ -206,7 +221,7 @@ const PersonalInfoConfigPage = () => {
                                                 label="Residencia Actual"
                                                 value={residence}
                                                 fieldKey="show_residence"
-                                                currentVisibility={getVisibility("show_residence")}
+                                                currentVisibility={visibilityMap["show_residence"] ?? false}
                                                 onToggle={handleLocalVisibilityChange}
                                             />
                                         )}
@@ -216,7 +231,7 @@ const PersonalInfoConfigPage = () => {
                                                 label="Correo Secundario"
                                                 value={userInfo.contact_email}
                                                 fieldKey="show_contact_email"
-                                                currentVisibility={getVisibility("show_contact_email")}
+                                                currentVisibility={visibilityMap["show_contact_email"] ?? false}
                                                 onToggle={handleLocalVisibilityChange}
                                             />
                                         )}
@@ -226,7 +241,7 @@ const PersonalInfoConfigPage = () => {
                                                 label="Teléfono / WhatsApp"
                                                 value={userInfo.phone_number}
                                                 fieldKey="show_phone"
-                                                currentVisibility={getVisibility("show_phone")}
+                                                currentVisibility={visibilityMap["show_phone"] ?? false}
                                                 onToggle={handleLocalVisibilityChange}
                                             />
                                         )}

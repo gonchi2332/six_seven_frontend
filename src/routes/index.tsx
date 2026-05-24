@@ -19,7 +19,6 @@ import PersonalInfoPublic from "../pages/PersonalInfoPublic";
 import SoftSkillsPagePublic from "../pages/SoftSkillsPagePublic";
 import HardSkillsPagePublic from "../pages/HardSkillsPagePublic";
 import EducationPagePublic from "../pages/EducationPagePublic";
-import WorkExperiencieConfigPage from "../pages/WorkExperienceConfigPage";
 import HardSkillsConfigPage from "../pages/HardSkillsConfigPage"
 import SoftSkillsConfigPage from "../pages/SoftSkillsConfigPage";
 import PersonalProjectsConfigPage from "../pages/PersonalProjectsConfigPage";

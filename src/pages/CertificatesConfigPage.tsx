@@ -45,7 +45,19 @@ const CertificatesConfigPage = () => {
     const [localSuccess, setLocalSuccess] = useState<string | null>(null);
     const [isSaving, setIsSaving] = useState(false);
 
+    const [initialVisibilityMap, setInitialVisibilityMap] = useState<Record<string | number, boolean>>({});
     const [visibilityMap, setVisibilityMap] = useState<Record<string | number, boolean>>({});
+
+    useEffect(() => {
+        if (certificates) {
+            const initialMap: Record<string | number, boolean> = {};
+            certificates.forEach((cert) => {
+                initialMap[cert.id] = cert.visible ?? false;
+            });
+            setInitialVisibilityMap(initialMap);
+            setVisibilityMap(initialMap);
+        }
+    }, [certificates]);
 
     useEffect(() => {
         if (successMessage) {
@@ -63,30 +75,32 @@ const CertificatesConfigPage = () => {
         }
     }, [error]);
 
-    const handleLocalVisibilityChange = (id: string | number) => {
+    const handleLocalVisibilityChange = (id: string | number, isChecked: boolean) => {
         if (id === undefined || id === null) return;
-
-        setVisibilityMap((prev) => {
-            let currentVal = prev[id];
-
-            if (currentVal === undefined) {
-                const matched = certificates.find((cert) => cert.id === id);
-                currentVal = matched ? (matched.visible ?? false) : false;
-            }
-
-            return {
-                ...prev,
-                [id]: !currentVal,
-            };
-        });
+        setVisibilityMap((prev) => ({
+            ...prev,
+            [id]: isChecked,
+        }));
     };
 
     const handleHideAll = () => {
-        const updated: Record<string | number, boolean> = {};
-        certificates.forEach((cert) => {
-            updated[cert.id] = false;
+        setVisibilityMap((prev) => {
+            const updated = { ...prev };
+            Object.keys(updated).forEach((key) => {
+                updated[key] = false;
+            });
+            return updated;
         });
-        setVisibilityMap(updated);
+    };
+
+    const handleShowAll = () => {
+        setVisibilityMap((prev) => {
+            const updated = { ...prev };
+            Object.keys(updated).forEach((key) => {
+                updated[key] = true;
+            });
+            return updated;
+        });
     };
 
     const handleSaveChanges = async () => {
@@ -94,24 +108,10 @@ const CertificatesConfigPage = () => {
             setIsSaving(true);
             setLocalError(null);
             
-            const changesMap: Record<string | number, boolean> = {};
-            certificates.forEach((cert) => {
-                const currentOriginal = cert.visible ?? false;
-                changesMap[cert.id] = visibilityMap[cert.id] !== undefined ? (visibilityMap[cert.id] ?? currentOriginal) : currentOriginal;
-            });
-            const res = await visibilityService.updateCertificate(changesMap);
-            
-            certificates.forEach((cert) => {
-                const targetVisibility = changesMap[cert.id];
-                if (targetVisibility !== undefined) {
-                    cert.visible = targetVisibility;
-                }
-            });
-
+            const res = await visibilityService.updateCertificate(visibilityMap);
+            setInitialVisibilityMap(visibilityMap);
             setLocalSuccess(res.message || "Cambios guardados exitosamente.");
             setTimeout(() => setLocalSuccess(null), 3000);
-            
-            setVisibilityMap({});
         } catch (err: any) {
             setLocalError(err.message || "Error al guardar los cambios.");
             setTimeout(() => setLocalError(null), 3000);
@@ -129,12 +129,20 @@ const CertificatesConfigPage = () => {
         if (e.key === "Enter") handleSearch();
     };
 
-    const filteredCertificates = certificates.filter((cert) =>
+    const filteredCertificates = (certificates || []).filter((cert) =>
         cert.title?.toLowerCase().includes(activeSearch.toLowerCase())
     );
 
     const totalPages = Math.max(1, Math.ceil(filteredCertificates.length / PAGE_SIZE));
     const paginatedCertificates = filteredCertificates.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+    const hasChanges = Object.keys(initialVisibilityMap).some(
+        (key) => initialVisibilityMap[key] !== visibilityMap[key]
+    );
+
+    const visibilityValues = Object.values(visibilityMap);
+    const isAllVisible = visibilityValues.length > 0 && visibilityValues.every((v) => v === true);
+    const isAllHidden = visibilityValues.length > 0 && visibilityValues.every((v) => v === false);
 
     return (
         <div className={styles.wrapper}>
@@ -169,15 +177,22 @@ const CertificatesConfigPage = () => {
                                 <div className={styles.actionRow}>
                                     <Button
                                         variant="secondary"
+                                        onClick={handleShowAll}
+                                        disabled={isLoading || isAllVisible || paginatedCertificates.length === 0}
+                                    >
+                                        <span>Mostrar todo</span>
+                                    </Button>
+                                    <Button
+                                        variant="secondary"
                                         onClick={handleHideAll}
-                                        disabled={isLoading || paginatedCertificates.length === 0}
+                                        disabled={isLoading || isAllHidden || paginatedCertificates.length === 0}
                                     >
                                         <span>Ocultar todo</span>
                                     </Button>
                                     <Button
                                         variant="secondary"
                                         onClick={handleSaveChanges}
-                                        disabled={isLoading || isSaving || paginatedCertificates.length === 0}
+                                        disabled={isLoading || isSaving || !hasChanges || paginatedCertificates.length === 0}
                                     >
                                         <span>Guardar</span>
                                     </Button>
@@ -202,15 +217,12 @@ const CertificatesConfigPage = () => {
                         ) : (
                             <div className={styles.listWrapper}>
                                 {paginatedCertificates.map((cert) => {
-                                    const savedValue = visibilityMap[cert.id];
-                                    const currentVisibility = savedValue !== undefined 
-                                        ? savedValue 
-                                        : (cert.visible ?? false);
+                                    const currentVisibility = visibilityMap[cert.id] ?? cert.visible ?? false;
                                     
                                     return (
                                         <div key={cert.id} className={styles.cardConfigWrapper}>
                                             <CertificateCard
-                                                certificate={cert}
+                                                certificate={{ ...cert, visible: currentVisibility }}
                                                 onClick={() => {}} 
                                             />
                                             <div className={styles.switchRow}>
@@ -218,7 +230,7 @@ const CertificatesConfigPage = () => {
                                                     key={`${cert.id}-${currentVisibility}`}
                                                     id={cert.id} 
                                                     initialState={currentVisibility}
-                                                    onChange={() => handleLocalVisibilityChange(cert.id)}
+                                                    onChange={handleLocalVisibilityChange}
                                                 />
                                             </div>
                                         </div>

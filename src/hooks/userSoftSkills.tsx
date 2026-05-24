@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useParams } from "react-router-dom";
 import {
     getSoftSkills,
     deleteSoftSkill,
@@ -9,7 +10,9 @@ import type { SoftSkill } from "../services/softSkillService";
 import { useAuthContext } from "../context/AuthContext";
 
 export const useSoftSkills = () => {
+    const { username: publicUsernameUrl } = useParams<{ username: string }>();
     const { username } = useAuthContext();
+    
     const [skills, setSkills] = useState<SoftSkill[]>([]);
     const [publicSkills, setPublicSkills] = useState<SoftSkill[]>([]);
     const [catalogSkills, setCatalogSkills] = useState<string[]>([]);
@@ -25,6 +28,10 @@ export const useSoftSkills = () => {
     };
 
     const loadSkills = async () => {
+        if (publicUsernameUrl) {
+            setIsLoading(false);
+            return;
+        }
         if (!username) {
             setSkills([]);
             setIsLoading(false);
@@ -49,24 +56,22 @@ export const useSoftSkills = () => {
 
     useEffect(() => {
         loadSkills();
-    }, [username]);
+    }, [username, publicUsernameUrl]);
 
-    // useEffect para cargar skills públicas automáticamente cuando cambia currentPublicUsername
     useEffect(() => {
-        const fetchPublicUserSoftSkills = async () => {
-            if (!currentPublicUsername || currentPublicUsername.trim() === "") {
-                setPublicSkills([]);
-                setIsLoadingPublic(false);
-                return;
-            }
+        if (!currentPublicUsername || currentPublicUsername.trim() === "") {
+            setPublicSkills([]);
+            setIsLoadingPublic(false);
+            return;
+        }
 
+        const fetchPublicUserSoftSkills = async () => {
             setIsLoadingPublic(true);
             setError(null);
             try {
                 const data = await fetchPublicSoftSkills(currentPublicUsername);
                 setPublicSkills(data);
             } catch (err: unknown) {
-                console.error(err);
                 const errorMsg = err instanceof Error ? err.message : "Error al obtener habilidades blandas públicas";
                 setError(errorMsg);
                 setPublicSkills([]);
@@ -78,7 +83,6 @@ export const useSoftSkills = () => {
         fetchPublicUserSoftSkills();
     }, [currentPublicUsername]);
 
-    // Función pública para cambiar el usuario a visualizar
     const setPublicUser = useCallback((username: string | null) => {
         setCurrentPublicUsername(username);
     }, []);

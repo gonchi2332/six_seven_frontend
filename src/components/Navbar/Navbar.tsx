@@ -9,7 +9,7 @@ const defAvatar = "/defAvatar.png";
 
 const STYLES = {
     NAVBAR: "w-full bg-secondary px-4 sm:px-6 py-3 text-white font-inter border-b border-white/5 sticky top-0 z-50",
-    CONTAINER: "flex items-center justify-between w-full max-w-7xl mx-auto",
+    CONTAINER: "flex items-center justify-between w-full mx-auto",
     LEFT_SECTION: "flex items-center gap-4 lg:gap-8 flex-1 min-w-0",
     USER_INFO: "flex items-center gap-3 lg:border-r lg:border-white/10 lg:pr-4 shrink-0",
     AVATAR: "w-9 h-9 object-cover rounded-full border border-white/20 shrink-0",
@@ -61,13 +61,13 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
     const pathSoft = isPublic ? `/ver/${activeUsername}/habilidades-blandas` : "/habilidades-blandas";
 
     const configPaths = {
-        projects: "/configurar/proyectos-personales",
-        education: "/configurar/educacion",
+        personalInfo: "/configurar/informacion-personal",
         experience: "/configurar/experiencia-laboral",
         skillsTech: "/configurar/habilidades-tecnicas",
         skillsSoft: "/configurar/habilidades-blandas",
+        projects: "/configurar/proyectos-personales",
+        education: "/configurar/educacion",
         certificates: "/configurar/certificados",
-        personalInfo: "/configurar/informacion-personal",
     };
 
     const mainTabs = [
@@ -98,6 +98,8 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
         setIsMenuOpen(false);
         setIsSkillsDropdownOpen(false);
         setIsVisibilityDropdownOpen(false);
+        setIsMobileSkillsOpen(false);
+        setIsMobileVisibilityOpen(false);
     }, [location.pathname]);
 
     const userFullName = [userInfo?.names, userInfo?.first_surname].filter(Boolean).join(" ");
@@ -121,7 +123,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                                 />
                             )}
                             <span className={STYLES.USER_NAME}>
-                                {isPublic ? `Portafolio de ${ownerName || activeUsername}` : (userFullName || "Mi Panel")}
+                                {isPublic ? `Portafolio de ${userFullName || activeUsername}` : (userFullName || "Mi Panel")}
                             </span>
                         </div>
 
@@ -257,7 +259,6 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                     </button>
                 </div>
 
-                {/* Mobile menu - igual que antes */}
                 {isMenuOpen && (
                     <div className={STYLES.MOBILE_MENU}>
                         <div className="flex flex-col gap-1">
@@ -278,18 +279,18 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                                 </button>
 
                                 {isMobileSkillsOpen && (
-                                    <div className="pl-4 flex flex-col gap-1 mt-1 bg-black/10 rounded-xl p-1 border border-white/5">
+                                    <div className="pl-4 flex flex-col gap-1 mt-1 bg-black/10 rounded-xl p-1.5 border border-white/5">
                                         <button
                                             onClick={() => navigate(pathTech)}
                                             className={`${STYLES.MOBILE_TAB} ${location.pathname === pathTech ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
                                         >
-                                            • Habilidades Técnicas
+                                            Habilidades Técnicas
                                         </button>
                                         <button
                                             onClick={() => navigate(pathSoft)}
                                             className={`${STYLES.MOBILE_TAB} ${location.pathname === pathSoft ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
                                         >
-                                            • Habilidades Blandas
+                                            Habilidades Blandas
                                         </button>
                                     </div>
                                 )}
@@ -311,12 +312,12 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                                         onClick={() => { setIsMobileVisibilityOpen(!isMobileVisibilityOpen); setIsMobileSkillsOpen(false); }}
                                         className={`${STYLES.MOBILE_TAB} ${isVisibilityActive ? 'bg-white/5 text-white' : STYLES.TAB_INACTIVE} flex items-center justify-between`}
                                     >
-                                        <span>Configurar</span>
+                                        <span>Visibilidad</span>
                                         <ChevronDown size={16} className={`transition-transform ${isMobileVisibilityOpen ? 'rotate-180' : ''}`} />
                                     </button>
 
                                     {isMobileVisibilityOpen && (
-                                        <div className="pl-4 flex flex-col gap-1 mt-1 bg-black/10 rounded-xl p-1 border border-white/5">
+                                        <div className="pl-4 flex flex-col gap-1 mt-1 bg-black/10 rounded-xl p-1.5 border border-white/5">
                                             <button
                                                 onClick={() => navigate(configPaths.personalInfo)}
                                                 className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.personalInfo ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
@@ -327,31 +328,37 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                                                 onClick={() => navigate(configPaths.experience)}
                                                 className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.experience ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
                                             >
-                                                • Visibilidad Experiencia
-                                            </button>
-                                            <button
-                                                onClick={() => navigate(configPaths.projects)}
-                                                className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.projects ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
-                                            >
-                                                • Visibilidad Proyectos
-                                            </button>
-                                            <button
-                                                onClick={() => navigate(configPaths.education)}
-                                                className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.education ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
-                                            >
-                                                • Visibilidad Educación
+                                                Visibilidad Exp. Laboral
                                             </button>
                                             <button
                                                 onClick={() => navigate(configPaths.skillsTech)}
                                                 className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.skillsTech ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
                                             >
-                                                • Visibilidad Hab. Técnicas
+                                                Visibilidad Hab. Técnicas
                                             </button>
                                             <button
                                                 onClick={() => navigate(configPaths.skillsSoft)}
                                                 className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.skillsSoft ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
                                             >
-                                                • Visibilidad Hab. Blandas
+                                                Visibilidad Hab. Blandas
+                                            </button>
+                                            <button
+                                                onClick={() => navigate(configPaths.projects)}
+                                                className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.projects ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+                                            >
+                                                Visibilidad Proyectos
+                                            </button>
+                                            <button
+                                                onClick={() => navigate(configPaths.education)}
+                                                className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.education ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+                                            >
+                                                Visibilidad Educación
+                                            </button>
+                                            <button
+                                                onClick={() => navigate(configPaths.certificates)}
+                                                className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.certificates ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+                                            >
+                                                Visibilidad Certificados
                                             </button>
                                         </div>
                                     )}
@@ -381,6 +388,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                     </div>
                 )}
             </nav>
+
             {isShareModalOpen && userInfo?.username && (
                 <div className={STYLES.OVERLAY} onClick={() => setIsShareModalOpen(false)}>
                     <div onClick={(e) => e.stopPropagation()} className="w-full max-w-lg">

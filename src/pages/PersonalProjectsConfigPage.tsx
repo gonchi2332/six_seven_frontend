@@ -3,7 +3,7 @@ import { Search } from "lucide-react";
 import { useProjects } from "../features/PersonalProjects/hooks/useProjects";
 import ProjectCard from "../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectCard";
 import Button from "../components/Button";
-import VisibilitySwitch from "../components/Switch/Switch"; // Asegúrate que la importación sea correcta
+import VisibilitySwitch from "../components/Switch/Switch";
 import { visibilityService } from "../services/visibilityServices";
 
 const PAGE_SIZE = 10;
@@ -40,8 +40,20 @@ const PersonalProjectsConfigPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [localError, setLocalError] = useState<string | null>(null);
     const [localSuccess, setLocalSuccess] = useState<string | null>(null);
+    const [initialVisibilityMap, setInitialVisibilityMap] = useState<Record<string, boolean>>({});
     const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>({});
     const [isSaving, setIsSaving] = useState(false);
+
+    useEffect(() => {
+        if (projects) {
+            const initialMap: Record<string, boolean> = {};
+            projects.forEach((p) => {
+                initialMap[String(p.id)] = p.visible ?? false;
+            });
+            setInitialVisibilityMap(initialMap);
+            setVisibilityMap(initialMap);
+        }
+    }, [projects]);
 
     useEffect(() => {
         if (successMessage) {
@@ -59,10 +71,8 @@ const PersonalProjectsConfigPage = () => {
         }
     }, [error]);
 
-    // Handler actualizado para trabajar con la firma de VisibilitySwitch
     const handleLocalVisibilityChange = (id: string | number, isChecked: boolean) => {
         if (id === undefined || id === null) return;
-
         setVisibilityMap((prev) => ({
             ...prev,
             [String(id)]: isChecked,
@@ -70,37 +80,34 @@ const PersonalProjectsConfigPage = () => {
     };
 
     const handleHideAll = () => {
-        const updated: Record<string, boolean> = {};
-        projects.forEach((p) => {
-            updated[String(p.id)] = false;
+        setVisibilityMap((prev) => {
+            const updated = { ...prev };
+            Object.keys(updated).forEach((key) => {
+                updated[key] = false;
+            });
+            return updated;
         });
-        setVisibilityMap(updated);
+    };
+
+    const handleShowAll = () => {
+        setVisibilityMap((prev) => {
+            const updated = { ...prev };
+            Object.keys(updated).forEach((key) => {
+                updated[key] = true;
+            });
+            return updated;
+        });
     };
 
     const handleSaveChanges = async () => {
         try {
             setIsSaving(true);
             setLocalError(null);
-
-            const payload: Record<string, boolean> = {};
-
-            projects.forEach((p) => {
-                const idStr = String(p.id);
-                // Si el usuario lo cambió en la pantalla, tomamos ese valor; si no, dejamos su visible original
-                payload[idStr] = visibilityMap[idStr] !== undefined ? visibilityMap[idStr] : p.visible;
-            });
-
-            console.log("Enviando payload:", payload); // Para debug
-
-            const res = await visibilityService.updateProject(payload);
-            setLocalSuccess(res.message || "Cambios guardados exitosamente.");
-
-            // Limpiar el mapa después de guardar exitosamente
-            setVisibilityMap({});
-
+            await visibilityService.updateProject(visibilityMap);
+            setInitialVisibilityMap(visibilityMap);
+            setLocalSuccess("Cambios guardados exitosamente.");
             setTimeout(() => setLocalSuccess(null), 3000);
         } catch (err: any) {
-            console.error("Error al guardar:", err);
             setLocalError(err.message || "Error al guardar los cambios.");
             setTimeout(() => setLocalError(null), 3000);
         } finally {
@@ -124,6 +131,12 @@ const PersonalProjectsConfigPage = () => {
 
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+    const hasChanges = JSON.stringify(initialVisibilityMap) !== JSON.stringify(visibilityMap);
+
+    const visibilityValues = Object.values(visibilityMap);
+    const isAllVisible = visibilityValues.length > 0 && visibilityValues.every((v) => v === true);
+    const isAllHidden = visibilityValues.length > 0 && visibilityValues.every((v) => v === false);
 
     return (
         <div className={styles.wrapper}>
@@ -152,10 +165,13 @@ const PersonalProjectsConfigPage = () => {
                                 </div>
 
                                 <div className={styles.actionRow}>
-                                    <Button variant="secondary" onClick={handleHideAll} disabled={isLoading || paginated.length === 0}>
+                                    <Button variant="secondary" onClick={handleShowAll} disabled={isLoading || isAllVisible || paginated.length === 0}>
+                                        <span>Mostrar todo</span>
+                                    </Button>
+                                    <Button variant="secondary" onClick={handleHideAll} disabled={isLoading || isAllHidden || paginated.length === 0}>
                                         <span>Ocultar todo</span>
                                     </Button>
-                                    <Button variant="secondary" onClick={handleSaveChanges} disabled={isLoading || isSaving || paginated.length === 0}>
+                                    <Button variant="secondary" onClick={handleSaveChanges} disabled={isLoading || isSaving || !hasChanges || paginated.length === 0}>
                                         <span>{isSaving ? "Guardando..." : "Guardar"}</span>
                                     </Button>
                                 </div>
@@ -176,12 +192,7 @@ const PersonalProjectsConfigPage = () => {
                                 <div className={styles.listWrapper}>
                                     {paginated.map((project) => {
                                         const idStr = String(project.id);
-                                        // Determinar la visibilidad actual (del mapa local o del proyecto original)
-                                        const currentVisibility = visibilityMap[idStr] !== undefined
-                                            ? visibilityMap[idStr]
-                                            : project.visible;
-
-                                        // Actualizar el proyecto con la visibilidad actual para el ProjectCard
+                                        const currentVisibility = visibilityMap[idStr] ?? project.visible ?? false;
                                         const updatedProject = { ...project, visible: currentVisibility };
 
                                         return (
@@ -192,6 +203,7 @@ const PersonalProjectsConfigPage = () => {
                                                         {project.topic}
                                                     </span>
                                                     <VisibilitySwitch
+                                                        key={`${idStr}-${currentVisibility}`}
                                                         id={project.id}
                                                         initialState={currentVisibility}
                                                         onChange={handleLocalVisibilityChange}
