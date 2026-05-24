@@ -18,17 +18,17 @@ const styles = {
     row: 'flex items-start gap-4 py-3',
     iconBox: 'w-10 h-10 rounded-xl bg-[#2C666E]/40 flex items-center justify-center shrink-0 mt-0.5',
     icon: 'text-[#90DDF0] w-5 h-5',
-    textGroup: 'flex flex-col flex-1',
+    textGroup: 'flex flex-col flex-1 min-w-0', // min-w-0 permite que el texto se rompa
     label: 'text-[#90DDF0] text-xs uppercase tracking-wide font-bold mb-1',
-    value: 'text-white font-nunito text-base sm:text-lg font-medium leading-snug',
-    descriptionValue: 'text-white font-nunito text-base sm:text-lg leading-relaxed whitespace-pre-wrap',
-    emptyValue: 'text-white/30 italic font-nunito text-base sm:text-lg',
+    value: 'text-white font-nunito text-base sm:text-lg font-medium leading-snug break-words overflow-wrap-anywhere',
+    descriptionValue: 'text-white font-nunito text-base sm:text-lg leading-relaxed whitespace-pre-wrap break-words overflow-wrap-anywhere',
+    emptyValue: 'text-white/30 italic font-nunito text-base sm:text-lg break-words',
     
     // Grid para fechas
     dates: "grid grid-cols-1 sm:grid-cols-2 gap-4 mb-2",
     
     // Descripción con fondo sutil
-    descriptionBox: "bg-black/20 rounded-xl p-4 mt-2 border border-white/5",
+    descriptionBox: "bg-black/20 rounded-xl p-4 mt-2 border border-white/5 overflow-hidden",
     
     buttonContainer: "flex gap-3 px-6 pb-6",
     closeButton: "absolute right-4 top-4 text-white/50 hover:text-[#90DDF0] transition-colors p-1 hover:bg-white/10 rounded-lg",
@@ -108,7 +108,7 @@ const WorkExperienceDetailModal = ({ isOpen, experience, onClose }: WorkExperien
                             <InfoRow icon={Calendar} label="Fecha de finalización" value={endDateFormatted} />
                         </div>
                         
-                        {/* Descripción */}
+                        {/* Descripción - con manejo de texto largo */}
                         <div className={styles.descriptionBox}>
                             <InfoRow icon={FileText} label="Descripción" value={experience.description} isDescription />
                         </div>
