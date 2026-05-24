@@ -321,7 +321,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                                                 onClick={() => navigate(configPaths.personalInfo)}
                                                 className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.personalInfo ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
                                             >
-                                                • Información Personal
+                                                Visibilidad Info. Personal
                                             </button>
                                             <button
                                                 onClick={() => navigate(configPaths.experience)}
