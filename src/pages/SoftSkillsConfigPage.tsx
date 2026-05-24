@@ -39,6 +39,7 @@ const SoftSkillsConfigPage = () => {
 
     const [localError, setLocalError] = useState<string | null>(null);
     const [localSuccess, setLocalSuccess] = useState<string | null>(null);
+    const [initialVisibilityMap, setInitialVisibilityMap] = useState<Record<string | number, boolean>>({});
     const [visibilityMap, setVisibilityMap] = useState<Record<string | number, boolean>>({});
     const [isSaving, setIsSaving] = useState(false);
 
@@ -49,6 +50,7 @@ const SoftSkillsConfigPage = () => {
                 const targetId = skill.skill_id ?? skill.id;
                 initialMap[targetId] = skill.is_visible ?? skill.visible ?? false;
             });
+            setInitialVisibilityMap(initialMap);
             setVisibilityMap(initialMap);
         }
     }, [skills]);
@@ -86,11 +88,22 @@ const SoftSkillsConfigPage = () => {
         });
     };
 
+    const handleShowAll = () => {
+        setVisibilityMap((prev) => {
+            const updated = { ...prev };
+            Object.keys(updated).forEach((key) => {
+                updated[key] = true;
+            });
+            return updated;
+        });
+    };
+
     const handleSaveChanges = async () => {
         try {
             setIsSaving(true);
             setLocalError(null);
             const res = await visibilityService.updateSkill(visibilityMap);
+            setInitialVisibilityMap(visibilityMap);
             setLocalSuccess(res.message || "Cambios guardados exitosamente.");
             setTimeout(() => setLocalSuccess(null), 3000);
         } catch (err: any) {
@@ -105,6 +118,12 @@ const SoftSkillsConfigPage = () => {
         handleSearch();
         resetPage();
     };
+
+    const hasChanges = JSON.stringify(initialVisibilityMap) !== JSON.stringify(visibilityMap);
+
+    const visibilityValues = Object.values(visibilityMap);
+    const isAllVisible = visibilityValues.length > 0 && visibilityValues.every((v) => v === true);
+    const isAllHidden = visibilityValues.length > 0 && visibilityValues.every((v) => v === false);
 
     return (
         <div className={styles.wrapper}>
@@ -129,15 +148,22 @@ const SoftSkillsConfigPage = () => {
                                 <div className={styles.actionRow}>
                                     <Button
                                         variant="secondary"
+                                        onClick={handleShowAll}
+                                        disabled={isLoading || isAllVisible || paginated.length === 0}
+                                    >
+                                        <span>Mostrar todo</span>
+                                    </Button>
+                                    <Button
+                                        variant="secondary"
                                         onClick={handleHideAll}
-                                        disabled={isLoading || paginated.length === 0}
+                                        disabled={isLoading || isAllHidden || paginated.length === 0}
                                     >
                                         <span>Ocultar todo</span>
                                     </Button>
                                     <Button
                                         variant="secondary"
                                         onClick={handleSaveChanges}
-                                        disabled={isLoading || isSaving || paginated.length === 0}
+                                        disabled={isLoading || isSaving || !hasChanges || paginated.length === 0}
                                     >
                                         <span>Guardar</span>
                                     </Button>
@@ -163,8 +189,8 @@ const SoftSkillsConfigPage = () => {
                         ) : (
                             <div className={styles.listWrapper}>
                                 {paginated.map((skill) => {
-                                    const targetId = skill.skill_id ?? skill.skill_id;
-                                    const currentVisibility = visibilityMap[targetId] ?? skill.visible ?? skill.visible ?? false;
+                                    const targetId = skill.skill_id;
+                                    const currentVisibility = visibilityMap[targetId] ?? skill.visible ?? false;
                                     return (
                                         <div key={targetId} className={styles.skillRow}>
                                             <span className={styles.skillName}>{skill.name}</span>

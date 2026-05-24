@@ -43,6 +43,7 @@ const EducationConfigPage = () => {
     
     const [localError, setLocalError] = useState<string | null>(null);
     const [localSuccess, setLocalSuccess] = useState<string | null>(null);
+    const [initialVisibilityMap, setInitialVisibilityMap] = useState<Record<string | number, boolean>>({});
     const [visibilityMap, setVisibilityMap] = useState<Record<string | number, boolean>>({});
     const [isSaving, setIsSaving] = useState(false);
 
@@ -52,6 +53,7 @@ const EducationConfigPage = () => {
             entries.forEach((entry: any) => {
                 initialMap[entry.id] = entry.is_visible ?? entry.visible ?? false;
             });
+            setInitialVisibilityMap(initialMap);
             setVisibilityMap(initialMap);
         }
     }, [entries]);
@@ -96,11 +98,22 @@ const EducationConfigPage = () => {
         });
     };
 
+    const handleShowAll = () => {
+        setVisibilityMap((prev) => {
+            const updated = { ...prev };
+            Object.keys(updated).forEach((key) => {
+                updated[key] = true;
+            });
+            return updated;
+        });
+    };
+
     const handleSaveChanges = async () => {
         try {
             setIsSaving(true);
             setLocalError(null);
             const res = await visibilityService.updateEducation(visibilityMap);
+            setInitialVisibilityMap(visibilityMap);
             setLocalSuccess(res.message || "Cambios guardados exitosamente.");
             setTimeout(() => setLocalSuccess(null), 3000);
         } catch (err: any) {
@@ -128,6 +141,14 @@ const EducationConfigPage = () => {
 
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+    const hasChanges = Object.keys(initialVisibilityMap).some(
+        (key) => initialVisibilityMap[key] !== visibilityMap[key]
+    );
+
+    const visibilityValues = Object.values(visibilityMap);
+    const isAllVisible = visibilityValues.length > 0 && visibilityValues.every((v) => v === true);
+    const isAllHidden = visibilityValues.length > 0 && visibilityValues.every((v) => v === false);
 
     return (
         <div className={styles.wrapper}>
@@ -162,15 +183,22 @@ const EducationConfigPage = () => {
                                 <div className={styles.actionRow}>
                                     <Button
                                         variant="secondary"
+                                        onClick={handleShowAll}
+                                        disabled={isLoading || isAllVisible || paginated.length === 0}
+                                    >
+                                        <span>Mostrar todo</span>
+                                    </Button>
+                                    <Button
+                                        variant="secondary"
                                         onClick={handleHideAll}
-                                        disabled={isLoading || paginated.length === 0}
+                                        disabled={isLoading || isAllHidden || paginated.length === 0}
                                     >
                                         <span>Ocultar todo</span>
                                     </Button>
                                     <Button
                                         variant="secondary"
                                         onClick={handleSaveChanges}
-                                        disabled={isLoading || isSaving || paginated.length === 0}
+                                        disabled={isLoading || isSaving || !hasChanges || paginated.length === 0}
                                     >
                                         <span>Guardar</span>
                                     </Button>
@@ -194,7 +222,7 @@ const EducationConfigPage = () => {
                         ) : (
                             <div className={styles.listWrapper}>
                                 {paginated.map((entry) => {
-                                    const currentVisibility = visibilityMap[entry.id] ?? entry.visible ?? entry.visible ?? false;
+                                    const currentVisibility = visibilityMap[entry.id] ?? entry.visible ?? false;
                                     return (
                                         <div key={entry.id} className={styles.cardConfigWrapper}>
                                             <EducationCard entry={entry} onView={() => {}} />

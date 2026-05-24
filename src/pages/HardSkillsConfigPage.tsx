@@ -43,9 +43,20 @@ const HardSkillsConfigPage = () => {
     const [localError, setLocalError] = useState<string | null>(null);
     const [localSuccess, setLocalSuccess] = useState<string | null>(null);
     
-    // 💡 EL CAMBIO SANA: El mapa inicia completamente vacío. Solo guarda cambios del usuario.
+    const [initialVisibilityMap, setInitialVisibilityMap] = useState<Record<string, boolean>>({});
     const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>({});
     const [isSaving, setIsSaving] = useState(false);
+
+    useEffect(() => {
+        if (skills) {
+            const initialMap: Record<string, boolean> = {};
+            skills.forEach((skill) => {
+                initialMap[String(skill.skill_id)] = skill.visible ?? false;
+            });
+            setInitialVisibilityMap(initialMap);
+            setVisibilityMap(initialMap);
+        }
+    }, [skills]);
 
     useEffect(() => {
         if (successMessage) {
@@ -63,56 +74,42 @@ const HardSkillsConfigPage = () => {
         }
     }, [error]);
 
-    const handleLocalVisibilityChange = (idStr: string) => {
-    if (!idStr) return;
-
-    setVisibilityMap((prev) => {
-        // 1. Buscamos si ya se había movido antes en el mapa local
-        let currentVal = prev[idStr];
-
-        // 2. Si nunca se ha movido localmente, buscamos su valor original en la lista de 'skills'
-        if (currentVal === undefined) {
-            const originalSkill = skills.find((s) => String(s.skill_id) === idStr);
-            currentVal = originalSkill ? originalSkill.visible : false;
-        }
-
-        // 3. Invertimos el valor actual (si era true pasa a false, y viceversa)
-        const finalValue = !currentVal;
-
-        return {
+    const handleLocalVisibilityChange = (id: string | number, isChecked: boolean) => {
+        if (!id) return;
+        setVisibilityMap((prev) => ({
             ...prev,
-            [idStr]: finalValue,
-        };
-    });
-};
+            [String(id)]: isChecked,
+        }));
+    };
 
     const handleHideAll = () => {
-        // Marcamos absolutamente todas las habilidades cargadas como false usando su ID numérico real
-        const updated: Record<string, boolean> = {};
-        skills.forEach((s) => {
-            updated[String(s.skill_id)] = false;
+        setVisibilityMap((prev) => {
+            const updated = { ...prev };
+            Object.keys(updated).forEach((key) => {
+                updated[key] = false;
+            });
+            return updated;
         });
-        setVisibilityMap(updated);
+    };
+
+    const handleShowAll = () => {
+        setVisibilityMap((prev) => {
+            const updated = { ...prev };
+            Object.keys(updated).forEach((key) => {
+                updated[key] = true;
+            });
+            return updated;
+        });
     };
 
     const handleSaveChanges = async () => {
         try {
             setIsSaving(true);
             setLocalError(null);
-
-            // 💡 CONSTRUCCIÓN SEGURA: Cruzamos la lista original con las modificaciones del usuario
-            const payload: Record<string, boolean> = {};
-            
-            skills.forEach((s) => {
-                const idStr = String(s.skill_id);
-                // Si el usuario movió el Switch, usamos ese valor. Si no, dejamos su 'visible' original de la BD.
-                payload[idStr] = visibilityMap[idStr] !== undefined ? visibilityMap[idStr] : s.visible;
-            });
-
-            const res = await visibilityService.updateSkill(payload);
+            const res = await visibilityService.updateSkill(visibilityMap);
+            setInitialVisibilityMap(visibilityMap);
             setLocalSuccess(res.message || "Cambios guardados exitosamente.");
             setTimeout(() => setLocalSuccess(null), 3000);
-            
         } catch (err: any) {
             setLocalError(err.message || "Error al guardar los cambios.");
             setTimeout(() => setLocalError(null), 3000);
@@ -125,6 +122,14 @@ const HardSkillsConfigPage = () => {
         handleSearch();
         resetPage();
     };
+
+    const hasChanges = Object.keys(initialVisibilityMap).some(
+        (key) => initialVisibilityMap[key] !== visibilityMap[key]
+    );
+
+    const visibilityValues = Object.values(visibilityMap);
+    const isAllVisible = visibilityValues.length > 0 && visibilityValues.every((v) => v === true);
+    const isAllHidden = visibilityValues.length > 0 && visibilityValues.every((v) => v === false);
 
     return (
         <div className={styles.wrapper}>
@@ -149,15 +154,22 @@ const HardSkillsConfigPage = () => {
                                 <div className={styles.actionRow}>
                                     <Button
                                         variant="secondary"
+                                        onClick={handleShowAll}
+                                        disabled={isLoading || isAllVisible || paginated.length === 0}
+                                    >
+                                        <span>Mostrar todo</span>
+                                    </Button>
+                                    <Button
+                                        variant="secondary"
                                         onClick={handleHideAll}
-                                        disabled={isLoading || paginated.length === 0}
+                                        disabled={isLoading || isAllHidden || paginated.length === 0}
                                     >
                                         <span>Ocultar todo</span>
                                     </Button>
                                     <Button
                                         variant="secondary"
                                         onClick={handleSaveChanges}
-                                        disabled={isLoading || isSaving || paginated.length === 0}
+                                        disabled={isLoading || isSaving || !hasChanges || paginated.length === 0}
                                     >
                                         <span>Guardar</span>
                                     </Button>
@@ -184,10 +196,7 @@ const HardSkillsConfigPage = () => {
                             <div className={styles.listWrapper}>
                                 {paginated.map((skill: Skill) => {
                                     const idStr = String(skill.skill_id); 
-                                    
-                                    // Verificamos si hay un cambio temporal hecho por el usuario
-                                    const savedValue = visibilityMap[idStr];
-                                    const currentVisibility = savedValue !== undefined ? savedValue : skill.visible;
+                                    const currentVisibility = visibilityMap[idStr] ?? skill.visible ?? false;
                                     
                                     return (
                                         <div key={idStr} className={styles.skillRow}>
@@ -200,7 +209,7 @@ const HardSkillsConfigPage = () => {
                                                 key={`${idStr}-${currentVisibility}`}
                                                 id={skill.skill_id} 
                                                 initialState={currentVisibility}
-                                                onChange={() => handleLocalVisibilityChange(idStr)}
+                                                onChange={handleLocalVisibilityChange}
                                             />
                                         </div>
                                     );
