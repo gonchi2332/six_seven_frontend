@@ -10,24 +10,24 @@ const defAvatar = "/defAvatar.png";
 const STYLES = {
     NAVBAR: "w-full bg-secondary px-4 sm:px-6 py-3 text-white font-inter border-b border-white/5 sticky top-0 z-50",
     CONTAINER: "flex items-center justify-between w-full max-w-7xl mx-auto",
-    LEFT_SECTION: "flex items-center gap-4 lg:gap-8",
-    USER_INFO: "flex items-center gap-3 lg:border-r lg:border-white/10 lg:pr-4",
+    LEFT_SECTION: "flex items-center gap-4 lg:gap-8 flex-1 min-w-0",
+    USER_INFO: "flex items-center gap-3 lg:border-r lg:border-white/10 lg:pr-4 shrink-0",
     AVATAR: "w-9 h-9 object-cover rounded-full border border-white/20 shrink-0",
-    USER_NAME: "font-bold text-base sm:text-lg whitespace-nowrap shrink-0",
-    TABS_CONTAINER: "hidden lg:flex items-center gap-1",
-    TAB_BUTTON: "px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 duration-200 cursor-pointer whitespace-nowrap flex items-center gap-1.5",
+    USER_NAME: "font-bold text-base sm:text-lg truncate",
+    TABS_CONTAINER: "hidden lg:flex items-center gap-1 flex-wrap",
+    TAB_BUTTON: "px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap flex items-center gap-1.5",
     TAB_ACTIVE: "bg-accent text-secondary shadow-lg shadow-accent/20",
     TAB_INACTIVE: "text-white/60 hover:text-white hover:bg-white/5",
-    ACTIONS_CONTAINER: "hidden lg:flex items-center gap-4 ml-auto",
-    COPY_BUTTON: "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-200 bg-white/10 hover:bg-white/20 text-white shrink-0",
-    LOGOUT_BUTTON: "flex items-center gap-2 text-white/60 hover:text-red-400 transition-colors text-sm font-bold ml-2 shrink-0",
-    MOBILE_TOGGLE: "lg:hidden p-2 text-white/80 hover:text-white transition-colors ml-4",
+    ACTIONS_CONTAINER: "flex items-center gap-3 ml-4 shrink-0",
+    COPY_BUTTON: "flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-bold transition-all duration-200 bg-white/10 hover:bg-white/20 text-white whitespace-nowrap",
+    LOGOUT_BUTTON: "flex items-center gap-2 text-white/60 hover:text-red-400 transition-colors text-sm font-bold whitespace-nowrap",
+    MOBILE_TOGGLE: "lg:hidden p-2 text-white/80 hover:text-white transition-colors ml-2 shrink-0",
     MOBILE_MENU: "lg:hidden absolute top-full left-0 w-full bg-secondary border-b border-white/10 flex flex-col p-4 gap-4 animate-in slide-in-from-top duration-300",
     MOBILE_TAB: "w-full text-left px-4 py-3 rounded-xl text-sm font-medium",
     LOGIN_BUTTON: "bg-accent/10 text-accent px-4 py-2 rounded-xl hover:bg-accent hover:text-secondary transition-all text-sm font-bold",
     OVERLAY: "fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4",
     dropdownWrapper: "relative inline-block",
-    dropdownMenu: "absolute top-full left-0 mt-2 w-56 bg-secondary border border-white/10 rounded-xl p-1.5 shadow-xl flex flex-col gap-0.5 animate-in fade-in slide-in-from-top-2 duration-200",
+    dropdownMenu: "absolute top-full left-0 mt-2 w-56 bg-secondary border border-white/10 rounded-xl p-1.5 shadow-xl flex flex-col gap-0.5 animate-in fade-in slide-in-from-top-2 duration-200 z-[60]",
     dropdownItem: "w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all cursor-pointer",
     dropdownItemActive: "bg-accent/10 text-accent hover:bg-accent/15"
 };
@@ -176,7 +176,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                                         onClick={() => { setIsVisibilityDropdownOpen(!isVisibilityDropdownOpen); setIsSkillsDropdownOpen(false); }}
                                         className={`${STYLES.TAB_BUTTON} ${isVisibilityActive ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
                                     >
-                                        <span>Configurar Visibilidad</span>
+                                        <span>Visibilidad</span>
                                         <ChevronDown size={14} className={`transition-transform duration-200 ${isVisibilityDropdownOpen ? 'rotate-180' : ''}`} />
                                     </button>
 
@@ -184,9 +184,9 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                                         <div className={STYLES.dropdownMenu}>
                                             <button
                                                 onClick={() => navigate(configPaths.personalInfo)}
-                                                className={`${STYLES.dropdownItem} ${location.pathname === configPaths.projects ? STYLES.dropdownItemActive : ''}`}
+                                                className={`${STYLES.dropdownItem} ${location.pathname === configPaths.personalInfo ? STYLES.dropdownItemActive : ''}`}
                                             >
-                                                Informacion Personal
+                                                Información Personal
                                             </button>
                                             <button
                                                 onClick={() => navigate(configPaths.experience)}
@@ -220,7 +220,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                                             </button>
                                             <button
                                                 onClick={() => navigate(configPaths.certificates)}
-                                                className={`${STYLES.dropdownItem} ${location.pathname === configPaths.skillsSoft ? STYLES.dropdownItemActive : ''}`}
+                                                className={`${STYLES.dropdownItem} ${location.pathname === configPaths.certificates ? STYLES.dropdownItemActive : ''}`}
                                             >
                                                 Visibilidad Certificados
                                             </button>
@@ -235,14 +235,15 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                         {!isPublic && userInfo?.username && (
                             <button onClick={() => setIsShareModalOpen(true)} className={STYLES.COPY_BUTTON}>
                                 <Copy size={16} />
-                                <span>Generar Enlace</span>
+                                <span className="hidden sm:inline">Generar Enlace</span>
+                                <span className="sm:hidden">Enlace</span>
                             </button>
                         )}
 
                         {!isPublic && token ? (
                             <button onClick={handleLogout} className={STYLES.LOGOUT_BUTTON}>
                                 <LogOut size={18} />
-                                <span>Salir</span>
+                                <span className="hidden sm:inline">Salir</span>
                             </button>
                         ) : !token ? (
                             <button onClick={() => navigate("/login")} className={STYLES.LOGIN_BUTTON}>
@@ -256,6 +257,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                     </button>
                 </div>
 
+                {/* Mobile menu - igual que antes */}
                 {isMenuOpen && (
                     <div className={STYLES.MOBILE_MENU}>
                         <div className="flex flex-col gap-1">
@@ -309,12 +311,18 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                                         onClick={() => { setIsMobileVisibilityOpen(!isMobileVisibilityOpen); setIsMobileSkillsOpen(false); }}
                                         className={`${STYLES.MOBILE_TAB} ${isVisibilityActive ? 'bg-white/5 text-white' : STYLES.TAB_INACTIVE} flex items-center justify-between`}
                                     >
-                                        <span>Configurar Visibilidad</span>
+                                        <span>Configurar</span>
                                         <ChevronDown size={16} className={`transition-transform ${isMobileVisibilityOpen ? 'rotate-180' : ''}`} />
                                     </button>
 
                                     {isMobileVisibilityOpen && (
                                         <div className="pl-4 flex flex-col gap-1 mt-1 bg-black/10 rounded-xl p-1 border border-white/5">
+                                            <button
+                                                onClick={() => navigate(configPaths.personalInfo)}
+                                                className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.personalInfo ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+                                            >
+                                                • Información Personal
+                                            </button>
                                             <button
                                                 onClick={() => navigate(configPaths.experience)}
                                                 className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.experience ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
@@ -359,7 +367,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                                         className={STYLES.COPY_BUTTON}
                                     >
                                         <Copy size={16} />
-                                        <span>Generar Enlace Público</span>
+                                        <span>Generar Enlace</span>
                                     </button>
                                 )}
                                 {token && (
