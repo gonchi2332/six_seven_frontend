@@ -1,8 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import type { Skill } from "../features/skills/types/skill.types";
 import { fetchSkills, patchSkill, deleteSkill as apiDeleteSkill, fetchCatalogSkills, fetchSkillsPublicNew } from "../services/skillsService";
+import { useParams } from "react-router-dom";
 
 export const useSkills = () => {
+    const { username: publicUsernameUrl } = useParams<{ username: string }>();
+
     const [skills, setSkills] = useState<Skill[]>([]);
     const [catalogSkills, setCatalogSkills] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -10,7 +13,7 @@ export const useSkills = () => {
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [publicSkills, setPublicSkills] = useState<Skill[]>([]);
     const [isLoadingPublic, setIsLoadingPublic] = useState(false);
-    const [currentPublicUsername, setCurrentPublicUsername] = useState<string | null>(null); // ✅ Nuevo
+    const [currentPublicUsername, setCurrentPublicUsername] = useState<string | null>(null);
 
     const showSuccess = (msg: string) => {
         setSuccessMessage(msg);
@@ -23,6 +26,11 @@ export const useSkills = () => {
     };
 
     useEffect(() => {
+        if (publicUsernameUrl) {
+            setIsLoading(false);
+            return;
+        }
+
         const load = async () => {
             setIsLoading(true);
             setError(null);
@@ -46,16 +54,16 @@ export const useSkills = () => {
             }
         };
         load();
-    }, []);
+    }, [publicUsernameUrl]);
 
     useEffect(() => {
-        const fetchPublicUserSkills = async () => {
-            if (!currentPublicUsername || currentPublicUsername.trim() === "") {
-                setPublicSkills([]);
-                setIsLoadingPublic(false);
-                return;
-            }
+        if (!currentPublicUsername || currentPublicUsername.trim() === "") {
+            setPublicSkills([]);
+            setIsLoadingPublic(false);
+            return;
+        }
 
+        const fetchPublicUserSkills = async () => {
             setIsLoadingPublic(true);
             setError(null);
             try {
@@ -71,7 +79,6 @@ export const useSkills = () => {
 
                 setPublicSkills(formattedSkills);
             } catch (err) {
-                console.error(err);
                 const errorMsg = err instanceof Error ? err.message : "Error al obtener habilidades públicas del usuario";
                 showError(errorMsg);
                 setPublicSkills([]);
@@ -81,9 +88,8 @@ export const useSkills = () => {
         };
 
         fetchPublicUserSkills();
-    }, [currentPublicUsername]); // ✅ Se ejecuta cuando cambia el username
+    }, [currentPublicUsername]);
 
-    // ✅ Función pública para cambiar el usuario a visualizar
     const setPublicUser = useCallback((username: string | null) => {
         setCurrentPublicUsername(username);
     }, []);
@@ -136,7 +142,7 @@ export const useSkills = () => {
         deleteSkill,
         publicSkills,
         isLoadingPublic,
-        setPublicUser,        // ✅ Nueva: para cambiar de usuario
-        currentPublicUsername // ✅ Nueva: saber qué usuario se está viendo
+        setPublicUser,
+        currentPublicUsername
     };
 };

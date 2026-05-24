@@ -12,7 +12,9 @@ const jsonHeaders = () => ({
 });
 
 export const fetchSkillsPublicNew = async (username: string) => {
-    const res = await fetch(`${BASE_URL}/users/${username}/hard-skills`);
+    const res = await fetch(`${BASE_URL}/users/${username}/hard-skills`,{
+        headers: jsonHeaders(),
+    });
     if (!res.ok) {
         const data = await res.json();
         throw new Error(data.message ?? "Error al obtener habilidades");
