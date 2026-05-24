@@ -1,30 +1,62 @@
 import { useState } from 'react';
-import type { RegisterFormData, RegisterFormErrors, RegisterFormTouched } from '../types/auth.types';
-import { registerUser } from '../api';
+import { registerUser } from '../../../services/registerFormService';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../context/AuthContext';
+interface RegisterFormData {
+    name: string;
+    paternalLastName: string;
+    secondSurname: string;
+    username: string;
+    password: string;
+    confirmPassword: string;
+    mail: string;
+
+}
+
+interface RegisterFormErrors {
+    name: string;
+    paternalLastName: string;
+    secondSurname: string;
+    username: string;
+    password: string;
+    confirmPassword: string;
+    mail: string;
+}
+
+interface RegisterFormTouched {
+    name: boolean;
+    paternalLastName: boolean;
+    secondSurname: boolean;
+    username: boolean;
+    password: boolean;
+    confirmPassword: boolean;
+    mail: boolean;
+}
 
 
 
+
+import { sendVerificationCode } from '../../../services/verificationCodeService';
 
 export const useRegisterForm = () => {
 
     const { login: authLogin } = useAuthContext();
-
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState<RegisterFormData>({
         name: "",
         paternalLastName: "",
+        secondSurname: "",
         username: "",
         password: "",
         confirmPassword: "",
-        mail:""
+        mail: ""
     });
 
     const [errors, setErrors] = useState<RegisterFormErrors>({
         name: "",
         paternalLastName: "",
+        secondSurname: "",
         username: "",
         password: "",
         confirmPassword: "",
@@ -34,6 +66,7 @@ export const useRegisterForm = () => {
     const [touched, setTouched] = useState<RegisterFormTouched>({
         name: false,
         paternalLastName: false,
+        secondSurname: false,
         username: false,
         password: false,
         confirmPassword: false,
@@ -52,7 +85,6 @@ export const useRegisterForm = () => {
 
     const validatePassword = (password: string): string => {
         if (!password) return "La contraseña es requerida";
-
         if (password.length < 8) return "La contraseña debe tener al menos 8 caracteres";
         return "";
     };
@@ -62,20 +94,29 @@ export const useRegisterForm = () => {
         if (password !== confirm) return "Las contraseñas no coinciden";
         return "";
     };
+
     const validatePaternalLastName = (paternalName: string) => {
-        if (!paternalName) return "el apellido paterno es requerido"
+        if (!paternalName) return "El primer apellido es requerido";
         if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(paternalName)) return "Solo letras y espacios";
-        return ""
+        return "";
     }
+
+    const validatesecondSurname = (secondSurname: string) => {
+        if (!secondSurname) return ""; // Opcional
+        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(secondSurname)) return "Solo letras y espacios";
+        return "";
+    }
+
     const validateUsername = (username: string) => {
-        if (!username) return "el nombre de usuario es obligatorio"
+        if (!username) return "El nombre de usuario es obligatorio";
         if (!/^[a-zA-Z0-9_]+$/.test(username)) return "Solo letras, números y guión bajo";
-        return ""
+        return "";
     }
+
     const validateMail = (mail: string) => {
-        if (!mail) return "el correo es obligatorio"
+        if (!mail) return "El correo es obligatorio";
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) return "Correo no válido";
-        return ""
+        return "";
     }
 
     // Handlers
@@ -93,6 +134,9 @@ export const useRegisterForm = () => {
                     break;
                 case "paternalLastName":
                     error = validatePaternalLastName(value);
+                    break;
+                case "secondSurname":
+                    error = validatesecondSurname(value);
                     break;
                 case "username":
                     error = validateUsername(value);
@@ -120,6 +164,10 @@ export const useRegisterForm = () => {
         handleFieldChange("paternalLastName", e.target.value);
     };
 
+    const handlesecondSurnameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        handleFieldChange("secondSurname", e.target.value);
+    };
+
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         handleFieldChange("username", e.target.value);
     };
@@ -127,6 +175,7 @@ export const useRegisterForm = () => {
     const handleMailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         handleFieldChange("mail", e.target.value);
     };
+
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setFormData(prev => ({ ...prev, password: value }));
@@ -160,6 +209,7 @@ export const useRegisterForm = () => {
             setErrors(prev => ({ ...prev, name: error }));
         }
     };
+
     const handleMailBlur = () => {
         if (!touched.mail) {
             setTouched(prev => ({ ...prev, mail: true }));
@@ -183,11 +233,20 @@ export const useRegisterForm = () => {
             setErrors(prev => ({ ...prev, confirmPassword: error }));
         }
     };
+
     const handlePaternalLastNameBlur = () => {
         if (!touched.paternalLastName) {
             setTouched(prev => ({ ...prev, paternalLastName: true }));
             const error = validatePaternalLastName(formData.paternalLastName);
             setErrors(prev => ({ ...prev, paternalLastName: error }));
+        }
+    };
+
+    const handlesecondSurnameBlur = () => {
+        if (!touched.secondSurname) {
+            setTouched(prev => ({ ...prev, secondSurname: true }));
+            const error = validatesecondSurname(formData.secondSurname);
+            setErrors(prev => ({ ...prev, secondSurname: error }));
         }
     };
 
@@ -208,6 +267,7 @@ export const useRegisterForm = () => {
             password: true,
             confirmPassword: true,
             paternalLastName: true,
+            secondSurname: true,
             username: true,
             mail: true
         });
@@ -216,12 +276,14 @@ export const useRegisterForm = () => {
         const passwordError = validatePassword(formData.password);
         const confirmPasswordError = validateConfirmPassword(formData.password, formData.confirmPassword);
         const paternalLastNameError = validatePaternalLastName(formData.paternalLastName);
+        const secondSurnameError = validatesecondSurname(formData.secondSurname);
         const usernameError = validateUsername(formData.username);
         const mailError = validateMail(formData.mail!);
 
         setErrors({
             name: nameError,
             paternalLastName: paternalLastNameError,
+            secondSurname: secondSurnameError,
             username: usernameError,
             password: passwordError,
             confirmPassword: confirmPasswordError,
@@ -232,48 +294,86 @@ export const useRegisterForm = () => {
             passwordError ||
             confirmPasswordError ||
             paternalLastNameError ||
-            usernameError||
+            secondSurnameError ||
+            usernameError ||
             mailError
         ) return;
 
         setIsLoading(true);
 
-        // CONEXIÓN CON EL BACKEND
-        /*revisar todo esto, se esta manejando de formas raras el error de 
-        registro de usuario duplicado
-        */
         try {
-
-            const response = await registerUser({
+            // ============================================
+            // PASO 1: Registrar usuario
+            // ============================================
+            const registerData: any = {
                 username: formData.username,
                 password: formData.password,
                 names: formData.name,
                 firstSurname: formData.paternalLastName,
-                mainRegistrationEmail: formData.mail
-            });
+                secondSurname: formData.secondSurname,
+                mainRegistrationEmail: formData.mail,
+
+            };
+
+            
+
+            const response = await registerUser(registerData);
 
             const token = response.token;
 
             authLogin(token);
-            localStorage.setItem("username", formData.username);
-            navigate("/verification", { state: { email: formData.mail, username: formData.username, codeSent: true } });
+
+            // ============================================
+            // PASO 2: Enviar código de verificación al email
+            // ============================================
+            try {
+                await sendVerificationCode({
+                    username: formData.username,
+                    targetMail: formData.mail,
+                    token: token
+                });
+
+
+                // Redirigir a página de verificación
+                navigate("/verification", {
+                    state: {
+                        email: formData.mail,
+                        username: formData.username,
+                        codeSent: true
+                    }
+                });
+
+            } catch (verificationError: any) {
+
+                navigate("/verification", {
+                    state: {
+                        email: formData.mail,
+                        username: formData.username,
+                        codeSent: false,
+                        error: verificationError.message || "Error al enviar código"
+                    }
+                });
+            }
+
         } catch (error: any) {
+
 
             const errorMessage = error.message?.toLowerCase() || "";
 
-            //revisar aca, aca esta lo raro
-            if (errorMessage.includes("username") || errorMessage.includes("ya existe")) {
+            if (errorMessage.includes("username") || errorMessage.includes("ya existe") || errorMessage.includes("en uso")) {
                 setErrors(prev => ({
                     ...prev,
                     username: "Este nombre de usuario ya está en uso"
                 }));
                 setTouched(prev => ({ ...prev, username: true }));
-            } else {
+            } else if (errorMessage.includes("email") || errorMessage.includes("correo")) {
                 setErrors(prev => ({
                     ...prev,
-                    username: error.message || "Error al registrar"
+                    mail: "Este correo ya está registrado"
                 }));
-                setTouched(prev => ({ ...prev, username: true }));
+                setTouched(prev => ({ ...prev, mail: true }));
+            } else {
+                setServerError(error.message);
             }
         } finally {
             setIsLoading(false);
@@ -290,12 +390,14 @@ export const useRegisterForm = () => {
         handlePasswordChange,
         handleConfirmPasswordChange,
         handlePaternalLastNameChange,
+        handlesecondSurnameChange,
         handleUsernameChange,
         handleMailChange,
         handleNameBlur,
         handlePasswordBlur,
         handleConfirmPasswordBlur,
         handlePaternalLastNameBlur,
+        handlesecondSurnameBlur,
         handleUsernameBlur,
         handleMailBlur,
         handleSubmit

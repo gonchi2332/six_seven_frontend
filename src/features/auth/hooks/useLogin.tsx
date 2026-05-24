@@ -1,7 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { login } from "../../../services/loginService";
 import { useAuthContext } from "../../../context/AuthContext";
+import { sendVerificationCode } from "../../../services/verificationCodeService";
+import { getEmail } from "../../../services/getemail";
+import { useNavigate } from "react-router-dom";
+
+
 
 const useLogin = () => {
     const [username, setUsername] = useState("");
@@ -12,9 +16,11 @@ const useLogin = () => {
     const [serverError, setServerError] = useState<string>("");
 
     const [isLoading, setIsLoading] = useState(false);
+    const [showVerified, setShowVerified] = useState(false);
+    const [userEmail, setUserEmail] = useState("");
 
-    const { login: authLogin } = useAuthContext();
     const navigate = useNavigate();
+    const { login: authLogin } = useAuthContext();
 
     const validateUsername = (value: string) => {
         if (!value) return "El nombre de usuario es obligatorio";
@@ -68,18 +74,34 @@ const useLogin = () => {
         try {
             const data = await login({ username, password });
             authLogin(data.token);
-            localStorage.setItem("username", username);
+
 
             if (data.user.state.toUpperCase() === "UNVERIFIED") {
-                navigate("/verification");
+                let freshEmail = "";
+
+                try {
+                    const emailData = await getEmail({ token: data.token });
+
+                    freshEmail = emailData.email;
+                    setUserEmail(freshEmail);
+                } catch (e) {
+
+                    setUserEmail("");
+                }
+
+                try {
+                    await sendVerificationCode({ username, targetMail: freshEmail, token: data.token });
+                } catch {
+                }
+
+                setShowVerified(true);
             } else {
-                navigate("/dashboard");
+                navigate("/info-personal");
             }
         } catch (err) {
             const msg = err instanceof Error ? err.message : "Error inesperado";
             const lowerMsg = msg.toLowerCase();
 
-            // Map backend error messages to inputs intuitively
             if (
                 lowerMsg.includes("cannot read properties of undefined") ||
                 lowerMsg.includes("reading 'profile_picture'") ||
@@ -104,8 +126,11 @@ const useLogin = () => {
         password,
         errors,
         touched,
+        showVerified,
+        setShowVerified,
         serverError,
         isLoading,
+        userEmail,
         handleUsernameChange,
         handlePasswordChange,
         handleUsernameBlur,

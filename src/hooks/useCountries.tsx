@@ -23,7 +23,6 @@ export const useCountries = () => {
           
         setCountries(countryNames);
       } catch (err) {
-        console.error("Error al obtener los países:", err);
         setError("No se pudieron cargar los países");
         
         // Fallback en caso de error para que el select no quede vacío

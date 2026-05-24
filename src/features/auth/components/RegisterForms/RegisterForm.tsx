@@ -36,9 +36,8 @@ const RegisterForm = () => {
     const LINK_ANCHOR = "text-accent hover:text-accent/80 font-medium transition-colors font-nunito"
 
     return (
-        <form onSubmit={handleSubmit} className={TOP_SECTION}>
-            <
-                div className={FORM_SPACING}>
+        <form onSubmit={handleSubmit} className={TOP_SECTION} noValidate>
+            <div className={FORM_SPACING}>
                 <h1 className={TITLE}>
                     Empieza a construir tu Portafolio
                 </h1>
@@ -55,7 +54,7 @@ const RegisterForm = () => {
                 </div>
                 <div onBlur={handlePaternalLastNameBlur} className={FIELD_WRAPPER}>
                     <TextField
-                        label="Primer Apellido*"
+                        label="Primer apellido*"
                         type="text"
                         value={formData.paternalLastName}
                         onChange={handlePaternalLastNameChange}
@@ -63,7 +62,6 @@ const RegisterForm = () => {
                         disabled={isLoading}
                     />
                 </div>
-                    
                 <div onBlur={handleUsernameBlur} className={FIELD_WRAPPER}>
                     <TextField
                         label="Nombre de usuario*"

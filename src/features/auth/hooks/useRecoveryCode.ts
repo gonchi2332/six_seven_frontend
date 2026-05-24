@@ -3,28 +3,30 @@ import { requestRecoveryCode, verifyRecoveryCode } from "../../../services/recov
 
 interface UseSendRecoveryCodeParams {
     username: string;
-    email: string;
 }
 
-export const useSendRecoveryCode = ({ username, email }: UseSendRecoveryCodeParams) => {
+export const useSendRecoveryCode = ({ username }: UseSendRecoveryCodeParams) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [email, setEmail] = useState<string | null>(null);
 
-    const handleSend = async (): Promise<boolean> => {
+    const handleSend = async (): Promise<{ success: boolean; email: string | null }> => {
         setIsLoading(true);
         setError(null);
         try {
-            await requestRecoveryCode({ username, email });
-            return true;
+            const data = await requestRecoveryCode({ username });
+            const recoveryEmail = data.verificationMails[0];
+            setEmail(recoveryEmail);
+            return { success: true, email: recoveryEmail };
         } catch (err) {
             setError(err instanceof Error ? err.message : "Error al enviar el código");
-            return false;
+            return { success: false, email: null };
         } finally {
             setIsLoading(false);
         }
     };
 
-    return { isLoading, error, handleSend };
+    return { isLoading, email, error, handleSend };
 };
 
 interface UseVerifyRecoveryParams {
@@ -56,7 +58,7 @@ export const useVerifyRecoveryCode = ({ username, code }: UseVerifyRecoveryParam
 
     const resetError = () => setError(null);
 
-    const title = error ? "Código inválido" : "Recuperación de contraseña";
+    const title = error ? "Código inválido" : "Recuperación de Contraseña";
     const description = error
         ? error
         : "Ingresa el código de recuperación enviado a tu correo";

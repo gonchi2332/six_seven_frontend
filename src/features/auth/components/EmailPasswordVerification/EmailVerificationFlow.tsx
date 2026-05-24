@@ -15,23 +15,31 @@ type Props = {
     onClose?: () => void;
 };
 
-const VerificationFlow = ({ 
-    initialMode = "verify", 
+const VerificationFlow = ({
+    initialMode = "verify",
     initialStep = "email",
     initialUsername = "",
     initialEmail = "",
-    onClose 
+    onClose
 }: Props) => {
     const [step, setStep] = useState<Step>(initialStep);
     const [mode] = useState<Mode>(initialMode);
     const [username, setUsername] = useState(initialUsername);
-    const [email, setEmail] = useState(initialEmail);
     const [verifiedCode, setVerifiedCode] = useState("");
+    const [email, setEmail] = useState(initialEmail || "");
     const navigate = useNavigate();
 
-    const handleEmailSubmit = (submittedUsername: string, submittedEmail: string) => {
+    const handleClose = () => {
+        if (onClose) {
+            onClose();
+        } else {
+            navigate("/login");
+        }
+    };
+
+    const handleEmailSubmit = (submittedUsername: string, recoveryEmail: string) => {
         setUsername(submittedUsername);
-        setEmail(submittedEmail);
+        setEmail(recoveryEmail);
         setStep("verification");
     };
 
@@ -42,17 +50,16 @@ const VerificationFlow = ({
         if (mode === "recovery") {
             setStep("reset");
         } else if (mode === "verify") {
-            navigate("/login");
+            handleClose();
         }
     };
-    //console.log(username);
+
     return (
         <>
             {step === "email" && (
                 <EmailInputPopup
-                    mode={mode}
                     onSubmit={handleEmailSubmit}
-                    onCancel={onClose}
+                    onCancel={handleClose}
                 />
             )}
             {step === "verification" && (
@@ -61,10 +68,16 @@ const VerificationFlow = ({
                     email={email}
                     mode={mode}
                     onSuccess={handleCodeSuccess}
+                    onClose={handleClose}
                 />
             )}
             {step === "reset" && (
-                <ResetPasswordPopup username={username} code={verifiedCode} />
+                <ResetPasswordPopup
+                    username={username}
+                    code={verifiedCode}
+                    email={email}
+                    onClose={handleClose}
+                />
             )}
         </>
     );
