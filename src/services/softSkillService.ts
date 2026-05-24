@@ -34,15 +34,12 @@ export const getSoftSkills = async (username: string): Promise<SoftSkill[]> => {
     return data.skills ?? [];
 };
 
-
 export const fetchPublicSoftSkills = async (username: string): Promise<SoftSkill[]> => {
     const res = await fetch(`${BASE_URL}/users/${username}/soft-skills`);
     const data = await res.json();
     if (!res.ok) throw new Error(data.message ?? "Error al obtener habilidades blandas");
     return data.skills ?? [];
-}
-
-
+};
 
 export const fetchCatalogSoftSkills = async (): Promise<string[]> => {
     const res = await fetch(`${BASE_URL}/system/all-soft-skills`, {

@@ -18,7 +18,11 @@ const styles = {
     loading: "text-white/70 font-nunito text-center py-12 bg-black/20 rounded-xl border border-white/10",
 };
 
-function Github() {
+interface Props {
+    isPublic?: boolean;
+}
+
+function Github({ isPublic }: Props) {
     const [showModal, setShowModal] = useState(false);
     
     const token = localStorage.getItem("token") || "";
@@ -50,7 +54,7 @@ function Github() {
                                 Perfil de GitHub
                             </h1>
                             
-                            {githubUser && (
+                            {githubUser && !isPublic && (
                                 <Button variant="secondary" onClick={() => setShowModal(true)}>
                                     Cambiar Perfil
                                 </Button>
@@ -63,12 +67,21 @@ function Github() {
                             <div className={styles.content}>
                                 {!githubUser ? (
                                     <>
-                                        <p className={styles.emptyText}>
-                                            Vincula tu cuenta de GitHub para mostrar tu insignia profesional en tu portafolio público.
-                                        </p>
-                                        <Button variant="primary" onClick={() => setShowModal(true)}>
-                                            Vincular Ahora
-                                        </Button>
+                                        {!isPublic && (
+                                            <p className={styles.emptyText}>
+                                                Vincula tu cuenta de GitHub para mostrar tu insignia profesional en tu portafolio público.
+                                            </p>
+                                        )}
+                                        {isPublic && (
+                                            <p className={styles.emptyText}>
+                                                Aun no se vinculo una cuenta de GitHub.
+                                            </p>
+                                        )}
+                                        {!isPublic && (
+                                            <Button variant="primary" onClick={() => setShowModal(true)}>
+                                                Vincular Ahora
+                                            </Button>
+                                        )}
                                     </>
                                 ) : (
                                     <div className={styles.badgeWrapper}>

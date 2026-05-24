@@ -42,7 +42,7 @@ const HardSkillsPage = () => {
 
     const { currentPage, totalPages, paginated, prevPage, nextPage, resetPage } = usePagination(filtered, PAGE_SIZE);
 
-    const [skillAction, setSkillAction] = useState<Skill | null>(null);
+    const [, setSkillAction] = useState<Skill | null>(null);
 
     useEffect(() => {
         if (username) {
