@@ -70,7 +70,7 @@ const HardSkillsPage = () => {
         if (!skillToDelete) return;
         setIsDeleting(true);
         try {
-            await deleteSkill(skillToDelete.id);
+            await deleteSkill(skillToDelete.name);
             adjustAfterDelete(paginated.length);
             setSkillToDelete(null);
         } finally {
@@ -110,7 +110,7 @@ const HardSkillsPage = () => {
                         ) : (
                             <div className={styles.listWrapper}>
                                 {paginated.map((skill) => (
-                                    <div key={skill.id} className={styles.skillRow} onClick={() => setSkillAction(skill)}>
+                                    <div key={skill.name} className={styles.skillRow} onClick={() => setSkillAction(skill)}>
                                         <div className={styles.skillLeft}>
                                             <span className={styles.skillName}>{skill.name}</span>
                                             <LevelBars level={skill.level} size="sm" />
@@ -149,29 +149,29 @@ const HardSkillsPage = () => {
             )}
 
             {skillToView && (
-                    <ViewHardSkillPopup
-                        skill={skillToView}
-                        onClose={() => { setSkillToView(null); setSkillAction(skillToView); }}
-                    />
-                )}
-
-                {skillToEdit && (
-                    <EditSkillPopup
-                        skill={skillToEdit}
-                        onSubmit={handleEditSubmit}
-                        onClose={() => { setSkillToEdit(null); setSkillAction(skillToEdit); }}
-                        serverError={editError}
-                        isSubmitting={isEditSubmitting}
-                    />
-                )}
-
-                <ConfirmDeletePopup
-                    isOpen={!!skillToDelete}
-                    skillName={skillToDelete?.name ?? ""}
-                    onConfirm={handleDeleteConfirm}
-                    onClose={() => { setSkillToDelete(null); setSkillAction(skillToDelete); }}
-                    isLoading={isDeleting}
+                <ViewHardSkillPopup
+                    skill={skillToView}
+                    onClose={() => { setSkillToView(null); setSkillAction(skillToView); }}
                 />
+            )}
+
+            {skillToEdit && (
+                <EditSkillPopup
+                    skill={skillToEdit}
+                    onSubmit={handleEditSubmit}
+                    onClose={() => { setSkillToEdit(null); setSkillAction(skillToEdit); }}
+                    serverError={editError}
+                    isSubmitting={isEditSubmitting}
+                />
+            )}
+
+            <ConfirmDeletePopup
+                isOpen={!!skillToDelete}
+                skillName={skillToDelete?.name ?? ""}
+                onConfirm={handleDeleteConfirm}
+                onClose={() => { setSkillToDelete(null); setSkillAction(skillToDelete); }}
+                isLoading={isDeleting}
+            />
         </div>
     );
 };

@@ -119,12 +119,10 @@ export const useSkills = () => {
         }
     };
 
-    const deleteSkill = async (skillId: number | string) => {
+    const deleteSkill = async (skillName: string) => {
         try {
-            const targetSkill = skills.find(s => s.skill_id === Number(skillId));
-            const identifierForApi = targetSkill ? targetSkill.name : String(skillId);
-            await apiDeleteSkill(identifierForApi);
-            setSkills((prev) => prev.filter((s) => s.skill_id !== Number(skillId)));
+            await apiDeleteSkill(skillName);
+            setSkills((prev) => prev.filter((s) => s.name !== skillName));
             showSuccess("Habilidad eliminada correctamente");
         } catch (err) {
             throw err;
