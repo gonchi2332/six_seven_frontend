@@ -170,8 +170,8 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
         setIsSubmitting(true);
         try {
             await onEdit(experience.id, {
-                position: position.trim(),
-                companyName: company.trim(),
+                //position: position.trim(),
+                //companyName: company.trim(),
                 description: description.trim(),
                 startDate,
                 endDate: isCurrent ? null : endDate,
