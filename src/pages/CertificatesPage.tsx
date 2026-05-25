@@ -52,7 +52,7 @@ const CertificatesPage = () => {
                             <p className={styles.empty}>
                                 {filtered.length === 0 && certificates.length > 0
                                     ? "No se encontraron certificados."
-                                    : "No tienes certificados registrados aún."}
+                                    : "No tienes certificados registrados."}
                             </p>
                         ) : (<div className={styles.listWrapper}>
                                 {paginated.map((cert) => (<CertificateCard key={cert.id} certificate={cert} onClick={setCertAction} />))}
