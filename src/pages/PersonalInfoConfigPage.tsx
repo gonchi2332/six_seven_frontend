@@ -68,7 +68,7 @@ const PersonalInfoConfigPage = () => {
     const [localError, setLocalError] = useState<string | null>(null);
     const [localSuccess, setLocalSuccess] = useState<string | null>(null);
     const [isSaving, setIsSaving] = useState(false);
-    
+
     const [initialVisibilityMap, setInitialVisibilityMap] = useState<Record<string, boolean>>({});
     const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>({});
 
@@ -119,9 +119,9 @@ const PersonalInfoConfigPage = () => {
             if (!userInfo) return;
 
             const res = await visibilityService.updatePersonalInfo(visibilityMap);
-            
+
             setInitialVisibilityMap(visibilityMap);
-            setLocalSuccess(res.message || "Visibilidad de información personal actualizada.");
+            setLocalSuccess(res.message || "Cambios guardados exitosamente");
             setRefreshKey((prev) => prev + 1); // Forzar actualización limpia si el hook lo requiere
             setTimeout(() => setLocalSuccess(null), 3000);
         } catch (err: any) {
