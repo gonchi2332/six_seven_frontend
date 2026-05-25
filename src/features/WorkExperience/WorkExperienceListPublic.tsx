@@ -5,6 +5,7 @@ import WorkExperienceItem from './WorkExperienceItem';
 import type { WorkExperience } from '../../hooks/useWorkExperiences';
 import Button from '../../components/Button';
 import { useParams } from 'react-router-dom';
+import WorkExperienceDetailModal from './WorkExperienceDetailModal';
 
 const PAGE_SIZE = 10;
 
@@ -160,6 +161,12 @@ const WorkExperienceList = () => {
                     </div>
                 </div>
             </div>
+
+            <WorkExperienceDetailModal
+                isOpen={isDetailModalOpen}
+                experience={selectedExperience}
+                onClose={() => setIsDetailModalOpen(false)}
+            />
         </div>
     );
 };
