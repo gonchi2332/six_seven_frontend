@@ -56,13 +56,12 @@ const SkillsList = () => {
             {isLoading ? (
                 <p className={styles.empty}>Cargando...</p>
             ) : skills.length === 0 ? (
-                <p className={styles.empty}>No tienes habilidades aún.</p>
+                <p className={styles.empty}>No tienes habilidades registradas.</p>
             ) : (
                 <>
                     <div className={styles.list}>
                         {paginated.map((skill) => (
                             <SkillBar
-                                key={skill.id}
                                 skill={skill}
                                 onEdit={() => setEditTarget(skill)}
                                 onDelete={() => setDeleteTarget(skill)}

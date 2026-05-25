@@ -212,7 +212,7 @@ const CertificatesConfigPage = () => {
                             <p className={styles.loading}>Cargando...</p>
                         ) : paginatedCertificates.length === 0 ? (
                             <p className={styles.empty}>
-                                {activeSearch ? "No se encontraron certificados." : "No tienes certificados registrados aún."}
+                                {activeSearch ? "No se encontraron certificados." : "No tienes certificados registrados registrados."}
                             </p>
                         ) : (
                             <div className={styles.listWrapper}>
