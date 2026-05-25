@@ -69,12 +69,12 @@ function Github({ isPublic }: Props) {
                                     <>
                                         {!isPublic && (
                                             <p className={styles.emptyText}>
-                                                Vincula tu cuenta de GitHub para mostrar tu insignia profesional en tu portafolio público.
+                                                Vincula tu cuenta de GitHub para mostrar tu insignia profesional en tu portafolio público
                                             </p>
                                         )}
                                         {isPublic && (
                                             <p className={styles.emptyText}>
-                                                Aun no se vinculo una cuenta de GitHub.
+                                                Aún no se vinculó una cuenta de GitHub
                                             </p>
                                         )}
                                         {!isPublic && (

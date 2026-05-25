@@ -70,7 +70,7 @@ function LinkedIn() {
                 {!linkedinUser ? (
                   <>
                     <p className={styles.emptyText}>
-                      Vincula tu cuenta de LinkedIn para mostrar tu insignia profesional en tu portafolio público.
+                      Vincula tu cuenta de LinkedIn para mostrar tu insignia profesional en tu portafolio público
                     </p>
                     <Button variant="primary" onClick={() => setShowModal(true)}>
                       Vincular Ahora

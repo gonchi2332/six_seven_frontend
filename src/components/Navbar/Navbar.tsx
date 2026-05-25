@@ -188,7 +188,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                                                 onClick={() => navigate(configPaths.personalInfo)}
                                                 className={`${STYLES.dropdownItem} ${location.pathname === configPaths.personalInfo ? STYLES.dropdownItemActive : ''}`}
                                             >
-                                                Información Personal
+                                                Visibilidad Inf. Personal
                                             </button>
                                             <button
                                                 onClick={() => navigate(configPaths.experience)}

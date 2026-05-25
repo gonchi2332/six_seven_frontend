@@ -21,6 +21,7 @@ const styles = {
     body: "flex flex-col gap-4 px-4 sm:px-8 pb-2",
     serverError: "mx-4 sm:mx-8 mb-2 p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center",
     buttonsWrapper: "flex gap-3 justify-center mt-4 px-4 sm:px-8 pb-6",
+    mainLabel: "mb-1 text-xl font-inter text-white"
 };
 
 const CertificateForm = ({ mode, initial, onSubmit, onClose, serverError, isSubmitting = false }: Props) => {
@@ -77,6 +78,7 @@ const CertificateForm = ({ mode, initial, onSubmit, onClose, serverError, isSubm
                             onChange={handleDateChange}
                             onBlur={handleDateBlur}
                         />
+                        <div className={styles.mainLabel}>Imagen:*</div>
                         <ImageUpload
                             onImageSelect={handleImageChange}
                             initialImageUrl={imagePreview}
