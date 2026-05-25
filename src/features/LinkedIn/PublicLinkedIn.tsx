@@ -44,7 +44,7 @@ const PublicLinkedIn = () => {
                     <LinkedInBadge username={linkedinUser} />
                   ) : (
                     <p className={styles.emptyText}>
-                      Aún no se vinculó una cuenta de LinkedIn.
+                      Aún no se vinculó una cuenta de LinkedIn
                     </p>
                   )}
                 </div>

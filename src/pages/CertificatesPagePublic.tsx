@@ -4,6 +4,7 @@ import CertificateCard from "../features/Certificates/CertificateCard";
 import ViewCertificatePopup from "../features/Certificates/ViewCertificatePopup";
 import { useCertificates } from "../hooks/useCertificates";
 import { useParams } from "react-router-dom";
+import Button from "../components/Button";
 
 const PAGE_SIZE = 12;
 
@@ -105,12 +106,12 @@ const CertificatesPublicPage = () => {
                                         className={styles.searchInput}
                                     />
                                 </div>
-                                <button
+                                <Button
                                     onClick={handleSearch}
-                                    className="px-4 py-2 rounded-lg bg-[#90DDF0] text-[#07393C] font-nunito text-sm font-semibold hover:bg-[#90DDF0]/90 transition-colors"
+                                    variant="secondary"
                                 >
                                     Buscar
-                                </button>
+                                </Button>
                             </div>
                         </div>
 
