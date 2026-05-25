@@ -17,22 +17,18 @@ const styles = {
     
     // Estados
     loading: "text-white/70 font-nunito text-center py-12 bg-black/20 rounded-xl border border-white/10",
+    emptyText: "text-white/50 font-nunito text-sm sm:text-base text-center max-w-xs",
 };
 
 const PublicLinkedIn = () => {
   const { username } = useParams<{ username: string }>();
   const { linkedinUser, isLoading } = useLinkedin(username || "");
 
-  // Si no hay perfil vinculado, en la vista pública es mejor no mostrar la sección
-  if (!isLoading && !linkedinUser) return null;
-
   return (
     <div className={styles.wrapper}>
       <div className={styles.pageContent}>
         <div className={styles.outerCard}>
           <div className={styles.greenContainer}>
-            
-            {/* Header Estandarizado con Icono */}
             <div className={styles.header}>
               <h1 className={styles.title}>
                 Perfil de LinkedIn
@@ -44,8 +40,13 @@ const PublicLinkedIn = () => {
             ) : (
               <div className={styles.content}>
                 <div className={styles.badgeWrapper}>
-                  {/* Renderizamos el Badge público */}
-                  <LinkedInBadge username={linkedinUser!} />
+                  {linkedinUser ? (
+                    <LinkedInBadge username={linkedinUser} />
+                  ) : (
+                    <p className={styles.emptyText}>
+                      Aún no se vinculó una cuenta de LinkedIn
+                    </p>
+                  )}
                 </div>
               </div>
             )}

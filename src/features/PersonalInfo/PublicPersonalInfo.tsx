@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { usePersonalInfo } from '../../hooks/useNavbarInfo';
 import { MapPin, Mail, Phone, User, Hash } from 'lucide-react';
 import { useParams } from 'react-router-dom';
@@ -80,26 +80,22 @@ const PersonalInfoPage = () => {
                             <div className={styles.loading}>No se encontró información para este usuario</div>
                         ) : (
                             <div className={styles.listWrapper}>
-                                {/* Card Identidad */}
                                 <div className={styles.infoCard}>
                                     <p className={styles.sectionTitle}>
                                         <User size={14} /> Datos Personales  </p>
                                     <div className="flex flex-col gap-5">
                                         <InfoRow icon={User} label="Nombre Completo" value={fullName} />
                                         <InfoRow icon={Hash} label="Nombre de Usuario" value={publicInfo?.username} />
-                                        <InfoRow icon={Mail} label="Correo Principal" value={publicInfo?.main_registration_email} />
                                     </div>
                                 </div>
-
-                                {/* Card Contacto y Ubicación */}
                                 <div className={styles.infoCard}>
                                     <p className={styles.sectionTitle}>
                                         <MapPin size={14} /> Ubicación y Contacto
                                     </p>
                                     <div className="flex flex-col gap-5">
                                         <InfoRow icon={MapPin} label="Residencia Actual" value={residence} />
-                                        <InfoRow icon={Mail} label="Correo Secundario" value={publicInfo?.contact_email} />
-                                        <InfoRow icon={Phone} label="Teléfono / WhatsApp" value={publicInfo?.phone_number} />
+                                        <InfoRow icon={Mail} label="Correo de Contacto" value={publicInfo?.contact_email} />
+                                        <InfoRow icon={Phone} label="Teléfono" value={publicInfo?.phone_number} />
                                     </div>
                                 </div>
                             </div>
