@@ -144,7 +144,7 @@ const PersonalProjectsConfigPage = () => {
                 <div className={styles.outerCard}>
                     <div className={styles.greenContainer}>
                         <div className={styles.header}>
-                            <h1 className={styles.title}>Visibilidad de Proyectos</h1>
+                            <h1 className={styles.title}>Configuración de visibilidad de Proyectos</h1>
 
                             <div className={styles.controlsRow}>
                                 <div className={styles.searchRow}>

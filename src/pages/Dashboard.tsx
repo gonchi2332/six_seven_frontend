@@ -5,22 +5,21 @@ import PersonalInfo from "./PersonalInfo";
 const STYLES = {
   WRAPPER: "min-h-screen bg-main flex flex-col",
   CONTENT: "w-full",
-  GRID_CONTAINER: "grid grid-cols-1 lg:grid-cols-2 gap-8 items-start",
-  SECTION: "mb-8",
+  GRID_CONTAINER: "grid grid-cols-1 lg:grid-cols-2 gap-2 items-start",
+  SECTION: "mb-2 pb-2",
 };
 
 const Dashboard = () => {
   return (
     <div className={STYLES.WRAPPER}>
       <div className={STYLES.CONTENT}>
-        {/* Información Personal ocupa todo el ancho */}
         <div className={STYLES.SECTION}>
           <PersonalInfo />
         </div>
-        
-        {/* LinkedIn y GitHub en grid de 2 columnas */}
-        <div className={STYLES.GRID_CONTAINER}>
+        <div className={STYLES.SECTION}>
           <LinkedIn />
+        </div>
+        <div className={STYLES.SECTION}>
           <Github />
         </div>
       </div>

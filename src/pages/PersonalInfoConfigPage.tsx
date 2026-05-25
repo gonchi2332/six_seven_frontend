@@ -228,7 +228,7 @@ const PersonalInfoConfigPage = () => {
                                         {userInfo?.contact_email && (
                                             <ConfigInfoRow
                                                 icon={Mail}
-                                                label="Correo Secundario"
+                                                label="Correo de Contacto"
                                                 value={userInfo.contact_email}
                                                 fieldKey="show_contact_email"
                                                 currentVisibility={visibilityMap["show_contact_email"] ?? false}
@@ -238,7 +238,7 @@ const PersonalInfoConfigPage = () => {
                                         {userInfo?.phone_number && (
                                             <ConfigInfoRow
                                                 icon={Phone}
-                                                label="Teléfono / WhatsApp"
+                                                label="Teléfono"
                                                 value={userInfo.phone_number}
                                                 fieldKey="show_phone"
                                                 currentVisibility={visibilityMap["show_phone"] ?? false}

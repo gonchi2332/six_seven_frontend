@@ -14,7 +14,7 @@ import ViewPersonalInfoModal from './ViewPersonalInfoModal';
 const styles = {
     wrapper: "flex-1 flex flex-col overflow-hidden",
     pageContent: "flex-1 flex items-start justify-center px-3 sm:px-6 py-1 overflow-y-auto",
-    outerCard: "w-full max-w-[1400px] px-2 sm:px-6 lg:px-14 py-4 sm:py-8 flex flex-col",
+    outerCard: "w-full max-w-[1400px] px-2 sm:px-6 lg:px-8 py-4 sm:py-4 flex flex-col",
     // Contenedor Esmeralda (Marca registrada de tus secciones)
     greenContainer: "rounded-2xl border border-[#2C666E] bg-[#07393C] px-3 sm:px-6 py-4 sm:py-6 flex flex-col gap-4 sm:gap-6",
     header: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3",
@@ -35,7 +35,7 @@ const styles = {
 
     // Modales y estados
     overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 z-50 overflow-y-auto",
-    loading: "text-white/70 font-nunito text-center py-12 bg-black/20 rounded-xl border border-white/10",
+    loading: "text-white/70 font-nunito text-center py-8 bg-black/20 rounded-xl border border-white/10",
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
