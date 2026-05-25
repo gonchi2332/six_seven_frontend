@@ -11,7 +11,7 @@ const PAGE_SIZE = 10;
 const styles = {
     wrapper: "flex-1 flex flex-col overflow-hidden",
     pageContent: "flex-1 flex items-start justify-center px-3 sm:px-6 py-1 overflow-y-auto",
-    outerCard: "w-full max-w-[1400px] px-2 sm:px-6 lg:px-14 py-4 sm:py-8 flex flex-col",
+    outerCard: "w-full max-w-[1500px] px-2 sm:px-6 lg:px-14 py-4 sm:py-8 flex flex-col",
     greenContainer: "rounded-2xl border border-[#2C666E] bg-[#07393C] px-3 sm:px-6 py-4 sm:py-6 flex flex-col gap-3 sm:gap-4",
     header: "flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4",
     title: "text-xl sm:text-2xl font-bold font-inter text-white",
@@ -156,7 +156,7 @@ const EducationConfigPage = () => {
                 <div className={styles.outerCard}>
                     <div className={styles.greenContainer}>
                         <div className={styles.header}>
-                            <h1 className={styles.title}>Configuración de visibilidad de Formación Académica</h1>
+                            <h1 className={styles.title}>Configuración de visibilidad de Educación</h1>
 
                             <div className={styles.controlsRow}>
                                 <div className={styles.searchRow}>
