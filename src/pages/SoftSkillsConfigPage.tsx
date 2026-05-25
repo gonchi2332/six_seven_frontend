@@ -104,7 +104,7 @@ const SoftSkillsConfigPage = () => {
             setLocalError(null);
             const res = await visibilityService.updateSkill(visibilityMap);
             setInitialVisibilityMap(visibilityMap);
-            setLocalSuccess(res.message || "Cambios guardados exitosamente.");
+            setLocalSuccess(res.message || "Cambios guardados exitosamente");
             setTimeout(() => setLocalSuccess(null), 3000);
         } catch (err: any) {
             setLocalError(err.message || "Error al guardar los cambios.");
@@ -132,14 +132,14 @@ const SoftSkillsConfigPage = () => {
                     <div className={styles.greenContainer}>
                         <div className={styles.header}>
                             <h1 className={styles.title}>Configuración de visibilidad de Hab. Blandas</h1>
-                            
+
                             <div className={styles.headerControls}>
                                 <SkillSearchBar
                                     value={searchInput}
                                     onChange={handleChange}
                                     onSearch={onSearch}
                                     onKeyDown={handleKeyDown}
-                                    onAdd={() => {}}
+                                    onAdd={() => { }}
                                     placeholder="Buscar habilidad..."
                                     addLabel="Registrar"
                                     isPublic={true}
@@ -184,7 +184,7 @@ const SoftSkillsConfigPage = () => {
                             <p className={styles.empty}>
                                 {filtered.length === 0 && skills.length > 0
                                     ? "No se encontraron habilidades."
-                                    : "No hay habilidades blandas aún."}
+                                    : "No hay habilidades blandas registradas"}
                             </p>
                         ) : (
                             <div className={styles.listWrapper}>
@@ -194,9 +194,9 @@ const SoftSkillsConfigPage = () => {
                                     return (
                                         <div key={targetId} className={styles.skillRow}>
                                             <span className={styles.skillName}>{skill.name}</span>
-                                            <Switch 
+                                            <Switch
                                                 key={`${targetId}-${currentVisibility}`}
-                                                id={targetId} 
+                                                id={targetId}
                                                 initialState={currentVisibility}
                                                 onChange={handleLocalVisibilityChange}
                                             />

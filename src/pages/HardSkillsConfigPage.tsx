@@ -42,7 +42,7 @@ const HardSkillsConfigPage = () => {
 
     const [localError, setLocalError] = useState<string | null>(null);
     const [localSuccess, setLocalSuccess] = useState<string | null>(null);
-    
+
     const [initialVisibilityMap, setInitialVisibilityMap] = useState<Record<string, boolean>>({});
     const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>({});
     const [isSaving, setIsSaving] = useState(false);
@@ -138,14 +138,14 @@ const HardSkillsConfigPage = () => {
                     <div className={styles.greenContainer}>
                         <div className={styles.header}>
                             <h1 className={styles.title}>Configuración de visibilidad de Hab. Técnicas</h1>
-                            
+
                             <div className={styles.headerControls}>
                                 <SkillSearchBar
                                     value={searchInput}
                                     onChange={handleChange}
                                     onSearch={onSearch}
                                     onKeyDown={handleKeyDown}
-                                    onAdd={() => {}}
+                                    onAdd={() => { }}
                                     placeholder="Buscar habilidad..."
                                     addLabel="Registrar"
                                     isPublic={true}
@@ -190,24 +190,24 @@ const HardSkillsConfigPage = () => {
                             <p className={styles.empty}>
                                 {filtered.length === 0 && skills.length > 0
                                     ? "No se encontraron habilidades."
-                                    : "No hay habilidades técnicas aún."}
+                                    : "No hay habilidades técnicas registradas."}
                             </p>
                         ) : (
                             <div className={styles.listWrapper}>
                                 {paginated.map((skill: Skill) => {
-                                    const idStr = String(skill.skill_id); 
+                                    const idStr = String(skill.skill_id);
                                     const currentVisibility = visibilityMap[idStr] ?? skill.visible ?? false;
-                                    
+
                                     return (
                                         <div key={idStr} className={styles.skillRow}>
                                             <div className={styles.skillLeft}>
                                                 <span className={styles.skillName}>{skill.name}</span>
                                                 <LevelBars level={skill.level} size="sm" />
                                             </div>
-                                            
-                                            <Switch 
+
+                                            <Switch
                                                 key={`${idStr}-${currentVisibility}`}
-                                                id={skill.skill_id} 
+                                                id={skill.skill_id}
                                                 initialState={currentVisibility}
                                                 onChange={handleLocalVisibilityChange}
                                             />

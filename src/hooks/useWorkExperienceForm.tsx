@@ -71,7 +71,7 @@ export const useWorkExperienceForm = (initialData?: WorkExperienceFormData) => {
     }, []);
 
     const validateEndDate = useCallback((value: string, isCurrent: boolean): string => {
-        if (!isCurrent && !value) return 'La fecha de fin es obligatoria';
+        if (!isCurrent && !value) return 'La fecha de finalización es obligatoria';
         if (value) {
             const today = getTodayDateString();
             if (value > today) return 'La fecha de fin no puede ser futura';
@@ -110,11 +110,11 @@ export const useWorkExperienceForm = (initialData?: WorkExperienceFormData) => {
 
     const handleIsCurrentChange = (checked: boolean) => {
         setFormData(prev => ({ ...prev, isCurrent: checked }));
-        
+
         // Si se marca "Trabajo actualmente", limpiar error de endDate
         if (checked) {
             setErrors(prev => ({ ...prev, endDate: '' }));
-        } 
+        }
         // Si se desmarca, validar endDate si está vacío
         else if (!formData.endDate) {
             setErrors(prev => ({ ...prev, endDate: 'La fecha de finalizacion es obligatoria' }));
@@ -131,7 +131,7 @@ export const useWorkExperienceForm = (initialData?: WorkExperienceFormData) => {
         const descriptionError = validateDescription(formData.description);
         const startDateError = validateStartDate(formData.startDate);
         const endDateError = validateEndDate(formData.endDate, formData.isCurrent);
-        
+
         setErrors({
             position: positionError,
             company: companyError,
@@ -139,7 +139,7 @@ export const useWorkExperienceForm = (initialData?: WorkExperienceFormData) => {
             startDate: startDateError,
             endDate: endDateError,
         });
-        
+
         return !positionError && !companyError && !descriptionError && !startDateError && !endDateError;
     }, [formData, validatePosition, validateCompany, validateDescription, validateStartDate, validateEndDate]);
 
@@ -163,11 +163,11 @@ export const useWorkExperienceForm = (initialData?: WorkExperienceFormData) => {
 
     const isFormValid = (): boolean => {
         return Object.values(errors).every(e => e === '') &&
-               formData.position.trim() !== '' &&
-               formData.company.trim() !== '' &&
-               formData.description.trim() !== '' &&
-               formData.startDate !== '' &&
-               (formData.isCurrent || formData.endDate !== '');
+            formData.position.trim() !== '' &&
+            formData.company.trim() !== '' &&
+            formData.description.trim() !== '' &&
+            formData.startDate !== '' &&
+            (formData.isCurrent || formData.endDate !== '');
     };
 
     return {

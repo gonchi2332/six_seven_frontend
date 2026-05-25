@@ -105,7 +105,7 @@ const PersonalProjectsConfigPage = () => {
             setLocalError(null);
             await visibilityService.updateProject(visibilityMap);
             setInitialVisibilityMap(visibilityMap);
-            setLocalSuccess("Cambios guardados exitosamente.");
+            setLocalSuccess("Cambios guardados exitosamente");
             setTimeout(() => setLocalSuccess(null), 3000);
         } catch (err: any) {
             setLocalError(err.message || "Error al guardar los cambios.");
