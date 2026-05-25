@@ -5,6 +5,7 @@ import EducationCard from "../features/Education/EducationCard";
 import type { EducationEntry } from "../services/educationService";
 import Button from "../components/Button";
 import { useParams } from "react-router-dom";
+import ViewEducationPopup from "../features/Education/ViewEducationPopup";
 
 const PAGE_SIZE = 10;
 
@@ -154,6 +155,13 @@ const EducationPage = () => {
                     </div>
                 </div>
             </div>
+
+            <ViewEducationPopup
+                isOpen={isMenuOpen}
+                entry={selectedEntry}
+                onClose={() => setIsMenuOpen(false)}
+                onBack={() => setIsMenuOpen(false)}
+            />
         </div>
     );
 };
