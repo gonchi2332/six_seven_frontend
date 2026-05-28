@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { useSoftSkills } from "../hooks/userSoftSkills";
-import useSearch from "../hooks/useSearch";
-import usePagination from "../hooks/usePagination";
-import SkillSearchBar from "../components/SkillSearchBar";
-import SkillPagination from "../components/SkillPagination";
-import ConfirmDeletePopup from "../components/ConfirmDeletePopup/ConfirmDeletePopup ";
-import AddSoftSkillPopup from "../features/SoftSkills/AddSoftSkillPopup";
-import SoftSkillActionPopup from "../features/SoftSkills/SoftSkillActionPopup";
-import ViewSoftSkillPopup from "../features/SoftSkills/ViewSoftSkillPopup";
-import type { SoftSkill } from "../services/softSkillService";
+import { useSoftSkills } from "../../hooks/userSoftSkills";
+import useSearch from "../../hooks/useSearch";
+import usePagination from "../../hooks/usePagination";
+import SkillSearchBar from "../../components/SkillSearchBar";
+import SkillPagination from "../../components/SkillPagination";
+import ConfirmDeletePopup from "../../components/ConfirmDeletePopup/ConfirmDeletePopup ";
+import AddSoftSkillPopup from "../../features/SoftSkills/AddSoftSkillPopup";
+import SoftSkillActionPopup from "../../features/SoftSkills/SoftSkillActionPopup";
+import ViewSoftSkillPopup from "../../features/SoftSkills/ViewSoftSkillPopup";
+import type { SoftSkill } from "../../services/softSkillService";
 
 const PAGE_SIZE = 12;
 

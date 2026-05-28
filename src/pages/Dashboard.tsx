@@ -1,6 +1,6 @@
 import LinkedIn from "../features/LinkedIn/LinkedIn";
 import Github from "../features/Github/Github";
-import PersonalInfo from "./PersonalInfo";
+import PersonalInfo from "./PersonalInfo/PersonalInfo";
 
 const STYLES = {
   WRAPPER: "min-h-screen bg-main flex flex-col",

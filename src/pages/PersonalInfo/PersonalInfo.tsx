@@ -1,4 +1,4 @@
-import { PersonalInfoComponent } from '../features/PersonalInfo';
+import { PersonalInfoComponent } from '../../features/PersonalInfo';
 
 const PersonalInfoPage = () => {
     return <PersonalInfoComponent />;

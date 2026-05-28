@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useNavbarInfo } from '../hooks/useNavbarInfo';
+import { useNavbarInfo } from '../../hooks/useNavbarInfo';
 import { MapPin, Mail, Phone, User, Hash } from 'lucide-react';
-import Button from '../components/Button';
-import Switch from '../components/Switch/Switch';
-import { visibilityService } from '../services/visibilityServices';
+import Button from '../../components/Button';
+import Switch from '../../components/Switch/Switch';
+import { visibilityService } from '../../services/visibilityServices';
 
 const styles = {
     wrapper: "flex-1 flex flex-col overflow-hidden",

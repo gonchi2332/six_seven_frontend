@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import CertificateCard from "../features/Certificates/CertificateCard";
-import ViewCertificatePopup from "../features/Certificates/ViewCertificatePopup";
-import { useCertificates } from "../hooks/useCertificates";
+import CertificateCard from "../../features/Certificates/CertificateCard";
+import ViewCertificatePopup from "../../features/Certificates/ViewCertificatePopup";
+import { useCertificates } from "../../hooks/useCertificates";
 import { useParams } from "react-router-dom";
-import Button from "../components/Button";
+import Button from "../../components/Button";
 
 const PAGE_SIZE = 12;
 

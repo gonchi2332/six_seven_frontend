@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import { useEducation } from "../hooks/useEducation";
-import EducationCard from "../features/Education/EducationCard";
-import type { EducationEntry } from "../services/educationService";
-import Button from "../components/Button";
+import { useEducation } from "../../hooks/useEducation";
+import EducationCard from "../../features/Education/EducationCard";
+import type { EducationEntry } from "../../services/educationService";
+import Button from "../../components/Button";
 import { useParams } from "react-router-dom";
-import ViewEducationPopup from "../features/Education/ViewEducationPopup";
+import ViewEducationPopup from "../../features/Education/ViewEducationPopup";
 
 const PAGE_SIZE = 10;
 

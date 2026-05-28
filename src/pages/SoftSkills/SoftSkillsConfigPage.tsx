@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { useSoftSkills } from "../hooks/userSoftSkills";
-import useSearch from "../hooks/useSearch";
-import usePagination from "../hooks/usePagination";
-import SkillSearchBar from "../components/SkillSearchBar";
-import SkillPagination from "../components/SkillPagination";
-import { visibilityService } from "../services/visibilityServices";
-import Switch from "../components/Switch/Switch";
-import Button from "../components/Button";
+import { useSoftSkills } from "../../hooks/userSoftSkills";
+import useSearch from "../../hooks/useSearch";
+import usePagination from "../../hooks/usePagination";
+import SkillSearchBar from "../../components/SkillSearchBar";
+import SkillPagination from "../../components/SkillPagination";
+import { visibilityService } from "../../services/visibilityServices";
+import Switch from "../../components/Switch/Switch";
+import Button from "../../components/Button";
 
 const PAGE_SIZE = 12;
 
