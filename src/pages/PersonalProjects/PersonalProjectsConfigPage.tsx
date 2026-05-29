@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import { useProjects } from "../features/PersonalProjects/hooks/useProjects";
-import ProjectCard from "../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectCard";
-import Button from "../components/Button";
-import VisibilitySwitch from "../components/Switch/Switch";
-import { visibilityService } from "../services/visibilityServices";
+import { useProjects } from "../../features/PersonalProjects/hooks/useProjects";
+import ProjectCard from "../../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectCard";
+import Button from "../../components/Button";
+import VisibilitySwitch from "../../components/Switch/Switch";
+import { visibilityService } from "../../services/visibilityServices";
 
 const PAGE_SIZE = 10;
 

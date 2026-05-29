@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import { useCertificates } from "../hooks/useCertificates"; 
-import CertificateCard from "../features/Certificates/CertificateCard";
-import Button from "../components/Button";
-import Switch from "../components/Switch/Switch";
-import { visibilityService } from "../services/visibilityServices";
+import { useCertificates } from "../../hooks/useCertificates"; 
+import CertificateCard from "../../features/Certificates/CertificateCard";
+import Button from "../../components/Button";
+import Switch from "../../components/Switch/Switch";
+import { visibilityService } from "../../services/visibilityServices";
 
 const PAGE_SIZE = 10;
 

@@ -1,5 +1,5 @@
 
-import WorkExperienceListConfig from '../features/WorkExperience/WorkExperienceListConfig';
+import WorkExperienceListConfig from '../../features/WorkExperience/WorkExperienceListConfig';
 
 const styles = {
     container: "w-full",

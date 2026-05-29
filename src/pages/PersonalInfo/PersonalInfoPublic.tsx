@@ -1,6 +1,6 @@
-import PublicLinkedIn from "../features/LinkedIn/PublicLinkedIn";
-import PublicPersonalInfo from "../features/PersonalInfo/PublicPersonalInfo";
-import GitHub from "../features/Github/Github";
+import PublicLinkedIn from "../../features/LinkedIn/PublicLinkedIn";
+import PublicPersonalInfo from "../../features/PersonalInfo/PublicPersonalInfo";
+import GitHub from "../../features/Github/Github";
 
 const STYLES = {
   WRAPPER: "min-h-screen bg-main flex flex-col",

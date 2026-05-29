@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { useSoftSkills } from "../hooks/userSoftSkills";
-import useSearch from "../hooks/useSearch";
-import usePagination from "../hooks/usePagination";
-import SkillSearchBar from "../components/SkillSearchBar";
-import SkillPagination from "../components/SkillPagination";
-import type { SoftSkill } from "../services/softSkillService";
+import { useSoftSkills } from "../../hooks/userSoftSkills";
+import useSearch from "../../hooks/useSearch";
+import usePagination from "../../hooks/usePagination";
+import SkillSearchBar from "../../components/SkillSearchBar";
+import SkillPagination from "../../components/SkillPagination";
+import type { SoftSkill } from "../../services/softSkillService";
 import { useParams } from "react-router-dom";
 
 const PAGE_SIZE = 12;

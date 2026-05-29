@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import { useEducation } from "../hooks/useEducation";
-import EducationCard from "../features/Education/EducationCard";
-import { visibilityService } from "../services/visibilityServices";
-import Button from "../components/Button";
-import Switch from "../components/Switch/Switch";
+import { useEducation } from "../../hooks/useEducation";
+import EducationCard from "../../features/Education/EducationCard";
+import { visibilityService } from "../../services/visibilityServices";
+import Button from "../../components/Button";
+import Switch from "../../components/Switch/Switch";
 
 const PAGE_SIZE = 10;
 
