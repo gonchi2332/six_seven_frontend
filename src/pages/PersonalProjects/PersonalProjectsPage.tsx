@@ -1,13 +1,13 @@
 // ProjectsPage.tsx (versión corregida)
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import { useProjects } from "../features/PersonalProjects/hooks/useProjects";
-import ProjectCard from "../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectCard";
-import ViewProjectPopup from "../features/PersonalProjects/components/PersonalProjectsModal/ViewProjectPopup";
-import PersonalProjectsModal from "../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectsModal";
-import PopUpCard from "../components/PopUpCard";
-import Button from "../components/Button";
-import type { ProjectEntry, CreateProjectPayload, UpdateProjectPayload } from "../features/PersonalProjects/services/personalProjectsService";
+import { useProjects } from "../../features/PersonalProjects/hooks/useProjects";
+import ProjectCard from "../../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectCard";
+import ViewProjectPopup from "../../features/PersonalProjects/components/PersonalProjectsModal/ViewProjectPopup";
+import PersonalProjectsModal from "../../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectsModal";
+import PopUpCard from "../../components/PopUpCard";
+import Button from "../../components/Button";
+import type { ProjectEntry, CreateProjectPayload, UpdateProjectPayload } from "../../features/PersonalProjects/services/personalProjectsService";
 
 
 const PAGE_SIZE = 10;
@@ -277,14 +277,14 @@ const ProjectsPage = () => {
                             <div className="flex flex-col gap-6 p-6">
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                     <Button
-                                        variant="secondary"
+                                        variant="primary"
                                         onClick={handleCancel}
                                         fullWidth
                                     >
                                         Cancelar
                                     </Button>
                                     <Button
-                                        variant="secondary"
+                                        variant="primary"
                                         onClick={handleDeleteClick}
                                         disabled={isLoading}
                                         fullWidth
@@ -292,14 +292,14 @@ const ProjectsPage = () => {
                                         Eliminar
                                     </Button>
                                     <Button
-                                        variant="primary"
+                                        variant="secondary"
                                         onClick={handleView}
                                         fullWidth
                                     >
                                         Ver
                                     </Button>
                                     <Button
-                                        variant="primary"
+                                        variant="secondary"
                                         onClick={handleEdit}
                                         fullWidth
                                     >

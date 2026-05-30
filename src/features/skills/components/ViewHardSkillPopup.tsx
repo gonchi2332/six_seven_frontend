@@ -20,7 +20,7 @@ const styles = {
     overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 py-4 z-50",
     content: "px-4 sm:px-6 pb-5 pt-0 flex flex-col gap-4 sm:gap-5",
     field: "flex flex-col gap-1",
-    label: "text-secondary text-xs uppercase tracking-wide font-bold mb-1",
+    label: "text-accent text-xs uppercase tracking-wide font-bold mb-1",
     value: "text-surface font-nunito text-sm sm:text-base",
     divider: "border-t border-white/10",
     levelLabel: "text-[13px] font-nunito text-[#90DDF0] font-semibold text-center",

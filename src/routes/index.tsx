@@ -1,33 +1,33 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LoginPage from "../pages/LoginPage";
+import LoginPage from "../pages/Auth/LoginPage";
 import HomePage from "../pages/HomePage";
-import RegisterPage from "../pages/RegisterPage";
-import VerificationPage from "../pages/VerificationPage";
-import PasswordResetPage from "../pages/PasswordResetPage";
+import RegisterPage from "../pages/Auth/RegisterPage";
+import VerificationPage from "../pages/Auth/VerificationPage";
+import PasswordResetPage from "../pages/Auth/PasswordResetPage";
 import Dashboard from "../pages/Dashboard";
-import CertificatesPage from "../pages/CertificatesPage";
-import HardSkillsPage from "../pages/HardSkillsPage";
-import SoftSkillsPage from "../pages/SoftSkillsPage";
-import EducationPage from "../pages/EducationPage";
+import CertificatesPage from "../pages/Certificates/CertificatesPage";
+import HardSkillsPage from "../pages/HardSkills/HardSkillsPage";
+import SoftSkillsPage from "../pages/SoftSkills/SoftSkillsPage";
+import EducationPage from "../pages/Education/EducationPage";
 
-import PersonalProjectsPage from "../pages/PersonalProjectsPage";
-import PersonalProjectsPagePublic from "../pages/PersonalProjectsPagePublic";
-import Experience from "../pages/WorkExperiencePage";
+import PersonalProjectsPage from "../pages/PersonalProjects/PersonalProjectsPage";
+import PersonalProjectsPagePublic from "../pages/PersonalProjects/PersonalProjectsPagePublic";
+import Experience from "../pages/WorkExperience/WorkExperiencePage";
 
 import MainLayout from "../pages/MainLayout";
-import PersonalInfoPublic from "../pages/PersonalInfoPublic";
-import SoftSkillsPagePublic from "../pages/SoftSkillsPagePublic";
-import HardSkillsPagePublic from "../pages/HardSkillsPagePublic";
-import EducationPagePublic from "../pages/EducationPagePublic";
-import HardSkillsConfigPage from "../pages/HardSkillsConfigPage"
-import SoftSkillsConfigPage from "../pages/SoftSkillsConfigPage";
-import PersonalProjectsConfigPage from "../pages/PersonalProjectsConfigPage";
-import EducationConfigPage from "../pages/EducationConfigPage";
+import PersonalInfoPublic from "../pages/PersonalInfo/PersonalInfoPublic";
+import SoftSkillsPagePublic from "../pages/SoftSkills/SoftSkillsPagePublic";
+import HardSkillsPagePublic from "../pages/HardSkills/HardSkillsPagePublic";
+import EducationPagePublic from "../pages/Education/EducationPagePublic";
+import HardSkillsConfigPage from "../pages/HardSkills/HardSkillsConfigPage"
+import SoftSkillsConfigPage from "../pages/SoftSkills/SoftSkillsConfigPage";
+import PersonalProjectsConfigPage from "../pages/PersonalProjects/PersonalProjectsConfigPage";
+import EducationConfigPage from "../pages/Education/EducationConfigPage";
 import WorkExperienceListConfig from "../features/WorkExperience/WorkExperienceListConfig";
-import CertificatesConfigPage from "../pages/CertificatesConfigPage";
-import CertificatesPublicPage from "../pages/CertificatesPagePublic";
-import PersonalInfoConfigPage from "../pages/PersonalInfoConfigPage";
-import WorkExperiencePagePublic from "../pages/WorkExperiencePagePublic";
+import CertificatesConfigPage from "../pages/Certificates/CertificatesConfigPage";
+import CertificatesPublicPage from "../pages/Certificates/CertificatesPagePublic";
+import PersonalInfoConfigPage from "../pages/PersonalInfo/PersonalInfoConfigPage";
+import WorkExperiencePagePublic from "../pages/WorkExperience/WorkExperiencePagePublic";
 
 const Router = () => {
 

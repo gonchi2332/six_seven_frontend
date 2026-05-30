@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import { useProjects } from "../features/PersonalProjects/hooks/useProjects";
-import ProjectCard from "../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectCard";
-import ViewProjectPopup from "../features/PersonalProjects/components/PersonalProjectsModal/ViewProjectPopup";
-import type { ProjectEntry } from "../features/PersonalProjects/services/personalProjectsService";
-import Button from "../components/Button";
+import { useProjects } from "../../features/PersonalProjects/hooks/useProjects";
+import ProjectCard from "../../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectCard";
+import ViewProjectPopup from "../../features/PersonalProjects/components/PersonalProjectsModal/ViewProjectPopup";
+import type { ProjectEntry } from "../../features/PersonalProjects/services/personalProjectsService";
+import Button from "../../components/Button";
 import { useParams } from "react-router-dom";
 
 const PAGE_SIZE = 10;

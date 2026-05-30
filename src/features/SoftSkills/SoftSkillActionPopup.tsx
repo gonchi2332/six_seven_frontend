@@ -19,13 +19,13 @@ const SoftSkillActionPopup = ({ skillName, onView, onDelete, onClose }: Props) =
             <div className="w-full max-w-sm sm:max-w-md max-h-[90vh] overflow-y-auto">
                 <PopUpCard title={skillName}>
                     <div className={styles.buttonsWrapper}>
-                        <Button type="button" variant="secondary" onClick={onClose}>
+                        <Button type="button" variant="primary" onClick={onClose}>
                             Cancelar
                         </Button>
-                        <Button type="button" variant="secondary" onClick={onDelete}>
+                        <Button type="button" variant="primary" onClick={onDelete}>
                             Eliminar
                         </Button>
-                        <Button type="button" variant="primary" onClick={onView}>
+                        <Button type="button" variant="secondary" onClick={onView}>
                             Ver
                         </Button>
                     </div>

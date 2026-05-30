@@ -33,16 +33,16 @@ const WorkExperiencePopUp = ({
             <div className="w-full max-w-xl" onClick={(e) => e.stopPropagation()}>
                 <PopUpCard title={experience.position}>
                     <div className={styles.buttonContainer}>
-                        <Button variant="secondary" onClick={onClose} fullWidth>
+                        <Button variant="primary" onClick={onClose} fullWidth>
                             Cancelar
                         </Button>
                         <Button variant="primary" onClick={() => onDelete(experience.id)} fullWidth>
                             Eliminar
                         </Button>
-                        <Button variant="primary" onClick={() => onView(experience)} fullWidth>
+                        <Button variant="secondary" onClick={() => onView(experience)} fullWidth>
                             Ver
                         </Button>
-                        <Button variant="primary" onClick={() => onEdit(experience)} fullWidth>
+                        <Button variant="secondary" onClick={() => onEdit(experience)} fullWidth>
                             Modificar
                         </Button>
                         

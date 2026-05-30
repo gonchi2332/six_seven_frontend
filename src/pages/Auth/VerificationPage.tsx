@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import EmailVerificationFlow from "../features/auth/components/EmailPasswordVerification/EmailVerificationFlow";
+import EmailVerificationFlow from "../../features/auth/components/EmailPasswordVerification/EmailVerificationFlow";
 
 const VerificationPage = () => {
   const location = useLocation();
