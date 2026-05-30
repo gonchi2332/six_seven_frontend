@@ -1,5 +1,5 @@
 
-import AdditionalInfoModal from "../features/AddOptionalInfo/components/AdditionalInfoModal";
+import AdditionalInfoModal from "../../features/AddOptionalInfo/components/AdditionalInfoModal";
 
 
 const AdditionalInfoPage = () => {

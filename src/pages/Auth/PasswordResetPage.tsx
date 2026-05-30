@@ -1,4 +1,4 @@
-import EmailVerificationFlow from "../features/auth/components/EmailPasswordVerification/EmailVerificationFlow";
+import EmailVerificationFlow from "../../features/auth/components/EmailPasswordVerification/EmailVerificationFlow";
 
 const PasswordResetPage = () => {
   return (

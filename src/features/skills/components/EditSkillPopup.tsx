@@ -6,7 +6,7 @@ import type { Skill } from "../types/skill.types";
 
 interface EditSkillPopupProps {
     skill: Skill;
-    onSubmit: (id: string, name: string, level: number) => Promise<void>;
+    onSubmit: (id: number, name: string, level: number) => Promise<void>;
     onClose: () => void;
     serverError?: string | null;
     isSubmitting?: boolean;
@@ -26,7 +26,7 @@ const EditSkillPopup = ({ skill, onSubmit, onClose, serverError, isSubmitting = 
     const hasChanges = level !== skill.level;
 
     const handleSubmit = async () => {
-        await onSubmit(skill.id, skill.name, level);
+        await onSubmit(skill.skill_id, skill.name, level);
     };
 
     return (

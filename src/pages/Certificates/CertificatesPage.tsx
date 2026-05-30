@@ -1,11 +1,11 @@
-import SkillSearchBar from "../components/SkillSearchBar";
-import SkillPagination from "../components/SkillPagination";
-import CertificateCard from "../features/Certificates/CertificateCard";
-import CertificateActionPopup from "../features/Certificates/CertificateActionPopup";
-import ViewCertificatePopup from "../features/Certificates/ViewCertificatePopup";
-import CertificateForm from "../features/Certificates/CertificateForm";
-import DeleteCertificatePopup from "../features/Certificates/DeleteCertificatePopup";
-import useCertificatesPage from "../hooks/useCertificatesPage";
+import SkillSearchBar from "../../components/SkillSearchBar";
+import SkillPagination from "../../components/SkillPagination";
+import CertificateCard from "../../features/Certificates/CertificateCard";
+import CertificateActionPopup from "../../features/Certificates/CertificateActionPopup";
+import ViewCertificatePopup from "../../features/Certificates/ViewCertificatePopup";
+import CertificateForm from "../../features/Certificates/CertificateForm";
+import DeleteCertificatePopup from "../../features/Certificates/DeleteCertificatePopup";
+import useCertificatesPage from "../../hooks/useCertificatesPage";
 
 const styles = {
     wrapper: "flex-1 flex flex-col overflow-hidden",

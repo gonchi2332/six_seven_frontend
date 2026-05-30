@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
-import { useEducation } from "../hooks/useEducation";
-import EducationCard from "../features/Education/EducationCard";
-import EducationForm from "../features/Education/EducationForm";
-import ViewEducationPopup from "../features/Education/ViewEducationPopup";
-import EducationPopup from "../features/Education/EducationPopup";
-import ConfirmDeleteModal from "../features/Education/DeleteEducationPopup";
-import type { EducationEntry } from "../services/educationService";
-import Button from "../components/Button";
+import { useEducation } from "../../hooks/useEducation";
+import EducationCard from "../../features/Education/EducationCard";
+import EducationForm from "../../features/Education/EducationForm";
+import ViewEducationPopup from "../../features/Education/ViewEducationPopup";
+import EducationPopup from "../../features/Education/EducationPopup";
+import ConfirmDeleteModal from "../../features/Education/DeleteEducationPopup";
+import type { EducationEntry } from "../../services/educationService";
+import Button from "../../components/Button";
 
 const PAGE_SIZE = 10;
 

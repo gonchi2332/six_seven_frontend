@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { parseProfilePicture } from "../../services/decodeBase64";
 import { useNavbarInfo } from "../../hooks/useNavbarInfo";
-import { Copy, LogOut, Menu, X, ChevronDown } from "lucide-react";
+import { Copy, LogOut, Menu, X, ChevronDown, Home } from "lucide-react";
 import PublicProfileLink from "../PublicProfileLink/PublicProfileLink";
 
 const defAvatar = "/defAvatar.png";
@@ -19,6 +19,7 @@ const STYLES = {
     TAB_ACTIVE: "bg-accent text-secondary shadow-lg shadow-accent/20",
     TAB_INACTIVE: "text-white/60 hover:text-white hover:bg-white/5",
     ACTIONS_CONTAINER: "flex items-center gap-3 ml-4 shrink-0",
+    HOME_BUTTON: "flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-bold transition-all duration-200 bg-[#2C666E]/40 border border-[#90DDF0]/30 text-[#90DDF0] hover:bg-[#2C666E]/60 whitespace-nowrap",
     COPY_BUTTON: "flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-bold transition-all duration-200 bg-white/10 hover:bg-white/20 text-white whitespace-nowrap",
     LOGOUT_BUTTON: "flex items-center gap-2 text-white/60 hover:text-red-400 transition-colors text-sm font-bold whitespace-nowrap",
     MOBILE_TOGGLE: "lg:hidden p-2 text-white/80 hover:text-white transition-colors ml-2 shrink-0",
@@ -80,6 +81,9 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
 
     const isSkillsTabActive = location.pathname === pathTech || location.pathname === pathSoft;
     const isVisibilityActive = Object.values(configPaths).includes(location.pathname);
+
+    // 💡 Modificado: Mostrar botón si es vista pública y NO estamos ya en la raíz principal "/"
+    const showHomeButton = isPublic && location.pathname !== "/";
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -234,6 +238,15 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                     </div>
 
                     <div className={STYLES.ACTIONS_CONTAINER}>
+                        {/* 💡 Botón de Volver al Inicio exclusivo para Vistas Públicas */}
+                        {showHomeButton && (
+                            <button onClick={() => navigate("/")} className={STYLES.HOME_BUTTON}>
+                                <Home size={16} />
+                                <span className="hidden sm:inline">Página Principal</span>
+                                <span className="sm:hidden">Inicio</span>
+                            </button>
+                        )}
+
                         {!isPublic && userInfo?.username && (
                             <button onClick={() => setIsShareModalOpen(true)} className={STYLES.COPY_BUTTON}>
                                 <Copy size={16} />
@@ -366,25 +379,33 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                             )}
                         </div>
 
-                        {!isPublic && (
-                            <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
-                                {userInfo?.username && (
-                                    <button
-                                        onClick={() => { setIsShareModalOpen(true); setIsMenuOpen(false); }}
-                                        className={STYLES.COPY_BUTTON}
-                                    >
-                                        <Copy size={16} />
-                                        <span>Generar Enlace</span>
-                                    </button>
-                                )}
-                                {token && (
-                                    <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-2 text-red-400 font-bold text-sm">
-                                        <LogOut size={18} />
-                                        <span>Cerrar Sesión</span>
-                                    </button>
-                                )}
-                            </div>
-                        )}
+                        {/* Acciones móviles */}
+                        <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
+                            {showHomeButton && (
+                                <button
+                                    onClick={() => { navigate("/"); setIsMenuOpen(false); }}
+                                    className={STYLES.HOME_BUTTON}
+                                >
+                                    <Home size={16} />
+                                    <span>Volver al Inicio</span>
+                                </button>
+                            )}
+                            {!isPublic && userInfo?.username && (
+                                <button
+                                    onClick={() => { setIsShareModalOpen(true); setIsMenuOpen(false); }}
+                                    className={STYLES.COPY_BUTTON}
+                                >
+                                    <Copy size={16} />
+                                    <span>Generar Enlace</span>
+                                </button>
+                            )}
+                            {token && (
+                                <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-2 text-red-400 font-bold text-sm">
+                                    <LogOut size={18} />
+                                    <span>Cerrar Sesión</span>
+                                </button>
+                            )}
+                        </div>
                     </div>
                 )}
             </nav>
