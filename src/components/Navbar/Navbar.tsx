@@ -4,6 +4,7 @@ import { parseProfilePicture } from "../../services/decodeBase64";
 import { useNavbarInfo } from "../../hooks/useNavbarInfo";
 import { Copy, LogOut, Menu, X, ChevronDown, Home } from "lucide-react";
 import PublicProfileLink from "../PublicProfileLink/PublicProfileLink";
+import Button from "../Button";
 
 const defAvatar = "/defAvatar.png";
 
@@ -82,7 +83,6 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
     const isSkillsTabActive = location.pathname === pathTech || location.pathname === pathSoft;
     const isVisibilityActive = Object.values(configPaths).includes(location.pathname);
 
-    // 💡 Modificado: Mostrar botón si es vista pública y NO estamos ya en la raíz principal "/"
     const showHomeButton = isPublic && location.pathname !== "/";
 
     useEffect(() => {
@@ -240,30 +240,30 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                     <div className={STYLES.ACTIONS_CONTAINER}>
                         {/* 💡 Botón de Volver al Inicio exclusivo para Vistas Públicas */}
                         {showHomeButton && (
-                            <button onClick={() => navigate("/")} className={STYLES.HOME_BUTTON}>
+                            <Button onClick={() => navigate("/")} className={STYLES.HOME_BUTTON}>
                                 <Home size={16} />
                                 <span className="hidden sm:inline">Página Principal</span>
                                 <span className="sm:hidden">Inicio</span>
-                            </button>
+                            </Button>
                         )}
 
                         {!isPublic && userInfo?.username && (
-                            <button onClick={() => setIsShareModalOpen(true)} className={STYLES.COPY_BUTTON}>
+                            <Button onClick={() => setIsShareModalOpen(true)} className={STYLES.COPY_BUTTON}>
                                 <Copy size={16} />
                                 <span className="hidden sm:inline">Generar Enlace</span>
                                 <span className="sm:hidden">Enlace</span>
-                            </button>
+                            </Button>
                         )}
 
                         {!isPublic && token ? (
-                            <button onClick={handleLogout} className={STYLES.LOGOUT_BUTTON}>
+                            <Button onClick={handleLogout} className={STYLES.LOGOUT_BUTTON}>
                                 <LogOut size={18} />
                                 <span className="hidden sm:inline">Salir</span>
-                            </button>
+                            </Button>
                         ) : !token ? (
-                            <button onClick={() => navigate("/login")} className={STYLES.LOGIN_BUTTON}>
+                            <Button onClick={() => navigate("/login")} className={STYLES.LOGIN_BUTTON}>
                                 Iniciar Sesión
-                            </button>
+                            </Button>
                         ) : null}
                     </div>
 
