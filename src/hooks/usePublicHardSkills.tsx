@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import type { Skill } from "../features/skills/types/skill.types";
-import { fetchSkillsPublic } from "../services/skillsService"; // Crearemos este service
+import { fetchSkillsPublicNew } from "../services/skillsService";
 
 export const usePublicHardSkills = (username: string | undefined) => {
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -12,16 +12,17 @@ export const usePublicHardSkills = (username: string | undefined) => {
       if (!username) return;
       setIsLoading(true);
       try {
-        const data = await fetchSkillsPublic(username);
-        const list = data.hardSkills ?? [];
+        const response = await fetchSkillsPublicNew(username);
+        const rawSkills = response?.data?.hardSkills ?? response?.skills ?? response?.data ?? [];
         setSkills(
-          list.map((s: { name: string; punctuation: number }) => ({
-            id: s.name,
+          rawSkills.map((s: { name: string; punctuation?: number; level?: number }, index: number) => ({
+            skill_id: index,
             name: s.name,
-            level: s.punctuation,
+            level: s.punctuation ?? s.level ?? 0,
+            visible: true,
           }))
         );
-      } catch (err) {
+      } catch {
         setError("No se pudieron cargar las habilidades técnicas");
       } finally {
         setIsLoading(false);

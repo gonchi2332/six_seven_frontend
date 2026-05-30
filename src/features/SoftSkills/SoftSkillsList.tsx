@@ -133,8 +133,7 @@ const SoftSkillsList = () => {
                     setSkillToDelete(null);
                 }}
                 onConfirm={handleConfirmDelete}
-                title={`Eliminar: ${skillToDelete}`}
-                message="¿Estás seguro que quieres eliminar esta habilidad?"
+                skillName={skillToDelete ?? ""}
                 isLoading={isSubmitting}
             />
         </>
