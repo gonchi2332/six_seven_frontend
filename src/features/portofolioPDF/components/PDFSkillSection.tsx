@@ -73,7 +73,7 @@ const HardSkillsPage = () => {
                         ) : (
                             <div className={styles.listWrapper}>
                                 {paginated.map((skill) => (
-                                    <div key={skill.id} className={styles.skillRow} onClick={() => setSkillAction(skill)}>
+                                    <div className={styles.skillRow} onClick={() => setSkillAction(skill)}>
                                         <div className={styles.skillLeft}>
                                             <span className={styles.skillName}>{skill.name}</span>
                                             <LevelBars level={skill.level} size="sm" />

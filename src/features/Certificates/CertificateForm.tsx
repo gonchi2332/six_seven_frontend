@@ -27,7 +27,7 @@ const styles = {
 const CertificateForm = ({ mode, initial, onSubmit, onClose, serverError, isSubmitting = false }: Props) => {
     const { title, titleError, handleTitleChange, handleTitleBlur, description, descError, handleDescChange, handleDescBlur,
         area, areaError, handleAreaChange, handleAreaBlur, issueDate, dateError, dateTouched, handleDateChange, handleDateBlur,
-        coverImage, imagePreview, imageError, imageTouched, handleImageChange, isFormValid, hasChanges, handleSubmit,
+         imagePreview, handleImageChange, isFormValid, hasChanges, handleSubmit,
     } = useCertificateForm({ mode, initial, onSubmit });
     const formTitle = mode === "add" ? "Registrar Certificado" : `Modificar: ${initial?.title ?? ""}`;
 

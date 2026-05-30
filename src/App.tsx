@@ -1,4 +1,4 @@
-import RegisterPage from "./pages/RegisterPage";
+import RegisterPage from "./pages/Auth/RegisterPage";
 
 function App() {
     return (
