@@ -56,7 +56,7 @@ const EducationForm = ({
     const [institution, setInstitution] = useState(initial?.institution ?? "");
     const [startDate, setStartDate] = useState(initial?.startDate ?? "");
     const [educationState, setEducationState] = useState<string>(initial?.educationState ?? "Cursando");
-    const [touched, setTouched] = useState<Record<string, boolean>>({});
+
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     const selectedDegree = academicDegrees.find((d) => d.id === academicLevelId);
@@ -106,8 +106,7 @@ const EducationForm = ({
         
         await onSubmit({
             degree: degree.trim(),
-            academicLevel: selectedDegree?.academicdegree ?? initial?.academicLevel ?? "",
-            academicLevelId: academicLevelId || resolvedInitialId || 0,
+            academicLevelId: academicLevelId,
             institution: institution.trim(),
             startDate,
             educationState,
@@ -130,7 +129,6 @@ const EducationForm = ({
                             value={degree}
                             onChange={(e) => {
                                 setDegree(e.target.value);
-                                setTouched((prev) => ({ ...prev, degree: true }));
                                 if (e.target.value.trim()) {
                                     setErrors((prev) => { const n = { ...prev }; delete n.degree; return n; });
                                 } else {
@@ -150,7 +148,6 @@ const EducationForm = ({
                                     value={academicLevelId}
                                     onChange={(val) => {
                                         setAcademicLevelId(val);
-                                        setTouched((prev) => ({ ...prev, academicLevel: true }));
                                         if (val) {
                                             setErrors((prev) => { const n = { ...prev }; delete n.academicLevel; return n; });
                                         } else {
@@ -169,7 +166,6 @@ const EducationForm = ({
                                 value={institution}
                                 onChange={(e) => {
                                     setInstitution(e.target.value);
-                                    setTouched((prev) => ({ ...prev, institution: true }));
                                     if (e.target.value.trim()) {
                                         setErrors((prev) => { const n = { ...prev }; delete n.institution; return n; });
                                     } else {
@@ -205,7 +201,6 @@ const EducationForm = ({
                                     value={startDate}
                                     onChange={(val) => {
                                         setStartDate(val);
-                                        setTouched((prev) => ({ ...prev, startDate: true }));
                                         if (val) {
                                             setErrors((prev) => { const n = { ...prev }; delete n.startDate; return n; });
                                         } else {
