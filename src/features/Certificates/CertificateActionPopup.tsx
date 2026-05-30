@@ -21,17 +21,17 @@ const CertificateActionPopup = ({ certificate, onView, onModify, onDelete, onClo
             <div className="w-full max-w-sm sm:max-w-lg max-h-[90vh] overflow-y-auto">
                 <PopUpCard title={certificate.title}>
                     <div className={styles.buttonsWrapper}>
-                        <Button type="button" variant="secondary" onClick={onClose}>
+                        <Button type="button" variant="primary" onClick={onClose}>
                             Cancelar
                         </Button>
-                        <Button type="button" variant="primary" onClick={onView}>
+                        <Button type="button" variant="primary" onClick={onDelete}>
+                            Eliminar
+                        </Button>
+                        <Button type="button" variant="secondary" onClick={onView}>
                             Ver
                         </Button>
-                        <Button type="button" variant="primary" onClick={onModify}>
+                        <Button type="button" variant="secondary" onClick={onModify}>
                             Modificar
-                        </Button>
-                        <Button type="button" variant="secondary" onClick={onDelete}>
-                            Eliminar
                         </Button>
                     </div>
                 </PopUpCard>

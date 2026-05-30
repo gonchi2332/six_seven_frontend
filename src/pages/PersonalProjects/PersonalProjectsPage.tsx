@@ -277,14 +277,14 @@ const ProjectsPage = () => {
                             <div className="flex flex-col gap-6 p-6">
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                     <Button
-                                        variant="secondary"
+                                        variant="primary"
                                         onClick={handleCancel}
                                         fullWidth
                                     >
                                         Cancelar
                                     </Button>
                                     <Button
-                                        variant="secondary"
+                                        variant="primary"
                                         onClick={handleDeleteClick}
                                         disabled={isLoading}
                                         fullWidth
@@ -292,14 +292,14 @@ const ProjectsPage = () => {
                                         Eliminar
                                     </Button>
                                     <Button
-                                        variant="primary"
+                                        variant="secondary"
                                         onClick={handleView}
                                         fullWidth
                                     >
                                         Ver
                                     </Button>
                                     <Button
-                                        variant="primary"
+                                        variant="secondary"
                                         onClick={handleEdit}
                                         fullWidth
                                     >

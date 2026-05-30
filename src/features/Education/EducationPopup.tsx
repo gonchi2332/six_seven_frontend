@@ -26,22 +26,22 @@ const EducationPopup = ({ isOpen, entry, onClose, onEdit, onDelete, onView }: Pr
                 <PopUpCard title={entry.degree}>
                     <div className={styles.buttonContainer}>
                         <div className={styles.btnWide}>
-                            <Button variant="secondary" onClick={onClose} fullWidth>
+                            <Button variant="primary" onClick={onClose} fullWidth>
                                 Cancelar
                             </Button>
                         </div>
                         <div className={styles.btnWide}>
-                            <Button variant="secondary" onClick={() => onDelete(entry)} fullWidth>
+                            <Button variant="primary" onClick={() => onDelete(entry)} fullWidth>
                                 Eliminar
                             </Button>
                         </div>
                         <div className={styles.btnWide}>
-                            <Button variant="primary" onClick={onView} fullWidth>
+                            <Button variant="secondary" onClick={onView} fullWidth>
                                 Ver
                             </Button>
                         </div>
                         <div className={styles.btnWide}>
-                            <Button variant="primary" onClick={() => onEdit(entry)} fullWidth>
+                            <Button variant="secondary" onClick={() => onEdit(entry)} fullWidth>
                                 Modificar
                             </Button>
                         </div>

@@ -21,16 +21,16 @@ const SkillActionPopup = ({ skill, onView, onModify, onDelete, onClose }: Props)
             <div className="w-full max-w-lg sm:max-w-xl max-h-[90vh] overflow-y-auto">
                 <PopUpCard title={skill.name}>
                     <div className={styles.buttonsWrapper}>
-                        <Button type="button" variant="secondary" onClick={onClose}>
+                        <Button type="button" variant="primary" onClick={onClose}>
                             Cancelar
                         </Button>
-                        <Button type="button" variant="secondary" onClick={onDelete}>
+                        <Button type="button" variant="primary" onClick={onDelete}>
                             Eliminar
                         </Button>
-                        <Button type="button" variant="primary" onClick={onView}>
+                        <Button type="button" variant="secondary" onClick={onView}>
                             Ver
                         </Button>
-                        <Button type="button" variant="primary" onClick={onModify}>
+                        <Button type="button" variant="secondary" onClick={onModify}>
                             Modificar
                         </Button>
                     </div>
