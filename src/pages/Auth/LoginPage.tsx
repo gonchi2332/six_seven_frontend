@@ -1,5 +1,5 @@
-import LoginForm from "../features/auth/components/Login/LoginForm";
-import LoginImage from "../features/auth/components/Login/LoginImage/LoginImage";
+import LoginForm from "../../features/auth/components/Login/LoginForm";
+import LoginImage from "../../features/auth/components/Login/LoginImage/LoginImage";
 
 
 

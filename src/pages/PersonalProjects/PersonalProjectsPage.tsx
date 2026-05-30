@@ -1,13 +1,13 @@
 // ProjectsPage.tsx (versión corregida)
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import { useProjects } from "../features/PersonalProjects/hooks/useProjects";
-import ProjectCard from "../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectCard";
-import ViewProjectPopup from "../features/PersonalProjects/components/PersonalProjectsModal/ViewProjectPopup";
-import PersonalProjectsModal from "../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectsModal";
-import PopUpCard from "../components/PopUpCard";
-import Button from "../components/Button";
-import type { ProjectEntry, CreateProjectPayload, UpdateProjectPayload } from "../features/PersonalProjects/services/personalProjectsService";
+import { useProjects } from "../../features/PersonalProjects/hooks/useProjects";
+import ProjectCard from "../../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectCard";
+import ViewProjectPopup from "../../features/PersonalProjects/components/PersonalProjectsModal/ViewProjectPopup";
+import PersonalProjectsModal from "../../features/PersonalProjects/components/PersonalProjectsModal/PersonalProjectsModal";
+import PopUpCard from "../../components/PopUpCard";
+import Button from "../../components/Button";
+import type { ProjectEntry, CreateProjectPayload, UpdateProjectPayload } from "../../features/PersonalProjects/services/personalProjectsService";
 
 
 const PAGE_SIZE = 10;

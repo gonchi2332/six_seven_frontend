@@ -28,7 +28,7 @@ const PublicHardSkillsList = () => {
       
       <div className="flex flex-col w-full">
         {skills.map((skill) => (
-          <div key={skill.id} className={styles.itemWrapper}>
+          <div key={skill.skill_id} className={styles.itemWrapper}>
             <div className={styles.left}>
               <span className={styles.name}>{skill.name}</span>
               

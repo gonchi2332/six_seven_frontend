@@ -1,5 +1,5 @@
-import RegisterForm from "../features/auth/components/RegisterForms";
-import RegisterImage from "../features/auth/components/RegisterForms/RegisterImage";
+import RegisterForm from "../../features/auth/components/RegisterForms";
+import RegisterImage from "../../features/auth/components/RegisterForms/RegisterImage";
 
 // Contenedor principal
 const PAGE_CONTAINER = "min-h-screen bg-main flex flex-col";

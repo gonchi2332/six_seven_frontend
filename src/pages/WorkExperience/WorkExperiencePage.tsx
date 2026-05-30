@@ -1,4 +1,4 @@
-import { WorkExperienceList } from '../features/WorkExperience';
+import { WorkExperienceList } from '../../features/WorkExperience';
 
 const styles = {
     container: "w-full",

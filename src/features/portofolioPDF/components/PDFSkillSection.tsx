@@ -34,10 +34,6 @@ const HardSkillsPage = () => {
     );
     const { currentPage, totalPages, paginated, prevPage, nextPage, resetPage } = usePagination(filtered, PAGE_SIZE);
 
-    const [showAdd, setShowAdd] = useState(false);
-    const [skillAction, setSkillAction] = useState<Skill | null>(null);
-
-
     const onSearch = () => { handleSearch(); resetPage(); };
 
     return (
@@ -52,7 +48,7 @@ const HardSkillsPage = () => {
                                 onChange={handleChange}
                                 onSearch={onSearch}
                                 onKeyDown={handleKeyDown}
-                                onAdd={() => setShowAdd(true)}
+                                onAdd={() => {}}
                                 placeholder="Buscar habilidad..."
                                 addLabel="Registrar"
                                 isPublic={true}
