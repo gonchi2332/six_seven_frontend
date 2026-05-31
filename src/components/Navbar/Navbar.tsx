@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { parseProfilePicture } from "../../services/decodeBase64";
 import { useNavbarInfo } from "../../hooks/useNavbarInfo";
+// 💡 Importamos tu nuevo hook para manejar la visibilidad condicional desde el backend
+import { useSectionsVisibility } from "../../hooks/usePublicProfileSections";
 import { Copy, LogOut, Menu, X, ChevronDown, Home } from "lucide-react";
 import PublicProfileLink from "../PublicProfileLink/PublicProfileLink";
 import Button from "../Button";
@@ -59,6 +61,8 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
     const visibilityRef = useRef<HTMLDivElement>(null);
     const activeUsername = urlUsername || ownerName;
 
+    const { visibility: publicVisibility } = useSectionsVisibility(activeUsername, isPublic);
+
     const pathTech = isPublic ? `/ver/${activeUsername}/habilidades-tecnicas` : "/habilidades-tecnicas";
     const pathSoft = isPublic ? `/ver/${activeUsername}/habilidades-blandas` : "/habilidades-blandas";
 
@@ -72,12 +76,12 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
         certificates: "/configurar/certificados",
     };
 
-    const mainTabs = [
-        { name: "Perfil", path: isPublic ? `/ver/${activeUsername}` : "/info-personal" },
-        { name: "Experiencia Laboral", path: isPublic ? `/ver/${activeUsername}/experiencia-laboral` : "/experiencia-laboral" },
-        { name: "Proyectos Personales", path: isPublic ? `/ver/${activeUsername}/proyectos` : "/proyectos" },
-        { name: "Educación", path: isPublic ? `/ver/${activeUsername}/educacion` : "/educacion" },
-        { name: "Certificados", path: isPublic ? `/ver/${activeUsername}/certificados` : "/certificados" }
+    const allTabs = [
+        { id: "profile", name: "Perfil", path: isPublic ? `/ver/${activeUsername}` : "/info-personal" },
+        { id: "has_work_experience", name: "Experiencia Laboral", path: isPublic ? `/ver/${activeUsername}/experiencia-laboral` : "/experiencia-laboral" },
+        { id: "has_projects", name: "Proyectos Personales", path: isPublic ? `/ver/${activeUsername}/proyectos` : "/proyectos" },
+        { id: "has_education", name: "Educación", path: isPublic ? `/ver/${activeUsername}/educacion` : "/educacion" },
+        { id: "has_certificates", name: "Certificados", path: isPublic ? `/ver/${activeUsername}/certificados` : "/certificados" }
     ];
 
     const isSkillsTabActive = location.pathname === pathTech || location.pathname === pathSoft;
@@ -113,6 +117,18 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
         navigate("/login");
     };
 
+    const visibleTabs = allTabs.filter(tab => {
+        if (!isPublic) return true;
+        if (tab.id === "profile") return true;
+        if (!publicVisibility) return true;
+
+        return !!publicVisibility[tab.id as keyof typeof publicVisibility];
+    });
+
+    const showSkillsDropdown = !isPublic || (
+        publicVisibility ? (publicVisibility.has_hard_skills || publicVisibility.has_soft_skills) : true
+    );
+
     return (
         <>
             <nav className={STYLES.NAVBAR}>
@@ -132,41 +148,52 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                         </div>
 
                         <div className={STYLES.TABS_CONTAINER}>
-                            <button
-                                onClick={() => navigate(mainTabs[0]!.path)}
-                                className={`${STYLES.TAB_BUTTON} ${location.pathname === mainTabs[0]!.path ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
-                            >
-                                {mainTabs[0]!.name}
-                            </button>
-
-                            <div className={STYLES.dropdownWrapper} ref={skillsRef}>
+                            {/* Renderizar Perfil si está dentro de las pestañas visibles */}
+                            {visibleTabs.find(t => t.id === "profile") && (
                                 <button
-                                    onClick={() => { setIsSkillsDropdownOpen(!isSkillsDropdownOpen); setIsVisibilityDropdownOpen(false); }}
-                                    className={`${STYLES.TAB_BUTTON} ${isSkillsTabActive ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+                                    onClick={() => navigate(allTabs[0]!.path)}
+                                    className={`${STYLES.TAB_BUTTON} ${location.pathname === allTabs[0]!.path ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
                                 >
-                                    <span>Habilidades</span>
-                                    <ChevronDown size={14} className={`transition-transform duration-200 ${isSkillsDropdownOpen ? 'rotate-180' : ''}`} />
+                                    {allTabs[0]!.name}
                                 </button>
+                            )}
 
-                                {isSkillsDropdownOpen && (
-                                    <div className={STYLES.dropdownMenu}>
-                                        <button
-                                            onClick={() => navigate(pathTech)}
-                                            className={`${STYLES.dropdownItem} ${location.pathname === pathTech ? STYLES.dropdownItemActive : ''}`}
-                                        >
-                                            Habilidades Técnicas
-                                        </button>
-                                        <button
-                                            onClick={() => navigate(pathSoft)}
-                                            className={`${STYLES.dropdownItem} ${location.pathname === pathSoft ? STYLES.dropdownItemActive : ''}`}
-                                        >
-                                            Habilidades Blandas
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
+                            {/* Dropdown de habilidades condicionado por los datos reales del usuario */}
+                            {showSkillsDropdown && (
+                                <div className={STYLES.dropdownWrapper} ref={skillsRef}>
+                                    <button
+                                        onClick={() => { setIsSkillsDropdownOpen(!isSkillsDropdownOpen); setIsVisibilityDropdownOpen(false); }}
+                                        className={`${STYLES.TAB_BUTTON} ${isSkillsTabActive ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+                                    >
+                                        <span>Habilidades</span>
+                                        <ChevronDown size={14} className={`transition-transform duration-200 ${isSkillsDropdownOpen ? 'rotate-180' : ''}`} />
+                                    </button>
 
-                            {mainTabs.slice(1).map((tab) => (
+                                    {isSkillsDropdownOpen && (
+                                        <div className={STYLES.dropdownMenu}>
+                                            {(!isPublic || publicVisibility?.has_hard_skills) && (
+                                                <button
+                                                    onClick={() => navigate(pathTech)}
+                                                    className={`${STYLES.dropdownItem} ${location.pathname === pathTech ? STYLES.dropdownItemActive : ''}`}
+                                                >
+                                                    Habilidades Técnicas
+                                                </button>
+                                            )}
+                                            {(!isPublic || publicVisibility?.has_soft_skills) && (
+                                                <button
+                                                    onClick={() => navigate(pathSoft)}
+                                                    className={`${STYLES.dropdownItem} ${location.pathname === pathSoft ? STYLES.dropdownItemActive : ''}`}
+                                                >
+                                                    Habilidades Blandas
+                                                </button>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Mapeo del resto de secciones activas (Experiencia, Proyectos, etc) */}
+                            {visibleTabs.filter(tab => tab.id !== "profile").map((tab) => (
                                 <button
                                     key={tab.path}
                                     onClick={() => navigate(tab.path)}
@@ -238,7 +265,6 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                     </div>
 
                     <div className={STYLES.ACTIONS_CONTAINER}>
-                        {/* 💡 Botón de Volver al Inicio exclusivo para Vistas Públicas */}
                         {showHomeButton && (
                             <Button onClick={() => navigate("/")} className={STYLES.HOME_BUTTON}>
                                 <Home size={16} />
@@ -275,41 +301,8 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                 {isMenuOpen && (
                     <div className={STYLES.MOBILE_MENU}>
                         <div className="flex flex-col gap-1">
-                            <button
-                                onClick={() => navigate(mainTabs[0]!.path)}
-                                className={`${STYLES.MOBILE_TAB} ${location.pathname === mainTabs[0]!.path ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
-                            >
-                                {mainTabs[0]!.name}
-                            </button>
-
-                            <div>
-                                <button
-                                    onClick={() => { setIsMobileSkillsOpen(!isMobileSkillsOpen); setIsMobileVisibilityOpen(false); }}
-                                    className={`${STYLES.MOBILE_TAB} ${isSkillsTabActive ? 'bg-white/5 text-white' : STYLES.TAB_INACTIVE} flex items-center justify-between`}
-                                >
-                                    <span>Habilidades</span>
-                                    <ChevronDown size={16} className={`transition-transform ${isMobileSkillsOpen ? 'rotate-180' : ''}`} />
-                                </button>
-
-                                {isMobileSkillsOpen && (
-                                    <div className="pl-4 flex flex-col gap-1 mt-1 bg-black/10 rounded-xl p-1.5 border border-white/5">
-                                        <button
-                                            onClick={() => navigate(pathTech)}
-                                            className={`${STYLES.MOBILE_TAB} ${location.pathname === pathTech ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
-                                        >
-                                            Habilidades Técnicas
-                                        </button>
-                                        <button
-                                            onClick={() => navigate(pathSoft)}
-                                            className={`${STYLES.MOBILE_TAB} ${location.pathname === pathSoft ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
-                                        >
-                                            Habilidades Blandas
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-
-                            {mainTabs.slice(1).map((tab) => (
+                            {/* Menú móvil adaptado con el filtro de secciones visibles */}
+                            {visibleTabs.map((tab) => (
                                 <button
                                     key={tab.path}
                                     onClick={() => navigate(tab.path)}
@@ -318,6 +311,39 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                                     {tab.name}
                                 </button>
                             ))}
+
+                            {showSkillsDropdown && (
+                                <div>
+                                    <button
+                                        onClick={() => { setIsMobileSkillsOpen(!isMobileSkillsOpen); setIsMobileVisibilityOpen(false); }}
+                                        className={`${STYLES.MOBILE_TAB} ${isSkillsTabActive ? 'bg-white/5 text-white' : STYLES.TAB_INACTIVE} flex items-center justify-between`}
+                                    >
+                                        <span>Habilidades</span>
+                                        <ChevronDown size={16} className={`transition-transform ${isMobileSkillsOpen ? 'rotate-180' : ''}`} />
+                                    </button>
+
+                                    {isMobileSkillsOpen && (
+                                        <div className="pl-4 flex flex-col gap-1 mt-1 bg-black/10 rounded-xl p-1.5 border border-white/5">
+                                            {(!isPublic || publicVisibility?.has_hard_skills) && (
+                                                <button
+                                                    onClick={() => navigate(pathTech)}
+                                                    className={`${STYLES.MOBILE_TAB} ${location.pathname === pathTech ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+                                                >
+                                                    Habilidades Técnicas
+                                                </button>
+                                            )}
+                                            {(!isPublic || publicVisibility?.has_soft_skills) && (
+                                                <button
+                                                    onClick={() => navigate(pathSoft)}
+                                                    className={`${STYLES.MOBILE_TAB} ${location.pathname === pathSoft ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
+                                                >
+                                                    Habilidades Blandas
+                                                </button>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
 
                             {!isPublic && (
                                 <div>
