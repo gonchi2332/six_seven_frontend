@@ -6,7 +6,7 @@ import type { Skill } from "../types/skill.types";
 
 interface EditSkillPopupProps {
     skill: Skill;
-    onSubmit: (id: number, name: string, level: number) => Promise<void>;
+    onSubmit: (id: string | number, name: string, level: number) => Promise<void>;
     onClose: () => void;
     serverError?: string | null;
     isSubmitting?: boolean;

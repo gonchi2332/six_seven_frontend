@@ -110,6 +110,8 @@ const EducationForm = ({
             institution: institution.trim(),
             startDate,
             educationState,
+            visible: initial?.visible ?? true,
+            academicLevel: selectedDegree?.academicdegree ?? initial?.academicLevel ?? "",
         });
     };
 

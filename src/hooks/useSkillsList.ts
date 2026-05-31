@@ -18,7 +18,7 @@ const useSkillsList = () => {
         addSkill(name, level);
     };
 
-    const handleEdit = async (id: string, name: string, level: number) => {
+    const handleEdit = async (id: string | number, name: string, level: number) => {
         setServerError(null);
         setIsSubmitting(true);
         try {
@@ -34,7 +34,7 @@ const useSkillsList = () => {
     const handleDelete = async () => {
         if (!deleteTarget) return;
         try {
-            await deleteSkill(deleteTarget.id);
+            await deleteSkill(deleteTarget.name);
             setDeleteTarget(null);
             if (paginated.length === 1 && currentPage > 1) {
                 setCurrentPage((p) => p - 1);

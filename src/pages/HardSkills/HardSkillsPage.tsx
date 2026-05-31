@@ -53,7 +53,7 @@ const HardSkillsPage = () => {
         await addSkill(name, level);
     };
 
-    const handleEditSubmit = async (id: number, name: string, level: number) => {
+    const handleEditSubmit = async (id: string | number, name: string, level: number) => {
         setIsEditSubmitting(true);
         setEditError(null);
         try {

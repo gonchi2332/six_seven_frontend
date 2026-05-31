@@ -62,7 +62,7 @@ const SkillsPrintView = forwardRef<HTMLDivElement, SkillsPrintViewProps>(
                             {/* Columna izquierda */}
                             <div className="flex-1">
                                 {leftColumn.map((skill) => (
-                                    <div key={skill.id} className="mb-5 print:break-inside-avoid">
+                                    <div key={skill.skill_id} className="mb-5 print:break-inside-avoid">
                                         <div className="flex justify-between mb-1.5 text-sm">
                                             <span className="font-medium text-gray-800">{skill.name}</span>
                                             <span className="text-[#2C666E] font-semibold">{skill.level}/100</span>
@@ -80,7 +80,7 @@ const SkillsPrintView = forwardRef<HTMLDivElement, SkillsPrintViewProps>(
                             {/* Columna derecha */}
                             <div className="flex-1">
                                 {rightColumn.map((skill) => (
-                                    <div key={skill.id} className="mb-5 print:break-inside-avoid">
+                                    <div key={skill.skill_id} className="mb-5 print:break-inside-avoid">
                                         <div className="flex justify-between mb-1.5 text-sm">
                                             <span className="font-medium text-gray-800">{skill.name}</span>
                                             <span className="text-[#2C666E] font-semibold">{skill.level}/100</span>
@@ -99,7 +99,7 @@ const SkillsPrintView = forwardRef<HTMLDivElement, SkillsPrintViewProps>(
                         // Columna única
                         <div>
                             {sortedSkills.map((skill) => (
-                                <div key={skill.id} className="mb-5 print:break-inside-avoid">
+                                <div key={skill.skill_id} className="mb-5 print:break-inside-avoid">
                                     <div className="flex justify-between mb-1.5 text-sm">
                                         <span className="font-medium text-gray-800">{skill.name}</span>
                                         <span className="text-[#2C666E] font-semibold">{skill.level}/100</span>

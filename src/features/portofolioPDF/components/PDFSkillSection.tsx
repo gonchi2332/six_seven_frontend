@@ -1,12 +1,9 @@
-
-import { useState } from "react";
 import { useSkills } from "../../../hooks/useSkills";
 import useSearch from "../../../hooks/useSearch";
 import usePagination from "../../../hooks/usePagination";
 import SkillSearchBar from "../../../components/SkillSearchBar";
 import SkillPagination from "../../../components/SkillPagination";
 import LevelBars from "../../../components/LevelBars/Levelbars ";
-import type { Skill } from "../../skills/types/skill.types";
 
 const PAGE_SIZE = 12;
 
@@ -20,7 +17,7 @@ const styles = {
     listWrapper: "flex flex-col gap-2 sm:gap-3",
     empty: "text-white/70 font-nunito text-sm sm:text-base text-center py-8 sm:py-12 bg-black/20 rounded-xl border border-white/10",
     loading: "text-white/70 font-nunito text-sm sm:text-base text-center py-8 sm:py-12 bg-black/20 rounded-xl border border-white/10",
-    skillRow: "flex items-center gap-3 sm:gap-4 px-3 sm:px-5 py-3 sm:py-4 rounded-xl border border-white/20 bg-black/30 cursor-pointer hover:border-[#90DDF0]/60 hover:bg-white/5 transition-all",
+    skillRow: "flex items-center gap-3 sm:gap-4 px-3 sm:px-5 py-3 sm:py-4 rounded-xl border border-white/20 bg-black/30 hover:border-[#90DDF0]/60 hover:bg-white/5 transition-all",
     skillLeft: "flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 flex-1 min-w-0",
     skillName: "text-white font-nunito text-[14px] sm:text-[16px] sm:w-36 shrink-0 truncate",
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
@@ -33,10 +30,6 @@ const HardSkillsPage = () => {
         (s, q) => s.name.toLowerCase().includes(q.toLowerCase())
     );
     const { currentPage, totalPages, paginated, prevPage, nextPage, resetPage } = usePagination(filtered, PAGE_SIZE);
-
-    const [showAdd, setShowAdd] = useState(false);
-    const [skillAction, setSkillAction] = useState<Skill | null>(null);
-
 
     const onSearch = () => { handleSearch(); resetPage(); };
 
@@ -52,7 +45,7 @@ const HardSkillsPage = () => {
                                 onChange={handleChange}
                                 onSearch={onSearch}
                                 onKeyDown={handleKeyDown}
-                                onAdd={() => setShowAdd(true)}
+                                onAdd={() => {}}
                                 placeholder="Buscar habilidad..."
                                 addLabel="Registrar"
                                 isPublic={true}
@@ -73,7 +66,7 @@ const HardSkillsPage = () => {
                         ) : (
                             <div className={styles.listWrapper}>
                                 {paginated.map((skill) => (
-                                    <div className={styles.skillRow} onClick={() => setSkillAction(skill)}>
+                                    <div key={skill.skill_id} className={styles.skillRow}>
                                         <div className={styles.skillLeft}>
                                             <span className={styles.skillName}>{skill.name}</span>
                                             <LevelBars level={skill.level} size="sm" />
