@@ -1,11 +1,11 @@
-import Button from "../../components/Button";
-import PopUpCard from "../../components/PopUpCard";
-import TextField from "../../components/TextField";
-import TextAreaField from "../../components/TextAreaField";
-import DateField from "./DateField";
-import ImageUpload from "../UploadFile/components/uploadFile";
-import useCertificateForm from "../../hooks/useCertificateForm";
-import type { Certificate } from "../../services/certificateService";
+import Button from "../../../components/Button";
+import PopUpCard from "../../../components/PopUpCard";
+import TextField from "../../../components/TextField";
+import TextAreaField from "../../../components/TextAreaField";
+import DateField from "../components/DateField";
+import ImageUpload from "../../UploadFile/components/uploadFile";
+import useCertificateForm from "../../../hooks/useCertificateForm";
+import type { Certificate } from "../../../services/certificateService";
 
 interface Props {
     mode: "add" | "edit";
@@ -27,7 +27,7 @@ const styles = {
 const CertificateForm = ({ mode, initial, onSubmit, onClose, serverError, isSubmitting = false }: Props) => {
     const { title, titleError, handleTitleChange, handleTitleBlur, description, descError, handleDescChange, handleDescBlur,
         area, areaError, handleAreaChange, handleAreaBlur, issueDate, dateError, dateTouched, handleDateChange, handleDateBlur,
-         imagePreview, handleImageChange, isFormValid, hasChanges, handleSubmit,
+        imagePreview, handleImageChange, isFormValid, hasChanges, handleSubmit,
     } = useCertificateForm({ mode, initial, onSubmit });
     const formTitle = mode === "add" ? "Registrar Certificado" : `Modificar: ${initial?.title ?? ""}`;
 

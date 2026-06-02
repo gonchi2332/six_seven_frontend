@@ -1,7 +1,7 @@
 import { GraduationCap, Award, Landmark, ToggleLeft, Calendar } from 'lucide-react';
-import Button from "../../components/Button";
-import PopUpCard from "../../components/PopUpCard";
-import type { EducationEntry } from "../../services/educationService";
+import Button from "../../../components/Button";
+import PopUpCard from "../../../components/PopUpCard";
+import type { EducationEntry } from "../../../services/educationService";
 
 interface Props {
     isOpen: boolean;
@@ -17,7 +17,7 @@ const styles = {
     row: 'flex items-start gap-4 py-3',
     iconBox: 'w-10 h-10 rounded-xl bg-[#2C666E]/40 flex items-center justify-center shrink-0 mt-0.5',
     icon: 'text-[#90DDF0] w-5 h-5',
-    textGroup: 'flex flex-col flex-1 min-w-0', 
+    textGroup: 'flex flex-col flex-1 min-w-0',
     label: 'text-[#90DDF0] text-xs uppercase tracking-wide font-bold mb-1',
     value: 'text-white font-nunito text-base sm:text-lg font-medium leading-snug break-words overflow-wrap-anywhere',
     emptyValue: 'text-white/30 italic font-nunito text-base sm:text-lg break-words',
@@ -53,7 +53,7 @@ const InfoRow = ({
 const ViewEducationPopup = ({ isOpen, entry, onClose, onBack }: Props) => {
     if (!isOpen || !entry) return null;
 
-    const dateDisplay = entry.educationState === "cursando" 
+    const dateDisplay = entry.educationState === "cursando"
         ? `${entry.startDate} - Presente`
         : entry.startDate;
 
@@ -64,7 +64,7 @@ const ViewEducationPopup = ({ isOpen, entry, onClose, onBack }: Props) => {
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
                 <PopUpCard title="Detalle de Formación Académica">
                     <button onClick={onClose} className={styles.closeButton}>✕</button>
-                    
+
                     <div className={styles.content}>
                         <InfoRow icon={GraduationCap} label="Título / Carrera" value={entry.degree} />
                         <div className={styles.metaGrid}>

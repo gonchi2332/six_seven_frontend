@@ -1,7 +1,7 @@
 import { Award, Layers, Calendar, FileText } from 'lucide-react';
-import Button from "../../components/Button";
-import PopUpCard from "../../components/PopUpCard";
-import type { Certificate } from "../../services/certificateService";
+import Button from "../../../components/Button";
+import PopUpCard from "../../../components/PopUpCard";
+import type { Certificate } from "../../../services/certificateService";
 
 interface Props {
     certificate: Certificate;
@@ -15,7 +15,7 @@ const styles = {
     row: 'flex items-start gap-4 py-3',
     iconBox: 'w-10 h-10 rounded-xl bg-[#2C666E]/40 flex items-center justify-center shrink-0 mt-0.5',
     icon: 'text-[#90DDF0] w-5 h-5',
-    textGroup: 'flex flex-col flex-1 min-w-0', 
+    textGroup: 'flex flex-col flex-1 min-w-0',
     label: 'text-[#90DDF0] text-xs uppercase tracking-wide font-bold mb-1',
     value: 'text-white font-nunito text-base sm:text-lg font-medium leading-snug break-words overflow-wrap-anywhere',
     descriptionValue: 'text-white font-nunito text-base sm:text-lg leading-relaxed whitespace-pre-wrap break-words overflow-wrap-anywhere',
@@ -56,12 +56,12 @@ const InfoRow = ({
 );
 
 const ViewCertificatePopup = ({ certificate, onClose }: Props) => {
-    const formattedDate = certificate.issueDate 
-        ? new Date(certificate.issueDate + "T00:00:00").toLocaleDateString("es-ES", { 
-            day: "2-digit", 
-            month: "2-digit", 
-            year: "numeric" 
-          }) 
+    const formattedDate = certificate.issueDate
+        ? new Date(certificate.issueDate + "T00:00:00").toLocaleDateString("es-ES", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        })
         : null;
 
     return (
@@ -69,7 +69,7 @@ const ViewCertificatePopup = ({ certificate, onClose }: Props) => {
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
                 <PopUpCard title="Certificado">
                     <button onClick={onClose} className={styles.closeButton}>✕</button>
-                    
+
                     <div className={styles.content}>
                         <div className={styles.imageWrapper}>
                             {certificate.coverImage ? (

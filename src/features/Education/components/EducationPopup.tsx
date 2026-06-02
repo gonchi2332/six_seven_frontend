@@ -1,6 +1,6 @@
-import Button from "../../components/Button/Button";
-import PopUpCard from "../../components/PopUpCard/PopUpCard";
-import type { EducationEntry } from "../../services/educationService";
+import Button from "../../../components/Button/Button";
+import PopUpCard from "../../../components/PopUpCard/PopUpCard";
+import type { EducationEntry } from "../../../services/educationService";
 
 interface Props {
     isOpen: boolean;
@@ -45,7 +45,7 @@ const EducationPopup = ({ isOpen, entry, onClose, onEdit, onDelete, onView }: Pr
                                 Modificar
                             </Button>
                         </div>
-                        
+
                     </div>
                 </PopUpCard>
             </div>

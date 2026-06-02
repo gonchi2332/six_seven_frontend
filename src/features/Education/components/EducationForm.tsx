@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Button from "../../components/Button";
-import PopUpCard from "../../components/PopUpCard";
-import TextField from "../../components/TextField";
+import Button from "../../../components/Button";
+import PopUpCard from "../../../components/PopUpCard";
+import TextField from "../../../components/TextField";
 import YearSelect from "./YearSelect";
 import AcademicLevelSelect from "./AcademicLevelSelect";
-import type { EducationEntry, AcademicDegree } from "../../services/educationService";
+import type { EducationEntry, AcademicDegree } from "../../../services/educationService";
 
 interface Props {
     mode: "add" | "edit";
@@ -96,14 +96,14 @@ const EducationForm = ({
         if (!institution.trim()) newErrors.institution = "La institución es obligatoria";
         if (!startDate) newErrors.startDate = "El año es obligatorio";
         if (startDate && !/^\d{4}$/.test(startDate)) newErrors.startDate = "Formato: YYYY (ej: 2020)";
-        
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async () => {
         if (!validateForm()) return;
-        
+
         await onSubmit({
             degree: degree.trim(),
             academicLevelId: academicLevelId,
@@ -142,7 +142,7 @@ const EducationForm = ({
                             error={errors.degree}
                             maxLength={100}
                         />
-                        
+
                         <div className={styles.row}>
                             <div className={styles.field}>
                                 <p className={styles.label}>Grado académico:<span className={styles.required}>*</span></p>
@@ -162,7 +162,7 @@ const EducationForm = ({
                                 />
                                 {errors.academicLevel && <p className={styles.errorText}>{errors.academicLevel}</p>}
                             </div>
-                            
+
                             <TextField
                                 label="Institución:*"
                                 value={institution}
@@ -196,7 +196,7 @@ const EducationForm = ({
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <div className={styles.field}>
                                 <p className={styles.label}>{yearLabel}:<span className={styles.required}>*</span></p>
                                 <YearSelect
@@ -217,7 +217,7 @@ const EducationForm = ({
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className={styles.buttonsWrapper}>
                         <Button variant="secondary" onClick={handleCancelOrBack} fullWidth disabled={isSubmitting}>
                             Cancelar

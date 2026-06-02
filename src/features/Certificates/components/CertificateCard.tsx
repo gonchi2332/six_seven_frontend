@@ -1,4 +1,4 @@
-import type { Certificate } from "../../services/certificateService";
+import type { Certificate } from "../../../services/certificateService";
 
 interface Props {
     certificate: Certificate;
@@ -18,14 +18,14 @@ const styles = {
 
 const CertificateCard = ({ certificate, onClick }: Props) => {
     const formattedDate = certificate.issueDate ? new Date(certificate.issueDate + "T00:00:00").toLocaleDateString("es-ES", {
-            day: "2-digit", month: "2-digit", year: "numeric",
-          }) : "";
+        day: "2-digit", month: "2-digit", year: "numeric",
+    }) : "";
 
     return (
         <div className={styles.container} onClick={() => onClick(certificate)}>
             <div className={styles.imageWrapper}>
-                {certificate.coverImage ? ( <img src={certificate.coverImage} alt={certificate.title} className={styles.image} />) : (
-                <span className={styles.imageFallback}>Sin imagen</span>)}
+                {certificate.coverImage ? (<img src={certificate.coverImage} alt={certificate.title} className={styles.image} />) : (
+                    <span className={styles.imageFallback}>Sin imagen</span>)}
             </div>
             <div className={styles.content}>
                 <h3 className={styles.title}>{certificate.title}</h3>
