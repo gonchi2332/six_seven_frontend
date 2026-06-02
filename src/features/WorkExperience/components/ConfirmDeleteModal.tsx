@@ -1,5 +1,5 @@
-import Button from '../../components/Button';
-import PopUpCard from '../../components/PopUpCard';
+import Button from '../../../components/Button';
+import PopUpCard from '../../../components/PopUpCard';
 
 import React from 'react';
 

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
-import { useWorkExperiences } from '../../hooks/useWorkExperiences';
+import { useWorkExperiences } from '../../../hooks/useWorkExperiences';
 import WorkExperienceItem from './WorkExperienceItem';
-import type { WorkExperience } from '../../hooks/useWorkExperiences';
-import Button from '../../components/Button';
+import type { WorkExperience } from '../../../hooks/useWorkExperiences';
+import Button from '../../../components/Button';
 import { useParams } from 'react-router-dom';
 import WorkExperienceDetailModal from './WorkExperienceDetailModal';
 

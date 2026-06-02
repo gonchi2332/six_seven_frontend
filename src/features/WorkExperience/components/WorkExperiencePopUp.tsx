@@ -1,6 +1,6 @@
-import Button from '../../components/Button';
-import PopUpCard from '../../components/PopUpCard';
-import type { WorkExperience } from '../../hooks/useWorkExperiences';
+import Button from '../../../components/Button';
+import PopUpCard from '../../../components/PopUpCard';
+import type { WorkExperience } from '../../../hooks/useWorkExperiences';
 
 interface WorkExperiencePopUpProps {
     isOpen: boolean;
@@ -17,15 +17,15 @@ const styles = {
     buttonContainer: "flex gap-3 px-6 pb-6",
 };
 
-const WorkExperiencePopUp = ({ 
-    isOpen, 
-    experience, 
-    onClose, 
-    onEdit, 
-    onDelete, 
-    onView 
+const WorkExperiencePopUp = ({
+    isOpen,
+    experience,
+    onClose,
+    onEdit,
+    onDelete,
+    onView
 }: WorkExperiencePopUpProps) => {
-    
+
     if (!isOpen || !experience) return null;
 
     return (
@@ -45,7 +45,7 @@ const WorkExperiencePopUp = ({
                         <Button variant="secondary" onClick={() => onEdit(experience)} fullWidth>
                             Modificar
                         </Button>
-                        
+
                     </div>
                 </PopUpCard>
             </div>

@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import { useWorkExperiences } from "../../hooks/useWorkExperiences";
+import { useWorkExperiences } from "../../../hooks/useWorkExperiences";
 import WorkExperienceItem from "./WorkExperienceItem";
-import Button from "../../components/Button";
-import Switch from "../../components/Switch/Switch";
-import { visibilityService } from "../../services/visibilityServices";
+import Button from "../../../components/Button";
+import Switch from "../../../components/Switch/Switch";
+import { visibilityService } from "../../../services/visibilityServices";
 
 const PAGE_SIZE = 10;
 
@@ -216,12 +216,12 @@ const WorkExperienceListConfig = () => {
                                         <div key={experience.id} className={styles.cardConfigWrapper}>
                                             <WorkExperienceItem
                                                 experience={experience}
-                                                onView={() => {}}
+                                                onView={() => { }}
                                             />
                                             <div className={styles.switchRow}>
-                                                <Switch 
+                                                <Switch
                                                     key={`${experience.id}-${currentVisibility}`}
-                                                    id={experience.id} 
+                                                    id={experience.id}
                                                     initialState={currentVisibility}
                                                     onChange={handleLocalVisibilityChange}
                                                 />

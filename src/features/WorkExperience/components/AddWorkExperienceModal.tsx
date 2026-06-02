@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import Button from '../../components/Button';
-import TextField from '../../components/TextField';
-import PopUpCard from '../../components/PopUpCard';
-import { useWorkExperienceForm } from '../../hooks/useWorkExperienceForm';
+import Button from '../../../components/Button';
+import TextField from '../../../components/TextField';
+import PopUpCard from '../../../components/PopUpCard';
+import { useWorkExperienceForm } from '../../../hooks/useWorkExperienceForm';
 
 interface AddWorkExperienceModalProps {
     isOpen: boolean;
@@ -50,7 +50,7 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
     const handleSubmit = async () => {
         setApiError(null);
         if (!validateForm()) return;
-        
+
         setIsSubmitting(true);
         try {
             await onAdd({
@@ -80,11 +80,11 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
                 <PopUpCard title="Registrar Experiencia Laboral">
                     {apiError && (
-                    <div className={styles.apiError}>
-                        {apiError}
+                        <div className={styles.apiError}>
+                            {apiError}
                         </div>
                     )}
-                    
+
                     <div className={styles.form}>
                         {/* Fila: Puesto y Empresa */}
                         <div className={styles.row}>
@@ -138,7 +138,7 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
                                 disabled={formData.isCurrent}
                             />
                         </div>
-                        
+
                         {/* Checkbox */}
                         <div className={styles.checkboxContainer}>
                             <input
@@ -155,7 +155,7 @@ const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceMod
                             </label>
                         </div>
                     </div>
-                    
+
                     <div className={styles.buttonContainer}>
                         <Button variant="secondary" onClick={handleClose} fullWidth>
                             Cancelar

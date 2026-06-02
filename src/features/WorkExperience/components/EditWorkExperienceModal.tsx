@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import Button from '../../components/Button';
-import TextField from '../../components/TextField';
-import PopUpCard from '../../components/PopUpCard';
-import type { WorkExperience, UpdateWorkExperienceDto } from '../../hooks/useWorkExperiences';
+import Button from '../../../components/Button';
+import TextField from '../../../components/TextField';
+import PopUpCard from '../../../components/PopUpCard';
+import type { WorkExperience, UpdateWorkExperienceDto } from '../../../hooks/useWorkExperiences';
 
 interface EditWorkExperienceModalProps {
     isOpen: boolean;
@@ -79,7 +79,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
     const [isCurrent, setIsCurrent] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [apiError, setApiError] = useState<string | null>(null);
-    
+
     // Errores en tiempo real
     const [positionError, setPositionError] = useState('');
     const [descriptionError, setDescriptionError] = useState('');
@@ -94,7 +94,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
             setStartDate(formatDateForInput(experience.start_date));
             setEndDate(formatDateForInput(experience.end_date));
             setIsCurrent(!experience.end_date);
-            
+
             // Limpiar errores al cargar
             setPositionError('');
             setDescriptionError('');
@@ -166,7 +166,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
     const handleSubmit = async () => {
         setApiError(null);
         if (!experience || !isFormValid()) return;
-        
+
         setIsSubmitting(true);
         try {
             await onEdit(experience.id, {
@@ -195,7 +195,7 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
                 <PopUpCard title={`Modificar: ${experience?.position}`}>
                     {apiError && <div className={styles.apiError}>{apiError}</div>}
-                    
+
                     <div className={styles.form}>
                         {/* Fila: Puesto y Empresa */}
                         <div className={styles.row}>
@@ -205,18 +205,18 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                                 onChange={(e) => handlePositionChange(e.target.value)}
                                 placeholder="Ej: Full Stack Developer"
                                 error={positionError}
-                                disabled = {true}
+                                disabled={true}
                             />
-                            
+
                             <TextField
                                 label="Empresa:*"
                                 value={company}
-                                onChange={() => {}}
+                                onChange={() => { }}
                                 disabled={true}
                                 placeholder="Ej: WIMETRIX"
                             />
                         </div>
-                  
+
                         {/* Descripción - ancho completo */}
                         <TextField
                             label="Descripción:*"
@@ -261,15 +261,15 @@ const EditWorkExperienceModal = ({ isOpen, onClose, onEdit, experience }: EditWo
                             </label>
                         </div>
                     </div>
-                    
+
                     <div className={styles.buttonContainer}>
                         <Button variant="secondary" onClick={handleClose} fullWidth>
                             Cancelar
                         </Button>
-                        <Button 
-                            variant="primary" 
-                            onClick={handleSubmit} 
-                            disabled={isSubmitting || !hasChanges() || !isFormValid()} 
+                        <Button
+                            variant="primary"
+                            onClick={handleSubmit}
+                            disabled={isSubmitting || !hasChanges() || !isFormValid()}
                             fullWidth
                         >
                             {isSubmitting ? 'Guardando...' : 'Modificar'}

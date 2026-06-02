@@ -1,4 +1,4 @@
-import type { WorkExperience } from '../../hooks/useWorkExperiences';
+import type { WorkExperience } from '../../../hooks/useWorkExperiences';
 
 interface WorkExperienceItemProps {
     experience: WorkExperience;
@@ -19,14 +19,14 @@ const styles = {
 
 const formatDate = (dateStr: string | null): string => {
     if (!dateStr) return 'Presente';
-    
+
     try {
         const year = dateStr.substring(0, 4);
         const monthStr = dateStr.substring(5, 7);
         const month = parseInt(monthStr, 10);
-        
+
         if (isNaN(month) || month < 1 || month > 12) return dateStr;
-        
+
         const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
         return `${monthNames[month - 1]} ${year}`;
     } catch {
@@ -48,7 +48,7 @@ const WorkExperienceItem = ({ experience, onView }: WorkExperienceItemProps) => 
                 <div className={styles.header}>
                     <h3 className={styles.title}>{experience.position}</h3>
                     <div className={styles.companyRow}>
-                        <span className={styles.company}>{experience.company_name}</span> 
+                        <span className={styles.company}>{experience.company_name}</span>
                         <span className={styles.separator}>|</span>
                         <span className={styles.date}>{startDateFormatted} — {endDateFormatted}</span>
                     </div>
