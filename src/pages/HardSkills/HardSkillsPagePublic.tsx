@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { useSkills } from "../../hooks/useSkills";
+import { useSkills } from "../../features/HardSkills/hooks/useSkills";
 import useSearch from "../../hooks/useSearch";
 import usePagination from "../../hooks/usePagination";
 import SkillSearchBar from "../../components/SkillSearchBar";
 import SkillPagination from "../../components/SkillPagination";
-import LevelBars from "../../components/LevelBars/Levelbars ";
-import type { Skill } from "../../features/skills/types/skill.types";
+import LevelBars from "../../features/HardSkills/components/LevelBars/Levelbars ";
+import type { Skill } from "../../features/HardSkills/types/skill.types";
 import { useParams } from "react-router-dom";
 
 const PAGE_SIZE = 12;

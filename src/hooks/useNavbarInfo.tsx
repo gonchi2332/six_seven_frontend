@@ -1,6 +1,6 @@
 // hooks/usePersonalInfo.ts
 import { useEffect, useState, useCallback } from "react";
-import { getPersonalInfo, fetchPublicPersonalInfo, type PersonalInfoResponse } from "../services/personalInfoService";
+import { getPersonalInfo, fetchPublicPersonalInfo, type PersonalInfoResponse } from "../features/PersonalInfo/services/personalInfoService";
 import { useAuthContext } from "../context/AuthContext";
 
 export const usePersonalInfo = (refreshTrigger?: number) => {

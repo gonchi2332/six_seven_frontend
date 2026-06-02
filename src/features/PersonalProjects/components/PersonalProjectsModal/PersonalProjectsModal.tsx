@@ -50,90 +50,16 @@ const PersonalProjectsModal = ({
         formData,
         imageUrl,
         errors,
-        hasChanges,
         handleChange,
         handleLinkChange,
         addLink,
         removeLink,
         handleImageChange,
-        validateForm
-    } = useProjectForm(initialData, isEditing);
+        handleSubmit,
+        getLinkError,
+        isSubmitDisabled,
+    } = useProjectForm(onSubmit, isSubmitting, projectId, initialData, isEditing);
 
-    const handleSubmit = async () => {
-        if (!validateForm()) return;
-
-        if (isEditing && projectId) {
-            const updatePayload: UpdateProjectPayload = {
-                description: formData.description,
-                topic: formData.topic,
-                role: formData.role,
-                status: formData.status,
-                links: formData.links,
-                image: formData.image,
-            };
-            await onSubmit(updatePayload, projectId);
-        } else {
-            const createPayload: CreateProjectPayload = {
-                name: formData.name,
-                description: formData.description,
-                topic: formData.topic,
-                role: formData.role,
-                status: formData.status,
-                links: formData.links,
-                image: formData.image,
-            };
-            await onSubmit(createPayload);
-        }
-    };
-
-    // Función para verificar si todos los campos requeridos están llenos
-    const isFormComplete = () => {
-        if (isEditing) return true; // Para edición, solo verificamos cambios después
-
-        // Para crear, verificamos que todos los campos requeridos tengan valor
-        const hasName = formData.name && formData.name.trim() !== "";
-        const hasDescription = formData.description && formData.description.trim() !== "";
-        const hasTopic = formData.topic && formData.topic.trim() !== "";
-        const hasRole = formData.role && formData.role.trim() !== "";
-        const hasImage = formData.image !== null && formData.image !== undefined && formData.image !== "";
-
-        // Verificar que todos los enlaces tengan nombre y URL
-        const areLinksValid = formData.links.every(link =>
-            link.label && link.label.trim() !== "" &&
-            link.url && link.url.trim() !== ""
-        );
-
-        return hasName && hasDescription && hasTopic && hasRole && hasImage && areLinksValid;
-    };
-
-    // Verificar si hay errores importantes (solo los campos requeridos)
-    const hasCriticalErrors = () => {
-        // Solo verificamos errores de campos que son obligatorios
-        const criticalFields = ['name', 'description', 'topic', 'role', 'image'];
-
-        // También verificamos errores de enlaces
-        const hasLinkErrors = formData.links.some((_, index) =>
-            errors[`link${index}_label`] || errors[`link${index}_url`]
-        );
-
-        return criticalFields.some(field => errors[field]) || hasLinkErrors;
-    };
-
-    // Determinar si el botón debe estar deshabilitado
-    const isSubmitDisabled = () => {
-        if (isSubmitting) return true;
-        if (isEditing && !hasChanges) return true;
-        // En modo creación, deshabilitar si el formulario no está completo o hay errores críticos
-        if (!isEditing && (!isFormComplete() || hasCriticalErrors())) return true;
-        return false;
-    };
-
-    // Función helper para obtener el error de un enlace
-    const getLinkError = (index: number, field: 'label' | 'url') => {
-        const errorKey = `link${index}_${field}`;
-        const error = errors[errorKey];
-        return typeof error === 'string' ? error : undefined;
-    };
 
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 overflow-y-auto">

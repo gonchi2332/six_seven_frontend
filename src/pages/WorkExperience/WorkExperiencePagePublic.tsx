@@ -1,5 +1,5 @@
 
-import WorkExperienceListPublic from '../../features/WorkExperience/WorkExperienceListPublic';
+import WorkExperienceListPublic from '../../features/WorkExperience/components/WorkExperienceListPublic';
 
 const styles = {
     container: "w-full",

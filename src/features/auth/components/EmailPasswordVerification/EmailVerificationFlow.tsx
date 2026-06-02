@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEmailVerificationFlow } from "../../hooks/useEmailVerificationFlow";
 import EmailInputPopup from "./EmailInputPopup";
 import VerificationPopup from "./CodeEmailPopup";
 import ResetPasswordPopup from "./ChangePassword";
@@ -15,44 +14,18 @@ type Props = {
     onClose?: () => void;
 };
 
-const VerificationFlow = ({
-    initialMode = "verify",
-    initialStep = "email",
-    initialUsername = "",
-    initialEmail = "",
-    onClose
-}: Props) => {
-    const [step, setStep] = useState<Step>(initialStep);
-    const [mode] = useState<Mode>(initialMode);
-    const [username, setUsername] = useState(initialUsername);
-    const [verifiedCode, setVerifiedCode] = useState("");
-    const [email, setEmail] = useState(initialEmail || "");
-    const navigate = useNavigate();
+const VerificationFlow = (props: Props) => {
 
-    const handleClose = () => {
-        if (onClose) {
-            onClose();
-        } else {
-            navigate("/login");
-        }
-    };
-
-    const handleEmailSubmit = (submittedUsername: string, recoveryEmail: string) => {
-        setUsername(submittedUsername);
-        setEmail(recoveryEmail);
-        setStep("verification");
-    };
-
-    const handleCodeSuccess = (codeString?: string) => {
-        if (codeString) {
-            setVerifiedCode(codeString);
-        }
-        if (mode === "recovery") {
-            setStep("reset");
-        } else if (mode === "verify") {
-            handleClose();
-        }
-    };
+    const {
+        step,
+        mode,
+        username,
+        email,
+        verifiedCode,
+        handleEmailSubmit,
+        handleCodeSuccess,
+        handleClose,
+    } = useEmailVerificationFlow(props);
 
     return (
         <>

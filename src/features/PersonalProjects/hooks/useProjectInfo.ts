@@ -1,7 +1,6 @@
 // hooks/useProjectInfo.ts
 import { useState, useEffect } from "react";
-import type { CreateProjectPayload } from "../services/personalProjectsService";
-
+import type { CreateProjectPayload, UpdateProjectPayload } from "../services/personalProjectsService";
 type FormErrors = Partial<Record<keyof CreateProjectPayload | string, string>>;
 
 const INITIAL_FORM: CreateProjectPayload = {
@@ -14,7 +13,13 @@ const INITIAL_FORM: CreateProjectPayload = {
     image: null,
 };
 
-export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEditing: boolean = false) => {
+export const useProjectForm = (
+    onSubmit: (data: CreateProjectPayload | UpdateProjectPayload, id?: string) => Promise<void>,
+    isSubmitting: boolean,
+    projectId?: string,
+    initialData?: Partial<CreateProjectPayload>,  // Opcional
+    isEditing: boolean = false,  // Opcional con valor por defecto
+) => {
     const [formData, setFormData] = useState<CreateProjectPayload>({
         ...INITIAL_FORM,
         ...initialData,
@@ -261,6 +266,80 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
         setErrors({});
     };
 
+
+    // Función para verificar si todos los campos requeridos están llenos
+    const isFormComplete = () => {
+        if (isEditing) return true; // Para edición, solo verificamos cambios después
+
+        // Para crear, verificamos que todos los campos requeridos tengan valor
+        const hasName = formData.name && formData.name.trim() !== "";
+        const hasDescription = formData.description && formData.description.trim() !== "";
+        const hasTopic = formData.topic && formData.topic.trim() !== "";
+        const hasRole = formData.role && formData.role.trim() !== "";
+        const hasImage = formData.image !== null && formData.image !== undefined && formData.image !== "";
+
+        // Verificar que todos los enlaces tengan nombre y URL
+        const areLinksValid = formData.links.every(link =>
+            link.label && link.label.trim() !== "" &&
+            link.url && link.url.trim() !== ""
+        );
+
+        return hasName && hasDescription && hasTopic && hasRole && hasImage && areLinksValid;
+    };
+
+    const hasCriticalErrors = () => {
+        const criticalFields = ['name', 'description', 'topic', 'role', 'image'];
+
+        const hasLinkErrors = formData.links.some((_, index) =>
+            errors[`link${index}_label`] || errors[`link${index}_url`]
+        );
+
+        return criticalFields.some(field => errors[field]) || hasLinkErrors;
+    };
+
+    const isSubmitDisabled = () => {
+        if (isSubmitting) return true;
+        if (isEditing && !hasChanges) return true;
+        // En modo creación, deshabilitar si el formulario no está completo o hay errores críticos
+        if (!isEditing && (!isFormComplete() || hasCriticalErrors())) return true;
+        return false;
+    };
+
+    const getLinkError = (index: number, field: 'label' | 'url') => {
+        const errorKey = `link${index}_${field}`;
+        const error = errors[errorKey];
+        return typeof error === 'string' ? error : undefined;
+    };
+
+
+    const handleSubmit = async () => {
+        if (!validateForm()) return;
+
+        if (isEditing && projectId) {
+            const updatePayload: UpdateProjectPayload = {
+                description: formData.description,
+                topic: formData.topic,
+                role: formData.role,
+                status: formData.status,
+                links: formData.links,
+                image: formData.image,
+            };
+            await onSubmit(updatePayload, projectId);
+        } else {
+            const createPayload: CreateProjectPayload = {
+                name: formData.name,
+                description: formData.description,
+                topic: formData.topic,
+                role: formData.role,
+                status: formData.status,
+                links: formData.links,
+                image: formData.image,
+            };
+            await onSubmit(createPayload);
+        }
+    };
+
+
     return {
         formData,
         imageUrl,
@@ -272,7 +351,12 @@ export const useProjectForm = (initialData?: Partial<CreateProjectPayload>, isEd
         removeLink,
         handleImageChange,
         validateForm,
+        handleSubmit,
         setInitialData,
+        isFormComplete,
+        hasCriticalErrors,
+        isSubmitDisabled,
+        getLinkError,
         reset,
     };
 };

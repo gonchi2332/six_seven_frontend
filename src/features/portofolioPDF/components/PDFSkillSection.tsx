@@ -1,4 +1,4 @@
-import { useSkills } from "../../../hooks/useSkills";
+/*import { useSkills } from "../../../hooks/useSkills";
 import useSearch from "../../../hooks/useSearch";
 import usePagination from "../../../hooks/usePagination";
 import SkillSearchBar from "../../../components/SkillSearchBar";
@@ -45,7 +45,7 @@ const HardSkillsPage = () => {
                                 onChange={handleChange}
                                 onSearch={onSearch}
                                 onKeyDown={handleKeyDown}
-                                onAdd={() => {}}
+                                onAdd={() => { }}
                                 placeholder="Buscar habilidad..."
                                 addLabel="Registrar"
                                 isPublic={true}
@@ -89,4 +89,4 @@ const HardSkillsPage = () => {
     );
 };
 
-export default HardSkillsPage;
+export default HardSkillsPage;*/

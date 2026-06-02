@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import { useCertificates } from "../../hooks/useCertificates"; 
-import CertificateCard from "../../features/Certificates/CertificateCard";
+import { useCertificates } from "../../features/Certificates/hooks/useCertificates";
+import CertificateCard from "../../features/Certificates/components/CertificateCard";
 import Button from "../../components/Button";
 import Switch from "../../components/Switch/Switch";
 import { visibilityService } from "../../services/visibilityServices";
@@ -36,11 +36,11 @@ const styles = {
 
 const CertificatesConfigPage = () => {
     const { certificates, isLoading, error, successMessage } = useCertificates();
-    
+
     const [searchInput, setSearchInput] = useState("");
     const [activeSearch, setActiveSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    
+
     const [localError, setLocalError] = useState<string | null>(null);
     const [localSuccess, setLocalSuccess] = useState<string | null>(null);
     const [isSaving, setIsSaving] = useState(false);
@@ -107,7 +107,7 @@ const CertificatesConfigPage = () => {
         try {
             setIsSaving(true);
             setLocalError(null);
-            
+
             const res = await visibilityService.updateCertificate(visibilityMap);
             setInitialVisibilityMap(visibilityMap);
             setLocalSuccess(res.message || "Cambios guardados exitosamente.");
@@ -218,17 +218,17 @@ const CertificatesConfigPage = () => {
                             <div className={styles.listWrapper}>
                                 {paginatedCertificates.map((cert) => {
                                     const currentVisibility = visibilityMap[cert.id] ?? cert.visible ?? false;
-                                    
+
                                     return (
                                         <div key={cert.id} className={styles.cardConfigWrapper}>
                                             <CertificateCard
                                                 certificate={{ ...cert, visible: currentVisibility }}
-                                                onClick={() => {}} 
+                                                onClick={() => { }}
                                             />
                                             <div className={styles.switchRow}>
-                                                <Switch 
+                                                <Switch
                                                     key={`${cert.id}-${currentVisibility}`}
-                                                    id={cert.id} 
+                                                    id={cert.id}
                                                     initialState={currentVisibility}
                                                     onChange={handleLocalVisibilityChange}
                                                 />

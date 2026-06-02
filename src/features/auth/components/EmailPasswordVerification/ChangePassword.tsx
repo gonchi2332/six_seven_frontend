@@ -1,6 +1,5 @@
-import { useState } from "react";
 import Button from "../../../../components/Button/Button";
-import { useResetPassword } from "../../hooks/useResetPassword";
+import { useResetPasswordForm } from "../../hooks/useResetPasswordForm";
 
 const VERIFICATION_CONTAINER = "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6";
 const VERIFICATION_CARD = "bg-primary rounded-2xl w-full max-w-sm shadow-2xl py-8 min-h-[540px] flex flex-col items-center px-10";
@@ -35,27 +34,20 @@ interface Props {
 }
 
 const ResetPasswordPopup = ({ username, code, email, onClose }: Props) => {
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const { isLoading, error, handleResetPassword } = useResetPassword();
-
-    const isPasswordValid = password.length >= 8;
-    const isMatch = password === confirmPassword;
-
-    const handleSave = async () => {
-        if (isPasswordValid && isMatch) {
-            if (username && code) {
-                const success = await handleResetPassword(username, password, code);
-                if (success) {
-                    onClose?.();
-                }
-            } else {
-                onClose?.();
-            }
-        }
-    };
+    const {
+        password,
+        confirmPassword,
+        showPassword,
+        showConfirmPassword,
+        validation,
+        isLoading,
+        error,
+        updatePassword,
+        updateConfirmPassword,
+        toggleShowPassword,
+        toggleShowConfirmPassword,
+        handleSave,
+    } = useResetPasswordForm({ username, code, onSuccess: onClose });
 
     return (
         <div className={VERIFICATION_CONTAINER}>
@@ -93,16 +85,17 @@ const ResetPasswordPopup = ({ username, code, email, onClose }: Props) => {
                             type={showPassword ? "text" : "password"}
                             className={INPUT}
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => updatePassword(e.target.value)}
+                            placeholder="Mínimo 8 caracteres"
                         />
                         <i
                             className={`${showPassword ? EYE_CLOSE_ICON : EYE_OPEN_ICON} ${EYE_ICON}`}
-                            onClick={() => setShowPassword(!showPassword)}
+                            onClick={toggleShowPassword}
                         ></i>
                     </div>
-                    {!isPasswordValid && password.length > 0 && (
+                    {validation.passwordError && (
                         <p className={ERROR_TEXT}>
-                            La contraseña debe tener mínimo 8 caracteres
+                            {validation.passwordError}
                         </p>
                     )}
                 </div>
@@ -116,16 +109,17 @@ const ResetPasswordPopup = ({ username, code, email, onClose }: Props) => {
                             type={showConfirmPassword ? "text" : "password"}
                             className={INPUT}
                             value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            onChange={(e) => updateConfirmPassword(e.target.value)}
+                            placeholder="Repite la contraseña"
                         />
                         <i
                             className={`${showConfirmPassword ? EYE_CLOSE_ICON : EYE_OPEN_ICON} ${EYE_ICON}`}
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            onClick={toggleShowConfirmPassword}
                         ></i>
                     </div>
-                    {confirmPassword.length > 0 && !isMatch && (
+                    {validation.confirmError && (
                         <p className={ERROR_TEXT}>
-                            Las contraseñas deben ser iguales
+                            {validation.confirmError}
                         </p>
                     )}
                 </div>
@@ -135,7 +129,7 @@ const ResetPasswordPopup = ({ username, code, email, onClose }: Props) => {
                         variant="secondary"
                         fullWidth
                         onClick={handleSave}
-                        disabled={!isPasswordValid || !isMatch || password.length === 0 || isLoading}
+                        disabled={!validation.isValid || isLoading}
                     >
                         {isLoading ? "Guardando..." : "Guardar"}
                     </Button>
@@ -143,6 +137,7 @@ const ResetPasswordPopup = ({ username, code, email, onClose }: Props) => {
                         variant="primary"
                         fullWidth
                         onClick={onClose}
+                        disabled={isLoading}
                     >
                         Cancelar
                     </Button>

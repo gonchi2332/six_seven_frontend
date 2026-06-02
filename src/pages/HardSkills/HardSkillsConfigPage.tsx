@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { useSkills } from "../../hooks/useSkills";
+import { useSkills } from "../../features/HardSkills/hooks/useSkills";
 import useSearch from "../../hooks/useSearch";
 import usePagination from "../../hooks/usePagination";
 import SkillSearchBar from "../../components/SkillSearchBar";
 import SkillPagination from "../../components/SkillPagination";
-import LevelBars from "../../components/LevelBars/Levelbars ";
+import LevelBars from "../../features/HardSkills/components/LevelBars/Levelbars ";
 import Switch from "../../components/Switch/Switch";
 import Button from "../../components/Button";
 import { visibilityService } from "../../services/visibilityServices";
-import type { Skill } from "../../features/skills/types/skill.types";
+import type { Skill } from "../../features/HardSkills/types/skill.types";
 
 const PAGE_SIZE = 12;
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSoftSkills } from "../../hooks/userSoftSkills";
+import { useSoftSkills } from "../../features/SoftSkills/hooks/userSoftSkills";
 import useSearch from "../../hooks/useSearch";
 import usePagination from "../../hooks/usePagination";
 import SkillSearchBar from "../../components/SkillSearchBar";
