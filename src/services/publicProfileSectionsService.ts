@@ -13,12 +13,25 @@ const API_URL = import.meta.env.VITE_API_URL;
  * Obtiene el estado de visibilidad de las secciones para el portafolio público de un usuario
  */
 export const fetchPublicSectionsVisibility = async (username: string): Promise<PublicSectionsVisibility> => {
-    const response = await fetch(`${API_URL}/api/v1/profile/users/${username}/sections-visibility`);
+    const token = localStorage.getItem("token");
     
-    const data = await response.json();
+    const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+    };
     
-    if (!response.ok || !data.success) {
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    const response = await fetch(`${API_URL}/api/v1/profile/users/${username}/sections-visibility`, {
+        headers
+    });
+    
+    if (!response.ok) {
+        const data = await response.json();
         throw new Error(data.message || "Error al obtener la visibilidad de las secciones");
     }
-    return data.sectionsVisibility; 
+    
+    // Si la respuesta es exitosa, simplemente devuelve los datos
+    return await response.json();
 };

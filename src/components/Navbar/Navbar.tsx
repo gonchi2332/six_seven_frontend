@@ -116,12 +116,12 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
         localStorage.clear();
         navigate("/login");
     };
-
+    
     const visibleTabs = allTabs.filter(tab => {
         if (!isPublic) return true;
         if (tab.id === "profile") return true;
-        if (!publicVisibility) return true;
-
+        if (!publicVisibility) return false;
+        
         return !!publicVisibility[tab.id as keyof typeof publicVisibility];
     });
 
