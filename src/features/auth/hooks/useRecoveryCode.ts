@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { requestRecoveryCode, verifyRecoveryCode } from "../../../services/recoveryCodeService";
+import { requestRecoveryCode, verifyRecoveryCode } from "../services/recoveryCodeService";
 import { useNavigate } from "react-router-dom";
 
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Button from '../../../components/Button';
 import TextField from '../../../components/TextField';
 import PopUpCard from '../../../components/PopUpCard';
-import type { WorkExperience, UpdateWorkExperienceDto } from '../../../hooks/useWorkExperiences';
+import type { WorkExperience, UpdateWorkExperienceDto } from '../hooks/useWorkExperiences';
 
 interface EditWorkExperienceModalProps {
     isOpen: boolean;
