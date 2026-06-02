@@ -2,7 +2,7 @@ import { useState } from 'react';
 import LinkedInInput from './LinkedInInput';
 import LinkedInBadge from './LinkedInBadge';
 import Button from '../../../components/Button';
-import { useLinkedin } from '../../../hooks/useLinkedIn';
+import { useLinkedin } from '../hooks/useLinkedIn';
 
 const styles = {
     wrapper: "flex-1 flex flex-col overflow-hidden",

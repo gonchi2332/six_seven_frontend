@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import { useEducation } from "../../hooks/useEducation";
+import { useEducation } from "../../features/Education/hooks/useEducation";
 import EducationCard from "../../features/Education/components/EducationCard";
-import type { EducationEntry } from "../../services/educationService";
+import type { EducationEntry } from "../../features/Education/services/educationService";
 import Button from "../../components/Button";
 import { useParams } from "react-router-dom";
 import ViewEducationPopup from "../../features/Education/components/ViewEducationPopup";

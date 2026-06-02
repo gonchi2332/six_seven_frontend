@@ -1,5 +1,5 @@
 // import { PDFDownloadLink, Document, Page, View, Text } from '@react-pdf/renderer';
-import { useSkills } from '../../hooks/useSkills';
+/*import { useSkills } from '../../hooks/useSkills';
 
 // Mock component since @react-pdf/renderer is not installed
 export const DownloadPortfolioPDF = () => {
@@ -23,4 +23,4 @@ export const DownloadPortfolioPDF = () => {
             Descargar CV
         </button>
     );
-};
+};*/

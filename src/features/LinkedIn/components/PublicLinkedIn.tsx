@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useLinkedin } from "../../../hooks/useLinkedIn";
+import { useLinkedin } from "../hooks/useLinkedIn";
 import LinkedInBadge from "./LinkedInBadge";
 
 const styles = {

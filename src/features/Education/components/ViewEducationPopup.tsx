@@ -1,7 +1,7 @@
 import { GraduationCap, Award, Landmark, ToggleLeft, Calendar } from 'lucide-react';
 import Button from "../../../components/Button";
 import PopUpCard from "../../../components/PopUpCard";
-import type { EducationEntry } from "../../../services/educationService";
+import type { EducationEntry } from "../services/educationService";
 
 interface Props {
     isOpen: boolean;

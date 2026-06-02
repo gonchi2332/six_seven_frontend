@@ -1,4 +1,4 @@
-import type { EducationEntry } from "../../../services/educationService";
+import type { EducationEntry } from "../services/educationService";
 
 interface Props {
     entry: EducationEntry;

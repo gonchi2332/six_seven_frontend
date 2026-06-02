@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import CertificateCard from "../../features/Certificates/components/CertificateCard";
 import ViewCertificatePopup from "../../features/Certificates/components/ViewCertificatePopup";
-import { useCertificates } from "../../hooks/useCertificates";
+import { useCertificates } from "../../features/Certificates/hooks/useCertificates";
 import { useParams } from "react-router-dom";
 import Button from "../../components/Button";
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import { useEducation } from "../../hooks/useEducation";
+import { useEducation } from "../../features/Education/hooks/useEducation";
 import EducationCard from "../../features/Education/components/EducationCard";
 import { visibilityService } from "../../services/visibilityServices";
 import Button from "../../components/Button";

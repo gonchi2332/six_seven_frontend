@@ -2,7 +2,7 @@ import { useState } from 'react';
 import GithubInput from './GithubInput';
 import GithubBadge from './GithubBadge';
 import Button from '../../../components/Button';
-import { useGitHub } from '../../../hooks/useGithub';
+import { useGitHub } from '../hooks/useGithub';
 
 const styles = {
     wrapper: "flex-1 flex flex-col overflow-hidden",

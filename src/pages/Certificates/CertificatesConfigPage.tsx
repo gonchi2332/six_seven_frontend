@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import { useCertificates } from "../../hooks/useCertificates";
+import { useCertificates } from "../../features/Certificates/hooks/useCertificates";
 import CertificateCard from "../../features/Certificates/components/CertificateCard";
 import Button from "../../components/Button";
 import Switch from "../../components/Switch/Switch";

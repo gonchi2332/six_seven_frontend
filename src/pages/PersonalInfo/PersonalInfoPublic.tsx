@@ -1,5 +1,5 @@
 import PublicLinkedIn from "../../features/LinkedIn/components/PublicLinkedIn";
-import PublicPersonalInfo from "../../features/PersonalInfo/PublicPersonalInfo";
+import PublicPersonalInfo from "../../features/PersonalInfo/components/PublicPersonalInfo";
 import GitHub from "../../features/Github/components/Github";
 
 const STYLES = {

@@ -4,7 +4,7 @@ import PopUpCard from "../../../components/PopUpCard";
 import TextField from "../../../components/TextField";
 import YearSelect from "./YearSelect";
 import AcademicLevelSelect from "./AcademicLevelSelect";
-import type { EducationEntry, AcademicDegree } from "../../../services/educationService";
+import type { EducationEntry, AcademicDegree } from "../services/educationService";
 
 interface Props {
     mode: "add" | "edit";

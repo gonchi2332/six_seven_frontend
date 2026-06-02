@@ -4,8 +4,8 @@ import TextField from "../../../components/TextField";
 import TextAreaField from "../../../components/TextAreaField";
 import DateField from "../components/DateField";
 import ImageUpload from "../../UploadFile/components/uploadFile";
-import useCertificateForm from "../../../hooks/useCertificateForm";
-import type { Certificate } from "../../../services/certificateService";
+import useCertificateForm from "../hooks/useCertificateForm";
+import type { Certificate } from "../services/certificateService";
 
 interface Props {
     mode: "add" | "edit";

@@ -5,7 +5,7 @@ import CertificateActionPopup from "../../features/Certificates/components/Certi
 import ViewCertificatePopup from "../../features/Certificates/components/ViewCertificatePopup";
 import CertificateForm from "../../features/Certificates/components/CertificateForm";
 import DeleteCertificatePopup from "../../features/Certificates/components/DeleteCertificatePopup";
-import useCertificatesPage from "../../hooks/useCertificatesPage";
+import useCertificatesPage from "../../features/Certificates/hooks/useCertificatesPage";
 
 const styles = {
     wrapper: "flex-1 flex flex-col overflow-hidden",

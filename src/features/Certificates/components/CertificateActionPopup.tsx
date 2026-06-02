@@ -1,6 +1,6 @@
 import Button from "../../../components/Button";
 import PopUpCard from "../../../components/PopUpCard";
-import type { Certificate } from "../../../services/certificateService";
+import type { Certificate } from "../services/certificateService";
 
 interface Props {
     certificate: Certificate;

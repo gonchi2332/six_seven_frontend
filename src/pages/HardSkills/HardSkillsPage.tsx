@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { useSkills } from "../../hooks/useSkills";
+import { useSkills } from "../../features/HardSkills/hooks/useSkills";
 import useSearch from "../../hooks/useSearch";
 import usePagination from "../../hooks/usePagination";
 import SkillSearchBar from "../../components/SkillSearchBar";
 import SkillPagination from "../../components/SkillPagination";
 import ConfirmDeletePopup from "../../components/ConfirmDeletePopup/ConfirmDeletePopup ";
-import LevelBars from "../../components/LevelBars/Levelbars ";
-import AddSkillPopup from "../../features/skills/components/AddSkillPopup";
-import EditSkillPopup from "../../features/skills/components/EditSkillPopup";
-import SkillActionPopup from "../../features/skills/components/SkillActionPopup";
-import ViewHardSkillPopup from "../../features/skills/components/ViewHardSkillPopup";
-import type { Skill } from "../../features/skills/types/skill.types";
+import LevelBars from "../../features/HardSkills/components/LevelBars/Levelbars ";
+import AddSkillPopup from "../../features/HardSkills/components/AddSkillPopup";
+import EditSkillPopup from "../../features/HardSkills/components/EditSkillPopup";
+import SkillActionPopup from "../../features/HardSkills/components/SkillActionPopup";
+import ViewHardSkillPopup from "../../features/HardSkills/components/ViewHardSkillPopup";
+import type { Skill } from "../../features/HardSkills/types/skill.types";
 
 const PAGE_SIZE = 12;
 

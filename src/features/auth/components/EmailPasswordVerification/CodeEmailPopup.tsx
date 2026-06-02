@@ -1,5 +1,5 @@
 import Button from "../../../../components/Button/Button";
-import VerificationCodeInput from "../../../../components/VerificationCodeInput/VerificationCodeInput";
+import VerificationCodeInput from "../VerificationCodeInput/VerificationCodeInput";
 import { useVerification } from "../../hooks/useVerification";
 import { useAuthContext } from "../../../../context/AuthContext";
 

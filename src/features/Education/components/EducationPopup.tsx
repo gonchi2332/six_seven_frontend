@@ -1,6 +1,6 @@
 import Button from "../../../components/Button/Button";
 import PopUpCard from "../../../components/PopUpCard/PopUpCard";
-import type { EducationEntry } from "../../../services/educationService";
+import type { EducationEntry } from "../services/educationService";
 
 interface Props {
     isOpen: boolean;
