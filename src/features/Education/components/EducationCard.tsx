@@ -1,4 +1,4 @@
-import type { EducationEntry } from "../../services/educationService";
+import type { EducationEntry } from "../../../services/educationService";
 
 interface Props {
     entry: EducationEntry;
@@ -15,11 +15,11 @@ const styles = {
     date: "text-white/40 font-nunito text-xs",
     institution: "text-surface font-nunito text-[13px] sm:text-[15px] mt-2 sm:mt-3 italic line-clamp-1",
     separator: "text-white/50 font-nunito text-xs",
-    academicLevel : "text-surface font-inter text-sm sm:text-base leading-tight line-clamp-1"
+    academicLevel: "text-surface font-inter text-sm sm:text-base leading-tight line-clamp-1"
 };
 
 const EducationCard = ({ entry, onView }: Props) => {
-    const dateDisplay = entry.educationState === "cursando" 
+    const dateDisplay = entry.educationState === "cursando"
         ? `${entry.startDate} - Presente`
         : entry.startDate;
 

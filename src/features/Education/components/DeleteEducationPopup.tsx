@@ -1,5 +1,5 @@
-import Button from "../../components/Button/Button";
-import PopUpCard from "../../components/PopUpCard/PopUpCard";
+import Button from "../../../components/Button/Button";
+import PopUpCard from "../../../components/PopUpCard/PopUpCard";
 
 interface Props {
     degree: string;

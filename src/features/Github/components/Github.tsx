@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import GithubInput from './GithubInput';
 import GithubBadge from './GithubBadge';
-import Button from '../../components/Button';
-import { useGitHub } from '../../hooks/useGithub';
+import Button from '../../../components/Button';
+import { useGitHub } from '../../../hooks/useGithub';
 
 const styles = {
     wrapper: "flex-1 flex flex-col overflow-hidden",
@@ -24,7 +24,7 @@ interface Props {
 
 function Github({ isPublic }: Props) {
     const [showModal, setShowModal] = useState(false);
-    
+
     const token = localStorage.getItem("token") || "";
     const appUsername = localStorage.getItem("username") || "";
 
@@ -48,12 +48,12 @@ function Github({ isPublic }: Props) {
             <div className={styles.pageContent}>
                 <div className={styles.outerCard}>
                     <div className={styles.greenContainer}>
-                        
+
                         <div className={styles.header}>
                             <h1 className={styles.title}>
                                 Perfil de GitHub
                             </h1>
-                            
+
                             {githubUser && !isPublic && (
                                 <Button variant="secondary" onClick={() => setShowModal(true)}>
                                     Cambiar Perfil
@@ -97,9 +97,9 @@ function Github({ isPublic }: Props) {
             {showModal && (
                 <div className={styles.overlay} onClick={() => setShowModal(false)}>
                     <div className="w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
-                        <GithubInput 
-                            onSuccess={handleGitHubSuccess} 
-                            onClose={() => setShowModal(false)} 
+                        <GithubInput
+                            onSuccess={handleGitHubSuccess}
+                            onClose={() => setShowModal(false)}
                             initialValue={githubUser || ''}
                         />
                     </div>

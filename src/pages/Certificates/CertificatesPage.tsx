@@ -1,10 +1,10 @@
 import SkillSearchBar from "../../components/SkillSearchBar";
 import SkillPagination from "../../components/SkillPagination";
-import CertificateCard from "../../features/Certificates/CertificateCard";
-import CertificateActionPopup from "../../features/Certificates/CertificateActionPopup";
-import ViewCertificatePopup from "../../features/Certificates/ViewCertificatePopup";
-import CertificateForm from "../../features/Certificates/CertificateForm";
-import DeleteCertificatePopup from "../../features/Certificates/DeleteCertificatePopup";
+import CertificateCard from "../../features/Certificates/components/CertificateCard";
+import CertificateActionPopup from "../../features/Certificates/components/CertificateActionPopup";
+import ViewCertificatePopup from "../../features/Certificates/components/ViewCertificatePopup";
+import CertificateForm from "../../features/Certificates/components/CertificateForm";
+import DeleteCertificatePopup from "../../features/Certificates/components/DeleteCertificatePopup";
 import useCertificatesPage from "../../hooks/useCertificatesPage";
 
 const styles = {
@@ -23,9 +23,9 @@ const styles = {
 const CertificatesPage = () => {
     const {
         isLoading, error, successMessage, searchInput, paginated, filtered, certificates, currentPage, totalPages,
-        prevPage, nextPage, onSearch, handleKeyDown, handleChange, certAction, setCertAction,certToView, setCertToView,
-        certToEdit, setCertToEdit,certToDelete,setCertToDelete,showAdd, setShowAdd,formError, setFormError,
-        isSubmitting,closeAll, goToMenu,onAddSubmit, onEditSubmit, onDeleteConfirm,} = useCertificatesPage();
+        prevPage, nextPage, onSearch, handleKeyDown, handleChange, certAction, setCertAction, certToView, setCertToView,
+        certToEdit, setCertToEdit, certToDelete, setCertToDelete, showAdd, setShowAdd, formError, setFormError,
+        isSubmitting, closeAll, goToMenu, onAddSubmit, onEditSubmit, onDeleteConfirm, } = useCertificatesPage();
 
     return (
         <div className={styles.wrapper}>
@@ -55,8 +55,8 @@ const CertificatesPage = () => {
                                     : "No tienes certificados registrados."}
                             </p>
                         ) : (<div className={styles.listWrapper}>
-                                {paginated.map((cert) => (<CertificateCard key={cert.id} certificate={cert} onClick={setCertAction} />))}
-                            </div>)}
+                            {paginated.map((cert) => (<CertificateCard key={cert.id} certificate={cert} onClick={setCertAction} />))}
+                        </div>)}
                         <SkillPagination currentPage={currentPage} totalPages={totalPages} onPrev={prevPage} onNext={nextPage} />
                     </div>
                 </div>
@@ -73,7 +73,7 @@ const CertificatesPage = () => {
             )}
 
             {certToView && (
-                <ViewCertificatePopup certificate={certToView} onClose={() => goToMenu(certToView)}/>
+                <ViewCertificatePopup certificate={certToView} onClose={() => goToMenu(certToView)} />
             )}
 
             {showAdd && (

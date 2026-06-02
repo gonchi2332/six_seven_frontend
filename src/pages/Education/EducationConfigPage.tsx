@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { useEducation } from "../../hooks/useEducation";
-import EducationCard from "../../features/Education/EducationCard";
+import EducationCard from "../../features/Education/components/EducationCard";
 import { visibilityService } from "../../services/visibilityServices";
 import Button from "../../components/Button";
 import Switch from "../../components/Switch/Switch";
@@ -40,7 +40,7 @@ const EducationConfigPage = () => {
     const [searchInput, setSearchInput] = useState("");
     const [activeSearch, setActiveSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    
+
     const [localError, setLocalError] = useState<string | null>(null);
     const [localSuccess, setLocalSuccess] = useState<string | null>(null);
     const [initialVisibilityMap, setInitialVisibilityMap] = useState<Record<string | number, boolean>>({});
@@ -225,11 +225,11 @@ const EducationConfigPage = () => {
                                     const currentVisibility = visibilityMap[entry.id] ?? entry.visible ?? false;
                                     return (
                                         <div key={entry.id} className={styles.cardConfigWrapper}>
-                                            <EducationCard entry={entry} onView={() => {}} />
+                                            <EducationCard entry={entry} onView={() => { }} />
                                             <div className={styles.switchRow}>
-                                                <Switch 
+                                                <Switch
                                                     key={`${entry.id}-${currentVisibility}`}
-                                                    id={entry.id} 
+                                                    id={entry.id}
                                                     initialState={currentVisibility}
                                                     onChange={handleLocalVisibilityChange}
                                                 />

@@ -23,7 +23,7 @@ import HardSkillsConfigPage from "../pages/HardSkills/HardSkillsConfigPage"
 import SoftSkillsConfigPage from "../pages/SoftSkills/SoftSkillsConfigPage";
 import PersonalProjectsConfigPage from "../pages/PersonalProjects/PersonalProjectsConfigPage";
 import EducationConfigPage from "../pages/Education/EducationConfigPage";
-import WorkExperienceListConfig from "../features/WorkExperience/WorkExperienceListConfig";
+import WorkExperienceListConfig from "../features/WorkExperience/components/WorkExperienceListConfig";
 import CertificatesConfigPage from "../pages/Certificates/CertificatesConfigPage";
 import CertificatesPublicPage from "../pages/Certificates/CertificatesPagePublic";
 import PersonalInfoConfigPage from "../pages/PersonalInfo/PersonalInfoConfigPage";
