@@ -2,6 +2,8 @@
 // TIPOS DEL BACKEND
 // ============================================
 
+import { fetchWithAuth } from "../../../services/refreshToken";
+
 export interface WorkExperienceBackend {
     id: number;
     position: string;
@@ -38,16 +40,6 @@ const getToken = (): string | null => {
     return localStorage.getItem('token');
 };
 
-const getHeaders = (): HeadersInit => {
-    const token = getToken();
-    const headers: HeadersInit = {
-        'Content-Type': 'application/json',
-    };
-    if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-    }
-    return headers;
-};
 
 // ============================================
 // SERVICIOS (SIN TRANSFORMAR)
@@ -69,13 +61,23 @@ export const fetchPublicWorkExperience = async (username: string): Promise<{ suc
 
 
 export const getWorkExperiences = async (username: string): Promise<{ success: boolean; message: string; laboralExperiences: WorkExperienceBackend[] }> => {
-    const response = await fetch(
-        `${API_URL}/api/v1/portfolio/users/laboral-experience?username=${username}`,
-        {
-            method: 'GET',
-            headers:  getHeaders(),
-        }
-    );
+    const token = getToken();
+    let response: Response;
+    if(token){
+        response = await fetchWithAuth(
+            `${API_URL}/api/v1/portfolio/users/laboral-experience?username=${username}`,
+            {
+                method: 'GET',
+            }
+        );
+    }else{
+        response = await fetch(
+            `${API_URL}/api/v1/portfolio/users/laboral-experience?username=${username}`,
+            {
+                method: 'GET',
+            }
+        );
+    }
 
     const data = await response.json();
 
@@ -88,14 +90,14 @@ export const getWorkExperiences = async (username: string): Promise<{ success: b
 
 // POST - Crear nueva experiencia laboral
 export const createWorkExperience = async (data: CreateWorkExperienceBackendDto): Promise<{ success: boolean; message: string }> => {
-    const response = await fetch(
-        `${API_URL}/api/v1/portfolio/users/laboral-experience`,
-        {
-            method: 'POST',
-            headers: getHeaders(),
-            body: JSON.stringify(data),
-        }
-    );
+    const response = await fetchWithAuth(
+            `${API_URL}/api/v1/portfolio/users/laboral-experience`,
+            {
+                method: 'POST',
+                body: JSON.stringify(data),
+            }
+        );
+
 
     const responseData = await response.json();
 
@@ -108,15 +110,13 @@ export const createWorkExperience = async (data: CreateWorkExperienceBackendDto)
 
 // PATCH - Modificar experiencia laboral
 export const updateWorkExperience = async (id: number, data: UpdateWorkExperienceBackendDto): Promise<{ success: boolean; message: string }> => {
-    const response = await fetch(
-        `${API_URL}/api/v1/portfolio/users/laboral-experience?id=${id}`,
-        {
-            method: 'PATCH',
-            headers: getHeaders(),
-            body: JSON.stringify(data),
-        }
-    );
-
+    const response = await fetchWithAuth(
+            `${API_URL}/api/v1/portfolio/users/laboral-experience?id=${id}`,
+            {
+                method: 'PATCH',
+                body: JSON.stringify(data),
+            }
+        );
     const responseData = await response.json();
 
     if (!response.ok) {
@@ -128,11 +128,10 @@ export const updateWorkExperience = async (id: number, data: UpdateWorkExperienc
 
 // DELETE - Eliminar experiencia laboral
 export const deleteWorkExperience = async (id: number): Promise<{ success: boolean; message: string }> => {
-    const response = await fetch(
+    const response = await fetchWithAuth(
         `${API_URL}/api/v1/portfolio/users/laboral-experience?id=${id}`,
         {
             method: 'DELETE',
-            headers: getHeaders(),
         }
     );
 

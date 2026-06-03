@@ -1,8 +1,4 @@
-
-interface EmailPayload {
-    token: string;
-}
-
+import { fetchWithAuth } from "./refreshToken";
 interface EmailResponse {
     success: boolean;
     message: string;
@@ -10,14 +6,11 @@ interface EmailResponse {
 }
 const API_URL = import.meta.env.VITE_API_URL;
 
-export const getEmail = async (payload: EmailPayload): Promise<EmailResponse> => {
-    const response = await fetch(
+export const getEmail = async (): Promise<EmailResponse> => {
+    const response = await fetchWithAuth(
         `${API_URL}/api/v2/verification/users/mail`,
         {
             method: "GET",
-            headers: {
-                "Authorization": `Bearer ${payload.token}`
-            }
         }
     );
 

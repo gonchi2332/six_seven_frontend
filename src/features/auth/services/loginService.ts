@@ -15,7 +15,9 @@ interface LoginResponse {
         profilePicture: string;
     };
     profilePicture: string;
-    token: string;
+    token?: string;
+    accessToken: string;
+    refreshToken: string;
 }
 const API_URL = import.meta.env.VITE_API_URL;
 

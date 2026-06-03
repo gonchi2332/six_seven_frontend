@@ -114,6 +114,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
 
     const handleLogout = () => {
         localStorage.clear();
+        sessionStorage.clear();
         navigate("/login");
     };
     

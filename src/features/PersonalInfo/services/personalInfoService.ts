@@ -1,3 +1,5 @@
+import { fetchWithAuth } from "../../../services/refreshToken";
+
 export interface PersonalInfoResponse {
     username: string;
     is_new: boolean;
@@ -15,16 +17,13 @@ export interface PersonalInfoResponse {
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const getToken = () => localStorage.getItem("token") ?? "";
-
 export const getPersonalInfo = async (username: string): Promise<PersonalInfoResponse> => {
-    const response = await fetch(
+    const response = await fetchWithAuth(
         `${API_URL}/api/v2/register/users/personal-info?username=${username}`,
         {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getToken()}`,
             },
         }
     );
@@ -47,12 +46,8 @@ export const fetchPublicPersonalInfo = async (username: string): Promise<Persona
 }
 
 export const updatePersonalInfo = async (formData: FormData) => {
-    const token = localStorage.getItem("token")?.trim();
-    const response = await fetch(`${API_URL}/api/v2/register/users/personal-info`, {
+    const response = await fetchWithAuth(`${API_URL}/api/v2/register/users/personal-info`, {
         method: "PUT",
-        headers: {
-            'Authorization': `Bearer ${token}`,
-        },
         body: formData,
     });
 
