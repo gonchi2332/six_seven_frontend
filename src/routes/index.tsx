@@ -28,6 +28,8 @@ import CertificatesConfigPage from "../pages/Certificates/CertificatesConfigPage
 import CertificatesPublicPage from "../pages/Certificates/CertificatesPagePublic";
 import PersonalInfoConfigPage from "../pages/PersonalInfo/PersonalInfoConfigPage";
 import WorkExperiencePagePublic from "../pages/WorkExperience/WorkExperiencePagePublic";
+import CVPrintPage from "../features/PrintablePortfolio/components/CvPrintPage";
+
 
 const Router = () => {
 
@@ -56,6 +58,7 @@ const Router = () => {
                     <Route path="ver/:username/experiencia-laboral" element={<WorkExperiencePagePublic />} />
                     <Route path="ver/:username/certificados" element={<CertificatesPublicPage />} />
 
+                    <Route path="/print" element={<CVPrintPage />} />
                     <Route path="configurar/habilidades-tecnicas" element={<HardSkillsConfigPage />} />
                     <Route path="configurar/habilidades-blandas" element={<SoftSkillsConfigPage />} />
                     <Route path="configurar/proyectos-personales" element={<PersonalProjectsConfigPage />} />
