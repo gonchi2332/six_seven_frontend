@@ -1,6 +1,6 @@
 import Button from '../../../components/Button';
 import PopUpCard from '../../../components/PopUpCard';
-import type { WorkExperience } from '../../../hooks/useWorkExperiences';
+import type { WorkExperience } from '../hooks/useWorkExperiences';
 
 interface WorkExperiencePopUpProps {
     isOpen: boolean;

@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Search } from 'lucide-react';
-import { useWorkExperiences } from '../../../hooks/useWorkExperiences';
+import { useWorkExperiences } from '../hooks/useWorkExperiences';
 import WorkExperienceItem from './WorkExperienceItem';
 import WorkExperiencePopUp from './WorkExperiencePopUp';
 import AddWorkExperienceModal from './AddWorkExperienceModal';
 import EditWorkExperienceModal from './EditWorkExperienceModal';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
-import type { WorkExperience } from '../../../hooks/useWorkExperiences';
+import type { WorkExperience } from '../hooks/useWorkExperiences';
 import WorkExperienceDetailModal from './WorkExperienceDetailModal';
 import Button from '../../../components/Button';
 

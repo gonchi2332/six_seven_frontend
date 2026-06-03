@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import { useWorkExperiences } from "../../../hooks/useWorkExperiences";
+import { useWorkExperiences } from "../hooks/useWorkExperiences";
 import WorkExperienceItem from "./WorkExperienceItem";
 import Button from "../../../components/Button";
 import Switch from "../../../components/Switch/Switch";

@@ -1,4 +1,4 @@
-import type { WorkExperience } from '../../../hooks/useWorkExperiences';
+import type { WorkExperience } from '../hooks/useWorkExperiences';
 
 interface WorkExperienceItemProps {
     experience: WorkExperience;

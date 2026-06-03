@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Button from '../../../components/Button';
 import TextField from '../../../components/TextField';
 import PopUpCard from '../../../components/PopUpCard';
-import { useWorkExperienceForm } from '../../../hooks/useWorkExperienceForm';
+import { useWorkExperienceForm } from '../hooks/useWorkExperienceForm';
 
 interface AddWorkExperienceModalProps {
     isOpen: boolean;
