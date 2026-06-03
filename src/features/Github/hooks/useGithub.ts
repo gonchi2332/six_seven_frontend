@@ -5,7 +5,7 @@ export const useGitHub = (appUsername: string) => {
     const [githubUser, setGithubUser] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    
+
     // Guardar el username que se está cargando actualmente
     const currentUsernameRef = useRef<string | null>(null);
 
@@ -23,10 +23,10 @@ export const useGitHub = (appUsername: string) => {
                 setIsLoading(false);
                 return;
             }
-            
+
             setIsLoading(true);
             setError(null);
-            
+
             try {
                 const data = await gitHubService.getProfile(appUsername);
                 // Verificar que la respuesta corresponda al usuario actual
@@ -58,10 +58,10 @@ export const useGitHub = (appUsername: string) => {
         fetchProfile();
     }, [appUsername]);
 
-    const saveProfile = async (newGithubUser: string, token: string) => {
+    const saveProfile = async (newGithubUser: string) => {
         setError(null);
         try {
-            const data = await gitHubService.updateProfile(newGithubUser, token);
+            const data = await gitHubService.updateProfile(newGithubUser);
             if (data.success) {
                 // Solo actualizar si el usuario no cambió mientras se guardaba
                 if (currentUsernameRef.current === appUsername) {
