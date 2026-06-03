@@ -1,10 +1,11 @@
+// src/components/Navbar/Navbar.tsx
+
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { parseProfilePicture } from "../../services/decodeBase64";
 import { useNavbarInfo } from "../../hooks/useNavbarInfo";
-// 💡 Importamos tu nuevo hook para manejar la visibilidad condicional desde el backend
 import { useSectionsVisibility } from "../../hooks/usePublicProfileSections";
-import { Copy, LogOut, Menu, X, ChevronDown, Home } from "lucide-react";
+import { Copy, LogOut, Menu, X, ChevronDown, Home, Printer } from "lucide-react";
 import PublicProfileLink from "../PublicProfileLink/PublicProfileLink";
 import Button from "../Button";
 
@@ -24,6 +25,7 @@ const STYLES = {
     ACTIONS_CONTAINER: "flex items-center gap-3 ml-4 shrink-0",
     HOME_BUTTON: "flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-bold transition-all duration-200 bg-[#2C666E]/40 border border-[#90DDF0]/30 text-[#90DDF0] hover:bg-[#2C666E]/60 whitespace-nowrap",
     COPY_BUTTON: "flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-bold transition-all duration-200 bg-white/10 hover:bg-white/20 text-white whitespace-nowrap",
+    PRINT_BUTTON: "flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-bold transition-all duration-200 bg-[#07393C]/60 border border-[#2C666E]/40 text-[#90DDF0] hover:bg-[#07393C]/80 whitespace-nowrap",
     LOGOUT_BUTTON: "flex items-center gap-2 text-white/60 hover:text-red-400 transition-colors text-sm font-bold whitespace-nowrap",
     MOBILE_TOGGLE: "lg:hidden p-2 text-white/80 hover:text-white transition-colors ml-2 shrink-0",
     MOBILE_MENU: "lg:hidden absolute top-full left-0 w-full bg-secondary border-b border-white/10 flex flex-col p-4 gap-4 animate-in slide-in-from-top duration-300",
@@ -114,15 +116,13 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
 
     const handleLogout = () => {
         localStorage.clear();
-        sessionStorage.clear();
         navigate("/login");
     };
-    
+
     const visibleTabs = allTabs.filter(tab => {
         if (!isPublic) return true;
         if (tab.id === "profile") return true;
         if (!publicVisibility) return false;
-        
         return !!publicVisibility[tab.id as keyof typeof publicVisibility];
     });
 
@@ -149,7 +149,6 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                         </div>
 
                         <div className={STYLES.TABS_CONTAINER}>
-                            {/* Renderizar Perfil si está dentro de las pestañas visibles */}
                             {visibleTabs.find(t => t.id === "profile") && (
                                 <button
                                     onClick={() => navigate(allTabs[0]!.path)}
@@ -159,7 +158,6 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                                 </button>
                             )}
 
-                            {/* Dropdown de habilidades condicionado por los datos reales del usuario */}
                             {showSkillsDropdown && (
                                 <div className={STYLES.dropdownWrapper} ref={skillsRef}>
                                     <button
@@ -193,7 +191,6 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                                 </div>
                             )}
 
-                            {/* Mapeo del resto de secciones activas (Experiencia, Proyectos, etc) */}
                             {visibleTabs.filter(tab => tab.id !== "profile").map((tab) => (
                                 <button
                                     key={tab.path}
@@ -216,46 +213,25 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
 
                                     {isVisibilityDropdownOpen && (
                                         <div className={STYLES.dropdownMenu}>
-                                            <button
-                                                onClick={() => navigate(configPaths.personalInfo)}
-                                                className={`${STYLES.dropdownItem} ${location.pathname === configPaths.personalInfo ? STYLES.dropdownItemActive : ''}`}
-                                            >
+                                            <button onClick={() => navigate(configPaths.personalInfo)} className={`${STYLES.dropdownItem} ${location.pathname === configPaths.personalInfo ? STYLES.dropdownItemActive : ''}`}>
                                                 Visibilidad Inf. Personal
                                             </button>
-                                            <button
-                                                onClick={() => navigate(configPaths.experience)}
-                                                className={`${STYLES.dropdownItem} ${location.pathname === configPaths.experience ? STYLES.dropdownItemActive : ''}`}
-                                            >
+                                            <button onClick={() => navigate(configPaths.experience)} className={`${STYLES.dropdownItem} ${location.pathname === configPaths.experience ? STYLES.dropdownItemActive : ''}`}>
                                                 Visibilidad Exp. Laboral
                                             </button>
-                                            <button
-                                                onClick={() => navigate(configPaths.skillsTech)}
-                                                className={`${STYLES.dropdownItem} ${location.pathname === configPaths.skillsTech ? STYLES.dropdownItemActive : ''}`}
-                                            >
+                                            <button onClick={() => navigate(configPaths.skillsTech)} className={`${STYLES.dropdownItem} ${location.pathname === configPaths.skillsTech ? STYLES.dropdownItemActive : ''}`}>
                                                 Visibilidad Hab. Técnicas
                                             </button>
-                                            <button
-                                                onClick={() => navigate(configPaths.skillsSoft)}
-                                                className={`${STYLES.dropdownItem} ${location.pathname === configPaths.skillsSoft ? STYLES.dropdownItemActive : ''}`}
-                                            >
+                                            <button onClick={() => navigate(configPaths.skillsSoft)} className={`${STYLES.dropdownItem} ${location.pathname === configPaths.skillsSoft ? STYLES.dropdownItemActive : ''}`}>
                                                 Visibilidad Hab. Blandas
                                             </button>
-                                            <button
-                                                onClick={() => navigate(configPaths.projects)}
-                                                className={`${STYLES.dropdownItem} ${location.pathname === configPaths.projects ? STYLES.dropdownItemActive : ''}`}
-                                            >
+                                            <button onClick={() => navigate(configPaths.projects)} className={`${STYLES.dropdownItem} ${location.pathname === configPaths.projects ? STYLES.dropdownItemActive : ''}`}>
                                                 Visibilidad Proyectos
                                             </button>
-                                            <button
-                                                onClick={() => navigate(configPaths.education)}
-                                                className={`${STYLES.dropdownItem} ${location.pathname === configPaths.education ? STYLES.dropdownItemActive : ''}`}
-                                            >
+                                            <button onClick={() => navigate(configPaths.education)} className={`${STYLES.dropdownItem} ${location.pathname === configPaths.education ? STYLES.dropdownItemActive : ''}`}>
                                                 Visibilidad Educación
                                             </button>
-                                            <button
-                                                onClick={() => navigate(configPaths.certificates)}
-                                                className={`${STYLES.dropdownItem} ${location.pathname === configPaths.certificates ? STYLES.dropdownItemActive : ''}`}
-                                            >
+                                            <button onClick={() => navigate(configPaths.certificates)} className={`${STYLES.dropdownItem} ${location.pathname === configPaths.certificates ? STYLES.dropdownItemActive : ''}`}>
                                                 Visibilidad Certificados
                                             </button>
                                         </div>
@@ -265,12 +241,22 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                         </div>
                     </div>
 
+                    {/* ── ACTIONS DESKTOP ── */}
                     <div className={STYLES.ACTIONS_CONTAINER}>
                         {showHomeButton && (
                             <Button onClick={() => navigate("/")} className={STYLES.HOME_BUTTON}>
                                 <Home size={16} />
                                 <span className="hidden sm:inline">Página Principal</span>
                                 <span className="sm:hidden">Inicio</span>
+                            </Button>
+                        )}
+
+                        {/* Botón Imprimir CV — solo versión privada */}
+                        {!isPublic && (
+                            <Button onClick={() => navigate("/print")} className={STYLES.PRINT_BUTTON}>
+                                <Printer size={16} />
+                                <span className="hidden sm:inline">Imprimir CV</span>
+                                <span className="sm:hidden">CV</span>
                             </Button>
                         )}
 
@@ -302,7 +288,6 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                 {isMenuOpen && (
                     <div className={STYLES.MOBILE_MENU}>
                         <div className="flex flex-col gap-1">
-                            {/* Menú móvil adaptado con el filtro de secciones visibles */}
                             {visibleTabs.map((tab) => (
                                 <button
                                     key={tab.path}
@@ -358,46 +343,25 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
 
                                     {isMobileVisibilityOpen && (
                                         <div className="pl-4 flex flex-col gap-1 mt-1 bg-black/10 rounded-xl p-1.5 border border-white/5">
-                                            <button
-                                                onClick={() => navigate(configPaths.personalInfo)}
-                                                className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.personalInfo ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
-                                            >
+                                            <button onClick={() => navigate(configPaths.personalInfo)} className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.personalInfo ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}>
                                                 Visibilidad Info. Personal
                                             </button>
-                                            <button
-                                                onClick={() => navigate(configPaths.experience)}
-                                                className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.experience ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
-                                            >
+                                            <button onClick={() => navigate(configPaths.experience)} className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.experience ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}>
                                                 Visibilidad Exp. Laboral
                                             </button>
-                                            <button
-                                                onClick={() => navigate(configPaths.skillsTech)}
-                                                className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.skillsTech ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
-                                            >
+                                            <button onClick={() => navigate(configPaths.skillsTech)} className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.skillsTech ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}>
                                                 Visibilidad Hab. Técnicas
                                             </button>
-                                            <button
-                                                onClick={() => navigate(configPaths.skillsSoft)}
-                                                className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.skillsSoft ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
-                                            >
+                                            <button onClick={() => navigate(configPaths.skillsSoft)} className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.skillsSoft ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}>
                                                 Visibilidad Hab. Blandas
                                             </button>
-                                            <button
-                                                onClick={() => navigate(configPaths.projects)}
-                                                className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.projects ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
-                                            >
+                                            <button onClick={() => navigate(configPaths.projects)} className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.projects ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}>
                                                 Visibilidad Proyectos
                                             </button>
-                                            <button
-                                                onClick={() => navigate(configPaths.education)}
-                                                className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.education ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
-                                            >
+                                            <button onClick={() => navigate(configPaths.education)} className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.education ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}>
                                                 Visibilidad Educación
                                             </button>
-                                            <button
-                                                onClick={() => navigate(configPaths.certificates)}
-                                                className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.certificates ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}
-                                            >
+                                            <button onClick={() => navigate(configPaths.certificates)} className={`${STYLES.MOBILE_TAB} ${location.pathname === configPaths.certificates ? STYLES.TAB_ACTIVE : STYLES.TAB_INACTIVE}`}>
                                                 Visibilidad Certificados
                                             </button>
                                         </div>
@@ -406,7 +370,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                             )}
                         </div>
 
-                        {/* Acciones móviles */}
+                        {/* ── ACTIONS MOBILE ── */}
                         <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
                             {showHomeButton && (
                                 <button
@@ -417,6 +381,18 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                                     <span>Volver al Inicio</span>
                                 </button>
                             )}
+
+                            {/* Botón Imprimir CV — solo versión privada */}
+                            {!isPublic && (
+                                <button
+                                    onClick={() => { navigate("/print"); setIsMenuOpen(false); }}
+                                    className={STYLES.PRINT_BUTTON}
+                                >
+                                    <Printer size={16} />
+                                    <span>Imprimir CV</span>
+                                </button>
+                            )}
+
                             {!isPublic && userInfo?.username && (
                                 <button
                                     onClick={() => { setIsShareModalOpen(true); setIsMenuOpen(false); }}
@@ -426,6 +402,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                                     <span>Generar Enlace</span>
                                 </button>
                             )}
+
                             {token && (
                                 <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-2 text-red-400 font-bold text-sm">
                                     <LogOut size={18} />
