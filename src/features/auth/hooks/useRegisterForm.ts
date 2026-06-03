@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { registerUser } from '../../../services/registerFormService';
+import { registerUser } from '../services/registerFormService';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../context/AuthContext';
 interface RegisterFormData {
@@ -36,7 +36,7 @@ interface RegisterFormTouched {
 
 
 
-import { sendVerificationCode } from '../../../services/verificationCodeService';
+import { sendVerificationCode } from '../services/verificationCodeService';
 
 export const useRegisterForm = () => {
 
@@ -315,7 +315,7 @@ export const useRegisterForm = () => {
 
             };
 
-            
+
 
             const response = await registerUser(registerData);
 

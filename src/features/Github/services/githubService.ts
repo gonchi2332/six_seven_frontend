@@ -1,3 +1,5 @@
+import { fetchWithAuth } from "../../../services/refreshToken";
+
 // services/gitHubService.ts
 const API_URL = import.meta.env.VITE_API_URL;
 const BASE_URL = `${API_URL}/api/v1/platforms/users`;
@@ -14,11 +16,10 @@ export const gitHubService = {
     },
 
     // PUT: Registrar o modificar
-    updateProfile: async (githubUsername: string, token: string) => {
-        const response = await fetch(`${BASE_URL}/github`, {
+    updateProfile: async (githubUsername: string) => {
+        const response = await fetchWithAuth(`${BASE_URL}/github`, {
             method: 'PUT',
             headers: {
-                'Authorization': `Bearer ${token.trim()}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ githubUsername }),

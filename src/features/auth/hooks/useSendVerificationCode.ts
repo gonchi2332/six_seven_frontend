@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { sendVerificationCode } from "../../../services/verificationCodeService";
+import { sendVerificationCode } from "../services/verificationCodeService";
 
 interface UseSendVerificationCodeParams {
     username: string;

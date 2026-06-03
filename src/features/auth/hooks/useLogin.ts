@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { login } from "../../../services/loginService";
+import { login } from "../services/loginService";
 import { useAuthContext } from "../../../context/AuthContext";
-import { sendVerificationCode } from "../../../services/verificationCodeService";
+import { sendVerificationCode } from "../services/verificationCodeService";
 import { getEmail } from "../../../services/getemail";
 import { useNavigate } from "react-router-dom";
-
-
 
 const useLogin = () => {
     const [username, setUsername] = useState("");
@@ -73,26 +71,31 @@ const useLogin = () => {
         setIsLoading(true);
         try {
             const data = await login({ username, password });
-            authLogin(data.token);
+            
+            const accessToken = data.token || data.accessToken;
+            const refreshToken = data.refreshToken;
 
+            if (refreshToken) {
+                sessionStorage.setItem("refreshToken", refreshToken);
+            }
+
+            // Guardamos el Access Token mediante el contexto (que internamente lo mandará a localStorage)
+            authLogin(accessToken);
 
             if (data.user.state.toUpperCase() === "UNVERIFIED") {
                 let freshEmail = "";
 
                 try {
-                    const emailData = await getEmail({ token: data.token });
-
+                    const emailData = await getEmail();
                     freshEmail = emailData.email;
                     setUserEmail(freshEmail);
                 } catch (e) {
-
                     setUserEmail("");
                 }
 
                 try {
-                    await sendVerificationCode({ username, targetMail: freshEmail, token: data.token });
-                } catch {
-                }
+                    await sendVerificationCode({ username, targetMail: freshEmail, token: accessToken });
+                } catch {}
 
                 setShowVerified(true);
             } else {

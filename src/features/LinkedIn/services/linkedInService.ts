@@ -1,3 +1,5 @@
+import { fetchWithAuth } from "../../../services/refreshToken";
+
 // services/linkedinService.ts
 const API_URL = import.meta.env.VITE_API_URL;
 const BASE_URL = `${API_URL}/api/v1/platforms/users`;
@@ -10,12 +12,11 @@ export const linkedinService = {
   },
 
   // PUT: Registrar o modificar
-  updateProfile: async (linkedinUsername: string, token: string) => {
+  updateProfile: async (linkedinUsername: string) => {
     // CORRECCIÓN: La URL base ya contiene la ruta, no la repitas
-    const response = await fetch(`${BASE_URL}/linkedin`, {
+    const response = await fetchWithAuth(`${BASE_URL}/linkedin`, {
       method: 'PUT',
       headers: {
-        'Authorization': `Bearer ${token.trim()}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ linkedinUsername }),
