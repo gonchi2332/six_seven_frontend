@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Button from "../../../../components/Button/Button";
 import { useSendRecoveryCode } from "../../hooks/useRecoveryCode";
+import { censorEmail } from "../../utils/stringUtils";
+
 
 const CONTAINER = "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6";
 const CARD = "bg-primary rounded-2xl w-full max-w-md shadow-2xl py-5 flex flex-col items-center px-8";
@@ -16,40 +17,16 @@ const LABEL = "text-[16px] font-inter font-normal text-surface mb-1.5 block text
 const INPUT = "w-full bg-black rounded-lg px-3 py-2.5 text-[#FFFFFF] placeholder:text-white/40 outline-none mb-1 text-[15px]";
 const EMAIL_HINT = "text-surface text-sm font-nunito text-center mt-1 mb-2";
 
-const censorEmail = (email: string): string => {
-    const [local, domain] = email.split("@");
-    if (!local || !domain) return email;
-    const visible = local.slice(0, 4);
-    const censored = "*".repeat(4);
-    return `${visible}${censored}@${domain}`;
-};
-
 interface Props {
     onSubmit?: (username: string, email: string) => void;
     onCancel?: () => void;
 }
 
 const EmailInputPopup = ({ onSubmit, onCancel }: Props) => {
-    const navigate = useNavigate();
     const [username, setUsername] = useState("");
 
-    const { handleSend, email, error, isLoading } = useSendRecoveryCode({ username });
+    const { email, error, isLoading, handleSubmit, handleCancel } = useSendRecoveryCode({ username, onSubmit, onCancel });
 
-    const handleSubmit = async () => {
-        const { success, email: mail } = await handleSend();
-        if (success) {
-            onSubmit?.(username, mail ?? "");
-
-        }
-    };
-
-    const handleCancel = () => {
-        if (onCancel) {
-            onCancel();
-        } else {
-            navigate("/login");
-        }
-    };
 
     return (
         <div className={CONTAINER}>

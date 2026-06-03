@@ -16,8 +16,10 @@ export const mockProjects: ProjectEntry[] = [
 
         ],
         imageUrl: "https://via.placeholder.com/300x200/2C666E/ffffff?text=E-commerce",
+        image: null,
         createdAt: "2024-01-15T00:00:00Z",
-        updatedAt: "2024-03-20T00:00:00Z"
+        updatedAt: "2024-03-20T00:00:00Z",
+        visible: true
     },
     {
         id: "2",
@@ -30,8 +32,10 @@ export const mockProjects: ProjectEntry[] = [
             { label: "GitHub", url: "https://github.com/user/taskmanager" }
         ],
         imageUrl: "https://via.placeholder.com/300x200/2C666E/ffffff?text=Task+Manager",
+        image: null,
         createdAt: "2024-02-10T00:00:00Z",
-        updatedAt: "2024-04-05T00:00:00Z"
+        updatedAt: "2024-04-05T00:00:00Z",
+        visible: true
     },
     {
         id: "3",
@@ -45,8 +49,10 @@ export const mockProjects: ProjectEntry[] = [
             { label: "Demo", url: "https://weather-dashboard.com" }
         ],
         imageUrl: "https://via.placeholder.com/300x200/2C666E/ffffff?text=Weather+Dashboard",
+        image: null,
         createdAt: "2023-11-20T00:00:00Z",
-        updatedAt: "2024-01-10T00:00:00Z"
+        updatedAt: "2024-01-10T00:00:00Z",
+        visible: true
     },
     {
         id: "4",
@@ -59,8 +65,10 @@ export const mockProjects: ProjectEntry[] = [
             { label: "GitHub", url: "https://github.com/user/chat" }
         ],
         imageUrl: "https://via.placeholder.com/300x200/2C666E/ffffff?text=Chat+App",
+        image: null,
         createdAt: "2023-09-05T00:00:00Z",
-        updatedAt: "2023-12-15T00:00:00Z"
+        updatedAt: "2023-12-15T00:00:00Z",
+        visible: true
     },
     {
         id: "5",
@@ -74,8 +82,10 @@ export const mockProjects: ProjectEntry[] = [
             { label: "Demo", url: "https://analytics-demo.com" }
         ],
         imageUrl: "https://via.placeholder.com/300x200/2C666E/ffffff?text=Analytics",
+        image: null,
         createdAt: "2024-03-01T00:00:00Z",
-        updatedAt: "2024-04-08T00:00:00Z"
+        updatedAt: "2024-04-08T00:00:00Z",
+        visible: true
     },
     {
         id: "6",
@@ -89,7 +99,9 @@ export const mockProjects: ProjectEntry[] = [
             { label: "Website", url: "https://johndoe.dev" }
         ],
         imageUrl: "https://via.placeholder.com/300x200/2C666E/ffffff?text=Portfolio",
+        image: null,
         createdAt: "2024-04-01T00:00:00Z",
-        updatedAt: "2024-04-10T00:00:00Z"
+        updatedAt: "2024-04-10T00:00:00Z",
+        visible: true
     }
 ];

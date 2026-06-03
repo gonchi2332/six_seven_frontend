@@ -24,7 +24,7 @@ const styles = {
 
 const SkillSearchBar = ({
     value, onChange, onSearch, onKeyDown, onAdd,
-    placeholder = "Buscar...", addLabel = "Agregar",
+    placeholder = "Buscar...",
     isPublic = false
 }: SkillSearchBarProps) => {
     return (

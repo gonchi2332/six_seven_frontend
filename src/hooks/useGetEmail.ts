@@ -17,7 +17,7 @@ const useEmail = () => {
         const fetchEmail = async () => {
             setIsLoading(true);
             try {
-                const data = await getEmail({ token });
+                const data = await getEmail();
                 setEmail(data.email);
             } catch (error) {
                 console.error(error);

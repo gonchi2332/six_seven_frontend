@@ -1,14 +1,21 @@
 import { useState } from "react";
-import { requestRecoveryCode, verifyRecoveryCode } from "../../../services/recoveryCodeService";
+import { requestRecoveryCode, verifyRecoveryCode } from "../services/recoveryCodeService";
+import { useNavigate } from "react-router-dom";
+
 
 interface UseSendRecoveryCodeParams {
     username: string;
+    onSubmit?: (username: string, email: string) => void;
+    onCancel?: () => void;
 }
 
-export const useSendRecoveryCode = ({ username }: UseSendRecoveryCodeParams) => {
+export const useSendRecoveryCode = ({ username, onSubmit, onCancel }: UseSendRecoveryCodeParams) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [email, setEmail] = useState<string | null>(null);
+    const navigate = useNavigate();
+
+
 
     const handleSend = async (): Promise<{ success: boolean; email: string | null }> => {
         setIsLoading(true);
@@ -26,7 +33,25 @@ export const useSendRecoveryCode = ({ username }: UseSendRecoveryCodeParams) => 
         }
     };
 
-    return { isLoading, email, error, handleSend };
+
+    const handleSubmit = async () => {
+        const { success, email: mail } = await handleSend();
+        if (success) {
+            onSubmit?.(username, mail ?? "");
+
+        }
+    };
+    const handleCancel = () => {
+        if (onCancel) {
+            onCancel();
+        } else {
+            navigate("/login");
+        }
+    };
+
+
+
+    return { isLoading, email, error, handleSend, handleSubmit, handleCancel };
 };
 
 interface UseVerifyRecoveryParams {
@@ -65,3 +90,4 @@ export const useVerifyRecoveryCode = ({ username, code }: UseVerifyRecoveryParam
 
     return { isLoading, error, title, description, handleSubmit, resetError };
 };
+

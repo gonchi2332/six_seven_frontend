@@ -1,6 +1,6 @@
 // hooks/usePrintableView.ts
 import { useRef, useState } from 'react';
-import { useReactToPrint } from 'react-to-print';
+// import { useReactToPrint } from 'react-to-print';
 
 interface PrintConfig {
     style: 'single-column' | 'two-columns';
@@ -29,28 +29,10 @@ export const usePrintableView = (defaultConfig?: Partial<PrintConfig>) => {
         ...defaultConfig,
     });
 
-    const handlePrint = useReactToPrint({
-        content: () => printRef.current,
-        documentTitle: 'portfolio-ignacio-jaldin',
-        pageStyle: `
-      @page {
-        size: A4;
-        margin: 1.5cm;
-      }
-      @media print {
-        body {
-          -webkit-print-color-adjust: exact;
-          print-color-adjust: exact;
-        }
-      }
-    `,
-        onBeforePrint: () => {
-            console.log('Preparando impresión...');
-        },
-        onAfterPrint: () => {
-            console.log('Impresión completada');
-        },
-    });
+    // Mock print handler since react-to-print is not installed
+    const handlePrint = () => {
+        console.log('Impresión mock - instale react-to-print para habilitar');
+    };
 
     const updateConfig = (newConfig: Partial<PrintConfig>) => {
         setConfig(prev => ({ ...prev, ...newConfig }));

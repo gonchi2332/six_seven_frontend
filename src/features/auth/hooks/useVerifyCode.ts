@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { verify } from "../../../services/verificationCodeService";
+import { verify } from "../services/verificationCodeService";
 import { useAuthContext } from "../../../context/AuthContext";
 
 interface UseVerifyCodeParams {
