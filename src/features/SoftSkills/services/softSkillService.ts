@@ -1,3 +1,5 @@
+import { fetchWithAuth } from "../../../services/refreshToken";
+
 export interface SoftSkill {
     name: string;
     visible: boolean;
@@ -14,20 +16,13 @@ export interface DeleteSoftSkillDto {
 
 const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/skills`;
 
-const getToken = () => localStorage.getItem("token") ?? "";
-
-const authHeaders = () => ({
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${getToken()}`,
-});
-
 const jsonHeaders = () => ({
     "Content-Type": "application/json",
 });
 
 export const getSoftSkills = async (username: string): Promise<SoftSkill[]> => {
-    const res = await fetch(`${BASE_URL}/users/soft-skills?username=${username}`, {
-        headers: authHeaders(),
+    const res = await fetchWithAuth(`${BASE_URL}/users/soft-skills?username=${username}`, {
+        method: "GET",
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message ?? "Error al obtener habilidades blandas");
@@ -60,9 +55,8 @@ export const getUserSoftSkillNames = async (username: string): Promise<string[]>
 };
 
 export const postSoftSkillFromCatalog = async (skillName: string): Promise<void> => {
-    const res = await fetch(`${BASE_URL}/users/soft-skills`, {
+    const res = await fetchWithAuth(`${BASE_URL}/users/soft-skills`, {
         method: "POST",
-        headers: authHeaders(),
         body: JSON.stringify({ skillName }),
     });
     const data = await res.json();
@@ -72,9 +66,8 @@ export const postSoftSkillFromCatalog = async (skillName: string): Promise<void>
 export const postNewSoftSkill = async (
     skillName: string
 ): Promise<"success" | "not-found"> => {
-    const res = await fetch(`${BASE_URL}/users/new-soft-skill`, {
+    const res = await fetchWithAuth(`${BASE_URL}/users/new-soft-skill`, {
         method: "POST",
-        headers: authHeaders(),
         body: JSON.stringify({ skillName }),
     });
     const data = await res.json();
@@ -113,9 +106,8 @@ export const postSoftSkill = async (
 };
 
 export const deleteSoftSkill = async (data: DeleteSoftSkillDto): Promise<void> => {
-    const res = await fetch(`${BASE_URL}/users/soft-skills`, {
+    const res = await fetchWithAuth(`${BASE_URL}/users/soft-skills`, {
         method: "DELETE",
-        headers: authHeaders(),
         body: JSON.stringify(data),
     });
     const resData = await res.json();

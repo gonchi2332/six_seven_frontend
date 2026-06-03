@@ -1,11 +1,7 @@
-const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/skills`;
-const getToken = () => localStorage.getItem("token") ?? "";
-const getUsername = () => localStorage.getItem("username") ?? "";
+import { fetchWithAuth } from "../../../services/refreshToken";
 
-const authHeaders = () => ({
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${getToken()}`,
-});
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/skills`;
+const getUsername = () => localStorage.getItem("username") ?? "";
 
 const jsonHeaders = () => ({
     "Content-Type": "application/json",
@@ -25,8 +21,8 @@ export const fetchSkillsPublicNew = async (username: string) => {
 
 export const fetchSkills = async () => {
     const username = getUsername();
-    const res = await fetch(`${BASE_URL}/users/hard-skills?username=${username}`, {
-        headers: authHeaders(),
+    const res = await fetchWithAuth(`${BASE_URL}/users/hard-skills?username=${username}`, {
+        method: "GET",
     });
     if (!res.ok) {
         const data = await res.json();
@@ -55,9 +51,8 @@ export const getUserSkillNames = async (): Promise<string[]> => {
 };
 
 export const postSkillFromCatalog = async (skillName: string, punctuation: number) => {
-    const res = await fetch(`${BASE_URL}/users/hard-skills`, {
+    const res = await fetchWithAuth(`${BASE_URL}/users/hard-skills`, {
         method: "POST",
-        headers: authHeaders(),
         body: JSON.stringify({ skillName, punctuation }),
     });
     const data = await res.json();
@@ -69,9 +64,8 @@ export const postNewSkill = async (
     skillName: string,
     punctuation: number
 ): Promise<"success" | "not-found"> => {
-    const res = await fetch(`${BASE_URL}/users/new-hard-skill`, {
+    const res = await fetchWithAuth(`${BASE_URL}/users/new-hard-skill`, {
         method: "POST",
-        headers: authHeaders(),
         body: JSON.stringify({ skillName, punctuation }),
     });
     const data = await res.json();
@@ -110,9 +104,8 @@ export const postSkill = async (
 };
 
 export const patchSkill = async (skillName: string, newPunctuation: number) => {
-    const res = await fetch(`${BASE_URL}/users/hard-skills`, {
+    const res = await fetchWithAuth(`${BASE_URL}/users/hard-skills`, {
         method: "PATCH",
-        headers: authHeaders(),
         body: JSON.stringify({ skillName, newPunctuation }),
     });
     if (!res.ok) {
@@ -122,9 +115,8 @@ export const patchSkill = async (skillName: string, newPunctuation: number) => {
 };
 
 export const deleteSkill = async (skillName: string) => {
-    const res = await fetch(`${BASE_URL}/users/hard-skills`, {
+    const res = await fetchWithAuth(`${BASE_URL}/users/hard-skills`, {
         method: "DELETE",
-        headers: authHeaders(),
         body: JSON.stringify({ skillName }),
     });
     if (!res.ok) {

@@ -2,6 +2,8 @@
 // TIPOS
 // ============================================
 
+import { fetchWithAuth } from "../../../services/refreshToken";
+
 export interface EducationEntry {
     id: string;
     degree: string;
@@ -24,18 +26,10 @@ export interface AcademicDegree {
 
 const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/portfolio`;
 
-const getToken = (): string => {
-    return localStorage.getItem("token") ?? "";
-};
 
 const getUsername = (): string => {
     return localStorage.getItem("username") ?? "";
 };
-
-const authHeaders = (): HeadersInit => ({
-    "Content-Type": "application/json",
-    "Authorization": `Bearer ${getToken()}`,
-});
 
 // ============================================
 // FUNCIONES AUXILIARES
@@ -58,8 +52,8 @@ const formatToISO = (year: string): string => {
 
 // GET - Obtener grados académicos (catálogo)
 export const fetchAcademicDegrees = async (): Promise<AcademicDegree[]> => {
-    const res = await fetch(`${BASE_URL}/education_degree`, {
-        headers: authHeaders(),
+    const res = await fetchWithAuth(`${BASE_URL}/education_degree`, {
+        method: "GET",
     });
     if (!res.ok) throw new Error("Error al obtener grados académicos");
     const data = await res.json();
@@ -101,8 +95,8 @@ export const fetchEducation = async (): Promise<EducationEntry[]> => {
     const username = getUsername();
     if (!username) return [];
 
-    const res = await fetch(`${BASE_URL}/users/education?username=${username}`, {
-        headers: authHeaders(),
+    const res = await fetchWithAuth(`${BASE_URL}/users/education?username=${username}`, {
+        method: "GET"
     });
     if (!res.ok) throw new Error("Error al cargar formaciones académicas");
     const data = await res.json();
@@ -141,9 +135,8 @@ export const createEducation = async (
         educationState: data.educationState,
     };
 
-    const res = await fetch(`${BASE_URL}/users/education`, {
+    const res = await fetchWithAuth(`${BASE_URL}/users/education`, {
         method: "POST",
-        headers: authHeaders(),
         body: JSON.stringify(body),
     });
 
@@ -166,9 +159,8 @@ export const updateEducation = async (
     if (data.startDate) body.startDate = formatToISO(data.startDate);
     if (data.educationState) body.educationState = data.educationState;
 
-    const res = await fetch(`${BASE_URL}/users/education?id=${id}`, {
+    const res = await fetchWithAuth(`${BASE_URL}/users/education?id=${id}`, {
         method: "PATCH",
-        headers: authHeaders(),
         body: JSON.stringify(body),
     });
 
@@ -180,9 +172,8 @@ export const updateEducation = async (
 
 // DELETE - Eliminar formación académica
 export const deleteEducation = async (id: string): Promise<void> => {
-    const res = await fetch(`${BASE_URL}/users/education?id=${id}`, {
+    const res = await fetchWithAuth(`${BASE_URL}/users/education?id=${id}`, {
         method: "DELETE",
-        headers: authHeaders(),
     });
 
     if (!res.ok) {

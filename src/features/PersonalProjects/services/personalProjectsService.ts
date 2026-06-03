@@ -1,3 +1,4 @@
+import { fetchWithAuth } from "../../../services/refreshToken";
 import getUsernameFromToken from "../../../utils/getUsernameToken";
 
 export interface Link {
@@ -80,13 +81,8 @@ export const createProjectService = async (
 
     formData.append("links", JSON.stringify(payload.links));
 
-    const token = localStorage.getItem("token");
-
-    const response = await fetch(`${API_URL}/api/v1/portfolio/users/projects`, {
+    const response = await fetchWithAuth(`${API_URL}/api/v1/portfolio/users/projects`, {
         method: "POST",
-        headers: {
-            "Authorization": `Bearer ${token}`,
-        },
         body: formData,
     });
 
@@ -142,13 +138,8 @@ export const fetchPublicProjectsService = async (username: string): Promise<Proj
 // Obtener proyectos del usuario autenticado
 export const fetchProjectsService = async (): Promise<ProjectEntry[]> => {
     const username = getUsernameFromToken();
-    const token = localStorage.getItem("token");
-    const response = await fetch(`${API_URL}/api/v1/portfolio/users/projects?username=${username}`, {
+    const response = await fetchWithAuth(`${API_URL}/api/v1/portfolio/users/projects?username=${username}`, {
         method: "GET",
-        headers: {
-            Authorization: `Bearer ${token}`,
-        }
-
     });
 
     if (!response.ok) {
@@ -194,13 +185,8 @@ export const updateProjectService = async (
     if (payload.links) formData.append("links", JSON.stringify(payload.links));
     if (payload.image) formData.append("image", payload.image);
 
-    const token = localStorage.getItem("token");
-
-    const response = await fetch(`${API_URL}/api/v1/portfolio/users/projects?id=${id}`, {
+    const response = await fetchWithAuth(`${API_URL}/api/v1/portfolio/users/projects?id=${id}`, {
         method: "PATCH",
-        headers: {
-            "Authorization": `Bearer ${token}`,
-        },
         body: formData,
     });
 
@@ -222,13 +208,9 @@ export const updateProjectService = async (
 
 // Eliminar proyecto (DELETE)
 export const deleteProjectService = async (id: string): Promise<DeleteProjectResponse> => {
-    const token = localStorage.getItem("token");
 
-    const response = await fetch(`${API_URL}/api/v1/portfolio/users/projects?id=${id}`, {
+    const response = await fetchWithAuth(`${API_URL}/api/v1/portfolio/users/projects?id=${id}`, {
         method: "DELETE",
-        headers: {
-            "Authorization": `Bearer ${token}`,
-        },
     });
 
     const responseText = await response.text();

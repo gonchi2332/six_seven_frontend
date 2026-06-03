@@ -1,4 +1,5 @@
 import { parseProfilePicture } from "../../../services/decodeBase64";
+import { fetchWithAuth } from "../../../services/refreshToken";
 
 export interface Certificate {
     id: number;
@@ -12,8 +13,6 @@ export interface Certificate {
 
 const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/portfolio`;
 
-const getToken = () => localStorage.getItem("token") ?? "";
-
 const getUsername = (): string => {
     const token = localStorage.getItem("token");
     if (!token) return "";
@@ -26,10 +25,6 @@ const getUsername = (): string => {
         return "";
     }
 };
-
-const authHeaders = () => ({
-    Authorization: `Bearer ${getToken()}`,
-});
 
 const jsonHeaders = () => ({
     "Content-Type": "application/json",
@@ -68,9 +63,7 @@ export const fetchCertificates = async (): Promise<Certificate[]> => {
     const username = getUsername();
     if (!username) return [];
 
-    const res = await fetch(`${BASE_URL}/users/certificates?username=${username}`, {
-        headers: authHeaders(),
-    });
+    const res = await fetchWithAuth(`${BASE_URL}/users/certificates?username=${username}`, {method: "GET"});
 
     const data = await res.json();
     if (!res.ok) return [];
@@ -109,9 +102,8 @@ export const createCertificate = async (
     formData.append("issueDate", data.issueDate);
     formData.append("coverImage", data.coverImage);
 
-    const res = await fetch(`${BASE_URL}/users/certificates`, {
+    const res = await fetchWithAuth(`${BASE_URL}/users/certificates`, {
         method: "POST",
-        headers: authHeaders(),
         body: formData,
     });
 
@@ -140,9 +132,8 @@ export const updateCertificate = async (
     formData.append("issueDate", data.issueDate);
     formData.append("coverImage", data.coverImage);
 
-    const res = await fetch(`${BASE_URL}/users/certificates?id=${id}`, {
+    const res = await fetchWithAuth(`${BASE_URL}/users/certificates?id=${id}`, {
         method: "PATCH",
-        headers: authHeaders(),
         body: formData,
     });
 
@@ -161,9 +152,8 @@ export const deleteCertificate = async (id: number): Promise<void> => {
     const username = getUsername();
     if (!username) throw new Error("Usuario no autenticado.");
 
-    const res = await fetch(`${BASE_URL}/users/certificates?id=${id}`, {
+    const res = await fetchWithAuth(`${BASE_URL}/users/certificates?id=${id}`, {
         method: "DELETE",
-        headers: authHeaders(),
     });
 
     if (!res.ok) {
