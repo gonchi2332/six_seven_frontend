@@ -35,7 +35,7 @@ function Github({ isPublic }: Props) {
             alert("Sesión expirada");
             return;
         }
-        const result = await saveProfile(username, token);
+        const result = await saveProfile(username);
         if (result.success) {
             setShowModal(false);
         } else {

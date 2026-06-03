@@ -25,9 +25,9 @@ export const useLinkedin = (appUsername: string) => {
         fetchProfile();
     }, [appUsername]);
 
-    const saveProfile = async (newLinkedinUser: string, token: string) => {
+    const saveProfile = async (newLinkedinUser: string) => {
         try {
-            const data = await linkedinService.updateProfile(newLinkedinUser, token);
+            const data = await linkedinService.updateProfile(newLinkedinUser);
             if (data.success) {
                 setLinkedinUser(newLinkedinUser);
                 return { success: true };
