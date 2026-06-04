@@ -31,6 +31,7 @@ interface UseProjectsReturn {
     currentPublicUsername: string | null;
 }
 
+// Hook para manejar operaciones CRUD de proyectos personales y publicos
 export const useProjects = (): UseProjectsReturn => {
     const [projects, setProjects] = useState<ProjectEntry[]>([]);
     const [publicProjects, setPublicProjects] = useState<ProjectEntry[]>([]);
@@ -42,11 +43,13 @@ export const useProjects = (): UseProjectsReturn => {
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [currentPublicUsername, setCurrentPublicUsername] = useState<string | null>(null);
 
+    // Obtener el usuario del token al montar el hook
     useEffect(() => {
         const user = getUsernameFromToken();
         setUsername(user);
     }, []);
 
+    // Obtener los proyectos del usuario autenticado
     const fetchProjects = useCallback(async () => {
         setIsLoading(true);
         setError(null);
@@ -63,7 +66,7 @@ export const useProjects = (): UseProjectsReturn => {
         }
     }, []);
 
-    // useEffect para cargar proyectos públicos automáticamente cuando cambia currentPublicUsername
+    // Cargar proyectos publicos automaticamente cuando cambia el usuario a visualizar
     useEffect(() => {
         const fetchPublicUserProjects = async () => {
             if (!currentPublicUsername || currentPublicUsername.trim() === "") {
@@ -92,11 +95,12 @@ export const useProjects = (): UseProjectsReturn => {
         fetchPublicUserProjects();
     }, [currentPublicUsername]);
 
-    // Función pública para cambiar el usuario a visualizar
+    // Cambiar el usuario cuyos proyectos publicos se quieren ver
     const setPublicUser = useCallback((username: string | null) => {
         setCurrentPublicUsername(username);
     }, []);
 
+    // Crear un nuevo proyecto
     const addProject = async (payload: CreateProjectPayload) => {
         setIsLoading(true);
         setError(null);
@@ -115,6 +119,7 @@ export const useProjects = (): UseProjectsReturn => {
         }
     };
 
+    // Editar un proyecto existente
     const editProject = async (id: string, payload: UpdateProjectPayload) => {
         setIsLoading(true);
         setError(null);
@@ -133,6 +138,7 @@ export const useProjects = (): UseProjectsReturn => {
         }
     };
 
+    // Eliminar un proyecto por ID
     const deleteProject = async (id: string) => {
         setIsLoading(true);
         setError(null);
@@ -151,6 +157,7 @@ export const useProjects = (): UseProjectsReturn => {
         }
     };
 
+    // Cargar proyectos al iniciar
     useEffect(() => {
         fetchProjects();
     }, [fetchProjects]);
