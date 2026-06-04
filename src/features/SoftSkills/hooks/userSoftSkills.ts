@@ -1,3 +1,4 @@
+// hooks/useSoftSkills.ts
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -9,6 +10,7 @@ import {
 import type { SoftSkill } from "../services/softSkillService";
 import { useAuthContext } from "../../../context/AuthContext";
 
+// Hook principal para manejar habilidades blandas del usuario autenticado
 export const useSoftSkills = () => {
     const { username: publicUsernameUrl } = useParams<{ username: string }>();
     const { username } = useAuthContext();
@@ -22,11 +24,13 @@ export const useSoftSkills = () => {
     const [isLoadingPublic, setIsLoadingPublic] = useState(false);
     const [currentPublicUsername, setCurrentPublicUsername] = useState<string | null>(null);
 
+    // Mostrar mensaje de exito temporal
     const showSuccess = (msg: string) => {
         setSuccessMessage(msg);
         setTimeout(() => setSuccessMessage(null), 3000);
     };
 
+    // Cargar habilidades del usuario y catalogo
     const loadSkills = async () => {
         if (publicUsernameUrl) {
             setIsLoading(false);
@@ -54,10 +58,12 @@ export const useSoftSkills = () => {
         }
     };
 
+    // Cargar habilidades al cambiar usuario o ruta
     useEffect(() => {
         loadSkills();
     }, [username, publicUsernameUrl]);
 
+    // Cargar habilidades publicas al cambiar el usuario seleccionado
     useEffect(() => {
         if (!currentPublicUsername || currentPublicUsername.trim() === "") {
             setPublicSkills([]);
@@ -83,15 +89,18 @@ export const useSoftSkills = () => {
         fetchPublicUserSoftSkills();
     }, [currentPublicUsername]);
 
+    // Establecer el usuario para ver sus habilidades publicas
     const setPublicUser = useCallback((username: string | null) => {
         setCurrentPublicUsername(username);
     }, []);
 
+    // Agregar una habilidad a la lista local
     const addSkill = (name: string) => {
         setSkills((prev) => [...prev, { name, visible: true, skill_id: "" }]);
         showSuccess("Habilidad registrada correctamente");
     };
 
+    // Eliminar una habilidad por nombre
     const removeSkill = async (skillName: string): Promise<void> => {
         setError(null);
         try {
@@ -121,11 +130,13 @@ export const useSoftSkills = () => {
     };
 };
 
+// Hook para ver habilidades blandas publicas de un usuario especifico
 export const usePublicSoftSkills = (username: string | undefined) => {
     const [skills, setSkills] = useState<SoftSkill[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    // Cargar habilidades publicas al montar o cambiar el username
     useEffect(() => {
         const load = async () => {
             if (!username) return;

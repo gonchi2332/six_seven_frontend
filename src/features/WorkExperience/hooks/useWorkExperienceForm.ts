@@ -1,3 +1,4 @@
+// hooks/useWorkExperienceForm.ts
 import { useState, useCallback } from 'react';
 
 export interface WorkExperienceFormData {
@@ -17,7 +18,7 @@ export interface WorkExperienceFormErrors {
     endDate: string;
 }
 
-// Función auxiliar para obtener la fecha de hoy en formato YYYY-MM-DD
+// Obtener la fecha de hoy en formato YYYY-MM-DD
 const getTodayDateString = (): string => {
     const today = new Date();
     const year = today.getFullYear();
@@ -26,6 +27,7 @@ const getTodayDateString = (): string => {
     return `${year}-${month}-${day}`;
 };
 
+// Hook para manejar el formulario de experiencia laboral
 export const useWorkExperienceForm = (initialData?: WorkExperienceFormData) => {
     const [formData, setFormData] = useState<WorkExperienceFormData>({
         position: initialData?.position || '',
@@ -44,25 +46,25 @@ export const useWorkExperienceForm = (initialData?: WorkExperienceFormData) => {
         endDate: '',
     });
 
-    // ============================================
-    // VALIDACIONES
-    // ============================================
-
+    // Validar campo de puesto
     const validatePosition = useCallback((value: string): string => {
         if (!value.trim()) return 'El puesto es obligatorio';
         return '';
     }, []);
 
+    // Validar campo de empresa
     const validateCompany = useCallback((value: string): string => {
         if (!value.trim()) return 'La empresa es obligatoria';
         return '';
     }, []);
 
+    // Validar campo de descripcion
     const validateDescription = useCallback((value: string): string => {
         if (!value.trim()) return 'La descripción es obligatoria';
         return '';
     }, []);
 
+    // Validar fecha de inicio
     const validateStartDate = useCallback((value: string): string => {
         if (!value) return 'La fecha de inicio es obligatoria';
         const today = getTodayDateString();
@@ -70,6 +72,7 @@ export const useWorkExperienceForm = (initialData?: WorkExperienceFormData) => {
         return '';
     }, []);
 
+    // Validar fecha de fin
     const validateEndDate = useCallback((value: string, isCurrent: boolean): string => {
         if (!isCurrent && !value) return 'La fecha de finalización es obligatoria';
         if (value) {
@@ -79,35 +82,37 @@ export const useWorkExperienceForm = (initialData?: WorkExperienceFormData) => {
         return '';
     }, []);
 
-    // ============================================
-    // HANDLERS
-    // ============================================
-
+    // Manejar cambio de puesto
     const handlePositionChange = (value: string) => {
         setFormData(prev => ({ ...prev, position: value }));
         setErrors(prev => ({ ...prev, position: validatePosition(value) }));
     };
 
+    // Manejar cambio de empresa
     const handleCompanyChange = (value: string) => {
         setFormData(prev => ({ ...prev, company: value }));
         setErrors(prev => ({ ...prev, company: validateCompany(value) }));
     };
 
+    // Manejar cambio de descripcion
     const handleDescriptionChange = (value: string) => {
         setFormData(prev => ({ ...prev, description: value }));
         setErrors(prev => ({ ...prev, description: validateDescription(value) }));
     };
 
+    // Manejar cambio de fecha de inicio
     const handleStartDateChange = (value: string) => {
         setFormData(prev => ({ ...prev, startDate: value }));
         setErrors(prev => ({ ...prev, startDate: validateStartDate(value) }));
     };
 
+    // Manejar cambio de fecha de fin
     const handleEndDateChange = (value: string) => {
         setFormData(prev => ({ ...prev, endDate: value }));
         setErrors(prev => ({ ...prev, endDate: validateEndDate(value, formData.isCurrent) }));
     };
 
+    // Manejar cambio de checkbox "trabajo actualmente"
     const handleIsCurrentChange = (checked: boolean) => {
         setFormData(prev => ({ ...prev, isCurrent: checked }));
 
@@ -121,10 +126,7 @@ export const useWorkExperienceForm = (initialData?: WorkExperienceFormData) => {
         }
     };
 
-    // ============================================
-    // UTILIDADES
-    // ============================================
-
+    // Validar todo el formulario
     const validateForm = useCallback((): boolean => {
         const positionError = validatePosition(formData.position);
         const companyError = validateCompany(formData.company);
@@ -143,6 +145,7 @@ export const useWorkExperienceForm = (initialData?: WorkExperienceFormData) => {
         return !positionError && !companyError && !descriptionError && !startDateError && !endDateError;
     }, [formData, validatePosition, validateCompany, validateDescription, validateStartDate, validateEndDate]);
 
+    // Resetear formulario a valores iniciales
     const resetForm = useCallback(() => {
         setFormData({
             position: '',
@@ -161,6 +164,7 @@ export const useWorkExperienceForm = (initialData?: WorkExperienceFormData) => {
         });
     }, []);
 
+    // Verificar si el formulario es valido para enviar
     const isFormValid = (): boolean => {
         return Object.values(errors).every(e => e === '') &&
             formData.position.trim() !== '' &&
@@ -171,17 +175,14 @@ export const useWorkExperienceForm = (initialData?: WorkExperienceFormData) => {
     };
 
     return {
-        // Datos
         formData,
         errors,
-        // Handlers específicos
         handlePositionChange,
         handleCompanyChange,
         handleDescriptionChange,
         handleStartDateChange,
         handleEndDateChange,
         handleIsCurrentChange,
-        // Utilidades
         validateForm,
         resetForm,
         isFormValid,

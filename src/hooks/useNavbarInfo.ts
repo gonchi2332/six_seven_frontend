@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 import { getPersonalInfo, fetchPublicPersonalInfo, type PersonalInfoResponse } from "../features/PersonalInfo/services/personalInfoService";
 import { useAuthContext } from "../context/AuthContext";
 
+// Hook para manejar informacion personal del usuario autenticado y publica
 export const usePersonalInfo = (refreshTrigger?: number) => {
     const { username } = useAuthContext();
     const [userInfo, setUserInfo] = useState<PersonalInfoResponse | null>(null);
@@ -13,7 +14,7 @@ export const usePersonalInfo = (refreshTrigger?: number) => {
     const [publicError, setPublicError] = useState<string | null>(null);
     const [currentPublicUsername, setCurrentPublicUsername] = useState<string | null>(null);
 
-    // Carga de información privada (autenticada)
+    // Cargar informacion privada del usuario autenticado
     useEffect(() => {
         const fetchData = async () => {
             if (!username) {
@@ -36,7 +37,7 @@ export const usePersonalInfo = (refreshTrigger?: number) => {
         fetchData();
     }, [username, refreshTrigger]);
 
-    // useEffect para cargar información pública automáticamente cuando cambia currentPublicUsername
+    // Cargar informacion publica automaticamente cuando cambia el usuario a visualizar
     useEffect(() => {
         const fetchPublicUserInfo = async () => {
             if (!currentPublicUsername || currentPublicUsername.trim() === "") {
@@ -65,7 +66,7 @@ export const usePersonalInfo = (refreshTrigger?: number) => {
         fetchPublicUserInfo();
     }, [currentPublicUsername]);
 
-    // Función pública para cambiar el usuario a visualizar
+    // Cambiar el usuario cuya informacion publica se quiere ver
     const setPublicUser = useCallback((username: string | null) => {
         setCurrentPublicUsername(username);
     }, []);
@@ -82,12 +83,13 @@ export const usePersonalInfo = (refreshTrigger?: number) => {
     };
 };
 
-// Mantener el hook original para compatibilidad
+// Hook simplificado para la navbar, mantiene compatibilidad
 export const useNavbarInfo = (refreshTrigger?: number) => {
     const { username } = useAuthContext();
     const [userInfo, setUserInfo] = useState<PersonalInfoResponse | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
+    // Cargar informacion del usuario para la navbar
     useEffect(() => {
         const fetchData = async () => {
             if (!username) {

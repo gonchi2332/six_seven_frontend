@@ -1,3 +1,4 @@
+// services/workExperienceService.ts
 // ============================================
 // TIPOS DEL BACKEND
 // ============================================
@@ -36,15 +37,16 @@ export interface UpdateWorkExperienceBackendDto {
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+// Obtener token del localStorage
 const getToken = (): string | null => {
     return localStorage.getItem('token');
 };
-
 
 // ============================================
 // SERVICIOS (SIN TRANSFORMAR)
 // ============================================
 
+// Obtener experiencias laborales publicas de un usuario
 export const fetchPublicWorkExperience = async (username: string): Promise<{ success: boolean; message: string; laboralExperiences: WorkExperienceBackend[] }> => {
     const response = await fetch(`${API_URL}/api/v1/portfolio/users/${username}/laboral-experience`);
     const data = await response.json();
@@ -54,12 +56,9 @@ export const fetchPublicWorkExperience = async (username: string): Promise<{ suc
     }
 
     return data;
-
 }
 
-// GET - Obtener experiencias laborales de un usuario
-
-
+// Obtener experiencias laborales del usuario autenticado
 export const getWorkExperiences = async (username: string): Promise<{ success: boolean; message: string; laboralExperiences: WorkExperienceBackend[] }> => {
     const token = getToken();
     let response: Response;
@@ -88,7 +87,7 @@ export const getWorkExperiences = async (username: string): Promise<{ success: b
     return data;
 };
 
-// POST - Crear nueva experiencia laboral
+// Crear una nueva experiencia laboral
 export const createWorkExperience = async (data: CreateWorkExperienceBackendDto): Promise<{ success: boolean; message: string }> => {
     const response = await fetchWithAuth(
             `${API_URL}/api/v1/portfolio/users/laboral-experience`,
@@ -97,7 +96,6 @@ export const createWorkExperience = async (data: CreateWorkExperienceBackendDto)
                 body: JSON.stringify(data),
             }
         );
-
 
     const responseData = await response.json();
 
@@ -108,7 +106,7 @@ export const createWorkExperience = async (data: CreateWorkExperienceBackendDto)
     return responseData;
 };
 
-// PATCH - Modificar experiencia laboral
+// Actualizar una experiencia laboral existente
 export const updateWorkExperience = async (id: number, data: UpdateWorkExperienceBackendDto): Promise<{ success: boolean; message: string }> => {
     const response = await fetchWithAuth(
             `${API_URL}/api/v1/portfolio/users/laboral-experience?id=${id}`,
@@ -126,7 +124,7 @@ export const updateWorkExperience = async (id: number, data: UpdateWorkExperienc
     return responseData;
 };
 
-// DELETE - Eliminar experiencia laboral
+// Eliminar una experiencia laboral por ID
 export const deleteWorkExperience = async (id: number): Promise<{ success: boolean; message: string }> => {
     const response = await fetchWithAuth(
         `${API_URL}/api/v1/portfolio/users/laboral-experience?id=${id}`,

@@ -1,13 +1,16 @@
+// hooks/useUserSearch.ts
 import { useState, useEffect } from "react";
 import { userService } from "../services/homepageService";
 import type { UserSearchResult } from "../services/homepageService";
 
+// Hook para buscar usuarios por nombre o username
 export const useUserSearch = () => {
     const [query, setQuery] = useState("");
     const [allUsers, setAllUsers] = useState<UserSearchResult[]>([]);
     const [filteredUsers, setFilteredUsers] = useState<UserSearchResult[]>([]);
     const [isFetching, setIsFetching] = useState(false);
 
+    // Obtener todos los usuarios al montar el hook
     useEffect(() => {
         const fetchUsers = async () => {
             try {
@@ -23,6 +26,7 @@ export const useUserSearch = () => {
         fetchUsers();
     }, []);
 
+    // Filtrar usuarios cuando cambia la consulta
     useEffect(() => {
         if (!query.trim()) {
             setFilteredUsers([]);

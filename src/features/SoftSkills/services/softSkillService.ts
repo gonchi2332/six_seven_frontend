@@ -1,3 +1,4 @@
+// services/softSkillService.ts
 import { fetchWithAuth } from "../../../services/refreshToken";
 
 export interface SoftSkill {
@@ -20,6 +21,7 @@ const jsonHeaders = () => ({
     "Content-Type": "application/json",
 });
 
+// Obtener habilidades blandas de un usuario por nombre de usuario
 export const getSoftSkills = async (username: string): Promise<SoftSkill[]> => {
     const res = await fetchWithAuth(`${BASE_URL}/users/soft-skills?username=${username}`, {
         method: "GET",
@@ -29,6 +31,7 @@ export const getSoftSkills = async (username: string): Promise<SoftSkill[]> => {
     return data.skills ?? [];
 };
 
+// Obtener habilidades blandas publicas de un usuario
 export const fetchPublicSoftSkills = async (username: string): Promise<SoftSkill[]> => {
     const res = await fetch(`${BASE_URL}/users/${username}/soft-skills`);
     const data = await res.json();
@@ -36,6 +39,7 @@ export const fetchPublicSoftSkills = async (username: string): Promise<SoftSkill
     return data.skills ?? [];
 };
 
+// Obtener catalogo de todas las habilidades blandas disponibles
 export const fetchCatalogSoftSkills = async (): Promise<string[]> => {
     const res = await fetch(`${BASE_URL}/system/all-soft-skills`, {
         headers: jsonHeaders(),
@@ -45,6 +49,7 @@ export const fetchCatalogSoftSkills = async (): Promise<string[]> => {
     return (data.data ?? []).map((s: { name: string }) => s.name);
 };
 
+// Obtener nombres de habilidades blandas de un usuario en minusculas
 export const getUserSoftSkillNames = async (username: string): Promise<string[]> => {
     try {
         const data = await getSoftSkills(username);
@@ -54,6 +59,7 @@ export const getUserSoftSkillNames = async (username: string): Promise<string[]>
     }
 };
 
+// Registrar una habilidad blanda desde el catalogo
 export const postSoftSkillFromCatalog = async (skillName: string): Promise<void> => {
     const res = await fetchWithAuth(`${BASE_URL}/users/soft-skills`, {
         method: "POST",
@@ -63,6 +69,7 @@ export const postSoftSkillFromCatalog = async (skillName: string): Promise<void>
     if (!res.ok) throw new Error(data.message ?? "Error al registrar habilidad blanda");
 };
 
+// Registrar una nueva habilidad blanda no existente en el catalogo
 export const postNewSoftSkill = async (
     skillName: string
 ): Promise<"success" | "not-found"> => {
@@ -86,6 +93,7 @@ export const postNewSoftSkill = async (
     return "success";
 };
 
+// Registrar habilidad blanda intentando primero desde catalogo
 export const postSoftSkill = async (
     skillName: string
 ): Promise<"success" | "not-found"> => {
@@ -105,6 +113,7 @@ export const postSoftSkill = async (
     }
 };
 
+// Eliminar una habilidad blanda de un usuario
 export const deleteSoftSkill = async (data: DeleteSoftSkillDto): Promise<void> => {
     const res = await fetchWithAuth(`${BASE_URL}/users/soft-skills`, {
         method: "DELETE",
@@ -114,6 +123,7 @@ export const deleteSoftSkill = async (data: DeleteSoftSkillDto): Promise<void> =
     if (!res.ok) throw new Error(resData.message ?? "Error al eliminar habilidad blanda");
 };
 
+// Crear una habilidad blanda (alias de postSoftSkillFromCatalog)
 export const createSoftSkill = async (data: CreateSoftSkillDto): Promise<void> => {
     await postSoftSkillFromCatalog(data.skillName);
 };
