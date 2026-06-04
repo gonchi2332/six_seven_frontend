@@ -29,6 +29,7 @@ import CertificatesPublicPage from "../pages/Certificates/CertificatesPagePublic
 import PersonalInfoConfigPage from "../pages/PersonalInfo/PersonalInfoConfigPage";
 import WorkExperiencePagePublic from "../pages/WorkExperience/WorkExperiencePagePublic";
 import CVPrintPage from "../features/PrintablePortfolio/components/CvPrintPage";
+import { ReportsPage } from "../features/Reports";
 
 
 const Router = () => {
@@ -49,6 +50,7 @@ const Router = () => {
                     <Route path="/educacion" element={<EducationPage />} />
                     <Route path="/experiencia-laboral" element={<Experience />} />
                     <Route path="/certificados" element={<CertificatesPage />} />
+                    <Route path="/reportes" element={<ReportsPage />} />
 
                     <Route path="ver/:username" element={<PersonalInfoPublic />} />
                     <Route path="ver/:username/habilidades-tecnicas" element={<HardSkillsPagePublic />} />
