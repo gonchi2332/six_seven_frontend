@@ -17,9 +17,10 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}): Pro
     
     options.headers = {
         ...options.headers,
+        "Content-Type": "application/json",
         'Authorization': `Bearer ${token}`,
     };
-
+    console.log(options.body);
     let response = await fetch(`${url}`, options);
 
     if (response.status === 401) {
