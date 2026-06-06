@@ -85,7 +85,7 @@ export const createProjectService = async (
     const response = await fetchWithAuth(`${API_URL}/api/v1/portfolio/users/projects`, {
         method: "POST",
         body: formData,
-    });
+    }, true);
 
     const responseText = await response.text();
 
@@ -187,7 +187,7 @@ export const updateProjectService = async (
     const response = await fetchWithAuth(`${API_URL}/api/v1/portfolio/users/projects?id=${id}`, {
         method: "PATCH",
         body: formData,
-    });
+    }, true);
 
     const responseText = await response.text();
 

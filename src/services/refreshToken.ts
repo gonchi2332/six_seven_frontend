@@ -12,14 +12,17 @@ const onRefreshed = (token: string) => {
     refreshSubscribers = [];
 };
 
-export const fetchWithAuth = async (url: string, options: RequestInit = {}): Promise<Response> => {
+export const fetchWithAuth = async (url: string, options: RequestInit = {}, formData?: boolean): Promise<Response> => {
     const token = localStorage.getItem("token") ?? "";
+    formData = formData ?? false;
     
     options.headers = {
         ...options.headers,
-        "Content-Type": "application/json",
         'Authorization': `Bearer ${token}`,
     };
+    if(!formData) {
+        options.headers = {...options.headers,'Content-Type': 'application/json'};
+    }
     console.log(options.body);
     let response = await fetch(`${url}`, options);
 

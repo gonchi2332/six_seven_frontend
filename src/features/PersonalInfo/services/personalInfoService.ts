@@ -46,10 +46,12 @@ export const fetchPublicPersonalInfo = async (username: string): Promise<Persona
 }
 
 export const updatePersonalInfo = async (formData: FormData) => {
+    console.log("Enviando datos al backend:");
+    console.log(JSON.stringify(Object.fromEntries(formData)));
     const response = await fetchWithAuth(`${API_URL}/api/v2/register/users/personal-info`, {
         method: "PUT",
         body: formData,
-    });
+    }, true);
 
     const data = await response.json();
     if (!response.ok) {
