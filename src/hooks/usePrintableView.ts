@@ -14,6 +14,7 @@ interface PrintConfig {
     showVersion: boolean;
 }
 
+// Hook para manejar vista imprimible con configuracion
 export const usePrintableView = (defaultConfig?: Partial<PrintConfig>) => {
     const printRef = useRef<HTMLDivElement>(null);
     const [config, setConfig] = useState<PrintConfig>({
@@ -34,10 +35,12 @@ export const usePrintableView = (defaultConfig?: Partial<PrintConfig>) => {
         console.log('Impresión mock - instale react-to-print para habilitar');
     };
 
+    // Actualizar configuracion parcial
     const updateConfig = (newConfig: Partial<PrintConfig>) => {
         setConfig(prev => ({ ...prev, ...newConfig }));
     };
 
+    // Alternar visibilidad de una seccion especifica
     const toggleSection = (section: keyof PrintConfig['sections']) => {
         setConfig(prev => ({
             ...prev,
@@ -48,6 +51,7 @@ export const usePrintableView = (defaultConfig?: Partial<PrintConfig>) => {
         }));
     };
 
+    // Alternar entre estilo de una o dos columnas
     const toggleStyle = () => {
         setConfig(prev => ({
             ...prev,

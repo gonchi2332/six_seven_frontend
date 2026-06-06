@@ -1,4 +1,4 @@
-
+// hooks/useWorkExperiences.ts
 import { useState, useEffect, useCallback } from 'react';
 import {
     fetchPublicWorkExperience,
@@ -35,6 +35,7 @@ export interface UpdateWorkExperienceDto {
 // VALIDACIONES
 // ============================================
 
+// Obtener la fecha actual en formato YYYY-MM-DD
 const getTodayDateString = (): string => {
     const today = new Date();
     const year = today.getFullYear();
@@ -51,21 +52,25 @@ export interface ValidationErrors {
     endDate?: string;
 }
 
+// Validar campo de puesto
 export const validatePosition = (value: string): string => {
     if (!value.trim()) return 'El puesto es obligatorio';
     return '';
 };
 
+// Validar campo de empresa
 export const validateCompany = (value: string): string => {
     if (!value.trim()) return 'La empresa es obligatoria';
     return '';
 };
 
+// Validar campo de descripcion
 export const validateDescription = (value: string): string => {
     if (!value.trim()) return 'La descripción es obligatoria';
     return '';
 };
 
+// Validar fecha de inicio
 export const validateStartDate = (value: string): string => {
     if (!value) return 'La fecha de inicio es obligatoria';
     if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return 'Formato: YYYY-MM-DD';
@@ -74,6 +79,7 @@ export const validateStartDate = (value: string): string => {
     return '';
 };
 
+// Validar fecha de fin
 export const validateEndDate = (value: string | null | undefined, isCurrent: boolean): string => {
     if (isCurrent) return '';
     if (!value) return 'La fecha de finalizacion es obligatoria';
@@ -83,6 +89,7 @@ export const validateEndDate = (value: string | null | undefined, isCurrent: boo
     return '';
 };
 
+// Validar todo el formulario
 export const validateForm = (data: {
     position: string;
     company: string;
@@ -111,6 +118,7 @@ export const validateForm = (data: {
     return errors;
 };
 
+// Verificar si el formulario es valido
 export const isFormValid = (errors: ValidationErrors): boolean => {
     return Object.keys(errors).length === 0;
 };
@@ -119,6 +127,7 @@ export const isFormValid = (errors: ValidationErrors): boolean => {
 // HOOK
 // ============================================
 
+// Hook para manejar experiencias laborales del usuario autenticado
 export const useWorkExperiences = () => {
     const [publicExperiences, setPublicExperiences] = useState<WorkExperience[]>([]);
     const [experiences, setExperiences] = useState<WorkExperience[]>([]);
@@ -129,15 +138,18 @@ export const useWorkExperiences = () => {
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [currentPublicUsername, setCurrentPublicUsername] = useState<string | null>(null);
 
+    // Mostrar mensaje de exito temporal
     const showSuccess = (msg: string) => {
         setSuccessMessage(msg);
         setTimeout(() => setSuccessMessage(null), 3000);
     };
 
+    // Obtener usuario del localStorage
     const getUsername = (): string | null => {
         return localStorage.getItem('username');
     };
 
+    // Cargar experiencias del usuario autenticado
     const loadExperiences = async () => {
         setIsLoading(true);
         setError(null);
@@ -164,11 +176,12 @@ export const useWorkExperiences = () => {
         }
     };
 
+    // Cargar experiencias al montar el hook
     useEffect(() => {
         loadExperiences();
     }, []);
 
-    // useEffect para cargar experiencias públicas automáticamente cuando cambia currentPublicUsername
+    // Cargar experiencias publicas automaticamente cuando cambia el usuario a visualizar
     useEffect(() => {
         const fetchPublicUserExperiences = async () => {
             if (!currentPublicUsername || currentPublicUsername.trim() === "") {
@@ -201,11 +214,12 @@ export const useWorkExperiences = () => {
         fetchPublicUserExperiences();
     }, [currentPublicUsername]);
 
-    // Función pública para cambiar el usuario a visualizar
+    // Cambiar el usuario cuyas experiencias publicas se quieren ver
     const setPublicUser = useCallback((username: string | null) => {
         setCurrentPublicUsername(username);
     }, []);
 
+    // Agregar una nueva experiencia laboral
     const addExperience = async (data: CreateWorkExperienceDto): Promise<void> => {
         try {
             await createWorkExperience(data);
@@ -216,6 +230,7 @@ export const useWorkExperiences = () => {
         }
     };
 
+    // Actualizar una experiencia laboral existente
     const updateExperience = async (id: number, data: UpdateWorkExperienceDto): Promise<void> => {
         try {
             await updateWorkExperience(id, data);
@@ -226,6 +241,7 @@ export const useWorkExperiences = () => {
         }
     };
 
+    // Eliminar una experiencia laboral por ID
     const deleteExperience = async (id: number): Promise<void> => {
         try {
             await deleteWorkExperience(id);
@@ -253,7 +269,6 @@ export const useWorkExperiences = () => {
         validateEndDate,
         validateForm,
         isFormValid,
-        // Nuevos valores para público
         publicExperiences,
         isLoadingPublic,
         setPublicUser,

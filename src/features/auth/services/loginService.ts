@@ -35,7 +35,7 @@ export const login = async (payload: LoginPayload): Promise<LoginResponse> => {
 
     const data = await response.json();
 
-    if (!response.ok || !data.token) {
+    if (!response.ok || !data.accessToken || !data.refreshToken) {
         throw new Error(data.message || "Error al iniciar sesión");
     }
 

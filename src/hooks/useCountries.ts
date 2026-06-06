@@ -2,11 +2,13 @@
 import { useState, useEffect } from 'react';
 import { getCountries } from '../services/getCountries';
 
+// Hook para obtener y manejar la lista de paises
 export const useCountries = () => {
   const [countries, setCountries] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Cargar paises al montar el hook
   useEffect(() => {
     const fetchCountries = async () => {
       setIsLoading(true);
@@ -36,6 +38,6 @@ export const useCountries = () => {
     fetchCountries();
   }, []);
 
-  // ¡ESTO ES CLAVE! Retornamos los estados para que el componente los pueda usar
+  // Retornamos los estados para que el componente los pueda usar
   return { countries, isLoading, error };
 };

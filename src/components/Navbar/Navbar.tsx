@@ -83,7 +83,8 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
         { id: "has_work_experience", name: "Experiencia Laboral", path: isPublic ? `/ver/${activeUsername}/experiencia-laboral` : "/experiencia-laboral" },
         { id: "has_projects", name: "Proyectos Personales", path: isPublic ? `/ver/${activeUsername}/proyectos` : "/proyectos" },
         { id: "has_education", name: "Educación", path: isPublic ? `/ver/${activeUsername}/educacion` : "/educacion" },
-        { id: "has_certificates", name: "Certificados", path: isPublic ? `/ver/${activeUsername}/certificados` : "/certificados" }
+        { id: "has_certificates", name: "Certificados", path: isPublic ? `/ver/${activeUsername}/certificados` : "/certificados" },
+        { id: "reports", name: "Reportes", path: "/reportes" }
     ];
 
     const isSkillsTabActive = location.pathname === pathTech || location.pathname === pathSoft;

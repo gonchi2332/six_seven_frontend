@@ -105,7 +105,7 @@ export const createCertificate = async (
     const res = await fetchWithAuth(`${BASE_URL}/users/certificates`, {
         method: "POST",
         body: formData,
-    });
+    }, true);
 
     const resData = await res.json();
     if (!res.ok) {
@@ -135,7 +135,7 @@ export const updateCertificate = async (
     const res = await fetchWithAuth(`${BASE_URL}/users/certificates?id=${id}`, {
         method: "PATCH",
         body: formData,
-    });
+    }, true);
 
     const resData = await res.json();
     if (!res.ok) {

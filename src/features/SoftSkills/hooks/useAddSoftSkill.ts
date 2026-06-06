@@ -1,9 +1,11 @@
+// hooks/useAddSoftSkill.ts
 import { useState, useRef } from "react";
 import { postSoftSkill, getUserSoftSkillNames } from "../services/softSkillService";
 import useClickOutside from "../../../hooks/useClickOutside";
 
 export type SoftSkillResultType = "success" | "not-found";
 
+// Hook para agregar una habilidad blanda a un usuario
 const useAddSoftSkill = (
     onSubmit: (name: string) => void,
     onClose: () => void,
@@ -24,12 +26,14 @@ const useAddSoftSkill = (
     const containerRef = useRef<HTMLDivElement>(null);
     useClickOutside(containerRef, () => setShowDropdown(false));
 
+    // Limpiar todos los errores
     const clearError = () => {
         setInlineError(null);
         setHasFieldError(false);
         setTopError(null);
     };
 
+    // Manejar cambios en el campo de busqueda
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value.slice(0, 50);
         setSearch(val);
@@ -44,6 +48,7 @@ const useAddSoftSkill = (
         }
     };
 
+    // Seleccionar una sugerencia del dropdown
     const handleSelectSuggestion = (name: string) => {
         setSearch(name);
         setSelectedName(name);
@@ -51,6 +56,7 @@ const useAddSoftSkill = (
         setShowDropdown(false);
     };
 
+    // Alternar modo "otra habilidad"
     const handleToggleOther = () => {
         setIsOther((prev) => {
             if (!prev) {
@@ -66,11 +72,13 @@ const useAddSoftSkill = (
         });
     };
 
+    // Manejar cambio en el campo de otra habilidad
     const handleOtherNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setOtherName(e.target.value.slice(0, 50));
         clearError();
     };
 
+    // Confirmar y enviar la habilidad
     const handleConfirm = async () => {
         const nameToSubmit = isOther ? otherName.trim() : selectedName;
         if (!nameToSubmit) return;

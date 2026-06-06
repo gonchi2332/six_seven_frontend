@@ -13,6 +13,7 @@ const INITIAL_FORM: CreateProjectPayload = {
     image: null,
 };
 
+// Hook para manejar el estado y validacion del formulario de proyectos
 export const useProjectForm = (
     onSubmit: (data: CreateProjectPayload | UpdateProjectPayload, id?: string) => Promise<void>,
     isSubmitting: boolean,
@@ -29,7 +30,7 @@ export const useProjectForm = (
     const [originalData, setOriginalData] = useState<Partial<CreateProjectPayload>>({});
     const [errors, setErrors] = useState<FormErrors>({});
 
-    // Para el ImageUpload - obtener la URL de la imagen si existe
+    // Obtener la URL de la imagen si existe
     const imageUrl = typeof formData.image === 'string' ? formData.image : null;
 
     // Guardar los datos originales cuando initialData cambie
@@ -46,7 +47,7 @@ export const useProjectForm = (
         }
     }, [initialData, isEditing]);
 
-    // Función para verificar si hay cambios
+    // Verificar si hay cambios en el formulario
     const hasChanges = (): boolean => {
         if (!isEditing) return true; // En modo creación siempre habilitado
 
@@ -61,6 +62,7 @@ export const useProjectForm = (
         return descriptionChanged || topicChanged || roleChanged || statusChanged || linksChanged || imageChanged;
     };
 
+    // Manejar cambios en los campos del formulario
     const handleChange = <K extends keyof CreateProjectPayload>(
         field: K,
         value: CreateProjectPayload[K]
@@ -124,6 +126,7 @@ export const useProjectForm = (
         setFormData((prev) => ({ ...prev, [field]: newValue }));
     };
 
+    // Manejar cambios en los campos de enlaces
     const handleLinkChange = (index: number, field: "label" | "url", value: string) => {
         setFormData((prev) => {
             const updated = [...prev.links];
@@ -159,6 +162,8 @@ export const useProjectForm = (
             }
         }
     };
+    
+    // Agregar un nuevo campo de enlace
     const addLink = () => {
         setFormData((prev) => ({
             ...prev,
@@ -166,6 +171,7 @@ export const useProjectForm = (
         }));
     };
 
+    // Eliminar un campo de enlace por indice
     const removeLink = (index: number) => {
         setFormData((prev) => ({
             ...prev,
@@ -178,11 +184,13 @@ export const useProjectForm = (
         setErrors(newErrors);
     };
 
+    // Manejar cambio de imagen
     const handleImageChange = (file: File | null) => {
         setFormData((prev) => ({ ...prev, image: file }));
         setErrors((prev) => ({ ...prev, image: undefined }));
     };
 
+    // Validar todo el formulario antes de enviar
     const validateForm = (): boolean => {
         const e: FormErrors = {};
 
@@ -246,6 +254,7 @@ export const useProjectForm = (
         return Object.keys(e).length === 0;
     };
 
+    // Establecer datos iniciales del formulario
     const setInitialData = (data: Partial<CreateProjectPayload>) => {
         setFormData({
             ...INITIAL_FORM,
@@ -256,6 +265,7 @@ export const useProjectForm = (
         setErrors({});
     };
 
+    // Resetear el formulario a su estado inicial
     const reset = () => {
         setFormData({
             ...INITIAL_FORM,
@@ -266,8 +276,7 @@ export const useProjectForm = (
         setErrors({});
     };
 
-
-    // Función para verificar si todos los campos requeridos están llenos
+    // Verificar si todos los campos requeridos estan completos
     const isFormComplete = () => {
         if (isEditing) return true; // Para edición, solo verificamos cambios después
 
@@ -287,6 +296,7 @@ export const useProjectForm = (
         return hasName && hasDescription && hasTopic && hasRole && hasImage && areLinksValid;
     };
 
+    // Verificar si hay errores criticos que impidan enviar
     const hasCriticalErrors = () => {
         const criticalFields = ['name', 'description', 'topic', 'role', 'image'];
 
@@ -297,6 +307,7 @@ export const useProjectForm = (
         return criticalFields.some(field => errors[field]) || hasLinkErrors;
     };
 
+    // Determinar si el boton de enviar debe estar deshabilitado
     const isSubmitDisabled = () => {
         if (isSubmitting) return true;
         if (isEditing && !hasChanges) return true;
@@ -305,13 +316,14 @@ export const useProjectForm = (
         return false;
     };
 
+    // Obtener el error de un campo de enlace especifico
     const getLinkError = (index: number, field: 'label' | 'url') => {
         const errorKey = `link${index}_${field}`;
         const error = errors[errorKey];
         return typeof error === 'string' ? error : undefined;
     };
 
-
+    // Enviar el formulario
     const handleSubmit = async () => {
         if (!validateForm()) return;
 
@@ -338,7 +350,6 @@ export const useProjectForm = (
             await onSubmit(createPayload);
         }
     };
-
 
     return {
         formData,

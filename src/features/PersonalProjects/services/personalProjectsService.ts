@@ -1,3 +1,4 @@
+// services/personalProjectsService.ts
 import { fetchWithAuth } from "../../../services/refreshToken";
 import getUsernameFromToken from "../../../utils/getUsernameToken";
 
@@ -63,7 +64,7 @@ interface FetchProjectsResponse {
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-// Crear proyecto
+// Crear un nuevo proyecto
 export const createProjectService = async (
     payload: CreateProjectPayload
 ): Promise<CreateProjectResponse> => {
@@ -84,7 +85,7 @@ export const createProjectService = async (
     const response = await fetchWithAuth(`${API_URL}/api/v1/portfolio/users/projects`, {
         method: "POST",
         body: formData,
-    });
+    }, true);
 
     const responseText = await response.text();
 
@@ -102,7 +103,7 @@ export const createProjectService = async (
     return JSON.parse(responseText);
 };
 
-
+// Obtener proyectos publicos de un usuario por nombre de usuario
 export const fetchPublicProjectsService = async (username: string): Promise<ProjectEntry[]> => {
     const response = await fetch(`${API_URL}/api/v1/portfolio/users/${username}/projects`);
     if (!response.ok) {
@@ -132,8 +133,6 @@ export const fetchPublicProjectsService = async (username: string): Promise<Proj
         visible: project.visible
     }));
 };
-
-
 
 // Obtener proyectos del usuario autenticado
 export const fetchProjectsService = async (): Promise<ProjectEntry[]> => {
@@ -171,7 +170,7 @@ export const fetchProjectsService = async (): Promise<ProjectEntry[]> => {
     }));
 };
 
-// Modificar proyecto (PATCH)
+// Actualizar un proyecto existente
 export const updateProjectService = async (
     id: string,
     payload: UpdateProjectPayload
@@ -188,7 +187,7 @@ export const updateProjectService = async (
     const response = await fetchWithAuth(`${API_URL}/api/v1/portfolio/users/projects?id=${id}`, {
         method: "PATCH",
         body: formData,
-    });
+    }, true);
 
     const responseText = await response.text();
 
@@ -206,7 +205,7 @@ export const updateProjectService = async (
     return JSON.parse(responseText);
 };
 
-// Eliminar proyecto (DELETE)
+// Eliminar un proyecto por ID
 export const deleteProjectService = async (id: string): Promise<DeleteProjectResponse> => {
 
     const response = await fetchWithAuth(`${API_URL}/api/v1/portfolio/users/projects?id=${id}`, {
@@ -228,5 +227,3 @@ export const deleteProjectService = async (id: string): Promise<DeleteProjectRes
 
     return JSON.parse(responseText);
 };
-
-
