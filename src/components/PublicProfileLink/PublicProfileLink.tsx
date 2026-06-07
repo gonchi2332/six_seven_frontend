@@ -12,35 +12,21 @@ const STYLES = {
   FOOTER: "flex justify-end mt-2"
 };
 
-/*
-  Propiedades del componente ShareProfileModal:
-  -username: Nombre de usuario para generar la URL pública del portafolio
-  -onClose: Función que se ejecuta al cerrar el modal
-*/
 interface ShareProfileModalProps {
   username: string;
   onClose: () => void;
 }
 
-/*
-  Caracteristicas:
-  -Modal para compartir enlace público del portafolio.
-  -Construye la URL pública en base al username: window.location.origin/ver/{username}
-  -Muestra la URL en un campo de solo lectura y permite copiarla al portapapeles.
-  -Al hacer clic en "Copiar", el texto se guarda en el portapapeles y el botón cambia temporalmente a "Copiado" durante 2 segundos.
-
-  Ejemplo de uso:
-  <ShareProfileModal username="juanperez" onClose={() => setModalOpen(false)} />
-*/
 const ShareProfileModal = ({ username, onClose }: ShareProfileModalProps) => {
   const [copied, setCopied] = useState(false);
   
-  // Construimos la URL completa
+  // URL pública del portafolio del usuario
   const publicUrl = `${window.location.origin}/ver/${username}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(publicUrl);
     setCopied(true);
+    // Restaura el ícono tras 2 segundos
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -50,7 +36,6 @@ const ShareProfileModal = ({ username, onClose }: ShareProfileModalProps) => {
         <p className={STYLES.DESCRIPTION}>
           Cualquier persona con este enlace podrá ver tu portafolio profesional, habilidades y experiencia.
         </p>
-
         <div className={STYLES.INPUT_GROUP}>
           <input 
             type="text" 
@@ -58,7 +43,6 @@ const ShareProfileModal = ({ username, onClose }: ShareProfileModalProps) => {
             value={publicUrl} 
             className={STYLES.INPUT}
           />
-          
           <div className={STYLES.COPY_AREA}>
             <button
               onClick={handleCopy}
@@ -76,7 +60,6 @@ const ShareProfileModal = ({ username, onClose }: ShareProfileModalProps) => {
             </button>
           </div>
         </div>
-
         <div className={STYLES.FOOTER}>
           <Button variant="secondary" onClick={onClose} fullWidth >
             Cerrar
