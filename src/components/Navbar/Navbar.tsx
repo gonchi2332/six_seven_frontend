@@ -38,11 +38,40 @@ const STYLES = {
     dropdownItemActive: "bg-accent/10 text-accent hover:bg-accent/15"
 };
 
+/*
+  Propiedades del componente Navbar:
+  -isPublic: Si es true, muestra el navbar en modo público (portafolio visible para otros)
+  -ownerName: Nombre del dueño del portafolio en modo público
+*/
 interface NavbarProps {
     isPublic?: boolean;
     ownerName?: string;
 }
 
+/*
+  Caracteristicas:
+  -Barra de navegación principal del sistema.
+  -Funciona en dos modos:
+    @ Modo privado: panel de control con opciones de edición y visibilidad
+    @ Modo público: portafolio visible sin opciones de edición
+  -Es completamente responsive:
+    @ En desktop: muestra tabs horizontales
+    @ En móvil: menú hamburguesa
+  -Menús desplegables para Habilidades (Técnicas/Blandas)
+  -Menú desplegable para Visibilidad (solo modo privado)
+  -Botón para generar enlace público del portafolio
+  -Botón para imprimir CV
+  -Cierre de sesión
+  -Filtrado dinámico de tabs según la visibilidad configurada
+
+  Ejemplos de uso:
+
+  // Modo privado (panel de control)
+  <Navbar />
+
+  // Modo público (ver portafolio de otro usuario)
+  <Navbar isPublic={true} ownerName="juanperez" />
+*/
 const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
     const { userInfo } = useNavbarInfo();
     const navigate = useNavigate();
@@ -427,3 +456,4 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
 };
 
 export default Navbar;
+

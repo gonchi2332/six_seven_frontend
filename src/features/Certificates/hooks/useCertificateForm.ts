@@ -1,12 +1,44 @@
 import { useState, useRef } from "react";
 import type { Certificate } from "../services/certificateService";
 
+/*
+  Props del hook useCertificateForm:
+  -mode: Modo del formulario - "add" (crear nuevo) o "edit" (modificar existente)
+  -initial: Datos iniciales del certificado (solo en modo edit)
+  -onSubmit: Función que se ejecuta al enviar el formulario, recibe los datos
+*/
 interface UseCertificateFormProps {
     mode: "add" | "edit";
     initial?: Certificate;
     onSubmit: (data: any) => Promise<void>;
 }
 
+/*
+  Características:
+  -Hook personalizado que gestiona toda la lógica del formulario de certificados
+  -Maneja estado de campos: título, área, descripción, fecha, imagen
+  -Validaciones: campos obligatorios (título, área, descripción, fecha, imagen)
+  -Validación en tiempo real al escribir y al hacer blur
+  -Modo "add": todos los campos son obligatorios, incluyendo imagen
+  -Modo "edit": título y área no se pueden modificar (solo descripción, fecha, imagen)
+  -isFormValid: valida según modo (add requiere todos los campos, edit solo descripción+fecha+imagen)
+  -hasChanges: detecta si hay cambios para habilitar botón en modo edit
+  -handleImageChange: crea URL de previsualización de la imagen
+  -handleSubmit: prepara los datos y los envía al onSubmit
+
+  @ Ejemplo modo add:
+  const form = useCertificateForm({
+    mode: "add",
+    onSubmit: async (data) => await createCertificate(data)
+  });
+
+  @ Ejemplo modo edit:
+  const form = useCertificateForm({
+    mode: "edit",
+    initial: existingCertificate,
+    onSubmit: async (data) => await updateCertificate(data)
+  });
+*/
 const useCertificateForm = ({ mode, initial, onSubmit }: UseCertificateFormProps) => {
     const [title, setTitle] = useState(initial?.title ?? "");
     const [titleError, setTitleError] = useState("");
@@ -28,6 +60,12 @@ const useCertificateForm = ({ mode, initial, onSubmit }: UseCertificateFormProps
 
     const fileRef = useRef<HTMLInputElement>(null);
 
+    /*
+      Valida si el formulario es válido según el modo:
+      -Modo add: título, descripción, área, fecha e imagen obligatorios
+      -Modo edit: descripción, fecha e imagen (nueva o existente) obligatorios
+      Título y área no se validan en modo edit porque están deshabilitados
+    */
     const isFormValid = mode === "add"
         ? title.trim() !== "" &&
         description.trim() !== "" &&
@@ -37,15 +75,16 @@ const useCertificateForm = ({ mode, initial, onSubmit }: UseCertificateFormProps
         : description.trim() !== "" &&
         issueDate !== "" &&
         (coverImage !== null || !!initial?.coverImage);
-    //(mode === "edit" ? (coverImage !== null || !!initial?.coverImage) : coverImage !== null);
 
+    /*
+      Detecta si hubo cambios en modo edit:
+      -Descripción cambió
+      -Fecha cambió
+      -Se seleccionó una nueva imagen
+      En modo add, siempre es true
+    */
     const hasChanges = mode === "add"
-        ? true
-        : description !== (initial?.description ?? "") ||
-        //area !== (initial?.area ?? "") ||
-        issueDate !== (initial?.issueDate ?? "") ||
-        coverImage !== null;
-
+        ? true : description !== (initial?.description ?? "") || issueDate !== (initial?.issueDate ?? "") || coverImage !== null;
     const handleTitleChange = (v: string) => {
         setTitle(v);
         setTitleError(v.trim() ? "" : "El título es obligatorio");
@@ -87,6 +126,12 @@ const useCertificateForm = ({ mode, initial, onSubmit }: UseCertificateFormProps
         setImageError("");
     };
 
+    /*
+      Prepara los datos y envía el formulario
+      -En modo add: incluye título
+      -En modo edit: no incluye título ni área
+      -Si no hay imagen nueva pero existe imagen previa, la convierte de URL a File
+    */
     const handleSubmit = async () => {
         if (!isFormValid) return;
 
@@ -109,21 +154,12 @@ const useCertificateForm = ({ mode, initial, onSubmit }: UseCertificateFormProps
             await onSubmit({
                 ...baseData,
                 title: title.trim(),
-                //area: area.trim(),
+
             });
         } else {
             await onSubmit(baseData as any);
         }
-
-        /*
-        await onSubmit({
-            title: title.trim(),
-            description: description.trim(),
-            area: area.trim(),
-            issueDate,
-            coverImage: imageToSend,
-        });
-        */
+        
     };
 
     return {
@@ -137,3 +173,4 @@ const useCertificateForm = ({ mode, initial, onSubmit }: UseCertificateFormProps
 };
 
 export default useCertificateForm;
+

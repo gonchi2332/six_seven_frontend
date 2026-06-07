@@ -1,5 +1,18 @@
 import React from 'react';
 
+/*
+  Propiedades del componente TextField:
+  -label: Etiqueta mostrada arriba del campo de texto
+  -value: Valor actual del input
+  -onChange: Función que se ejecuta al cambiar el contenido
+  -placeholder: Texto de ayuda dentro del campo
+  -type: Tipo de input (text, password, email, number, date). Por defecto 'text'
+  -error: Mensaje de error de validación (cambia el borde a rojo y fondo a rojo claro)
+  -maxLength: Número máximo de caracteres permitidos
+  -className: Clases CSS adicionales para el contenedor
+  -disabled: Si es true, deshabilita el input
+  -inputProps: Propiedades HTML adicionales para el input
+*/
 interface TextFieldProps {
   label?: string;
   value?: string;
@@ -13,6 +26,34 @@ interface TextFieldProps {
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
+/*
+  Caracteristicas:
+  -Campo de texto reutilizable para formularios.
+  -Si se proporciona label, se muestra arriba del input.
+  -Si hay error, el borde se vuelve rojo y se muestra un mensaje debajo.
+  -Cuando no hay valor, el texto se muestra en gris.
+  -Soporta el tipo "date" con un comportamiento especial:
+    @ Inicialmente se muestra como tipo "text" con placeholder
+    @ Al hacer focus, cambia a tipo "date" mostrando el selector
+    @ Al hacer blur sin valor, vuelve a tipo "text"
+
+  Ejemplo de uso básico:
+  <TextField 
+    label="Nombre"
+    value={name}
+    onChange={(e) => setName(e.target.value)}
+    placeholder="Ingresa tu nombre"
+  />
+
+  Ejemplo con validación:
+  <TextField 
+    label="Email"
+    type="email"
+    value={email}
+    onChange={handleEmailChange}
+    error="Correo electrónico inválido"
+  />
+*/
 const TextField = ({
   label,
   value,

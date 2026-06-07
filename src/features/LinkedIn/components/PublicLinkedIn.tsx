@@ -6,20 +6,29 @@ const styles = {
     wrapper: "flex-1 flex flex-col overflow-hidden",
     pageContent: "flex-1 flex items-start justify-center px-3 sm:px-6 py-1 overflow-y-auto",
     outerCard: "w-full max-w-[1400px] px-2 sm:px-6 lg:px-14 py-4 sm:py-8 flex flex-col",
-    // El contenedor verde distintivo de tu app
     greenContainer: "rounded-2xl border border-[#2C666E] bg-[#07393C] px-3 sm:px-6 py-4 sm:py-6 flex flex-col gap-6",
     header: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3",
     title: "text-xl sm:text-2xl font-bold font-inter text-white flex items-center gap-3",
-
-    // Contenido central (Badge)
     content: "flex flex-col items-center justify-center py-8 sm:py-12 bg-black/20 rounded-xl border border-white/10 min-h-[250px]",
     badgeWrapper: "w-full flex justify-center transform transition-all duration-300",
-
-    // Estados
     loading: "text-white/70 font-nunito text-center py-12 bg-black/20 rounded-xl border border-white/10",
     emptyText: "text-white/50 font-nunito text-sm sm:text-base text-center max-w-xs",
 };
 
+/*
+  Características:
+  -Componente público que muestra la insignia de LinkedIn en el portafolio
+  -Obtiene el username de la URL mediante useParams
+  -Usa useLinkedin para cargar la información del perfil de LinkedIn
+  -Muestra la insignia (LinkedInBadge) si el usuario tiene vinculada su cuenta
+  -Si no hay perfil vinculado, muestra mensaje "Aún no se vinculó una cuenta de LinkedIn"
+  -Estado loading muestra "Cargando LinkedIn..." mientras se obtienen los datos
+  -Diseño consistente con el resto del portafolio público
+
+  @ Ejemplo:
+  // Ruta: /ver/juanperez/linkedin
+  <PublicLinkedIn /> // Muestra la insignia de LinkedIn de juanperez
+*/
 const PublicLinkedIn = () => {
     const { username } = useParams<{ username: string }>();
     const { linkedinUser, isLoading } = useLinkedin(username || "");
@@ -59,3 +68,4 @@ const PublicLinkedIn = () => {
 };
 
 export default PublicLinkedIn;
+

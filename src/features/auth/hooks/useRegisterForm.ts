@@ -2,6 +2,17 @@ import { useState } from 'react';
 import { registerUser } from '../services/registerFormService';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../context/AuthContext';
+
+/*
+  Tipo que define la estructura de los datos del formulario de registro:
+  -name: Nombre(s) del usuario
+  -paternalLastName: Primer apellido
+  -secondSurname: Segundo apellido (opcional)
+  -username: Nombre de usuario único
+  -password: Contraseña (mínimo 8 caracteres)
+  -confirmPassword: Confirmación de contraseña (debe coincidir)
+  -mail: Correo electrónico único
+*/
 interface RegisterFormData {
     name: string;
     paternalLastName: string;
@@ -10,9 +21,11 @@ interface RegisterFormData {
     password: string;
     confirmPassword: string;
     mail: string;
-
 }
 
+/*
+  Tipo que define los mensajes de error para cada campo del formulario
+*/
 interface RegisterFormErrors {
     name: string;
     paternalLastName: string;
@@ -23,6 +36,9 @@ interface RegisterFormErrors {
     mail: string;
 }
 
+/*
+  Tipo que define qué campos han sido tocados (blur) para mostrar errores
+*/
 interface RegisterFormTouched {
     name: boolean;
     paternalLastName: boolean;
@@ -33,11 +49,26 @@ interface RegisterFormTouched {
     mail: boolean;
 }
 
-
-
-
 import { sendVerificationCode } from '../services/verificationCodeService';
 
+/*
+  Características:
+  -Hook personalizado que gestiona toda la lógica del formulario de registro
+  -Maneja estado de campos, validaciones, errores, y carga
+  -Validaciones por campo: nombre (solo letras), apellidos (solo letras), username (letras/números/_),
+    email (formato válido), password (mínimo 8 caracteres), confirmPassword (coincide con password)
+  -Validación en tiempo real al escribir (si el campo ya fue tocado)
+  -Validación al hacer blur (marca campo como tocado)
+  -Al enviar, registra usuario, obtiene token, lo guarda en AuthContext, envía código de verificación
+  -Maneja errores específicos: username ya existe, email ya registrado
+  -Redirige a /verification después del registro exitoso
+
+  @ Ejemplo:
+  const {
+    formData, errors, touched, isLoading, serverError,
+    handleNameChange, handlePasswordChange, handleSubmit
+  } = useRegisterForm();
+*/
 export const useRegisterForm = () => {
 
     const { login: authLogin } = useAuthContext();

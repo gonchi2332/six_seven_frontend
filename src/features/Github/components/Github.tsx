@@ -18,10 +18,31 @@ const styles = {
     loading: "text-white/70 font-nunito text-center py-12 bg-black/20 rounded-xl border border-white/10",
 };
 
+/*
+  Props del componente Github:
+  -isPublic: Si es true, muestra el componente en modo público (solo lectura)
+*/
 interface Props {
     isPublic?: boolean;
 }
 
+/*
+  Características:
+  -Componente que gestiona la integración con GitHub
+  -Muestra la insignia de GitHub del usuario (avatar, nombre de usuario, etc.)
+  -Dos modos:
+    - Modo privado: permite vincular/cambiar cuenta de GitHub
+    - Modo público: solo muestra la insignia si existe, o mensaje de "no vinculado"
+  -Botón "Cambiar Perfil" / "Vincular Ahora" abre modal con GithubInput
+  -Al vincular exitosamente, guarda el perfil y cierra el modal
+  -Estado loading mientras carga la información de GitHub
+
+  @ Ejemplo modo privado:
+  <Github />
+
+  @ Ejemplo modo público:
+  <Github isPublic={true} />
+*/
 function Github({ isPublic }: Props) {
     const [showModal, setShowModal] = useState(false);
 
@@ -110,3 +131,4 @@ function Github({ isPublic }: Props) {
 }
 
 export default Github;
+

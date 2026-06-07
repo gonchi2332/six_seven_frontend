@@ -9,6 +9,28 @@ import {
     deleteEducation as apiDeleteEducation,
 } from "../services/educationService";
 
+/*
+  Características:
+  -Hook personalizado que gestiona el estado y operaciones CRUD de formación académica
+  -Maneja dos conjuntos de datos: formaciones privadas (autenticado) y públicas (vista de portafolio)
+  -Carga automática de grados académicos y formaciones privadas al montar el componente
+  -Carga automática de formaciones públicas cuando cambia currentPublicUsername
+  -Maneja mensajes de éxito y error (se autolimpian después de 3 segundos)
+  -Operaciones CRUD: agregar, editar, eliminar (recargan la lista automáticamente)
+
+  @ Ejemplo:
+  const {
+    entries, publicEntries, academicDegrees, isLoading,
+    addEntry, editEntry, deleteEntry, setPublicUser
+  } = useEducation();
+
+  // Vista privada (panel de control)
+  <EducationList entries={entries} onDelete={deleteEntry} />
+
+  // Vista pública (portafolio)
+  setPublicUser("juanperez");
+  <PublicEducationList entries={publicEntries} isLoading={isLoadingPublic} />
+*/
 export const useEducation = () => {
     const [entries, setEntries] = useState<EducationEntry[]>([]);
     const [publicEntries, setPublicEntries] = useState<EducationEntry[]>([]);
@@ -30,7 +52,7 @@ export const useEducation = () => {
         setTimeout(() => setError(null), 3000);
     };
 
-    // Carga de datos privados (autenticado)
+    // Carga de formaciones privadas y grados académicos al montar el componente
     useEffect(() => {
         const load = async () => {
             setIsLoading(true);
@@ -51,7 +73,7 @@ export const useEducation = () => {
         load();
     }, []);
 
-    // useEffect para cargar formaciones públicas automáticamente cuando cambia currentPublicUsername
+    // Carga formaciones públicas automáticamente cuando cambia currentPublicUsername
     useEffect(() => {
         const fetchPublicUserEducation = async () => {
             if (!currentPublicUsername || currentPublicUsername.trim() === "") {
@@ -80,11 +102,16 @@ export const useEducation = () => {
         fetchPublicUserEducation();
     }, [currentPublicUsername]);
 
-    // Función pública para cambiar el usuario a visualizar
+    // Función pública para cambiar el usuario a visualizar en el portafolio
     const setPublicUser = useCallback((username: string | null) => {
         setCurrentPublicUsername(username);
     }, []);
 
+    /*
+      Agrega una nueva formación académica
+      -Envía los datos al servicio createEducation
+      -Actualiza la lista con la respuesta del servidor
+    */
     const addEntry = async (data: Omit<EducationEntry, "id">) => {
         try {
             const updated = await createEducation(data);
@@ -95,6 +122,11 @@ export const useEducation = () => {
         }
     };
 
+    /*
+      Edita una formación académica existente
+      -Envía los datos actualizados al servicio updateEducation
+      -Actualiza la lista con la respuesta del servidor
+    */
     const editEntry = async (id: string, data: Omit<EducationEntry, "id">) => {
         try {
             const updated = await updateEducation(id, data);
@@ -105,6 +137,11 @@ export const useEducation = () => {
         }
     };
 
+    /*
+      Elimina una formación académica:
+      -Llama al servicio deleteEducation
+      -Actualiza el estado local filtrando la entrada eliminada
+    */
     const deleteEntry = async (id: string) => {
         try {
             await apiDeleteEducation(id);
@@ -131,3 +168,4 @@ export const useEducation = () => {
         currentPublicUsername,
     };
 };
+

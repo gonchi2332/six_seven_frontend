@@ -1,5 +1,10 @@
 import type { Certificate } from "../services/certificateService";
 
+/*
+  Props del componente CertificateCard:
+  -certificate: Objeto con los datos del certificado (título, área, imagen, fecha de emisión)
+  -onClick: Función ejecutada al hacer clic en la tarjeta, recibe el certificado completo
+*/
 interface Props {
     certificate: Certificate;
     onClick: (certificate: Certificate) => void;
@@ -16,6 +21,21 @@ const styles = {
     date: "text-white/40 font-nunito text-xs",
 };
 
+/*
+  Características:
+  -Tarjeta visual para mostrar un certificado en listados
+  -Muestra imagen de portada (coverImage) o texto "Sin imagen" si no hay
+  -Contenido: título del certificado, área, fecha de emisión formateada
+  -Formato de fecha: DD/MM/YYYY (ej: 15/03/2024)
+  -Al hacer clic en cualquier parte, ejecuta onClick con el certificado
+  -Efectos hover: borde acento y fondo semitransparente
+
+  @ Ejemplo:
+  <CertificateCard 
+    certificate={certificate} 
+    onClick={(cert) => openCertificateDetail(cert)}
+  />
+*/
 const CertificateCard = ({ certificate, onClick }: Props) => {
     const formattedDate = certificate.issueDate ? new Date(certificate.issueDate + "T00:00:00").toLocaleDateString("es-ES", {
         day: "2-digit", month: "2-digit", year: "numeric",
@@ -37,3 +57,4 @@ const CertificateCard = ({ certificate, onClick }: Props) => {
 };
 
 export default CertificateCard;
+

@@ -23,6 +23,19 @@ const styles = {
     loading: "text-white/70 font-nunito text-center py-12 bg-black/20 rounded-xl border border-white/10",
 };
 
+/*
+  Características:
+  -Componente que gestiona la integración con LinkedIn
+  -Muestra la insignia de LinkedIn del usuario (avatar, nombre de usuario, etc.)
+  -Dos modos: vinculación inicial o cambio de perfil
+  -Botón "Cambiar Perfil" / "Vincular Ahora" abre modal con LinkedInInput
+  -Al vincular exitosamente, guarda el perfil y cierra el modal
+  -Estado loading mientras carga la información de LinkedIn
+  -Diseño consistente con el resto de integraciones (GitHub)
+
+  @ Ejemplo:
+  <LinkedIn />
+*/
 function LinkedIn() {
     const [showModal, setShowModal] = useState(false);
 
@@ -50,7 +63,6 @@ function LinkedIn() {
                 <div className={styles.outerCard}>
                     <div className={styles.greenContainer}>
 
-                        {/* Header Estandarizado */}
                         <div className={styles.header}>
                             <h1 className={styles.title}>
                                 Perfil de LinkedIn
@@ -87,7 +99,7 @@ function LinkedIn() {
                 </div>
             </div>
 
-            {/* Modal de Vinculación (Overlay estandarizado) */}
+
             {showModal && (
                 <div className={styles.overlay} onClick={() => setShowModal(false)}>
                     <div className="w-full max-w-sm" onClick={(e) => e.stopPropagation()}>

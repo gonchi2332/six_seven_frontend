@@ -1,6 +1,19 @@
 // components/TextAreaField/index.tsx
 import React from 'react';
 
+/*
+  Propiedades del componente TextAreaField:
+  -label: Etiqueta mostrada arriba del campo de texto
+  -value: Valor actual del textarea
+  -onChange: Función que se ejecuta al cambiar el contenido
+  -placeholder: Texto de ayuda dentro del campo
+  -error: Mensaje de error de validación (cambia el borde a rojo y fondo a rojo claro)
+  -maxLength: Número máximo de caracteres permitidos
+  -className: Clases CSS adicionales para el contenedor
+  -disabled: Si es true, deshabilita el textarea
+  -rows: Número de filas visibles (por defecto 4)
+  -textareaProps: Propiedades HTML adicionales para el textarea
+*/
 interface TextAreaFieldProps {
     label?: string;
     value?: string;
@@ -14,6 +27,31 @@ interface TextAreaFieldProps {
     textareaProps?: React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 }
 
+/*
+  Caracteristicas:
+  -Campo de texto multilínea reutilizable para formularios.
+  -Si se proporciona label, se muestra arriba del textarea.
+  -Si hay error, el borde se vuelve rojo y se muestra un mensaje debajo.
+  -Cuando no hay valor, el texto se muestra en gris.
+  -El textarea es redimensionable verticalmente (resize-vertical).
+
+  Ejemplo de uso básico:
+  <TextAreaField 
+    label="Descripción"
+    value={description}
+    onChange={(e) => setDescription(e.target.value)}
+    placeholder="Escribe tu descripción..."
+  />
+
+  Ejemplo con validación:
+  <TextAreaField 
+    label="Biografía"
+    value={bio}
+    onChange={handleBioChange}
+    error="La biografía es requerida"
+    maxLength={500}
+  />
+*/
 const TextAreaField = ({
     label,
     value,

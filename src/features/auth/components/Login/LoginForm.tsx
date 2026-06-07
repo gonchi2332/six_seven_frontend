@@ -6,6 +6,20 @@ import EmailVerificationFlow from "../../components/EmailPasswordVerification/Em
 import CodeEmailPopup from "../EmailPasswordVerification/CodeEmailPopup";
 import { useNavigate } from "react-router-dom";
 
+/*
+  Características:
+  -Formulario principal de inicio de sesión
+  -Campos: nombre de usuario y contraseña
+  -Validación en tiempo real con feedback de errores
+  -Muestra error de servidor si las credenciales son incorrectas
+  -Enlace "¿Olvidaste tu contraseña?" abre flujo de recuperación
+  -Enlace "Regístrate aquí" redirige a página de registro
+  -Después de registro exitoso, muestra popup de verificación de email
+  -Estado isLoading deshabilita campos y botón durante el envío
+
+  @ Ejemplo:
+  <LoginForm />
+*/
 const LoginForm = () => {
     const {
         username,

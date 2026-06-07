@@ -1,9 +1,6 @@
 import LoginForm from "../../features/auth/components/Login/LoginForm";
 import LoginImage from "../../features/auth/components/Login/LoginImage/LoginImage";
 
-
-
-
 const PAGE_CONTAINER = "h-screen bg-main flex flex-col";
 const MAIN_CONTENT = "flex-1 overflow-y-auto px-6 lg:px-0 lg:overflow-hidden lg:flex-1";
 const TOP_BAR = "lg:hidden bg-secondary px-6 py-3";
@@ -15,6 +12,20 @@ const FORM_SECTION = "lg:w-1/2 flex items-center justify-center py-6 lg:p-6";
 const FORM_CARD = "w-full max-w-md";
 const BOTTOM_BAR = "lg:hidden h-16 bg-secondary";
 
+/*
+  Características:
+  -Página de inicio de sesión de la aplicación
+  -Diseño responsivo: en móvil muestra top bar con título, en desktop layout de dos columnas
+  -Columna izquierda: imagen decorativa (LoginImage)
+  -Columna derecha: formulario de inicio de sesión (LoginForm)
+  -En móvil, la imagen se muestra más pequeña arriba del formulario
+  -Barra superior e inferior solo visibles en móvil (lg:hidden)
+  -Diseño flexible con flexbox para adaptarse a diferentes tamaños de pantalla
+
+  @ Ejemplo:
+  // Ruta: /login
+  <LoginPage />
+*/
 const LoginPage = () => {
     return (
         <div className={PAGE_CONTAINER}>

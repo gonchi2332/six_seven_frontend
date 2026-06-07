@@ -6,6 +6,24 @@ import type { Certificate } from "../services/certificateService";
 
 const PAGE_SIZE = 12;
 
+/*
+  Características:
+  -Hook personalizado que orquesta la página de gestión de certificados
+  -Combina múltiples hooks: useCertificates (CRUD), useSearch (búsqueda), usePagination (paginación)
+  -Maneja estados de UI: popups de acción, vista, edición, eliminación, creación
+  -Paginación con 12 certificados por página
+  -Búsqueda por título del certificado (case-insensitive)
+  -closeAll: cierra todos los popups y limpia errores
+  -goToMenu: muestra el menú de acciones para un certificado específico
+  -Manejo de errores y estado de carga en operaciones CRUD
+  -isSubmitting: deshabilita botones durante envíos
+
+  @ Ejemplo:
+  const {
+    paginated, isLoading, searchInput, onSearch, handleChange,
+    certToDelete, onDeleteConfirm, showAdd, onAddSubmit
+  } = useCertificatesPage();
+*/
 const useCertificatesPage = () => {
     const { certificates, isLoading, error, successMessage, addCertificate, editCertificate, deleteCertificate } = useCertificates();
 
@@ -98,3 +116,4 @@ const useCertificatesPage = () => {
 };
 
 export default useCertificatesPage;
+

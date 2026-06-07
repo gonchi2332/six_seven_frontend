@@ -20,6 +20,15 @@ const ICON_INFO = "fa-solid fa-circle-info";
 const RESEND_CONFIRMATION = "text-green-300 text-normal text-center w-full";
 const EMAIL_HINT = "text-surface text-sm font-nunito text-center";
 
+/*
+  Características:
+  -Censura parcialmente un correo electrónico para mostrar solo los primeros 4 caracteres
+  -Ejemplo: "usuario123@gmail.com" -> "usua****@gmail.com"
+  -Si no se puede dividir el email, retorna el original sin cambios
+
+  @ Parámetro: email - Correo electrónico a censurar
+  @ Retorna: Email censurado o el original si hay error
+*/
 const censorEmail = (email: string): string => {
     const [local, domain] = email.split("@");
     if (!local || !domain) return email;
@@ -28,6 +37,14 @@ const censorEmail = (email: string): string => {
     return `${visible}${censored}@${domain}`;
 };
 
+/*
+  Props del componente VerificationPopup:
+  -username: Nombre del usuario que se está verificando
+  -email: Correo del usuario (se muestra censurado)
+  -mode: Modo de uso - "verify" (registro) o "recovery" (recuperación)
+  -onSuccess: Función ejecutada cuando la verificación es exitosa
+  -onClose: Función ejecutada al cerrar el popup
+*/
 interface Props {
     username: string;
     email?: string;
@@ -36,6 +53,36 @@ interface Props {
     onClose?: () => void;
 }
 
+/*
+  Características:
+  -Popup de verificación con código de 8 dígitos
+  -Funciona en dos modos: verify (registro de nuevo usuario) y recovery (recuperación de contraseña)
+  -Muestra el email censurado para confirmación visual
+  -Input de código con validación de 8 dígitos
+  -Cambia el ícono y mensajes según haya error o no
+  -Botón Verificar: valida el código ingresado
+  -Botón Reenviar Código: envía un nuevo código al email
+  -Botón Cancelar: cierra el popup
+  -Estado resent muestra confirmación verde cuando se reenvía el código
+
+  @ Ejemplo modo verify:
+  <VerificationPopup 
+    username="juanperez"
+    email="juanperez@gmail.com"
+    mode="verify"
+    onSuccess={(code) => console.log("Verificado", code)}
+    onClose={() => setShowPopup(false)}
+  />
+
+  @ Ejemplo modo recovery:
+  <VerificationPopup 
+    username="juanperez"
+    email="juanperez@gmail.com"
+    mode="recovery"
+    onSuccess={(code) => handlePasswordReset(code)}
+    onClose={() => setShowPopup(false)}
+  />
+*/
 const VerificationPopup = ({ username, email, mode, onSuccess, onClose }: Props) => {
     const { token } = useAuthContext();
 

@@ -34,9 +34,23 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
+/*
+  Características:
+  -Página principal de gestión de formación académica
+  -Muestra lista de entradas educativas en formato grid
+  -Barra de búsqueda (filtra por título o institución)
+  -Paginación (10 elementos por página)
+  -Maneja CRUD completo: crear, ver, editar, eliminar
+  -Popup de acciones al hacer clic en una tarjeta (EducationPopup)
+  -Modales: ViewEducationPopup (ver detalle), EducationForm (crear/editar), ConfirmDeleteModal (eliminar)
+
+  @ Ejemplo:
+  // Ruta: /educacion
+  <EducationPage />
+*/
 const EducationPage = () => {
     const { entries, academicDegrees, isLoading, error, successMessage, addEntry, editEntry, deleteEntry } = useEducation();
-
+    
 
     const [searchInput, setSearchInput] = useState("");
     const [activeSearch, setActiveSearch] = useState("");
@@ -78,6 +92,7 @@ const EducationPage = () => {
         if (e.key === "Enter") handleSearch();
     };
 
+    // Filtra por título o institución
     const filtered = entries.filter((e) => {
         if (!activeSearch.trim()) return true;
         const term = activeSearch.toLowerCase();

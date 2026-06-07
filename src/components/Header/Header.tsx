@@ -1,3 +1,7 @@
+/*
+  Propiedades del componente Header:
+  -title: Título que se muestra en la cabecera de la sección
+*/
 interface Props {
   title: string;
 }
@@ -8,6 +12,15 @@ const STYLES = {
     LINE: "h-[3px] flex-grow bg-surface"
 }
 
+/*
+  Caracteristicas:
+  -Cabecera de sección con título y línea decorativa.
+  -Muestra un título a la izquierda y una línea horizontal que ocupa el espacio restante a la derecha. 
+  -Útil para separar secciones dentro del portafolio.
+
+  Ejemplo de uso:
+  <Header title="Experiencia Laboral" />
+*/
 const Header = ({ title }: Props) => {
   return (
     <div className={STYLES.CONTAINER}>

@@ -5,6 +5,23 @@ import { sendVerificationCode } from "../services/verificationCodeService";
 import { getEmail } from "../../../services/getemail";
 import { useNavigate } from "react-router-dom";
 
+/*
+  Características:
+  -Hook personalizado que gestiona toda la lógica del formulario de inicio de sesión
+  -Maneja estado de campos (username, password), validaciones, errores, y carga
+  -Integra autenticación con el contexto AuthContext
+  -Maneja dos flujos post-login:
+    1. Usuario verificado: navega directamente a /info-personal
+    2. Usuario no verificado: obtiene email, envía código de verificación y muestra popup de verificación
+  -Validaciones: campos obligatorios
+  -Manejo de errores del servidor con detección de mensajes específicos (credenciales inválidas, etc.)
+
+  @ Ejemplo:
+  const {
+    username, password, errors, touched, isLoading,
+    handleUsernameChange, handlePasswordChange, handleSubmit
+  } = useLogin();
+*/
 const useLogin = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");

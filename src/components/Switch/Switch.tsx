@@ -1,5 +1,11 @@
 import { useState } from "react";
 
+/*
+  Propiedades del componente VisibilitySwitch:
+  -id: Identificador único del elemento cuya visibilidad se controla
+  -initialState: Estado inicial de visibilidad (true = público, false = oculto). Por defecto true
+  -onChange: Función que se ejecuta al cambiar el switch, recibe el id y el nuevo estado
+*/
 interface VisibilitySwitchProps {
     id: number | string;
     initialState?: boolean;
@@ -12,6 +18,19 @@ const styles = {
     switchText: "hidden sm:inline-block mr-3 text-sm font-nunito font-bold text-white/50 peer-checked:text-[#90DDF0] transition-colors"
 };
 
+/*
+  Caracteristicas:
+  -Switch de visibilidad para controlar qué secciones del portafolio son públicas u ocultas.
+  -Muestra un texto que alterna entre "Público" y "Oculto" según el estado, y un toggle visual estilo iOS.
+  -Al hacer clic, ejecuta la función onChange (si fue proporcionada) con el id y el nuevo estado. El componente maneja su propio estado interno.
+
+  Ejemplo de uso:
+  <VisibilitySwitch 
+    id="workExperience" 
+    initialState={true} 
+    onChange={(id, isVisible) => saveVisibility(id, isVisible)} 
+  />
+*/
 const VisibilitySwitch = ({ id, initialState = true, onChange }: VisibilitySwitchProps) => {
     const [isVisible, setIsVisible] = useState(initialState);
 
@@ -40,3 +59,4 @@ const VisibilitySwitch = ({ id, initialState = true, onChange }: VisibilitySwitc
 };
 
 export default VisibilitySwitch;
+

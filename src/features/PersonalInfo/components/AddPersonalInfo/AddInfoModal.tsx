@@ -3,9 +3,23 @@ import Button from '../../../../components/Button';
 import TextField from '../../../../components/TextField';
 import { useAddInfoForm } from '../../hooks/useAddInfoForm';
 
-// Campos que se pueden agregar (los que pueden estar vacíos)
+/*
+  Tipos de campos que se pueden agregar en el formulario:
+  -secondSurname: Segundo apellido (opcional)
+  -city: Ciudad de residencia
+  -email: Correo electrónico de contacto
+  -phone: Número de teléfono
+  -country: País de residencia
+*/
 type AvailableField = 'secondSurname' | 'city' | 'email' | 'phone' | 'country';
 
+/*
+  Estructura de opción de campo:
+  -value: Identificador del campo
+  -label: Etiqueta mostrada al usuario
+  -placeholder: Texto de ayuda en el input
+  -type: Tipo de input (text o email)
+*/
 interface FieldOption {
     value: AvailableField;
     label: string;
@@ -13,6 +27,9 @@ interface FieldOption {
     type?: 'text' | 'email';
 }
 
+/*
+  Lista de opciones disponibles para agregar información personal
+*/
 const fieldOptions: FieldOption[] = [
     { value: 'secondSurname', label: 'Segundo apellido', placeholder: 'Ej: Pérez', type: 'text' },
     { value: 'city', label: 'Ciudad', placeholder: 'Ej: La Paz', type: 'text' },
@@ -21,6 +38,13 @@ const fieldOptions: FieldOption[] = [
     { value: 'country', label: 'País de residencia', placeholder: 'Selecciona un país', type: 'text' },
 ];
 
+/*
+  Props del componente AddInfoModal:
+  -isOpen: Controla si el modal es visible
+  -onClose: Función ejecutada al cerrar el modal
+  -onAdd: Función para agregar el campo, recibe el campo y el valor
+  -emptyFields: Lista de campos que aún no tiene el usuario (se pueden agregar)
+*/
 interface AddInfoModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -38,6 +62,24 @@ const styles = {
     buttonContainer: "flex gap-3 mt-6",
 };
 
+/*
+  Características:
+  -Modal para agregar campos faltantes de información personal
+  -Muestra un selector con los campos que el usuario aún no tiene registrados
+  -Soporta diferentes tipos de campos: texto, email, país (con selector)
+  -Para el campo "país", utiliza un selector con lista de países (useCountries)
+  -Validaciones según tipo de campo (email, etc.)
+  -Muestra mensajes de error si el campo es inválido o ya existe
+  -Botón Registrar deshabilitado mientras se valida o se envía
+
+  @ Ejemplo:
+  <AddInfoModal
+    isOpen={showModal}
+    onClose={() => setShowModal(false)}
+    onAdd={handleAddField}
+    emptyFields={['city', 'phone', 'email']}
+  />
+*/
 const AddInfoModal = ({ isOpen, onClose, onAdd, emptyFields }: AddInfoModalProps) => {
     const { countries, isLoading: countriesLoading } = useCountries();
 
@@ -131,3 +173,4 @@ const AddInfoModal = ({ isOpen, onClose, onAdd, emptyFields }: AddInfoModalProps
 };
 
 export default AddInfoModal;
+

@@ -1,5 +1,17 @@
 import { useRef } from "react";
 
+/*
+  Props del componente ImageUploadField:
+  -label: Etiqueta mostrada arriba del campo de carga
+  -required: Si es true, muestra un asterisco (*) indicando campo obligatorio
+  -preview: URL de la imagen para mostrar vista previa (puede ser base64 o URL)
+  -error: Mensaje de error de validación
+  -touched: Indica si el campo ha sido tocado (para mostrar error)
+  -showCurrentHint: Si es true, muestra sugerencia sobre imagen actual cargada
+  -disabled: Si es true, deshabilita el input de archivo
+  -onChange: Función ejecutada al seleccionar un archivo, recibe el File o null
+  -onBlur: Función ejecutada al salir del campo
+*/
 interface ImageUploadFieldProps {
     label: string;
     required?: boolean;
@@ -24,6 +36,30 @@ const styles = {
     preview: "w-full h-32 object-contain rounded-xl border border-white/10 bg-black/20 mt-2",
 };
 
+/*
+  Características:
+  -Campo de carga de imágenes reutilizable para formularios
+  -Acepta solo archivos de imagen (accept="image/*")
+  -Muestra label con asterisco si es requerido
+  -Botón de archivo estilizado con colores del tema
+  -Estado error: borde rojo (solo si touched es true)
+  -Muestra mensaje de error debajo del campo si hay error y fue tocado
+  -Muestra vista previa de la imagen seleccionada
+  -showCurrentHint: útil en modo edición para indicar que hay imagen actual
+
+  @ Ejemplo:
+  <ImageUploadField
+    label="Foto de Perfil"
+    required
+    preview={imagePreview}
+    error={imageError}
+    touched={imageTouched}
+    showCurrentHint={isEditMode}
+    disabled={isSubmitting}
+    onChange={handleImageChange}
+    onBlur={handleImageBlur}
+  />
+*/
 const ImageUploadField = ({
     label, required = false, preview, error, touched = false,
     showCurrentHint = false, disabled = false, onChange, onBlur,

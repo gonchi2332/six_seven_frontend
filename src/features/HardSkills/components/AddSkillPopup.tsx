@@ -4,6 +4,13 @@ import TextField from "../../../components/TextField";
 import SkillLevelSelector from "./SkillLevelSelector";
 import useAddSkill from "../hooks/useAddSkill";
 
+/*
+  Props del componente AddSkillPopup:
+  -onSubmit: Función ejecutada al confirmar el registro, recibe nombre y nivel de la habilidad
+  -onClose: Función ejecutada al cancelar o cerrar el popup
+  -isSubmitting: Estado de carga externo (deshabilita botones)
+  -catalogSkills: Lista de habilidades predefinidas del catálogo para autocompletado
+*/
 interface AddSkillPopupProps {
     onSubmit: (name: string, level: number) => void;
     onClose: () => void;
@@ -29,6 +36,26 @@ const styles = {
     checkboxLabel: (active: boolean) => `text-[16px] text-white font-nunito transition-all duration-200 ${active ? "text-white font-semibold" : "text-surface/70 group-hover:text-white"}`,
 };
 
+/*
+  Características:
+  -Popup para registrar una nueva habilidad técnica
+  -Dos modos de selección:
+    1. Seleccionar del catálogo: input con autocompletado (sugerencias)
+    2. "Otro": permite escribir nombre personalizado
+  -Checkbox "Otro" para alternar entre modos
+  -Nivel de habilidad: selector visual de 0-5 (SkillLevelSelector)
+  -Validaciones: habilidad no duplicada, nivel requerido
+  -Muestra sugerencias dinámicas mientras escribe
+  -Mensajes de error: inline (campo) y top (error general)
+
+  @ Ejemplo:
+  <AddSkillPopup
+    onSubmit={(name, level) => addHardSkill(name, level)}
+    onClose={() => setShowPopup(false)}
+    catalogSkills={["JavaScript", "Python", "React", "Node.js"]}
+    isSubmitting={isLoading}
+  />
+*/
 const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills = [] }: AddSkillPopupProps) => {
     const {
         search, suggestions, showDropdown, setShowDropdown, isOther, otherName,
@@ -126,3 +153,4 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
 };
 
 export default AddSkillPopup;
+

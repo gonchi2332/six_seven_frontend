@@ -27,6 +27,12 @@ const styles = {
     toastError: "bg-red-500/10 border border-red-500 text-red-400",
 };
 
+/*
+  Características:
+  -Subcomponente que renderiza una fila configurable con Switch para controlar visibilidad
+  -Recibe: ícono, etiqueta, valor, clave del campo, visibilidad actual y función onToggle
+  -Muestra el valor del campo y un Switch para alternar visibilidad
+*/
 const ConfigInfoRow = ({
     icon: Icon,
     label,
@@ -61,6 +67,21 @@ const ConfigInfoRow = ({
     </div>
 );
 
+/*
+  Características:
+  -Página de configuración de visibilidad de información personal
+  -Muestra secciones: Datos Personales (siempre públicos/ocultos) y Ubicación y Contacto (configurables)
+  -Campos siempre públicos: nombre completo, nombre de usuario
+  -Campo siempre oculto: correo principal de registro
+  -Campos configurables: residencia, correo de contacto, teléfono
+  -Botones: Mostrar todo, Ocultar todo, Guardar
+  -Detecta cambios locales antes de guardar (hasChanges)
+  -Muestra mensajes de éxito/error con toast
+
+  @ Ejemplo:
+  // Ruta: /configurar/informacion-personal/visibilidad
+  <PersonalInfoConfigPage />
+*/
 const PersonalInfoConfigPage = () => {
     const [refreshKey, setRefreshKey] = useState(0);
     const { userInfo, isLoading } = useNavbarInfo(refreshKey);
@@ -72,6 +93,7 @@ const PersonalInfoConfigPage = () => {
     const [initialVisibilityMap, setInitialVisibilityMap] = useState<Record<string, boolean>>({});
     const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>({});
 
+    // Inicializa mapas de visibilidad desde los datos del usuario
     useEffect(() => {
         if (userInfo) {
             const initialMap = {
@@ -122,7 +144,7 @@ const PersonalInfoConfigPage = () => {
 
             setInitialVisibilityMap(visibilityMap);
             setLocalSuccess(res.message || "Cambios guardados exitosamente");
-            setRefreshKey((prev) => prev + 1); // Forzar actualización limpia si el hook lo requiere
+            setRefreshKey((prev) => prev + 1);
             setTimeout(() => setLocalSuccess(null), 3000);
         } catch (err: any) {
             setLocalError(err.message || "Error al guardar los cambios.");
@@ -256,6 +278,12 @@ const PersonalInfoConfigPage = () => {
     );
 };
 
+/*
+  Características:
+  -Subcomponente que renderiza una fila estática (sin Switch) para campos con visibilidad fija
+  -Recibe: ícono, etiqueta, valor y texto de badge (ej: "Siempre Público", "Siempre Oculto")
+  -Útil para campos que no pueden ser modificados por el usuario
+*/
 const InfoRowStatic = ({ icon: Icon, label, value, badgeText }: { icon: React.ElementType; label: string; value: string; badgeText: string }) => (
     <div className={`${styles.fieldWrapper} opacity-80 bg-black/5`}>
         <div className={styles.field}>

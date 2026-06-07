@@ -12,12 +12,35 @@ const styles = {
   buttons: "flex gap-2 shrink-0",
 };
 
+/*
+  Props del componente SkillBar:
+  -skill: Objeto con los datos de la habilidad (nombre, nivel, id)
+  -onEdit: Función ejecutada al hacer clic en el botón editar (lápiz)
+  -onDelete: Función ejecutada al hacer clic en el botón eliminar (basurero)
+*/
 interface Props {
   skill: Skill;
   onEdit: (skill: Skill) => void;
   onDelete: (skill: Skill) => void;
 }
 
+/*
+  Características:
+  -Componente que representa una habilidad con barra de nivel y botones de acción
+  -Muestra el nombre de la habilidad (truncado si es muy largo)
+  -Barras de nivel: de 0 a 5, barras celestes (#90DDF0) para el nivel alcanzado
+  -Transición suave de 300ms al cambiar el nivel
+  -Botones: editar (lápiz) en color acento, eliminar (basurero) en color rojo
+  -stopPropagation en los botones para evitar eventos del contenedor padre
+  -Efecto hover en el contenedor: borde acento más visible
+
+  @ Ejemplo:
+  <SkillBar
+    skill={{ skill_id: 1, name: "JavaScript", level: 4 }}
+    onEdit={(skill) => openEditModal(skill)}
+    onDelete={(skill) => confirmDelete(skill)}
+  />
+*/
 const SkillBar = ({ skill, onEdit, onDelete }: Props) => {
   return (
     <div className={styles.container}>

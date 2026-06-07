@@ -30,6 +30,20 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
+/*
+  Características:
+  -Página principal de gestión de habilidades técnicas
+  -Muestra lista de habilidades con barras de nivel (LevelBars)
+  -Barra de búsqueda por nombre de habilidad
+  -Paginación (12 habilidades por página)
+  -Maneja CRUD completo: crear, ver, editar, eliminar
+  -Popup de acciones al hacer clic en una habilidad (SkillActionPopup)
+  -Modales: AddSkillPopup (crear), EditSkillPopup (editar), ViewHardSkillPopup (ver), ConfirmDeletePopup (eliminar)
+
+  @ Ejemplo:
+  // Ruta: /habilidades-tecnicas
+  <HardSkillsPage />
+*/
 const HardSkillsPage = () => {
     const { skills, catalogSkills, isLoading, error, successMessage, addSkill, editSkill, deleteSkill } = useSkills();
     const { searchInput, filtered, handleSearch, handleKeyDown, handleChange } = useSearch(

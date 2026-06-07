@@ -7,33 +7,24 @@ import EditPersonalInfoCard from './EditPersonalInfo/EditPersonalInfoCard';
 import AddInfoModal from './AddPersonalInfo/AddInfoModal';
 import ViewPersonalInfoModal from './ViewPersonalInfoModal';
 
-// ============================================
-// CONSTANTES DE ESTILOS ESTANDARIZADOS
-// ============================================
+
 
 const styles = {
     wrapper: "flex-1 flex flex-col overflow-hidden",
     pageContent: "flex-1 flex items-start justify-center px-3 sm:px-6 py-1 overflow-y-auto",
     outerCard: "w-full max-w-[1400px] px-2 sm:px-6 lg:px-8 py-4 sm:py-4 flex flex-col",
-    // Contenedor Esmeralda (Marca registrada de tus secciones)
     greenContainer: "rounded-2xl border border-[#2C666E] bg-[#07393C] px-3 sm:px-6 py-4 sm:py-6 flex flex-col gap-4 sm:gap-6",
     header: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3",
     title: "text-xl sm:text-2xl font-bold font-inter text-white",
     actionRow: "flex items-center gap-2",
-
-    // Grid de información
     listWrapper: "grid grid-cols-1 md:grid-cols-2 gap-4",
     infoCard: "bg-black/20 border border-white/10 rounded-xl p-5 flex flex-col gap-4",
     sectionTitle: "text-[#90DDF0] font-bold text-xs uppercase tracking-widest flex items-center gap-2 mb-2",
-
-    // Filas de datos
     field: "flex items-start gap-3",
     icon: "mt-0.5 text-[#90DDF0] shrink-0",
     label: "text-white/40 text-[10px] sm:text-xs uppercase tracking-wide font-bold",
     value: "text-white font-nunito text-sm sm:text-base mt-0.5 leading-tight",
     emptyValue: "text-white/20 italic font-nunito text-sm mt-0.5",
-
-    // Modales y estados
     overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 z-50 overflow-y-auto",
     loading: "text-white/70 font-nunito text-center py-8 bg-black/20 rounded-xl border border-white/10",
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
@@ -43,6 +34,12 @@ const styles = {
 // COMPONENTES AUXILIARES
 // ============================================
 
+/*
+  Características:
+  -Subcomponente que renderiza una fila de información con ícono, etiqueta y valor
+  -Recibe: ícono (lucide-react), etiqueta y valor
+  -Si no hay valor, muestra "No especificado" en cursiva y semi-transparente
+*/
 const InfoRow = ({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string | null | undefined }) => (
     <div className={styles.field}>
         <Icon size={18} className={styles.icon} />
@@ -61,6 +58,19 @@ const InfoRow = ({ icon: Icon, label, value }: { icon: React.ElementType; label:
 // COMPONENTE PRINCIPAL
 // ============================================
 
+/*
+  Características:
+  -Componente principal de gestión de información personal
+  -Muestra datos del usuario: nombre completo, nombre de usuario, correo de registro, residencia, correo de contacto, teléfono
+  -Organiza la información en dos tarjetas: "Datos Personales" y "Ubicación y Contacto"
+  -Botones de acción: Ver, Modificar, Ingresar Información
+  -Botón "Ingresar Información": deshabilitado si no hay campos vacíos o está en envío
+  -Integra modales: EditPersonalInfoCard (edición), ViewPersonalInfoModal (visualización), AddInfoModal (agregar campos faltantes)
+  -Usa refreshKey para recargar datos después de operaciones
+
+  @ Ejemplo:
+  <PersonalInfo />
+*/
 const PersonalInfo = () => {
     const [refreshKey, setRefreshKey] = useState(0);
     const { userInfo, isLoading } = useNavbarInfo(refreshKey);
@@ -72,6 +82,7 @@ const PersonalInfo = () => {
 
     const refreshData = () => setRefreshKey(prev => prev + 1);
 
+    // Campos vacíos que pueden ser agregados
     const emptyFields: DeletableField[] = [];
     if (!userInfo?.second_surname) emptyFields.push('secondSurname');
     if (!userInfo?.residence_city_name) emptyFields.push('city');
@@ -123,6 +134,7 @@ const PersonalInfo = () => {
                                 </Button>
                             </div>
                         </div>
+
                         {isLoading ? (
                             <div className={styles.loading}>Cargando información personal...</div>
                         ) : (
@@ -158,7 +170,7 @@ const PersonalInfo = () => {
                 </div>
             </div>
 
-            {/* Modal de Edición (Overlay estandarizado) */}
+            {/* Modal de Edición */}
             {isEditModalOpen && (
                 <div className={styles.overlay} onClick={() => setIsEditModalOpen(false)}>
                     <div
@@ -192,3 +204,4 @@ const PersonalInfo = () => {
 };
 
 export default PersonalInfo;
+

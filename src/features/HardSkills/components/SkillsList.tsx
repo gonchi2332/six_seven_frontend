@@ -18,6 +18,26 @@ const styles = {
     paginationLabel: "text-[14px] font-nunito text-surface/70",
 };
 
+/*
+  Características:
+  -Componente principal que renderiza la lista de habilidades técnicas
+  -Muestra cabecera con título y botón "Registrar"
+  -Maneja estados: carga, error, éxito, lista vacía
+  -Paginación: muestra botones anterior/siguiente si hay más de una página
+  -Popups modales: AddSkillPopup, EditSkillPopup, DeleteSkillPopup
+  -Usa useSkillsList para toda la lógica de estado y operaciones CRUD
+
+  Flujo:
+  1. Carga habilidades del usuario
+  2. Muestra cada habilidad con SkillBar (nombre + barras de nivel + botones)
+  3. Click en "Registrar" -> abre AddSkillPopup
+  4. Click en editar (lápiz) -> abre EditSkillPopup
+  5. Click en eliminar (basurero) -> abre DeleteSkillPopup
+  6. Después de cada operación, refresca la lista automáticamente
+
+  @ Ejemplo:
+  <SkillsList />
+*/
 const SkillsList = () => {
     const {
         skills,
@@ -62,6 +82,7 @@ const SkillsList = () => {
                     <div className={styles.list}>
                         {paginated.map((skill) => (
                             <SkillBar
+                                key={skill.skill_id}
                                 skill={skill}
                                 onEdit={() => setEditTarget(skill)}
                                 onDelete={() => setDeleteTarget(skill)}
@@ -125,3 +146,4 @@ const SkillsList = () => {
 };
 
 export default SkillsList;
+

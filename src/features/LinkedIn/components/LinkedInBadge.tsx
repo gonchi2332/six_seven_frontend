@@ -1,9 +1,28 @@
-import { ExternalLink } from 'lucide-react'; // Opcional para el icono del botón
+import { ExternalLink } from 'lucide-react';
 
+/*
+  Props del componente LinkedInBadge:
+  -username: Nombre de usuario de LinkedIn o URL completa del perfil
+*/
 interface Props {
   username: string;
 }
 
+/*
+  Características:
+  -Componente que muestra una insignia/tarjeta del perfil de LinkedIn
+  -Limpia la URL para extraer solo el nombre de usuario (ej: "https://linkedin.com/in/juanperez" -> "juanperez")
+  -Si no hay usuario válido, no renderiza nada (retorna null)
+  -Avatar dinámico con la inicial del nombre de usuario
+  -Fondo gradiente con los colores de LinkedIn (#0077b5 a #00a0dc)
+  -Muestra el nombre de usuario, etiqueta "LinkedIn" y "Perfil Público"
+  -Botón "Visitar Perfil" que abre el perfil de LinkedIn en una nueva pestaña
+  -Efectos hover: sombra en la tarjeta y botón con color LinkedIn (#0077b5)
+
+  @ Ejemplo:
+  <LinkedInBadge username="juanperez" />
+  <LinkedInBadge username="https://www.linkedin.com/in/maria-dev" />
+*/
 const LinkedInBadge = ({ username }: Props) => {
   // Limpieza de URL para obtener solo el nombre
   const cleanUser = username.split('/').filter(Boolean).pop() || "";

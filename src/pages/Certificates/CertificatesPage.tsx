@@ -20,6 +20,21 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
+/*
+  Características:
+  -Página principal de gestión de certificados
+  -Muestra lista de certificados en formato grid (2 en móvil, hasta 5 en desktop)
+  -Barra de búsqueda con SkillSearchBar (filtra por título)
+  -Paginación con SkillPagination
+  -Maneja CRUD completo: crear, ver, editar, eliminar
+  -Popup de acciones (CertificateActionPopup) al hacer clic en una tarjeta
+  -Modales: ViewCertificatePopup (ver detalle), CertificateForm (crear/editar), DeleteCertificatePopup (eliminar)
+  -Mensajes de éxito/error del hook useCertificatesPage
+
+  @ Ejemplo:
+  // Ruta: /certificados
+  <CertificatesPage />
+*/
 const CertificatesPage = () => {
     const {
         isLoading, error, successMessage, searchInput, paginated, filtered, certificates, currentPage, totalPages,

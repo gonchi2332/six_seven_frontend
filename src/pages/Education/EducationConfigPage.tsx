@@ -34,6 +34,21 @@ const styles = {
     switchRow: "flex items-center justify-center border-t border-white/5 pt-2 mt-auto",
 };
 
+/*
+  Características:
+  -Página de configuración de visibilidad de formación académica
+  -Muestra todas las entradas de educación del usuario con un Switch para controlar visibilidad
+  -Búsqueda por título o institución
+  -Paginación (10 elementos por página)
+  -Botones: Mostrar todo, Ocultar todo, Guardar
+  -Detecta cambios locales antes de guardar (hasChanges)
+  -Solo habilita guardar si hay cambios pendientes
+  -Muestra mensajes de éxito/error con toast
+
+  @ Ejemplo:
+  // Ruta: /configurar/educacion/visibilidad
+  <EducationConfigPage />
+*/
 const EducationConfigPage = () => {
     const { entries, isLoading, error, successMessage } = useEducation();
 
@@ -47,6 +62,7 @@ const EducationConfigPage = () => {
     const [visibilityMap, setVisibilityMap] = useState<Record<string | number, boolean>>({});
     const [isSaving, setIsSaving] = useState(false);
 
+    // Inicializa mapas de visibilidad desde las entradas cargadas
     useEffect(() => {
         if (entries) {
             const initialMap: Record<string | number, boolean> = {};
@@ -58,6 +74,7 @@ const EducationConfigPage = () => {
         }
     }, [entries]);
 
+    // Muestra mensaje de éxito del hook
     useEffect(() => {
         if (successMessage) {
             setLocalSuccess(successMessage);
@@ -66,6 +83,7 @@ const EducationConfigPage = () => {
         }
     }, [successMessage]);
 
+    // Muestra mensaje de error del hook
     useEffect(() => {
         if (error) {
             setLocalError(error);
@@ -74,6 +92,7 @@ const EducationConfigPage = () => {
         }
     }, [error]);
 
+    // Limpia búsqueda cuando el input está vacío
     useEffect(() => {
         if (searchInput === "") {
             setActiveSearch("");
@@ -133,6 +152,7 @@ const EducationConfigPage = () => {
         if (e.key === "Enter") handleSearch();
     };
 
+    // Filtra por título o institución
     const filtered = entries.filter((e) => {
         if (!activeSearch.trim()) return true;
         const term = activeSearch.toLowerCase();

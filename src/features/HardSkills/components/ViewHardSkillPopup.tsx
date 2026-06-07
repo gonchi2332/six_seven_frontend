@@ -3,11 +3,24 @@ import PopUpCard from "../../../components/PopUpCard";
 import LevelBars from "./LevelBars/Levelbars ";
 import type { Skill } from "../types/skill.types";
 
+/*
+  Props del componente ViewHardSkillPopup:
+  -skill: Objeto con los datos de la habilidad (nombre, nivel, id)
+  -onClose: Función ejecutada al cerrar el popup
+*/
 interface Props {
     skill: Skill;
     onClose: () => void;
 }
 
+/*
+  Mapeo de niveles numéricos a etiquetas descriptivas:
+  -1: Básico
+  -2: Elemental
+  -3: Intermedio
+  -4: Avanzado
+  -5: Excelente
+*/
 const LEVEL_LABELS: Record<number, string> = {
     1: "Básico",
     2: "Elemental",
@@ -27,6 +40,21 @@ const styles = {
     buttonContainer: "flex gap-3 px-4 sm:px-6 pb-6",
 };
 
+/*
+  Características:
+  -Popup para visualizar los detalles de una habilidad técnica
+  -Muestra el nombre de la habilidad
+  -Muestra el nivel visual mediante barras (LevelBars tamaño "md")
+  -Muestra el nivel numérico y su etiqueta descriptiva
+  -Diseño: cabecera con título "Habilidad Técnica", contenido con campos separados por divisores
+  -Botón "Atrás" para cerrar el popup
+
+  @ Ejemplo:
+  <ViewHardSkillPopup
+    skill={{ skill_id: 1, name: "JavaScript", level: 4 }}
+    onClose={() => setShowPopup(false)}
+  />
+*/
 const ViewHardSkillPopup = ({ skill, onClose }: Props) => {
     return (
         <div className={styles.overlay}>
@@ -58,3 +86,4 @@ const ViewHardSkillPopup = ({ skill, onClose }: Props) => {
 };
 
 export default ViewHardSkillPopup;
+

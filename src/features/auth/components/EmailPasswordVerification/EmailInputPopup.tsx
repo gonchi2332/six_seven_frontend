@@ -17,11 +17,36 @@ const LABEL = "text-[16px] font-inter font-normal text-surface mb-1.5 block text
 const INPUT = "w-full bg-black rounded-lg px-3 py-2.5 text-[#FFFFFF] placeholder:text-white/40 outline-none mb-1 text-[15px]";
 const EMAIL_HINT = "text-surface text-sm font-nunito text-center mt-1 mb-2";
 
+/*
+  Props del componente EmailInputPopup:
+  -onSubmit: Función ejecutada al enviar el nombre de usuario (recibe username y email)
+  -onCancel: Función ejecutada al cancelar el proceso
+*/
 interface Props {
     onSubmit?: (username: string, email: string) => void;
     onCancel?: () => void;
 }
 
+/*
+  Características:
+  -Popup para ingresar nombre de usuario en el proceso de recuperación de contraseña
+  -Campo único: nombre de usuario (requerido)
+  -Al enviar, se busca el email asociado al username mediante useSendRecoveryCode
+  -Muestra el email censurado para confirmación antes de enviar el código
+  -Muestra mensaje de error si el username no existe o hay problema de conexión
+  -Botón Enviar: busca el email y procede al siguiente paso
+  -Botón Cancelar: cierra el popup sin hacer nada
+
+  @ Ejemplo:
+  <EmailInputPopup 
+    onSubmit={(username, email) => {
+      setUsername(username);
+      setEmail(email);
+      showVerificationPopup();
+    }}
+    onCancel={() => setShowPopup(false)}
+  />
+*/
 const EmailInputPopup = ({ onSubmit, onCancel }: Props) => {
     const [username, setUsername] = useState("");
 

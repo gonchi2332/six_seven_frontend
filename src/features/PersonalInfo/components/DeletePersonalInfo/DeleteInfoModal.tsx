@@ -1,15 +1,36 @@
 import { useState } from 'react';
 import Button from '../../../../components/Button';
 
-// Campos que se pueden eliminar (todos excepto username, firstName, firstSurname, imagen)
+/*
+  Campos que se pueden eliminar:
+  -secondSurname: Segundo apellido
+  -city: Ciudad
+  -email: Correo de contacto
+  -phone: Teléfono
+  -country: País
+  (Nota: username, firstName, firstSurname e imagen no se pueden eliminar)
+*/
 export type DeletableField = 'secondSurname' | 'city' | 'email' | 'phone' | 'country';
 
+/*
+  Estructura de un campo con valor:
+  -field: Identificador del campo
+  -label: Etiqueta mostrada al usuario
+  -value: Valor actual del campo
+*/
 export interface FieldValue {
     field: DeletableField;
     label: string;
     value: string;
 }
 
+/*
+  Props del componente DeleteInfoModal:
+  -isOpen: Controla si el modal es visible
+  -onClose: Función ejecutada al cerrar el modal
+  -onDelete: Función para eliminar el campo, recibe el campo a eliminar
+  -fieldsWithValues: Lista de campos que tienen valor y pueden ser eliminados
+*/
 interface DeleteInfoModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -30,6 +51,33 @@ const styles = {
     buttonContainer: "flex gap-3 mt-6",
 };
 
+/*
+  Características:
+  -Modal para eliminar información personal del usuario
+  -Dos pasos: selección de campo y confirmación
+  -Muestra selector con los campos que tienen valor
+  -Al seleccionar un campo, muestra el valor actual para confirmación
+  -Al hacer clic en "Eliminar", muestra segundo modal de confirmación
+  -Maneja estado de carga durante la eliminación
+  -Soporta diferentes tipos de campos (secondSurname, city, email, phone, country)
+
+  Flujo:
+  1. Usuario selecciona campo del selector
+  2. Se muestra el valor actual del campo
+  3. Click en "Eliminar" muestra modal de confirmación
+  4. Confirmación ejecuta onDelete y cierra el modal
+
+  @ Ejemplo:
+  <DeleteInfoModal
+    isOpen={showModal}
+    onClose={() => setShowModal(false)}
+    onDelete={handleDeleteField}
+    fieldsWithValues={[
+      { field: 'city', label: 'Ciudad', value: 'La Paz' },
+      { field: 'phone', label: 'Teléfono', value: '+591 77123456' }
+    ]}
+  />
+*/
 const DeleteInfoModal = ({ isOpen, onClose, onDelete, fieldsWithValues }: DeleteInfoModalProps) => {
     const [selectedField, setSelectedField] = useState<DeletableField | ''>('');
     const [isDeleting, setIsDeleting] = useState(false);
@@ -70,7 +118,7 @@ const DeleteInfoModal = ({ isOpen, onClose, onDelete, fieldsWithValues }: Delete
 
     if (!isOpen) return null;
 
-    // Modal de confirmación
+    // Modal de confirmación (segundo paso)
     if (showConfirm && selectedOption) {
         return (
             <div className={styles.overlay} onClick={handleClose}>
@@ -99,6 +147,7 @@ const DeleteInfoModal = ({ isOpen, onClose, onDelete, fieldsWithValues }: Delete
         );
     }
 
+    // Modal de selección (primer paso)
     return (
         <div className={styles.overlay} onClick={handleClose}>
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
@@ -146,3 +195,4 @@ const DeleteInfoModal = ({ isOpen, onClose, onDelete, fieldsWithValues }: Delete
 };
 
 export default DeleteInfoModal;
+

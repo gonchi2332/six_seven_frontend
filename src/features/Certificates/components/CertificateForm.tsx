@@ -7,6 +7,15 @@ import ImageUpload from "../../UploadFile/components/uploadFile";
 import useCertificateForm from "../hooks/useCertificateForm";
 import type { Certificate } from "../services/certificateService";
 
+/*
+  Props del componente CertificateForm:
+  -mode: Modo del formulario - "add" (crear nuevo) o "edit" (modificar existente)
+  -initial: Datos iniciales del certificado (solo en modo edit)
+  -onSubmit: Función que se ejecuta al enviar el formulario, recibe los datos del certificado
+  -onClose: Función que se ejecuta al cancelar o cerrar
+  -serverError: Mensaje de error proveniente del servidor (opcional)
+  -isSubmitting: Estado de carga, deshabilita campos y botón mientras es true
+*/
 interface Props {
     mode: "add" | "edit";
     initial?: Certificate;
@@ -24,6 +33,35 @@ const styles = {
     mainLabel: "mb-1 text-xl font-inter text-white"
 };
 
+/*
+  Características:
+  -Formulario para registrar o modificar certificados
+  -Campos: título, área, descripción, fecha de certificación, imagen
+  -Todos los campos excepto fecha son obligatorios (*)
+  -Validación en tiempo real mediante useCertificateForm
+  -Modo "add": todos los campos editables, título y área no pueden modificarse después
+  -Modo "edit": título y área deshabilitados (no se pueden cambiar), solo descripción, fecha e imagen
+  -Botón enviar: deshabilitado si formulario inválido o sin cambios (modo edit)
+  -Muestra error del servidor si ocurre
+  -Integra ImageUpload para subir imagen (máximo 2MB)
+
+  @ Ejemplo modo add:
+  <CertificateForm
+    mode="add"
+    onSubmit={handleAddCertificate}
+    onClose={() => setShowForm(false)}
+    isSubmitting={isLoading}
+  />
+
+  @ Ejemplo modo edit:
+  <CertificateForm
+    mode="edit"
+    initial={certificateToEdit}
+    onSubmit={handleUpdateCertificate}
+    onClose={() => setShowForm(false)}
+    serverError={errorMessage}
+  />
+*/
 const CertificateForm = ({ mode, initial, onSubmit, onClose, serverError, isSubmitting = false }: Props) => {
     const { title, titleError, handleTitleChange, handleTitleBlur, description, descError, handleDescChange, handleDescBlur,
         area, areaError, handleAreaChange, handleAreaBlur, issueDate, dateError, dateTouched, handleDateChange, handleDateBlur,
@@ -104,3 +142,4 @@ const CertificateForm = ({ mode, initial, onSubmit, onClose, serverError, isSubm
 };
 
 export default CertificateForm;
+

@@ -13,30 +13,22 @@ const defAvatar = '/defAvatar.png';
 const styles = {
     overlay: 'fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center px-4 z-50 overflow-y-auto py-6',
     container: 'w-full max-w-2xl min-h-screen flex items-center justify-center p-4',
-
-    // Avatar y nombre
     avatarSection: 'flex flex-col items-center gap-4 px-6 pt-8 pb-6 border-b border-white/10 bg-black/20',
     avatarWrapper: 'relative',
     avatar: 'w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-[#90DDF0]/40 shadow-lg shadow-black/40',
     fullName: 'text-2xl sm:text-3xl font-bold font-inter text-white text-center break-words max-w-full',
     username: 'text-[#90DDF0] font-nunito text-base sm:text-lg font-semibold break-words max-w-full',
-
-    // Grid de datos
     body: 'px-6 py-5',
     grid: 'grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2',
     sectionLabel: 'text-[#90DDF0] font-bold text-xs uppercase tracking-widest flex items-center gap-2 mb-3 mt-4 first:mt-0 col-span-full',
     divider: 'border-t border-white/10 my-3 col-span-full',
-
-    // Filas de datos - TEXTO QUE NO SE SALE
     row: 'flex items-start gap-4 py-3 w-full',
     iconBox: 'w-10 h-10 rounded-xl bg-[#2C666E]/40 flex items-center justify-center shrink-0 mt-0.5',
     icon: 'text-[#90DDF0] w-5 h-5',
-    textGroup: 'flex flex-col flex-1 min-w-0', // ← min-w-0 permite que el texto se rompa
+    textGroup: 'flex flex-col flex-1 min-w-0',
     label: 'text-[#90DDF0] text-[10px] uppercase tracking-wide font-bold mb-1',
     value: 'text-white font-nunito text-base sm:text-lg font-medium break-words overflow-wrap-anywhere leading-snug',
     emptyValue: 'text-white/30 italic font-nunito text-base sm:text-lg',
-
-    // Footer
     footer: 'px-6 py-5 border-t border-white/10 bg-black/20',
     closeButton: 'absolute right-4 top-4 text-white/50 hover:text-[#90DDF0] transition-colors p-1 hover:bg-white/10 rounded-lg',
 };
@@ -45,6 +37,13 @@ const styles = {
 // COMPONENTE AUXILIAR
 // ============================================
 
+/*
+  Características:
+  -Subcomponente que renderiza una fila de información con ícono, etiqueta y valor
+  -Recibe: ícono (lucide-react), etiqueta y valor
+  -Si no hay valor, muestra "No especificado" en cursiva y semi-transparente
+  -Diseño consistente con el modal de visualización
+*/
 const InfoRow = ({
     icon: Icon,
     label,
@@ -73,12 +72,36 @@ const InfoRow = ({
 // COMPONENTE PRINCIPAL
 // ============================================
 
+/*
+  Props del componente ViewPersonalInfoModal:
+  -isOpen: Controla si el modal es visible
+  -onClose: Función ejecutada al cerrar el modal
+  -userInfo: Objeto con la información personal del usuario (puede ser null)
+*/
 interface ViewPersonalInfoModalProps {
     isOpen: boolean;
     onClose: () => void;
     userInfo: PersonalInfoResponse | null;
 }
 
+/*
+  Características:
+  -Modal para visualizar toda la información personal del usuario
+  -Muestra: avatar, nombre completo, nombre de usuario, teléfono, correos, ciudad, país
+  -Si no hay imagen de perfil, muestra avatar por defecto (/defAvatar.png)
+  -Organiza la información en secciones: "Datos del Usuario" y "Ubicación"
+  -Diseño responsivo con grid de dos columnas
+  -Valores vacíos muestran "No especificado"
+  -Botón "Atrás" para cerrar el modal
+  -Fondo con blur y overlay semitransparente
+
+  @ Ejemplo:
+  <ViewPersonalInfoModal
+    isOpen={showModal}
+    onClose={() => setShowModal(false)}
+    userInfo={userPersonalInfo}
+  />
+*/
 const ViewPersonalInfoModal = ({ isOpen, onClose, userInfo }: ViewPersonalInfoModalProps) => {
     if (!isOpen || !userInfo) return null;
 
@@ -98,8 +121,7 @@ const ViewPersonalInfoModal = ({ isOpen, onClose, userInfo }: ViewPersonalInfoMo
         <div className={styles.overlay} onClick={onClose}>
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
                 <PopUpCard title="Mi Perfil">
-
-
+                    
                     {/* Avatar y nombre */}
                     <div className={styles.avatarSection}>
                         <div className={styles.avatarWrapper}>
@@ -160,3 +182,4 @@ const ViewPersonalInfoModal = ({ isOpen, onClose, userInfo }: ViewPersonalInfoMo
 };
 
 export default ViewPersonalInfoModal;
+

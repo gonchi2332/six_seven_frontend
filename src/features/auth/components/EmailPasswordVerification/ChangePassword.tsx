@@ -18,6 +18,15 @@ const EYE_OPEN_ICON = "fa-solid fa-eye";
 const EYE_CLOSE_ICON = "fa-solid fa-eye-slash";
 const EMAIL_HINT = "text-surface text-sm font-nunito text-center mb-2";
 
+/*
+  Características:
+  -Censura parcialmente un correo electrónico para mostrar solo los primeros 4 caracteres
+  -Ejemplo: "usuario123@gmail.com" -> "usua****@gmail.com"
+  -Si no se puede dividir el email, retorna el original sin cambios
+
+  @ Parámetro: email - Correo electrónico a censurar
+  @ Retorna: Email censurado o el original si hay error
+*/
 const censorEmail = (email: string): string => {
     const [local, domain] = email.split("@");
     if (!local || !domain) return email;
@@ -26,6 +35,13 @@ const censorEmail = (email: string): string => {
     return `${visible}${censored}@${domain}`;
 };
 
+/*
+  Props del componente ResetPasswordPopup:
+  -username: Nombre de usuario que está recuperando la contraseña
+  -code: Código de verificación enviado al email
+  -email: Correo electrónico del usuario (se muestra censurado)
+  -onClose: Función que se ejecuta al cerrar el popup
+*/
 interface Props {
     username?: string;
     code?: string;
@@ -33,6 +49,24 @@ interface Props {
     onClose?: () => void;
 }
 
+/*
+  Características:
+  -Popup para restablecer la contraseña olvidada mediante código de verificación
+  -Recibe username, code y email desde el paso anterior de recuperación
+  -Muestra el email censurado para confirmación visual
+  -Campos: Nueva Contraseña y Confirmar Contraseña con validación en tiempo real
+  -Botones: Guardar (valida antes de enviar) y Cancelar
+  -Estado isLoading deshabilita ambos botones durante el envío
+  -Al guardar exitosamente, cierra el popup mediante onSuccess
+
+  @ Ejemplo:
+  <ResetPasswordPopup 
+    username="juanperez"
+    code="123456"
+    email="juanperez@gmail.com"
+    onClose={() => setShowPopup(false)}
+  />
+*/
 const ResetPasswordPopup = ({ username, code, email, onClose }: Props) => {
     const {
         password,

@@ -1,9 +1,27 @@
 import { ExternalLink } from 'lucide-react';
 
+/*
+  Props del componente GithubBadge:
+  -username: Nombre de usuario de GitHub o URL completa del perfil
+*/
 interface Props {
     username: string;
 }
 
+/*
+  Características:
+  -Componente que muestra una insignia/tarjeta del perfil de GitHub
+  -Limpia la URL para extraer solo el nombre de usuario (ej: "https://github.com/juanperez" -> "juanperez")
+  -Si no hay usuario válido, no renderiza nada (retorna null)
+  -Avatar dinámico con la inicial del nombre de usuario
+  -Muestra el nombre de usuario, etiqueta "GitHub" y "Perfil Público"
+  -Botón "Visitar Perfil" que abre el perfil de GitHub en una nueva pestaña
+  -Efectos hover: sombra en la tarjeta y botón con color morado (#6e5494)
+
+  @ Ejemplo:
+  <GithubBadge username="juanperez" />
+  <GithubBadge username="https://github.com/maria-dev" />
+*/
 const GithubBadge = ({ username }: Props) => {
     // Limpieza de URL para obtener solo el nombre
     const cleanUser = username.split('/').filter(Boolean).pop() || "";

@@ -26,6 +26,19 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
+/*
+  Características:
+  -Página pública de habilidades técnicas (portafolio visible)
+  -Obtiene el username de la URL mediante useParams
+  -Carga habilidades públicas del usuario a través de useSkills.setPublicUser
+  -Búsqueda por nombre de habilidad
+  -Paginación (12 habilidades por página)
+  -Modo solo lectura: no permite agregar, editar o eliminar (isPublic={true} en SkillSearchBar)
+
+  @ Ejemplo:
+  // Ruta: /ver/juanperez/habilidades-tecnicas
+  <HardSkillsPage />
+*/
 const HardSkillsPage = () => {
     const { username } = useParams<{ username: string }>();
     const {
@@ -44,6 +57,7 @@ const HardSkillsPage = () => {
 
     const [, setSkillAction] = useState<Skill | null>(null);
 
+    // Carga habilidades públicas cuando cambia el username
     useEffect(() => {
         if (username) {
             setPublicUser(username);

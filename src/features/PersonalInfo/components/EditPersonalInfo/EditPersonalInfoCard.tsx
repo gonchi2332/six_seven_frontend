@@ -19,10 +19,30 @@ const STYLES = {
     FOOTER: "flex flex-row justify-end items-center gap-4 mt-10 pt-6 px-8",
 };
 
+/*
+  Props del componente EditPersonalInfoCard:
+  -onClose: Función ejecutada al cancelar o cerrar el modal
+*/
 interface EditPersonalInfoCardProps {
     onClose?: () => void;
 }
 
+/*
+  Características:
+  -Modal para modificar información personal del usuario
+  -Carga datos actuales del usuario al montar el componente
+  -Muestra campos dinámicamente según existan o no en los datos originales
+  -Campos siempre visibles: nombre(s), primer apellido, imagen de perfil
+  -Campos condicionales: segundo apellido, ciudad, correo, teléfono, país (solo si ya existían)
+  -Integra selector de países (useCountries)
+  -Upload de imagen de perfil (ImageUpload)
+  -Validación de campos con regex (useProfileForm)
+  -Al enviar exitosamente, recarga la página para reflejar cambios
+  -Muestra errores de carga, validación y envío
+
+  @ Ejemplo:
+  <EditPersonalInfoCard onClose={() => setShowModal(false)} />
+*/
 const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
     const { countries, isLoading } = useCountries();
     const {
@@ -149,7 +169,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                                 />
                             )}
 
-                            {/* País de residencia - Solo si existe */}
+                            {/* País de residencia - Solo si existe originalmente */}
                             {formData.country && formData.country.trim() !== '' && (
                                 <div className="flex flex-col justify-start">
                                     <label className={STYLES.INPUT_LABEL}>País de residencia*:</label>
@@ -211,3 +231,4 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
 };
 
 export default EditPersonalInfoCard;
+

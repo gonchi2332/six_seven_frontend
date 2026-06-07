@@ -1,12 +1,36 @@
 import { useState, useEffect, useRef } from 'react';
 import { gitHubService } from '../services/githubService';
 
+/*
+  Características:
+  -Hook personalizado que gestiona el perfil de GitHub del usuario
+  -Carga automáticamente el perfil cuando cambia appUsername
+  -Maneja estado de carga (isLoading), error y el nombre de usuario de GitHub
+  -Usa useRef para evitar condiciones de carrera (evita actualizar estado con respuestas de usuarios anteriores)
+  -saveProfile: actualiza el perfil de GitHub del usuario
+
+  @ Parámetro: appUsername - Nombre de usuario de la aplicación (dueño del perfil)
+  @ Retorna:
+  -githubUser: Nombre de usuario de GitHub (null si no hay o no existe)
+  -isLoading: Estado de carga
+  -error: Mensaje de error (opcional)
+  -saveProfile: Función para guardar/actualizar el perfil de GitHub
+
+  @ Ejemplo:
+  const { githubUser, isLoading, saveProfile } = useGitHub("juanperez");
+  
+  // Guardar nuevo perfil
+  const result = await saveProfile("octocat");
+  if (result.success) {
+    console.log("Perfil actualizado");
+  }
+*/
 export const useGitHub = (appUsername: string) => {
     const [githubUser, setGithubUser] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Guardar el username que se está cargando actualmente
+    // Guardar el username que se está cargando actualmente para evitar condiciones de carrera
     const currentUsernameRef = useRef<string | null>(null);
 
     useEffect(() => {
@@ -58,6 +82,11 @@ export const useGitHub = (appUsername: string) => {
         fetchProfile();
     }, [appUsername]);
 
+    /*
+      Actualiza el perfil de GitHub del usuario
+      @ Parámetro: newGithubUser - Nuevo nombre de usuario de GitHub
+      @ Retorna: Object con success (boolean) y message (string)
+    */
     const saveProfile = async (newGithubUser: string) => {
         setError(null);
         try {
@@ -77,3 +106,4 @@ export const useGitHub = (appUsername: string) => {
 
     return { githubUser, isLoading, error, saveProfile };
 };
+

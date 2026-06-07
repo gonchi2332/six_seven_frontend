@@ -8,6 +8,29 @@ import {
     deleteCertificate as apiDeleteCertificate,
 } from "../services/certificateService";
 
+/*
+  Características:
+  -Hook personalizado que gestiona el estado y operaciones CRUD de certificados
+  -Maneja dos conjuntos de datos: certificados privados (autenticado) y públicos (vista de portafolio)
+  -Carga automática de certificados privados al montar el componente
+  -Carga automática de certificados públicos cuando cambia currentPublicUsername
+  -Filtra certificados públicos solo con visible === true
+  -Maneja mensajes de éxito y error (se autolimpian después de 3 segundos)
+  -Operaciones CRUD: agregar, editar, eliminar (recargan la lista automáticamente)
+
+  @ Ejemplo:
+  const {
+    certificates, publicCertificates, isLoading, error,
+    addCertificate, editCertificate, deleteCertificate, setPublicUser
+  } = useCertificates();
+
+  // Vista privada (panel de control)
+  <CertificateList certificates={certificates} onDelete={deleteCertificate} />
+
+  // Vista pública (portafolio)
+  setPublicUser("juanperez");
+  <PublicCertificateList certificates={publicCertificates} isLoading={isLoadingPublic} />
+*/
 export const useCertificates = () => {
     const [certificates, setCertificates] = useState<Certificate[]>([]);
     const [publicCertificates, setPublicCertificates] = useState<Certificate[]>([]);
@@ -28,7 +51,7 @@ export const useCertificates = () => {
         setTimeout(() => setError(null), 3000);
     };
 
-    // Carga de certificados privados (autenticado)
+    // Carga de certificados privados (autenticado) al montar el componente
     useEffect(() => {
         const load = async () => {
             setIsLoading(true);
@@ -45,7 +68,7 @@ export const useCertificates = () => {
         load();
     }, []);
 
-    // useEffect para cargar certificados públicos automáticamente cuando cambia currentPublicUsername
+    // Carga certificados públicos automáticamente cuando cambia currentPublicUsername
     useEffect(() => {
         const fetchPublicUserCertificates = async () => {
             if (!currentPublicUsername || currentPublicUsername.trim() === "") {
@@ -58,7 +81,7 @@ export const useCertificates = () => {
             setPublicError(null);
             try {
                 const data = await fetchCertificatesPublic(currentPublicUsername);
-                // Filtrar solo los visibles
+                // Filtrar solo los visibles (portafolio público)
                 const visibleData = (data ?? []).filter((cert) => cert.visible === true);
                 setPublicCertificates(visibleData);
             } catch (err: any) {
@@ -76,11 +99,16 @@ export const useCertificates = () => {
         fetchPublicUserCertificates();
     }, [currentPublicUsername]);
 
-    // Función pública para cambiar el usuario a visualizar
+    // Función pública para cambiar el usuario a visualizar en el portafolio
     const setPublicUser = useCallback((username: string | null) => {
         setCurrentPublicUsername(username);
     }, []);
 
+    /*
+      Agrega un nuevo certificado:
+      -Envía los datos al servicio createCertificate
+      -Recarga la lista actualizada
+    */
     const addCertificate = async (
         data: Omit<Certificate, "id" | "coverImage"> & { coverImage: File }
     ) => {
@@ -90,6 +118,11 @@ export const useCertificates = () => {
         showSuccess("Certificado registrado correctamente");
     };
 
+    /*
+      Edita un certificado existente:
+      -Envía los datos actualizados al servicio updateCertificate
+      -Recarga la lista actualizada
+    */
     const editCertificate = async (
         id: number,
         data: Omit<Certificate, "id" | "coverImage"> & { coverImage: File }
@@ -100,6 +133,11 @@ export const useCertificates = () => {
         showSuccess("Certificado modificado correctamente");
     };
 
+    /*
+      Elimina un certificado:
+      -Llama al servicio deleteCertificate
+      -Actualiza el estado local filtrando el certificado eliminado
+    */
     const deleteCertificate = async (id: number) => {
         await apiDeleteCertificate(id);
         setCertificates((prev) => prev.filter((c) => c.id !== id));

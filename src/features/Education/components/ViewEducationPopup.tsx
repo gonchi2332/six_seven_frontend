@@ -3,6 +3,13 @@ import Button from "../../../components/Button";
 import PopUpCard from "../../../components/PopUpCard";
 import type { EducationEntry } from "../services/educationService";
 
+/*
+  Props del componente ViewEducationPopup:
+  -isOpen: Controla si el popup es visible
+  -entry: Entrada de formación académica a visualizar (null si no hay)
+  -onClose: Función ejecutada al cerrar el popup
+  -onBack: Función ejecutada al hacer clic en "Atrás" para volver al menú anterior
+*/
 interface Props {
     isOpen: boolean;
     entry: EducationEntry | null;
@@ -26,6 +33,12 @@ const styles = {
     closeButton: "absolute right-4 top-4 text-white/50 hover:text-[#90DDF0] transition-colors p-1 hover:bg-white/10 rounded-lg",
 };
 
+/*
+  Características:
+  -Subcomponente que renderiza una fila de información con ícono, etiqueta y valor
+  -Recibe: ícono (lucide-react), etiqueta y valor
+  -Si no hay valor, muestra "No especificado" en cursiva y semi-transparente
+*/
 const InfoRow = ({
     icon: Icon,
     label,
@@ -50,6 +63,25 @@ const InfoRow = ({
     </div>
 );
 
+/*
+  Características:
+  -Popup para visualizar todos los detalles de una formación académica
+  -Muestra: título/carrera, grado académico, institución, estado (En curso/Egresado), periodo/año
+  -Formato de fecha dinámico: si estado es "cursando", muestra "YYYY - Presente", si no solo la fecha
+  -Mapeo de estado: "cursando" -> "En curso", otro -> "Egresado"
+  -Fondo con blur y overlay semitransparente
+  -Click fuera del popup cierra la ventana
+  -Botón "Atrás" para volver al menú anterior
+  -Botón "✕" en la esquina superior derecha
+
+  @ Ejemplo:
+  <ViewEducationPopup
+    isOpen={showPopup}
+    entry={selectedEducation}
+    onClose={() => setShowPopup(false)}
+    onBack={() => setShowMenu(true)}
+  />
+*/
 const ViewEducationPopup = ({ isOpen, entry, onClose, onBack }: Props) => {
     if (!isOpen || !entry) return null;
 
@@ -88,3 +120,4 @@ const ViewEducationPopup = ({ isOpen, entry, onClose, onBack }: Props) => {
 };
 
 export default ViewEducationPopup;
+

@@ -32,6 +32,21 @@ const styles = {
     toastError: "bg-red-500/10 border border-red-500 text-red-400",
 };
 
+/*
+  Características:
+  -Página de configuración de visibilidad de habilidades técnicas
+  -Muestra todas las habilidades del usuario con un Switch para controlar visibilidad
+  -Búsqueda por nombre de habilidad
+  -Paginación (12 habilidades por página)
+  -Botones: Mostrar todo, Ocultar todo, Guardar
+  -Detecta cambios locales antes de guardar (hasChanges)
+  -Solo habilita guardar si hay cambios pendientes
+  -Muestra mensajes de éxito/error con toast
+
+  @ Ejemplo:
+  // Ruta: /configurar/habilidades-tecnicas/visibilidad
+  <HardSkillsConfigPage />
+*/
 const HardSkillsConfigPage = () => {
     const { skills, isLoading, error, successMessage } = useSkills();
     const { searchInput, filtered, handleSearch, handleKeyDown, handleChange } = useSearch(
@@ -42,11 +57,12 @@ const HardSkillsConfigPage = () => {
 
     const [localError, setLocalError] = useState<string | null>(null);
     const [localSuccess, setLocalSuccess] = useState<string | null>(null);
-
+    
     const [initialVisibilityMap, setInitialVisibilityMap] = useState<Record<string, boolean>>({});
     const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>({});
     const [isSaving, setIsSaving] = useState(false);
 
+    // Inicializa mapas de visibilidad desde las habilidades cargadas
     useEffect(() => {
         if (skills) {
             const initialMap: Record<string, boolean> = {};
@@ -58,6 +74,7 @@ const HardSkillsConfigPage = () => {
         }
     }, [skills]);
 
+    // Muestra mensaje de éxito del hook
     useEffect(() => {
         if (successMessage) {
             setLocalSuccess(successMessage);
@@ -66,6 +83,7 @@ const HardSkillsConfigPage = () => {
         }
     }, [successMessage]);
 
+    // Muestra mensaje de error del hook
     useEffect(() => {
         if (error) {
             setLocalError(error);

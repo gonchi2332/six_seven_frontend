@@ -31,17 +31,42 @@ import WorkExperiencePagePublic from "../pages/WorkExperience/WorkExperiencePage
 import CVPrintPage from "../features/PrintablePortfolio/components/CvPrintPage";
 import { ReportsPage } from "../features/Reports";
 
+/*
+  Características:
+  -Componente principal de enrutamiento de la aplicación
+  -Define todas las rutas públicas y privadas del sistema
+  -Rutas públicas: login, registro, verificación, recuperación de contraseña
+  -Rutas protegidas: dentro de MainLayout (requieren autenticación)
+  -Rutas de portafolio público: /ver/:username/... (acceso sin autenticación)
+  -Rutas de configuración: /configurar/... (para editar visibilidad de secciones)
+  -Ruta para impresión de CV: /print
 
+  Estructura de rutas:
+  -Públicas (sin layout): /, /login, /register, /verification, /changePassword
+  -Protegidas (con MainLayout): información personal, habilidades, proyectos, educación, experiencia, certificados, reportes
+  -Portafolio público: /ver/:username/...
+  -Configuración: /configurar/...
+
+  @ Ejemplo:
+  // Redirigir a login
+  navigate("/login");
+
+  // Ver portafolio público
+  navigate("/ver/juanperez");
+*/
 const Router = () => {
 
     return (
         <BrowserRouter>
             <Routes>
+                {/* Rutas públicas sin layout */}
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/verification" element={<VerificationPage />} />
                 <Route path="/changePassword" element={<PasswordResetPage />} />
+
+                {/* Rutas protegidas con MainLayout */}
                 <Route element={<MainLayout />}>
                     <Route path="/info-personal" element={<Dashboard />} />
                     <Route path="/habilidades-tecnicas" element={<HardSkillsPage />} />
@@ -52,6 +77,7 @@ const Router = () => {
                     <Route path="/certificados" element={<CertificatesPage />} />
                     <Route path="/reportes" element={<ReportsPage />} />
 
+                    {/* Rutas de portafolio público */}
                     <Route path="ver/:username" element={<PersonalInfoPublic />} />
                     <Route path="ver/:username/habilidades-tecnicas" element={<HardSkillsPagePublic />} />
                     <Route path="ver/:username/habilidades-blandas" element={<SoftSkillsPagePublic />} />
@@ -60,7 +86,10 @@ const Router = () => {
                     <Route path="ver/:username/experiencia-laboral" element={<WorkExperiencePagePublic />} />
                     <Route path="ver/:username/certificados" element={<CertificatesPublicPage />} />
 
+                    {/* Ruta de impresión de CV */}
                     <Route path="/print" element={<CVPrintPage />} />
+
+                    {/* Rutas de configuración de visibilidad */}
                     <Route path="configurar/habilidades-tecnicas" element={<HardSkillsConfigPage />} />
                     <Route path="configurar/habilidades-blandas" element={<SoftSkillsConfigPage />} />
                     <Route path="configurar/proyectos-personales" element={<PersonalProjectsConfigPage />} />
@@ -75,3 +104,4 @@ const Router = () => {
 };
 
 export default Router;
+

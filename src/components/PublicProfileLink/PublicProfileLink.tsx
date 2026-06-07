@@ -12,11 +12,26 @@ const STYLES = {
   FOOTER: "flex justify-end mt-2"
 };
 
+/*
+  Propiedades del componente ShareProfileModal:
+  -username: Nombre de usuario para generar la URL pública del portafolio
+  -onClose: Función que se ejecuta al cerrar el modal
+*/
 interface ShareProfileModalProps {
   username: string;
   onClose: () => void;
 }
 
+/*
+  Caracteristicas:
+  -Modal para compartir enlace público del portafolio.
+  -Construye la URL pública en base al username: window.location.origin/ver/{username}
+  -Muestra la URL en un campo de solo lectura y permite copiarla al portapapeles.
+  -Al hacer clic en "Copiar", el texto se guarda en el portapapeles y el botón cambia temporalmente a "Copiado" durante 2 segundos.
+
+  Ejemplo de uso:
+  <ShareProfileModal username="juanperez" onClose={() => setModalOpen(false)} />
+*/
 const ShareProfileModal = ({ username, onClose }: ShareProfileModalProps) => {
   const [copied, setCopied] = useState(false);
   

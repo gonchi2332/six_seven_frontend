@@ -1,6 +1,17 @@
 import { Search } from "lucide-react";
-
 import Button from "../Button";
+
+/*
+  Propiedades del componente SkillSearchBar:
+  -value: Valor actual del campo de búsqueda
+  -onChange: Función que se ejecuta al cambiar el texto del input
+  -onSearch: Función que se ejecuta al hacer clic en el botón Buscar
+  -onKeyDown: Función que se ejecuta al presionar una tecla (útil para detectar Enter)
+  -onAdd: Función que se ejecuta al hacer clic en el botón Registrar
+  -placeholder: Texto de ayuda dentro del input (por defecto "Buscar...")
+  -addLabel: Etiqueta opcional para el botón Registrar (no utilizado actualmente)
+  -isPublic: Si es true, oculta el botón Registrar (modo público)
+*/
 interface SkillSearchBarProps {
     value: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -22,6 +33,31 @@ const styles = {
     addBtn: "flex-1 sm:flex-none px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-[#90DDF0] text-[#07393C] font-nunito text-sm font-semibold transition-all hover:brightness-110 active:scale-95",
 };
 
+/*
+  Caracteristicas:
+  -Barra de búsqueda y registro de habilidades.
+  -Incluye un campo de texto con ícono de lupa para escribir el término de búsqueda, un botón "Buscar" y un botón "Registrar" (visible solo en modo privado).
+  -Es responsive: en dispositivos móviles los botones ocupan todo el ancho, mientras que en desktop tienen un tamaño fijo.
+
+  Ejemplo de uso en modo edición:
+  <SkillSearchBar 
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    onSearch={handleSearch}
+    onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+    onAdd={() => openAddModal()}
+  />
+
+  Ejemplo de uso en modo público:
+  <SkillSearchBar 
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    onSearch={handleSearch}
+    onKeyDown={handleKeyDown}
+    onAdd={() => {}}
+    isPublic={true}
+  />
+*/
 const SkillSearchBar = ({
     value, onChange, onSearch, onKeyDown, onAdd,
     placeholder = "Buscar...",

@@ -6,6 +6,17 @@ import YearSelect from "./YearSelect";
 import AcademicLevelSelect from "./AcademicLevelSelect";
 import type { EducationEntry, AcademicDegree } from "../services/educationService";
 
+/*
+  Props del componente EducationForm:
+  -mode: Modo del formulario - "add" (crear nuevo) o "edit" (modificar existente)
+  -initial: Datos iniciales de la formación (solo en modo edit)
+  -academicDegrees: Lista de grados académicos disponibles para el select
+  -onSubmit: Función que se ejecuta al enviar el formulario
+  -onClose: Función que se ejecuta al cancelar o cerrar
+  -onBack: Función para volver atrás (cuando el formulario está en un flujo)
+  -serverError: Mensaje de error proveniente del servidor (opcional)
+  -isSubmitting: Estado de carga, deshabilita campos y botón mientras es true
+*/
 interface Props {
     mode: "add" | "edit";
     initial?: EducationEntry;
@@ -39,9 +50,41 @@ const educationStateOptions = [
     { value: "Egresado", label: "Egresado" },
 ];
 
+/*
+  Características:
+  -Formulario para registrar o modificar formación académica
+  -Campos: título/carrera, grado académico, institución, estado (Cursando/Egresado), año
+  -Modo "add": todos los campos editables
+  -Modo "edit": título, grado académico e institución deshabilitados (no se pueden modificar)
+  -Estado "Cursando": muestra "Año de inicio"
+  -Estado "Egresado": muestra "Año de emisión"
+  -Validaciones: campos obligatorios, año formato YYYY
+  -Muestra error del servidor si ocurre
+  -onBack: permite volver al menú anterior (útil en flujos anidados)
+
+  @ Ejemplo modo add:
+  <EducationForm
+    mode="add"
+    academicDegrees={degrees}
+    onSubmit={handleAddEducation}
+    onClose={() => setShowForm(false)}
+    isSubmitting={isLoading}
+  />
+
+  @ Ejemplo modo edit:
+  <EducationForm
+    mode="edit"
+    initial={educationToEdit}
+    academicDegrees={degrees}
+    onSubmit={handleUpdateEducation}
+    onClose={() => setShowForm(false)}
+    onBack={() => setShowMenu(true)}
+  />
+*/
 const EducationForm = ({
     mode, initial, academicDegrees, onSubmit, onClose, onBack, serverError, isSubmitting = false,
 }: Props) => {
+    // Resuelve el ID del grado académico inicial (para modo edit)
     const resolvedInitialId = (() => {
         if (!initial) return 0;
         if (initial.academicLevelId && initial.academicLevelId !== 0) return initial.academicLevelId;
@@ -61,7 +104,7 @@ const EducationForm = ({
 
     const selectedDegree = academicDegrees.find((d) => d.id === academicLevelId);
 
-    // Label según el estado
+    // Label según el estado: "Año de inicio" para cursando, "Año de emisión" para egresado
     const yearLabel = educationState === "Cursando" ? "Año de inicio" : "Año de emisión";
 
     const isFormInvalid = () => {
@@ -238,3 +281,4 @@ const EducationForm = ({
 };
 
 export default EducationForm;
+

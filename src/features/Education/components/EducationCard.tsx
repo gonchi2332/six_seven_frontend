@@ -1,5 +1,10 @@
 import type { EducationEntry } from "../services/educationService";
 
+/*
+  Props del componente EducationCard:
+  -entry: Objeto con los datos de la entrada de formación académica
+  -onView: Función ejecutada al hacer clic en la tarjeta, recibe la entrada completa
+*/
 interface Props {
     entry: EducationEntry;
     onView: (entry: EducationEntry) => void;
@@ -18,6 +23,20 @@ const styles = {
     academicLevel: "text-surface font-inter text-sm sm:text-base leading-tight line-clamp-1"
 };
 
+/*
+  Características:
+  -Tarjeta visual para mostrar una entrada de formación académica en listados
+  -Muestra: título del grado, nivel académico, estado (cursando/completado), fechas e institución
+  -Formato de fecha dinámico: si está "cursando", muestra "YYYY - Presente", si no solo la fecha de inicio
+  -Al hacer clic en cualquier parte, ejecuta onView con la entrada completa
+  -Efectos hover: borde acento y fondo semitransparente
+
+  @ Ejemplo:
+  <EducationCard 
+    entry={educationEntry} 
+    onView={(entry) => openEducationDetail(entry)}
+  />
+*/
 const EducationCard = ({ entry, onView }: Props) => {
     const dateDisplay = entry.educationState === "cursando"
         ? `${entry.startDate} - Presente`
@@ -44,3 +63,4 @@ const EducationCard = ({ entry, onView }: Props) => {
 };
 
 export default EducationCard;
+

@@ -1,18 +1,51 @@
 import { useState } from "react";
 import { useResetPassword } from "./useResetPassword";
 
+/*
+  Tipo que define el resultado de la validación del formulario:
+  -isValid: Indica si todos los campos son válidos
+  -passwordError: Mensaje de error para el campo contraseña (opcional)
+  -confirmError: Mensaje de error para el campo confirmar contraseña (opcional)
+*/
 interface ValidationResult {
     isValid: boolean;
     passwordError?: string;
     confirmError?: string;
 }
 
+/*
+  Props del hook useResetPasswordForm:
+  -username: Nombre de usuario que está reseteando la contraseña
+  -code: Código de verificación obtenido del paso anterior
+  -onSuccess: Función ejecutada cuando el reseteo es exitoso
+*/
 interface UseResetPasswordFormProps {
     username?: string;
     code?: string;
     onSuccess?: () => void;
 }
 
+/*
+  Características:
+  -Hook personalizado que gestiona el formulario de reseteo de contraseña
+  -Maneja dos campos: nueva contraseña y confirmar contraseña
+  -Validaciones: contraseña requerida, mínimo 8 caracteres, confirmación requerida, coincidencia de contraseñas
+  -Muestra/oculta contraseña con toggle (showPassword/showConfirmPassword)
+  -Integra useResetPassword para la llamada a la API
+  -Si el reseteo es exitoso, ejecuta onSuccess
+
+  @ Ejemplo:
+  const {
+    password, confirmPassword,
+    validation, isLoading, error,
+    updatePassword, updateConfirmPassword,
+    handleSave
+  } = useResetPasswordForm({
+    username: "juanperez",
+    code: "12345678",
+    onSuccess: () => navigate("/login")
+  });
+*/
 export const useResetPasswordForm = ({ username, code, onSuccess }: UseResetPasswordFormProps) => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");

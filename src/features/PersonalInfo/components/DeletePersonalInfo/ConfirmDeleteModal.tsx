@@ -1,5 +1,13 @@
 import Button from '../../../../components/Button';
 
+/*
+  Props del componente ConfirmDeleteModal:
+  -isOpen: Controla si el modal es visible
+  -onClose: Función ejecutada al cancelar o cerrar el modal
+  -onConfirm: Función ejecutada al confirmar la eliminación
+  -fieldLabel: Etiqueta del campo a eliminar (ej: "Segundo apellido", "Ciudad")
+  -isDeleting: Estado de carga, deshabilita el botón mientras es true
+*/
 interface ConfirmDeleteModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -17,6 +25,23 @@ const styles = {
     buttonContainer: "flex gap-3",
 };
 
+/*
+  Características:
+  -Modal de confirmación para eliminar información personal
+  -Muestra mensaje con el nombre del campo a eliminar
+  -Botón Cancelar: cierra el modal sin eliminar
+  -Botón Confirmar: ejecuta onConfirm
+  -Cuando isDeleting es true, el botón se deshabilita y muestra "Eliminando..."
+
+  @ Ejemplo:
+  <ConfirmDeleteModal
+    isOpen={showModal}
+    onClose={() => setShowModal(false)}
+    onConfirm={() => handleDeleteField('secondSurname')}
+    fieldLabel="segundo apellido"
+    isDeleting={isDeleting}
+  />
+*/
 const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm, fieldLabel, isDeleting }: ConfirmDeleteModalProps) => {
     if (!isOpen) return null;
 
@@ -43,3 +68,4 @@ const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm, fieldLabel, isDeleting
 };
 
 export default ConfirmDeleteModal;
+

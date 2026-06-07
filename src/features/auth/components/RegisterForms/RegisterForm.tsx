@@ -2,7 +2,19 @@ import TextField from "../../../../components/TextField";
 import Button from "../../../../components/Button";
 import { useRegisterForm } from "../../hooks/useRegisterForm";
 
+/*
+  Características:
+  -Formulario de registro de nuevos usuarios
+  -Campos: nombre(s), primer apellido, nombre de usuario, contraseña, confirmar contraseña, correo electrónico
+  -Todos los campos son obligatorios (*)
+  -Validación en tiempo real con feedback de errores
+  -Validaciones incluyen: campos vacíos, formato de email, longitud de contraseña (mínimo 8 caracteres), coincidencia de contraseñas
+  -Estado isLoading deshabilita campos y botón durante el envío
+  -Al registrarse exitosamente, redirige a verificación de email y luego a completar perfil
 
+  @ Ejemplo:
+  <RegisterForm />
+*/
 const RegisterForm = () => {
     const {
         formData,
