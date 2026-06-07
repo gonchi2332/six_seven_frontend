@@ -3,7 +3,6 @@ import Button from "../../../../components/Button/Button";
 import { useSendRecoveryCode } from "../../hooks/useRecoveryCode";
 import { censorEmail } from "../../utils/stringUtils";
 
-
 const CONTAINER = "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6";
 const CARD = "bg-primary rounded-2xl w-full max-w-md shadow-2xl py-5 flex flex-col items-center px-8";
 const ICON_WRAPPER = "w-20 h-20 flex items-center justify-center bg-black rounded-full shadow-lg border border-white/10 mb-3";
@@ -17,41 +16,14 @@ const LABEL = "text-[16px] font-inter font-normal text-surface mb-1.5 block text
 const INPUT = "w-full bg-black rounded-lg px-3 py-2.5 text-[#FFFFFF] placeholder:text-white/40 outline-none mb-1 text-[15px]";
 const EMAIL_HINT = "text-surface text-sm font-nunito text-center mt-1 mb-2";
 
-/*
-  Props del componente EmailInputPopup:
-  -onSubmit: Función ejecutada al enviar el nombre de usuario (recibe username y email)
-  -onCancel: Función ejecutada al cancelar el proceso
-*/
 interface Props {
     onSubmit?: (username: string, email: string) => void;
     onCancel?: () => void;
 }
 
-/*
-  Características:
-  -Popup para ingresar nombre de usuario en el proceso de recuperación de contraseña
-  -Campo único: nombre de usuario (requerido)
-  -Al enviar, se busca el email asociado al username mediante useSendRecoveryCode
-  -Muestra el email censurado para confirmación antes de enviar el código
-  -Muestra mensaje de error si el username no existe o hay problema de conexión
-  -Botón Enviar: busca el email y procede al siguiente paso
-  -Botón Cancelar: cierra el popup sin hacer nada
-
-  @ Ejemplo:
-  <EmailInputPopup 
-    onSubmit={(username, email) => {
-      setUsername(username);
-      setEmail(email);
-      showVerificationPopup();
-    }}
-    onCancel={() => setShowPopup(false)}
-  />
-*/
 const EmailInputPopup = ({ onSubmit, onCancel }: Props) => {
     const [username, setUsername] = useState("");
-
     const { email, error, isLoading, handleSubmit, handleCancel } = useSendRecoveryCode({ username, onSubmit, onCancel });
-
 
     return (
         <div className={CONTAINER}>
@@ -59,15 +31,12 @@ const EmailInputPopup = ({ onSubmit, onCancel }: Props) => {
                 <div className={ICON_WRAPPER}>
                     <i className={ICON}></i>
                 </div>
-
                 <h2 className={TITLE}>
                     Recuperación de Contraseña
                 </h2>
-
                 <p className={DESCRIPTION}>
                     Ingresa tu nombre de usuario para recuperar tu cuenta
                 </p>
-
                 <div className={INPUT_WRAPPER}>
                     <label className={LABEL}>
                         Nombre de usuario:*
@@ -80,17 +49,15 @@ const EmailInputPopup = ({ onSubmit, onCancel }: Props) => {
                         onChange={(e) => setUsername(e.target.value)}
                     />
                 </div>
-
+                {/* Muestra el email censurado al que se enviará el código */}
                 {email && (
                     <p className={EMAIL_HINT}>
                         Se enviará un código a: {censorEmail(email)}
                     </p>
                 )}
-
                 {error && (
                     <p className={ERROR}>{error}</p>
                 )}
-
                 <div className={BUTTONS_WRAPPER}>
                     <Button
                         variant="secondary"
@@ -100,7 +67,6 @@ const EmailInputPopup = ({ onSubmit, onCancel }: Props) => {
                     >
                         {isLoading ? "Enviando..." : "Enviar"}
                     </Button>
-
                     <Button
                         variant="primary"
                         onClick={handleCancel}

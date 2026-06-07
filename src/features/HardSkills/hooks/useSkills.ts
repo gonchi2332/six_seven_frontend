@@ -3,24 +3,7 @@ import type { Skill } from "../types/skill.types";
 import { fetchSkills, patchSkill, deleteSkill as apiDeleteSkill, fetchCatalogSkills, fetchSkillsPublicNew } from "../services/skillsService";
 import { useParams } from "react-router-dom";
 
-/*
-  Características:
-  -Hook personalizado que gestiona el estado y operaciones CRUD de habilidades técnicas
-  -Maneja dos contextos:
-    - Modo privado: carga habilidades del usuario autenticado (requiere token)
-    - Modo público: carga habilidades de un usuario específico (vista de portafolio)
-  -Detecta si hay username en la URL (modo público) y evita cargar datos privados
-  -Carga catálogo de habilidades disponibles para autocompletado
-  -Operaciones: agregar (local), editar, eliminar
-  -Maneja mensajes de éxito y error (se autolimpian después de 3 segundos)
-
-  @ Ejemplo modo privado:
-  const { skills, catalogSkills, addSkill, editSkill, deleteSkill } = useSkills();
-
-  @ Ejemplo modo público:
-  const { publicSkills, isLoadingPublic, setPublicUser } = useSkills();
-  setPublicUser("juanperez");
-*/
+// Hook principal para gestionar habilidades técnicas (privadas y públicas)
 export const useSkills = () => {
     const { username: publicUsernameUrl } = useParams<{ username: string }>();
 
@@ -33,6 +16,7 @@ export const useSkills = () => {
     const [isLoadingPublic, setIsLoadingPublic] = useState(false);
     const [currentPublicUsername, setCurrentPublicUsername] = useState<string | null>(null);
 
+    // Mostrar mensaje de éxito temporal
     const showSuccess = (msg: string) => {
         setSuccessMessage(msg);
         setTimeout(() => setSuccessMessage(null), 3000);
@@ -43,8 +27,9 @@ export const useSkills = () => {
         setTimeout(() => setError(null), 3000);
     };
 
-    // Carga de habilidades privadas (autenticado) - solo si no estamos en modo público por URL
+    // Cargar habilidades privadas (autenticado)
     useEffect(() => {
+        // Si estamos en modo público (URL con /ver), no cargar habilidades privadas
         if (publicUsernameUrl) {
             setIsLoading(false);
             return;
@@ -75,7 +60,7 @@ export const useSkills = () => {
         load();
     }, [publicUsernameUrl]);
 
-    // Carga de habilidades públicas cuando cambia currentPublicUsername
+    // Cargar habilidades públicas cuando cambia currentPublicUsername
     useEffect(() => {
         if (!currentPublicUsername || currentPublicUsername.trim() === "") {
             setPublicSkills([]);
@@ -110,17 +95,12 @@ export const useSkills = () => {
         fetchPublicUserSkills();
     }, [currentPublicUsername]);
 
-    // Función pública para cambiar el usuario a visualizar en el portafolio
+    // Función para setear el usuario público a visualizar
     const setPublicUser = useCallback((username: string | null) => {
         setCurrentPublicUsername(username);
     }, []);
 
-    /*
-      Agrega una habilidad localmente (optimista)
-      -Asigna un ID temporal (timestamp)
-      -No espera respuesta del backend, actualiza inmediatamente el estado
-      -La habilidad se guarda realmente en el backend a través de postSkill
-    */
+    // Agregar habilidad (optimista, actualiza estado local inmediatamente)
     const addSkill = (name: string, level: number) => {
         const tempId = Date.now();
         const newSkill: Skill = {
@@ -134,11 +114,7 @@ export const useSkills = () => {
         showSuccess("Habilidad registrada correctamente");
     };
 
-    /*
-      Edita una habilidad existente
-      -Llama al servicio patchSkill para actualizar en el backend
-      -Actualiza el estado local optimistamente
-    */
+    // Editar habilidad
     const editSkill = async (skillId: number | string, name: string, level: number) => {
         try {
             await patchSkill(name, level);
@@ -151,11 +127,7 @@ export const useSkills = () => {
         }
     };
 
-    /*
-      Elimina una habilidad
-      -Llama al servicio deleteSkill (por nombre)
-      -Actualiza el estado local filtrando la habilidad eliminada
-    */
+    // Eliminar habilidad
     const deleteSkill = async (skillName: string) => {
         try {
             await apiDeleteSkill(skillName);

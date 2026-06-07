@@ -6,18 +6,9 @@ const MESSAGE = "text-[15px] font-nunito text-white text-center px-6 sm:px-8 pb-
 const SUBTITLE = "text-[13px] font-nunito text-white/60 text-center px-6 sm:px-8 pb-4";
 const BUTTONS_WRAPPER = "flex gap-4 justify-center mt-2 px-6 sm:px-8 pb-6";
 
-/*
-  Tipo de resultado para el popup:
-  -success: Habilidad registrada exitosamente
-  -not-found: Habilidad no reconocida en el catálogo técnico
-*/
 export type ResultType = "success" | "not-found";
 
-/*
-  Contenido dinámico según el tipo de resultado:
-  -success: título "Habilidad Registrada", mensaje de éxito
-  -not-found: título "Habilidad No Reconocida", mensaje explicativo
-*/
+// Contenido dinámico según tipo de resultado
 const CONTENT: Record<ResultType, { title: string; message: string; subtitle?: string }> = {
     success: {
         title: "Habilidad Registrada",
@@ -29,27 +20,12 @@ const CONTENT: Record<ResultType, { title: string; message: string; subtitle?: s
     },
 };
 
-/*
-  Props del componente ResultPopup:
-  -type: Tipo de resultado (success o not-found), define el contenido mostrado
-  -onClose: Función ejecutada al cerrar el popup
-*/
 interface Props {
     type: ResultType;
     onClose: () => void;
 }
 
-/*
-  Características:
-  -Popup de resultado para operaciones de registro de habilidades
-  -Muestra contenido dinámico según el tipo (éxito o habilidad no reconocida)
-  -Puede mostrar subtítulo opcional (solo en caso de éxito)
-  -Botón "Registrar" para cerrar el popup
-
-  @ Ejemplo:
-  <ResultPopup type="success" onClose={() => setShowPopup(false)} />
-  <ResultPopup type="not-found" onClose={() => setShowPopup(false)} />
-*/
+// Popup de resultado (éxito o error "no encontrado")
 const ResultPopup = ({ type, onClose }: Props) => {
     const { title, message, subtitle } = CONTENT[type];
     return (

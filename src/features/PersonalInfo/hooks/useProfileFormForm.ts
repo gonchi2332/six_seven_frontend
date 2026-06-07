@@ -3,15 +3,7 @@ import { getPersonalInfo } from "../services/personalInfoService";
 import type { FormData } from "./useProfileFormRegex";
 import { parseProfilePicture } from "../../../services/decodeBase64";
 
-/*
-  Características:
-  -Extrae el nombre de usuario del token JWT almacenado en localStorage
-  -Divide el token por "." y toma la segunda parte (payload)
-  -Decodifica base64 (atob) y extrae la propiedad username o sub
-  -Si no hay token o falla, retorna cadena vacía
-
-  @ Retorna: Nombre de usuario o cadena vacía
-*/
+// Extraer username del token JWT
 const getUsernameFromToken = (): string => {
     const token = localStorage.getItem("token");
     if (!token) return "";
@@ -25,24 +17,7 @@ const getUsernameFromToken = (): string => {
     }
 };
 
-/*
-  Características:
-  -Hook personalizado que carga la información personal del usuario autenticado
-  -Obtiene el username del token JWT
-  -Llama al servicio getPersonalInfo para obtener los datos del usuario
-  -Procesa la respuesta y la envía a setInitialData para inicializar el formulario
-  -Convierte valores null/undefined a undefined para que el formulario oculte campos condicionales
-  -Decodifica la imagen de perfil con parseProfilePicture
-  -Maneja estado de carga (isLoadingData) y errores (loadError)
-
-  @ Parámetro: setInitialData - Función para inicializar el formulario con los datos cargados
-  @ Retorna: isLoadingData (bool), loadError (string | null)
-
-  @ Ejemplo:
-  const { isLoadingData, loadError } = usePersonalInfo((data) => {
-    setFormData(prev => ({ ...prev, ...data }));
-  });
-*/
+// Hook para cargar información personal del usuario autenticado
 export const usePersonalInfo = (setInitialData: (data: Partial<FormData>) => void) => {
     const [isLoadingData, setIsLoadingData] = useState(true);
     const [loadError, setLoadError] = useState<string | null>(null);
@@ -55,8 +30,7 @@ export const usePersonalInfo = (setInitialData: (data: Partial<FormData>) => voi
 
                 const info = await getPersonalInfo(username);
 
-                // Si el valor es null o "", se enviará como undefined,
-                // permitiendo que el componente Card oculte el campo.
+                // Si el valor es null o "", se envía como undefined para ocultar el campo en el formulario
                 setInitialData({
                     firstName: info.names || "",
                     firstSurname: info.first_surname || "",
@@ -78,3 +52,4 @@ export const usePersonalInfo = (setInitialData: (data: Partial<FormData>) => voi
 
     return { isLoadingData, loadError };
 };
+

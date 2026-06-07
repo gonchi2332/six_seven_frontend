@@ -20,15 +20,7 @@ const ICON_INFO = "fa-solid fa-circle-info";
 const RESEND_CONFIRMATION = "text-green-300 text-normal text-center w-full";
 const EMAIL_HINT = "text-surface text-sm font-nunito text-center";
 
-/*
-  Características:
-  -Censura parcialmente un correo electrónico para mostrar solo los primeros 4 caracteres
-  -Ejemplo: "usuario123@gmail.com" -> "usua****@gmail.com"
-  -Si no se puede dividir el email, retorna el original sin cambios
-
-  @ Parámetro: email - Correo electrónico a censurar
-  @ Retorna: Email censurado o el original si hay error
-*/
+// Censura el email mostrando solo los primeros 4 caracteres de la parte local
 const censorEmail = (email: string): string => {
     const [local, domain] = email.split("@");
     if (!local || !domain) return email;
@@ -37,52 +29,14 @@ const censorEmail = (email: string): string => {
     return `${visible}${censored}@${domain}`;
 };
 
-/*
-  Props del componente VerificationPopup:
-  -username: Nombre del usuario que se está verificando
-  -email: Correo del usuario (se muestra censurado)
-  -mode: Modo de uso - "verify" (registro) o "recovery" (recuperación)
-  -onSuccess: Función ejecutada cuando la verificación es exitosa
-  -onClose: Función ejecutada al cerrar el popup
-*/
 interface Props {
     username: string;
     email?: string;
-    mode: "verify" | "recovery";
+    mode: "verify" | "recovery"; // verify: activación de cuenta, recovery: recuperación de contraseña
     onSuccess?: (code: string) => void;
     onClose?: () => void;
 }
 
-/*
-  Características:
-  -Popup de verificación con código de 8 dígitos
-  -Funciona en dos modos: verify (registro de nuevo usuario) y recovery (recuperación de contraseña)
-  -Muestra el email censurado para confirmación visual
-  -Input de código con validación de 8 dígitos
-  -Cambia el ícono y mensajes según haya error o no
-  -Botón Verificar: valida el código ingresado
-  -Botón Reenviar Código: envía un nuevo código al email
-  -Botón Cancelar: cierra el popup
-  -Estado resent muestra confirmación verde cuando se reenvía el código
-
-  @ Ejemplo modo verify:
-  <VerificationPopup 
-    username="juanperez"
-    email="juanperez@gmail.com"
-    mode="verify"
-    onSuccess={(code) => console.log("Verificado", code)}
-    onClose={() => setShowPopup(false)}
-  />
-
-  @ Ejemplo modo recovery:
-  <VerificationPopup 
-    username="juanperez"
-    email="juanperez@gmail.com"
-    mode="recovery"
-    onSuccess={(code) => handlePasswordReset(code)}
-    onClose={() => setShowPopup(false)}
-  />
-*/
 const VerificationPopup = ({ username, email, mode, onSuccess, onClose }: Props) => {
     const { token } = useAuthContext();
 
@@ -110,23 +64,20 @@ const VerificationPopup = ({ username, email, mode, onSuccess, onClose }: Props)
             <div className={VERIFICATION_CARD}>
                 <div className={VERIFICATION_CONTENT}>
                     <div className={VERIFICATION_ICON_WRAPPER}>
+                        {/* Ícono cambia según si hay error o no */}
                         {error ? (
                             <i className={ICON_ERROR}></i>
                         ) : (
                             <i className={ICON_SUCCESS}></i>
                         )}
                     </div>
-
                     <h2 className={VERIFICATION_TITLE}>{title}</h2>
-
                     <p className={VERIFICATION_DESCRIPTION}>{description}</p>
-
                     {email && (
                         <p className={EMAIL_HINT}>
                             Código enviado a: {censorEmail(email)}
                         </p>
                     )}
-
                     {!error ? (
                         <>
                             <span className={VERIFICATION_LABEL}>Ingresar Código</span>
@@ -136,6 +87,7 @@ const VerificationPopup = ({ username, email, mode, onSuccess, onClose }: Props)
                                     onChange={updateCode}
                                     error={!!error}
                                 />
+                                {/* Aviso si el código está incompleto */}
                                 {!isComplete && code.length > 0 && (
                                     <p className={CODE_HINT}>
                                         El código debe tener 8 dígitos
@@ -150,14 +102,12 @@ const VerificationPopup = ({ username, email, mode, onSuccess, onClose }: Props)
                         </div>
                     )}
                 </div>
-
                 <div className={VERIFICATION_BUTTONS_WRAPPER}>
                     {resent && (
                         <p className={RESEND_CONFIRMATION}>
                             Código de verificación reenviado
                         </p>
                     )}
-
                     <Button
                         variant="secondary"
                         onClick={handleSubmit}
@@ -166,7 +116,6 @@ const VerificationPopup = ({ username, email, mode, onSuccess, onClose }: Props)
                     >
                         {isLoading ? "Verificando..." : error ? "Reintentar" : "Verificar"}
                     </Button>
-
                     <Button
                         variant="primary"
                         onClick={handleResend}
@@ -175,7 +124,6 @@ const VerificationPopup = ({ username, email, mode, onSuccess, onClose }: Props)
                     >
                         Reenviar Código
                     </Button>
-
                     <Button variant="primary" onClick={onClose} fullWidth>
                         Cancelar
                     </Button>

@@ -8,19 +8,7 @@ const STYLES = {
     GRID_CONTAINER: "grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"
 };
 
-/*
-  Características:
-  -Página principal del portafolio público (dashboard)
-  -Renderiza tres secciones principales en modo público:
-    - Información personal (PublicPersonalInfo)
-    - Perfil de LinkedIn (PublicLinkedIn)
-    - Perfil de GitHub (GitHub con isPublic={true})
-  -Diseño en columna (flex-col) para móvil, sin grid implementado actualmente
-
-  @ Ejemplo:
-  // Ruta: /ver/juanperez
-  <Dashboard />
-*/
+// Dashboard principal que muestra información personal, LinkedIn y GitHub en modo público
 const Dashboard = () => {
     return (
         <div className={STYLES.WRAPPER}>

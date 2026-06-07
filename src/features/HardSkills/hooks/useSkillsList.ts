@@ -4,23 +4,7 @@ import type { Skill } from "../types/skill.types";
 
 const PAGE_SIZE = 5;
 
-/*
-  Características:
-  -Hook personalizado que orquesta la página de gestión de habilidades técnicas
-  -Combina useSkills (CRUD) con lógica de UI local
-  -Paginación: 5 habilidades por página (PAGE_SIZE = 5)
-  -Maneja estados de UI: popup de agregar, editar, eliminar
-  -Maneja estado de carga y errores del servidor
-  -isSubmitting: deshabilita botones durante operaciones CRUD
-  -Después de eliminar, si la página actual queda vacía, retrocede una página automáticamente
-
-  @ Ejemplo:
-  const {
-    paginated, isLoading, totalPages, currentPage, setCurrentPage,
-    showAdd, setShowAdd, editTarget, setEditTarget, deleteTarget, setDeleteTarget,
-    handleAdd, handleEdit, handleDelete
-  } = useSkillsList();
-*/
+// Hook para orquestar la página de habilidades técnicas (paginación, modales)
 const useSkillsList = () => {
     const { skills, isLoading, error, successMessage, addSkill, editSkill, deleteSkill } = useSkills();
     const [showAdd, setShowAdd] = useState(false);
@@ -30,7 +14,7 @@ const useSkillsList = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     
-    // Paginación: calcula total de páginas y obtiene los elementos de la página actual
+    // Paginación
     const totalPages = Math.ceil(skills.length / PAGE_SIZE);
     const paginated = skills.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
     
@@ -38,12 +22,7 @@ const useSkillsList = () => {
         addSkill(name, level);
     };
 
-    /*
-      Maneja la edición de una habilidad
-      -Muestra estado de carga durante la operación
-      -Captura errores del servidor y los muestra en el popup
-      -Al finalizar, cierra el popup de edición
-    */
+
     const handleEdit = async (id: string | number, name: string, level: number) => {
         setServerError(null);
         setIsSubmitting(true);
@@ -57,17 +36,14 @@ const useSkillsList = () => {
         }
     };
 
-    /*
-      Maneja la eliminación de una habilidad
-      -Ejecuta la eliminación a través del servicio
-      -Si la página actual queda vacía después de eliminar, retrocede a la página anterior
-      -Cierra el popup de eliminación al finalizar
-    */
+
+
     const handleDelete = async () => {
         if (!deleteTarget) return;
         try {
             await deleteSkill(deleteTarget.name);
             setDeleteTarget(null);
+            // Si era el último elemento de la página, retroceder
             if (paginated.length === 1 && currentPage > 1) {
                 setCurrentPage((p) => p - 1);
             }

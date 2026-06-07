@@ -1,45 +1,24 @@
 import { ExternalLink } from 'lucide-react';
 
-/*
-  Props del componente GithubBadge:
-  -username: Nombre de usuario de GitHub o URL completa del perfil
-*/
 interface Props {
     username: string;
 }
 
-/*
-  Características:
-  -Componente que muestra una insignia/tarjeta del perfil de GitHub
-  -Limpia la URL para extraer solo el nombre de usuario (ej: "https://github.com/juanperez" -> "juanperez")
-  -Si no hay usuario válido, no renderiza nada (retorna null)
-  -Avatar dinámico con la inicial del nombre de usuario
-  -Muestra el nombre de usuario, etiqueta "GitHub" y "Perfil Público"
-  -Botón "Visitar Perfil" que abre el perfil de GitHub en una nueva pestaña
-  -Efectos hover: sombra en la tarjeta y botón con color morado (#6e5494)
-
-  @ Ejemplo:
-  <GithubBadge username="juanperez" />
-  <GithubBadge username="https://github.com/maria-dev" />
-*/
 const GithubBadge = ({ username }: Props) => {
-    // Limpieza de URL para obtener solo el nombre
+    // Extrae solo el nombre de usuario si se pegó una URL completa
     const cleanUser = username.split('/').filter(Boolean).pop() || "";
-    
+
     if (!cleanUser) return null;
 
-    // Generamos la inicial para el avatar
-    const initial = cleanUser.charAt(0).toUpperCase();
+    const initial = cleanUser.charAt(0).toUpperCase(); // Inicial para el avatar dinámico
 
     return (
         <div className="group relative w-72 bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-md transition-all duration-300">
             <div className="flex items-center gap-4">
-                {/* Avatar dinámico con inicial */}
+                {/* Avatar con inicial del username */}
                 <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-[#333] to-[#6e5494] rounded-full flex items-center justify-center text-white text-xl font-bold shadow-inner">
                     {initial}
                 </div>
-
-                {/* Info principal */}
                 <div className="flex-grow min-w-0">
                     <h3 className="text-gray-900 font-bold truncate leading-tight">
                         {cleanUser}
@@ -53,8 +32,6 @@ const GithubBadge = ({ username }: Props) => {
                     </div>
                 </div>
             </div>
-
-            {/* Botón de acción */}
             <a
                 href={`https://github.com/${cleanUser}`}
                 target="_blank"

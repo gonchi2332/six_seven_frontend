@@ -24,6 +24,7 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
+// Página pública de habilidades blandas (portafolio visible)
 const SoftSkillsPage = () => {
     const { username } = useParams<{ username: string }>();
     const {
@@ -38,6 +39,7 @@ const SoftSkillsPage = () => {
         (s, q) => s.name.toLowerCase().includes(q.toLowerCase())
     );
 
+    // Cargar habilidades públicas cuando cambia el username
     useEffect(() => {
         setPublicUser(username ?? null);
     }, [username, setPublicUser]);

@@ -18,31 +18,10 @@ const styles = {
     loading: "text-white/70 font-nunito text-center py-12 bg-black/20 rounded-xl border border-white/10",
 };
 
-/*
-  Props del componente Github:
-  -isPublic: Si es true, muestra el componente en modo público (solo lectura)
-*/
 interface Props {
     isPublic?: boolean;
 }
 
-/*
-  Características:
-  -Componente que gestiona la integración con GitHub
-  -Muestra la insignia de GitHub del usuario (avatar, nombre de usuario, etc.)
-  -Dos modos:
-    - Modo privado: permite vincular/cambiar cuenta de GitHub
-    - Modo público: solo muestra la insignia si existe, o mensaje de "no vinculado"
-  -Botón "Cambiar Perfil" / "Vincular Ahora" abre modal con GithubInput
-  -Al vincular exitosamente, guarda el perfil y cierra el modal
-  -Estado loading mientras carga la información de GitHub
-
-  @ Ejemplo modo privado:
-  <Github />
-
-  @ Ejemplo modo público:
-  <Github isPublic={true} />
-*/
 function Github({ isPublic }: Props) {
     const [showModal, setShowModal] = useState(false);
 
@@ -69,12 +48,9 @@ function Github({ isPublic }: Props) {
             <div className={styles.pageContent}>
                 <div className={styles.outerCard}>
                     <div className={styles.greenContainer}>
-
                         <div className={styles.header}>
-                            <h1 className={styles.title}>
-                                Perfil de GitHub
-                            </h1>
-
+                            <h1 className={styles.title}>Perfil de GitHub</h1>
+                            {/* Botón de cambio solo visible en modo privado si ya hay perfil vinculado */}
                             {githubUser && !isPublic && (
                                 <Button variant="secondary" onClick={() => setShowModal(true)}>
                                     Cambiar Perfil
@@ -88,16 +64,13 @@ function Github({ isPublic }: Props) {
                             <div className={styles.content}>
                                 {!githubUser ? (
                                     <>
-                                        {!isPublic && (
-                                            <p className={styles.emptyText}>
-                                                Vincula tu cuenta de GitHub para mostrar tu insignia profesional en tu portafolio público
-                                            </p>
-                                        )}
-                                        {isPublic && (
-                                            <p className={styles.emptyText}>
-                                                Aún no se vinculó una cuenta de GitHub
-                                            </p>
-                                        )}
+                                        <p className={styles.emptyText}>
+                                            {!isPublic
+                                                ? "Vincula tu cuenta de GitHub para mostrar tu insignia profesional en tu portafolio público"
+                                                : "Aún no se vinculó una cuenta de GitHub"
+                                            }
+                                        </p>
+                                        {/* Botón de vinculación solo en modo privado */}
                                         {!isPublic && (
                                             <Button variant="primary" onClick={() => setShowModal(true)}>
                                                 Vincular Ahora
@@ -131,4 +104,3 @@ function Github({ isPublic }: Props) {
 }
 
 export default Github;
-

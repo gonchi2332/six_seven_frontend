@@ -1,36 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import type { EducationEntry, AcademicDegree } from "../services/educationService";
 import {
-    fetchEducation,
-    fetchPublicEducation,
-    fetchAcademicDegrees,
-    createEducation,
-    updateEducation,
-    deleteEducation as apiDeleteEducation,
+    fetchEducation, fetchPublicEducation, fetchAcademicDegrees,
+    createEducation, updateEducation, deleteEducation as apiDeleteEducation,
 } from "../services/educationService";
 
-/*
-  Características:
-  -Hook personalizado que gestiona el estado y operaciones CRUD de formación académica
-  -Maneja dos conjuntos de datos: formaciones privadas (autenticado) y públicas (vista de portafolio)
-  -Carga automática de grados académicos y formaciones privadas al montar el componente
-  -Carga automática de formaciones públicas cuando cambia currentPublicUsername
-  -Maneja mensajes de éxito y error (se autolimpian después de 3 segundos)
-  -Operaciones CRUD: agregar, editar, eliminar (recargan la lista automáticamente)
-
-  @ Ejemplo:
-  const {
-    entries, publicEntries, academicDegrees, isLoading,
-    addEntry, editEntry, deleteEntry, setPublicUser
-  } = useEducation();
-
-  // Vista privada (panel de control)
-  <EducationList entries={entries} onDelete={deleteEntry} />
-
-  // Vista pública (portafolio)
-  setPublicUser("juanperez");
-  <PublicEducationList entries={publicEntries} isLoading={isLoadingPublic} />
-*/
+// Hook para gestionar formaciones académicas privadas y públicas
 export const useEducation = () => {
     const [entries, setEntries] = useState<EducationEntry[]>([]);
     const [publicEntries, setPublicEntries] = useState<EducationEntry[]>([]);
@@ -42,6 +17,7 @@ export const useEducation = () => {
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [currentPublicUsername, setCurrentPublicUsername] = useState<string | null>(null);
 
+    // Mensajes autolimpiables a los 3 segundos
     const showSuccess = (msg: string) => {
         setSuccessMessage(msg);
         setTimeout(() => setSuccessMessage(null), 3000);
@@ -52,7 +28,7 @@ export const useEducation = () => {
         setTimeout(() => setError(null), 3000);
     };
 
-    // Carga de formaciones privadas y grados académicos al montar el componente
+    // Carga formaciones y catálogo de grados en paralelo al montar
     useEffect(() => {
         const load = async () => {
             setIsLoading(true);
@@ -73,7 +49,7 @@ export const useEducation = () => {
         load();
     }, []);
 
-    // Carga formaciones públicas automáticamente cuando cambia currentPublicUsername
+    // Carga formaciones públicas al cambiar currentPublicUsername
     useEffect(() => {
         const fetchPublicUserEducation = async () => {
             if (!currentPublicUsername || currentPublicUsername.trim() === "") {
@@ -81,7 +57,6 @@ export const useEducation = () => {
                 setIsLoadingPublic(false);
                 return;
             }
-
             setIsLoadingPublic(true);
             setPublicError(null);
             try {
@@ -89,7 +64,7 @@ export const useEducation = () => {
                 setPublicEntries(data);
             } catch (err: any) {
                 console.error(err);
-                // No mostrar error de autenticación en vista pública
+                // Suprime errores de autenticación en vista pública
                 if (!err.message?.includes("token") && !err.message?.includes("autenticacion") && !err.message?.includes("Authorization")) {
                     setPublicError(err.message || 'Error al obtener formaciones académicas públicas');
                 }
@@ -98,20 +73,13 @@ export const useEducation = () => {
                 setIsLoadingPublic(false);
             }
         };
-
         fetchPublicUserEducation();
     }, [currentPublicUsername]);
 
-    // Función pública para cambiar el usuario a visualizar en el portafolio
     const setPublicUser = useCallback((username: string | null) => {
         setCurrentPublicUsername(username);
     }, []);
 
-    /*
-      Agrega una nueva formación académica
-      -Envía los datos al servicio createEducation
-      -Actualiza la lista con la respuesta del servidor
-    */
     const addEntry = async (data: Omit<EducationEntry, "id">) => {
         try {
             const updated = await createEducation(data);
@@ -122,11 +90,6 @@ export const useEducation = () => {
         }
     };
 
-    /*
-      Edita una formación académica existente
-      -Envía los datos actualizados al servicio updateEducation
-      -Actualiza la lista con la respuesta del servidor
-    */
     const editEntry = async (id: string, data: Omit<EducationEntry, "id">) => {
         try {
             const updated = await updateEducation(id, data);
@@ -137,11 +100,6 @@ export const useEducation = () => {
         }
     };
 
-    /*
-      Elimina una formación académica:
-      -Llama al servicio deleteEducation
-      -Actualiza el estado local filtrando la entrada eliminada
-    */
     const deleteEntry = async (id: string) => {
         try {
             await apiDeleteEducation(id);
@@ -153,19 +111,10 @@ export const useEducation = () => {
     };
 
     return {
-        entries,
-        publicEntries,
-        academicDegrees,
-        isLoading,
-        isLoadingPublic,
-        error,
-        publicError,
-        successMessage,
-        addEntry,
-        editEntry,
-        deleteEntry,
-        setPublicUser,
-        currentPublicUsername,
+        entries, publicEntries, academicDegrees,
+        isLoading, isLoadingPublic,
+        error, publicError, successMessage,
+        addEntry, editEntry, deleteEntry,
+        setPublicUser, currentPublicUsername,
     };
 };
-

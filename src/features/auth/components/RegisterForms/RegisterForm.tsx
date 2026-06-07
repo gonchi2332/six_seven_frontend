@@ -2,19 +2,6 @@ import TextField from "../../../../components/TextField";
 import Button from "../../../../components/Button";
 import { useRegisterForm } from "../../hooks/useRegisterForm";
 
-/*
-  Características:
-  -Formulario de registro de nuevos usuarios
-  -Campos: nombre(s), primer apellido, nombre de usuario, contraseña, confirmar contraseña, correo electrónico
-  -Todos los campos son obligatorios (*)
-  -Validación en tiempo real con feedback de errores
-  -Validaciones incluyen: campos vacíos, formato de email, longitud de contraseña (mínimo 8 caracteres), coincidencia de contraseñas
-  -Estado isLoading deshabilita campos y botón durante el envío
-  -Al registrarse exitosamente, redirige a verificación de email y luego a completar perfil
-
-  @ Ejemplo:
-  <RegisterForm />
-*/
 const RegisterForm = () => {
     const {
         formData,
@@ -36,16 +23,13 @@ const RegisterForm = () => {
         handleSubmit
     } = useRegisterForm();
 
-    // Layout
     const FORM_SPACING = "flex flex-col gap-6";
     const FIELD_WRAPPER = "w-full";
     const BUTTON_WRAPPER = "flex justify-center mt-6";
     const TOP_SECTION = "w-full";
-    // Tipografía
     const TITLE = "text-3xl lg:text-5xl font-regular text-left text-surface font-inter mb-6";
-
     const LINK_TEXT = "text-center text-sm text-surface font-nunito mt-6";
-    const LINK_ANCHOR = "text-accent hover:text-accent/80 font-medium transition-colors font-nunito"
+    const LINK_ANCHOR = "text-accent hover:text-accent/80 font-medium transition-colors font-nunito";
 
     return (
         <form onSubmit={handleSubmit} className={TOP_SECTION} noValidate>
@@ -53,7 +37,7 @@ const RegisterForm = () => {
                 <h1 className={TITLE}>
                     Empieza a construir tu Portafolio
                 </h1>
-
+                {/* Errores se muestran solo si el campo fue tocado (touched) */}
                 <div onBlur={handleNameBlur} className={FIELD_WRAPPER}>
                     <TextField
                         label="Nombre(s)*"
@@ -84,7 +68,6 @@ const RegisterForm = () => {
                         disabled={isLoading}
                     />
                 </div>
-
                 <div onBlur={handlePasswordBlur} className={FIELD_WRAPPER}>
                     <TextField
                         label="Contraseña*"
@@ -95,7 +78,6 @@ const RegisterForm = () => {
                         disabled={isLoading}
                     />
                 </div>
-
                 <div onBlur={handleConfirmPasswordBlur} className={FIELD_WRAPPER}>
                     <TextField
                         label="Confirmar contraseña*"
@@ -116,13 +98,11 @@ const RegisterForm = () => {
                         disabled={isLoading}
                     />
                 </div>
-
                 <div className={BUTTON_WRAPPER}>
                     <Button type="submit" variant="primary">
                         {isLoading ? "Registrando..." : "Registrate"}
                     </Button>
                 </div>
-
                 <p className={LINK_TEXT}>
                     ¿Ya tienes una cuenta?{" "}
                     <a href="/login" className={LINK_ANCHOR}>

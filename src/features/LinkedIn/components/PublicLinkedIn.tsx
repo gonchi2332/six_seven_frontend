@@ -15,20 +15,7 @@ const styles = {
     emptyText: "text-white/50 font-nunito text-sm sm:text-base text-center max-w-xs",
 };
 
-/*
-  Características:
-  -Componente público que muestra la insignia de LinkedIn en el portafolio
-  -Obtiene el username de la URL mediante useParams
-  -Usa useLinkedin para cargar la información del perfil de LinkedIn
-  -Muestra la insignia (LinkedInBadge) si el usuario tiene vinculada su cuenta
-  -Si no hay perfil vinculado, muestra mensaje "Aún no se vinculó una cuenta de LinkedIn"
-  -Estado loading muestra "Cargando LinkedIn..." mientras se obtienen los datos
-  -Diseño consistente con el resto del portafolio público
-
-  @ Ejemplo:
-  // Ruta: /ver/juanperez/linkedin
-  <PublicLinkedIn /> // Muestra la insignia de LinkedIn de juanperez
-*/
+// Vista pública del perfil de LinkedIn, obtiene el username desde la URL
 const PublicLinkedIn = () => {
     const { username } = useParams<{ username: string }>();
     const { linkedinUser, isLoading } = useLinkedin(username || "");
@@ -39,11 +26,8 @@ const PublicLinkedIn = () => {
                 <div className={styles.outerCard}>
                     <div className={styles.greenContainer}>
                         <div className={styles.header}>
-                            <h1 className={styles.title}>
-                                Perfil de LinkedIn
-                            </h1>
+                            <h1 className={styles.title}>Perfil de LinkedIn</h1>
                         </div>
-
                         {isLoading ? (
                             <div className={styles.loading}>Cargando LinkedIn...</div>
                         ) : (
@@ -59,7 +43,6 @@ const PublicLinkedIn = () => {
                                 </div>
                             </div>
                         )}
-
                     </div>
                 </div>
             </div>
@@ -68,4 +51,3 @@ const PublicLinkedIn = () => {
 };
 
 export default PublicLinkedIn;
-

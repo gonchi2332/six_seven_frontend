@@ -1,27 +1,10 @@
 import { useLocation } from "react-router-dom";
 import EmailVerificationFlow from "../../features/auth/components/EmailPasswordVerification/EmailVerificationFlow";
 
-/*
-  Características:
-  -Página de verificación de cuenta después del registro
-  -Recibe estado de navegación con username, email y codeSent
-  -Si codeSent es true (código ya enviado), inicia el flujo en paso "verification"
-  -Si no, inicia en paso "email" para solicitar envío de código
-  -Modo "verify" (registro, no recuperación)
-  -Diseño centrado con flexbox
-
-  @ Ejemplo:
-  // Redirección desde RegisterForm
-  navigate("/verification", {
-    state: {
-      email: "juan@mail.com",
-      username: "juanperez",
-      codeSent: true
-    }
-  });
-*/
+// Página de verificación después del registro
 const VerificationPage = () => {
   const location = useLocation();
+  // Recibir datos desde navigate con state (viene desde RegisterForm)
   const state = location.state as { username?: string, email?: string, codeSent?: boolean } | null;
 
   return (
@@ -29,6 +12,7 @@ const VerificationPage = () => {
       <div className="flex justify-center items-center flex-1">
         <EmailVerificationFlow 
           initialMode="verify" 
+          // Si ya se envió el código, empezar directamente en el paso de verificación
           initialStep={state?.codeSent ? "verification" : "email"}
           initialUsername={state?.username}
           initialEmail={state?.email}

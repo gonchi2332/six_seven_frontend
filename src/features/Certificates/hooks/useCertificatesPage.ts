@@ -6,27 +6,11 @@ import type { Certificate } from "../services/certificateService";
 
 const PAGE_SIZE = 12;
 
-/*
-  Características:
-  -Hook personalizado que orquesta la página de gestión de certificados
-  -Combina múltiples hooks: useCertificates (CRUD), useSearch (búsqueda), usePagination (paginación)
-  -Maneja estados de UI: popups de acción, vista, edición, eliminación, creación
-  -Paginación con 12 certificados por página
-  -Búsqueda por título del certificado (case-insensitive)
-  -closeAll: cierra todos los popups y limpia errores
-  -goToMenu: muestra el menú de acciones para un certificado específico
-  -Manejo de errores y estado de carga en operaciones CRUD
-  -isSubmitting: deshabilita botones durante envíos
-
-  @ Ejemplo:
-  const {
-    paginated, isLoading, searchInput, onSearch, handleChange,
-    certToDelete, onDeleteConfirm, showAdd, onAddSubmit
-  } = useCertificatesPage();
-*/
+// Hook que orquesta la página de certificados: CRUD, búsqueda, paginación y estados de UI
 const useCertificatesPage = () => {
     const { certificates, isLoading, error, successMessage, addCertificate, editCertificate, deleteCertificate } = useCertificates();
 
+    // Búsqueda por título
     const { searchInput, filtered, handleSearch, handleKeyDown, handleChange } = useSearch(
         certificates,
         (c, q) => c.title.toLowerCase().includes(q.toLowerCase())
@@ -34,6 +18,7 @@ const useCertificatesPage = () => {
 
     const { currentPage, totalPages, paginated, prevPage, nextPage, resetPage, adjustAfterDelete } = usePagination(filtered, PAGE_SIZE);
 
+    // Estados de UI para los popups
     const [certAction, setCertAction] = useState<Certificate | null>(null);
     const [certToView, setCertToView] = useState<Certificate | null>(null);
     const [certToEdit, setCertToEdit] = useState<Certificate | null>(null);
@@ -44,6 +29,7 @@ const useCertificatesPage = () => {
 
     const onSearch = () => { handleSearch(); resetPage(); };
 
+    // Cierra todos los popups y limpia estados
     const closeAll = () => {
         setCertAction(null);
         setCertToView(null);
@@ -53,6 +39,7 @@ const useCertificatesPage = () => {
         setFormError(null);
     };
 
+    // Vuelve al menú de acciones del certificado
     const goToMenu = (cert: Certificate) => {
         setCertToView(null);
         setCertToEdit(null);
@@ -92,7 +79,7 @@ const useCertificatesPage = () => {
         setIsSubmitting(true);
         try {
             await deleteCertificate(certToDelete.id);
-            adjustAfterDelete(paginated.length);
+            adjustAfterDelete(paginated.length); // Ajusta la página si queda vacía
             closeAll();
         } finally {
             setIsSubmitting(false);
@@ -116,4 +103,3 @@ const useCertificatesPage = () => {
 };
 
 export default useCertificatesPage;
-

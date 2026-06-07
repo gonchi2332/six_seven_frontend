@@ -3,11 +3,6 @@ import Button from "../../../components/Button";
 import PopUpCard from "../../../components/PopUpCard";
 import type { Certificate } from "../services/certificateService";
 
-/*
-  Props del componente ViewCertificatePopup:
-  -certificate: Objeto con los datos del certificado a visualizar
-  -onClose: Función ejecutada al cerrar el popup
-*/
 interface Props {
     certificate: Certificate;
     onClose: () => void;
@@ -34,13 +29,7 @@ const styles = {
     closeButton: "absolute right-4 top-4 text-white/50 hover:text-[#90DDF0] transition-colors p-1 hover:bg-white/10 rounded-lg",
 };
 
-/*
-  Características:
-  -Subcomponente que renderiza una fila de información con ícono, etiqueta y valor
-  -Recibe: ícono (lucide-react), etiqueta, valor, y si es descripción (estilo diferente)
-  -Si no hay valor, muestra "No especificado" en cursiva y semi-transparente
-  -Las descripciones tienen formato especial (whitespace-pre-wrap) para preservar saltos de línea
-*/
+// Subcomponente para mostrar una fila de información con ícono
 const InfoRow = ({
     icon: Icon,
     label,
@@ -67,28 +56,11 @@ const InfoRow = ({
     </div>
 );
 
-/*
-  Características:
-  -Popup para visualizar todos los detalles de un certificado
-  -Muestra: imagen de portada (o "Sin imagen" si no hay), título, área, fecha de certificación, descripción
-  -Formato de fecha: DD/MM/YYYY (ej: 15/03/2024)
-  -Fondo con blur y overlay semitransparente
-  -Click fuera del popup cierra la ventana
-  -Botón "Atrás" en la parte inferior para cerrar
-  -Botón "✕" en la esquina superior derecha
-
-  @ Ejemplo:
-  <ViewCertificatePopup
-    certificate={selectedCertificate}
-    onClose={() => setShowPopup(false)}
-  />
-*/
 const ViewCertificatePopup = ({ certificate, onClose }: Props) => {
+    // Formatea la fecha en DD/MM/YYYY para mostrar en el popup
     const formattedDate = certificate.issueDate
         ? new Date(certificate.issueDate + "T00:00:00").toLocaleDateString("es-ES", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric"
+            day: "2-digit", month: "2-digit", year: "numeric"
         })
         : null;
 
@@ -97,7 +69,6 @@ const ViewCertificatePopup = ({ certificate, onClose }: Props) => {
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
                 <PopUpCard title="Certificado">
                     <button onClick={onClose} className={styles.closeButton}>✕</button>
-
                     <div className={styles.content}>
                         <div className={styles.imageWrapper}>
                             {certificate.coverImage ? (
@@ -127,4 +98,3 @@ const ViewCertificatePopup = ({ certificate, onClose }: Props) => {
 };
 
 export default ViewCertificatePopup;
-

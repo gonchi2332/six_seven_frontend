@@ -27,20 +27,7 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
-/*
-  Características:
-  -Página pública de certificados (portafolio visible)
-  -Obtiene el username de la URL mediante useParams
-  -Carga certificados públicos del usuario a través de useCertificates.setPublicUser
-  -Búsqueda por título del certificado
-  -Paginación (12 certificados por página)
-  -Al hacer clic en un certificado, abre modal ViewCertificatePopup con detalles
-  -Muestra error si falla la carga
-
-  @ Ejemplo:
-  // Ruta: /ver/juanperez/certificados
-  <CertificatesPublicPage />
-*/
+// Página pública de certificados (portafolio visible)
 const CertificatesPublicPage = () => {
     const { username } = useParams<{ username: string }>();
     const {
@@ -55,7 +42,7 @@ const CertificatesPublicPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedCertificate, setSelectedCertificate] = useState<any>(null);
 
-    // Carga certificados públicos cuando cambia el username
+    // Cargar certificados del usuario cuando cambia el username en la URL
     useEffect(() => {
         setPublicUser(username ?? null);
     }, [username, setPublicUser]);
@@ -77,7 +64,7 @@ const CertificatesPublicPage = () => {
         setSelectedCertificate(null);
     };
 
-    // Filtrar por búsqueda
+    // Filtrar por título
     const filtered = publicCertificates.filter((cert) =>
         (cert.title || "").toLowerCase().includes(activeSearch.toLowerCase())
     );
@@ -188,6 +175,7 @@ const CertificatesPublicPage = () => {
                 </div>
             </div>
 
+            {/* Modal para ver detalle al hacer clic */}
             {selectedCertificate && (
                 <ViewCertificatePopup
                     certificate={selectedCertificate}

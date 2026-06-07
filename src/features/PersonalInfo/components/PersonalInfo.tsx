@@ -30,16 +30,7 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
-// ============================================
-// COMPONENTES AUXILIARES
-// ============================================
-
-/*
-  Características:
-  -Subcomponente que renderiza una fila de información con ícono, etiqueta y valor
-  -Recibe: ícono (lucide-react), etiqueta y valor
-  -Si no hay valor, muestra "No especificado" en cursiva y semi-transparente
-*/
+// Fila de información estática (sin edición)
 const InfoRow = ({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string | null | undefined }) => (
     <div className={styles.field}>
         <Icon size={18} className={styles.icon} />
@@ -54,23 +45,7 @@ const InfoRow = ({ icon: Icon, label, value }: { icon: React.ElementType; label:
     </div>
 );
 
-// ============================================
-// COMPONENTE PRINCIPAL
-// ============================================
-
-/*
-  Características:
-  -Componente principal de gestión de información personal
-  -Muestra datos del usuario: nombre completo, nombre de usuario, correo de registro, residencia, correo de contacto, teléfono
-  -Organiza la información en dos tarjetas: "Datos Personales" y "Ubicación y Contacto"
-  -Botones de acción: Ver, Modificar, Ingresar Información
-  -Botón "Ingresar Información": deshabilitado si no hay campos vacíos o está en envío
-  -Integra modales: EditPersonalInfoCard (edición), ViewPersonalInfoModal (visualización), AddInfoModal (agregar campos faltantes)
-  -Usa refreshKey para recargar datos después de operaciones
-
-  @ Ejemplo:
-  <PersonalInfo />
-*/
+// Componente principal de información personal (modo privado)
 const PersonalInfo = () => {
     const [refreshKey, setRefreshKey] = useState(0);
     const { userInfo, isLoading } = useNavbarInfo(refreshKey);
@@ -109,20 +84,14 @@ const PersonalInfo = () => {
                 <div className={styles.outerCard}>
                     <div className={styles.greenContainer}>
 
-                        {/* Header Estandarizado */}
+                        
                         <div className={styles.header}>
                             <h1 className={styles.title}>Información Personal</h1>
                             <div className={styles.actionRow}>
-                                <Button
-                                    variant="secondary"
-                                    onClick={() => setIsViewModalOpen(true)}
-                                >
+                                <Button variant="secondary" onClick={() => setIsViewModalOpen(true)}>
                                     Ver
                                 </Button>
-                                <Button
-                                    variant="quaternary"
-                                    onClick={() => setIsEditModalOpen(true)}
-                                >
+                                <Button variant="quaternary" onClick={() => setIsEditModalOpen(true)}>
                                     Modificar
                                 </Button>
                                 <Button
@@ -139,8 +108,7 @@ const PersonalInfo = () => {
                             <div className={styles.loading}>Cargando información personal...</div>
                         ) : (
                             <div className={styles.listWrapper}>
-
-                                {/* Card Identidad */}
+                                {/* Tarjeta de Datos Personales */}
                                 <div className={styles.infoCard}>
                                     <p className={styles.sectionTitle}>
                                         <User size={14} /> Datos Personales
@@ -152,7 +120,7 @@ const PersonalInfo = () => {
                                     </div>
                                 </div>
 
-                                {/* Card Contacto y Ubicación */}
+                                {/* Tarjeta de Ubicación y Contacto */}
                                 <div className={styles.infoCard}>
                                     <p className={styles.sectionTitle}>
                                         <MapPin size={14} /> Ubicación y Contacto

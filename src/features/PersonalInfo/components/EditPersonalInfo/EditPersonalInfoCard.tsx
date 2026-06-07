@@ -19,30 +19,12 @@ const STYLES = {
     FOOTER: "flex flex-row justify-end items-center gap-4 mt-10 pt-6 px-8",
 };
 
-/*
-  Props del componente EditPersonalInfoCard:
-  -onClose: Función ejecutada al cancelar o cerrar el modal
-*/
+
 interface EditPersonalInfoCardProps {
     onClose?: () => void;
 }
 
-/*
-  Características:
-  -Modal para modificar información personal del usuario
-  -Carga datos actuales del usuario al montar el componente
-  -Muestra campos dinámicamente según existan o no en los datos originales
-  -Campos siempre visibles: nombre(s), primer apellido, imagen de perfil
-  -Campos condicionales: segundo apellido, ciudad, correo, teléfono, país (solo si ya existían)
-  -Integra selector de países (useCountries)
-  -Upload de imagen de perfil (ImageUpload)
-  -Validación de campos con regex (useProfileForm)
-  -Al enviar exitosamente, recarga la página para reflejar cambios
-  -Muestra errores de carga, validación y envío
-
-  @ Ejemplo:
-  <EditPersonalInfoCard onClose={() => setShowModal(false)} />
-*/
+// Modal para editar información personal (con validación y carga de datos)
 const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
     const { countries, isLoading } = useCountries();
     const {
@@ -61,7 +43,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
     // Recargar la página cuando el submit es exitoso
     useEffect(() => {
         if (submitSuccess) {
-            // Pequeño delay para mostrar el mensaje de éxito
+
             const timer = setTimeout(() => {
                 window.location.reload();
             }, 1000);
@@ -101,7 +83,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                 <div>
                     <div className={STYLES.FORM_WRAPPER}>
                         <div className={STYLES.DYNAMIC_GRID}>
-                            {/* Nombre(s) - SIEMPRE visible */}
+                            {/* Campos siempre visibles */}
                             {shouldShowField('firstName') && (
                                 <TextField
                                     label="Nombre(s)*:"
@@ -111,7 +93,8 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                                     className="w-full"
                                 />
                             )}
-                            {/* Primer Apellido - SIEMPRE visible */}
+
+
                             {shouldShowField('firstSurname') && (
                                 <TextField
                                     label="Primer apellido*:"
@@ -121,7 +104,8 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                                     className="w-full"
                                 />
                             )}
-                            {/* Segundo Apellido - Solo si existía originalmente */}
+
+                            {/* Campos condicionales (solo si existían originalmente) */}
                             {shouldShowField('secondSurname') && (
                                 <TextField
                                     label="Segundo apellido*:"
@@ -132,7 +116,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                                 />
                             )}
 
-                            {/* Ciudad - Solo si existía originalmente */}
+
                             {shouldShowField('city') && (
                                 <TextField
                                     label="Ciudad*:"
@@ -143,7 +127,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                                 />
                             )}
 
-                            {/* Correo - Solo si existía originalmente */}
+
                             {shouldShowField('email') && (
                                 <TextField
                                     label="Correo de contacto*:"
@@ -156,7 +140,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                                 />
                             )}
 
-                            {/* Teléfono - Solo si existía originalmente */}
+
                             {shouldShowField('phone') && (
                                 <TextField
                                     label="Teléfono*:"
@@ -169,7 +153,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                                 />
                             )}
 
-                            {/* País de residencia - Solo si existe originalmente */}
+                            {/* País - solo si existe */}
                             {formData.country && formData.country.trim() !== '' && (
                                 <div className="flex flex-col justify-start">
                                     <label className={STYLES.INPUT_LABEL}>País de residencia*:</label>
@@ -177,8 +161,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                                         value={formData.country}
                                         onChange={(e) => handleChange("country", e.target.value)}
                                         disabled={isLoading}
-                                        className={`${STYLES.SELECT} ${formData.country === "" ? STYLES.SELECT_PLACEHOLDER : STYLES.SELECT_VALUE
-                                            }`}
+                                        className={`${STYLES.SELECT} ${formData.country === "" ? STYLES.SELECT_PLACEHOLDER : STYLES.SELECT_VALUE}`}
                                     >
                                         <option value="" disabled className="text-gray-400 hidden">
                                             {isLoading ? "Cargando países..." : "Selecciona un país"}
@@ -192,7 +175,7 @@ const EditPersonalInfoCard = ({ onClose }: EditPersonalInfoCardProps) => {
                                 </div>
                             )}
 
-                            {/* Imagen de perfil - Siempre visible */}
+                            {/* Imagen de perfil - siempre visible */}
                             <div className={STYLES.IMAGE_WRAPPER}>
                                 <span className={STYLES.INPUT_LABEL}>Imagen de perfil*:</span>
                                 <ImageUpload

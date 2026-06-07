@@ -2,32 +2,7 @@ import { useState, useRef } from "react";
 import { postSkill, getUserSkillNames } from "../services/skillsService";
 import useClickOutside from "../../../hooks/useClickOutside";
 
-/*
-  Características:
-  -Hook personalizado que gestiona la lógica del formulario de agregar habilidad
-  -Maneja dos modos: selección del catálogo (autocompletado) o "otro" (nombre personalizado)
-  -Autocompletado: muestra sugerencias mientras escribe, filtradas del catálogo
-  -Validaciones: habilidad no puede estar vacía, no puede duplicar existentes (si es del catálogo)
-  -Llama al servicio postSkill para registrar la habilidad
-  -Maneja errores específicos: INAPPROPRIATE (palabras prohibidas), ALREADY_EXISTS (habilidad duplicada)
-  -Cierra el dropdown al hacer clic fuera (useClickOutside)
-
-  @ Parámetros:
-  -onSubmit: Función ejecutada al registrar exitosamente (recibe nombre y nivel)
-  -onClose: Función ejecutada al cerrar el popup
-  -catalogSkills: Lista de habilidades predefinidas del catálogo
-
-  @ Retorna:
-  -search, suggestions, showDropdown, isOther, otherName, level, topError, inlineError, etc.
-  -handlers: handleSearchChange, handleSelectSuggestion, handleToggleOther, handleConfirm, etc.
-
-  @ Ejemplo:
-  const addSkill = useAddSkill(
-    (name, level) => addSkillToList(name, level),
-    () => setShowPopup(false),
-    ["JavaScript", "React", "Python"]
-  );
-*/
+// Hook para manejar la lógica de agregar habilidad (autocompletado + opción "Otro")
 const useAddSkill = (
     onSubmit: (name: string, level: number) => void,
     onClose: () => void,
@@ -46,6 +21,7 @@ const useAddSkill = (
     const [loading, setLoading] = useState(false);
 
     const containerRef = useRef<HTMLDivElement>(null);
+    // Cerrar dropdown al hacer clic fuera
     useClickOutside(containerRef, () => setShowDropdown(false));
 
     const clearError = () => {
@@ -60,6 +36,7 @@ const useAddSkill = (
         setSelectedName(null);
         clearError();
         if (val.trim()) {
+            // Filtrar sugerencias del catálogo
             setSuggestions(catalogSkills.filter((s) => s.toLowerCase().includes(val.toLowerCase())));
             setShowDropdown(true);
         } else {
@@ -75,6 +52,7 @@ const useAddSkill = (
         setShowDropdown(false);
     };
 
+    // Alternar entre modo catálogo y modo "Otro"
     const handleToggleOther = () => {
         setIsOther((prev) => {
             if (!prev) {
@@ -95,13 +73,7 @@ const useAddSkill = (
         clearError();
     };
 
-    /*
-      Valida y envía la habilidad al servidor
-      -Verifica si la habilidad ya existe en el catálogo del usuario (solo para selección)
-      -Llama a postSkill con el nombre y nivel
-      -Maneja errores: INAPPROPRIATE (palabras prohibidas), ALREADY_EXISTS (duplicada)
-      -Si es "otro", no valida duplicados en el backend (se permite)
-    */
+    // Enviar formulario
     const handleConfirm = async () => {
         const nameToSubmit = isOther ? otherName.trim() : selectedName;
         if (!nameToSubmit) return;
@@ -110,6 +82,7 @@ const useAddSkill = (
         clearError();
 
         try {
+            // Validar que no exista ya en las habilidades del usuario (solo modo catálogo)
             if (!isOther) {
                 const userSkills = await getUserSkillNames();
                 if (userSkills.includes(nameToSubmit.toLowerCase())) {

@@ -1,14 +1,3 @@
-/*
-  Props del componente DateField:
-  -label: Etiqueta mostrada arriba del campo de fecha
-  -required: Si es true, muestra un asterisco (*) indicando campo obligatorio
-  -value: Valor actual de la fecha en formato YYYY-MM-DD
-  -error: Mensaje de error de validación
-  -touched: Indica si el campo ha sido tocado (para mostrar error)
-  -disabled: Si es true, deshabilita el input
-  -onChange: Función ejecutada al cambiar la fecha, recibe el nuevo valor
-  -onBlur: Función ejecutada al salir del campo
-*/
 interface DateFieldProps {
     label: string;
     required?: boolean;
@@ -30,27 +19,7 @@ const styles = {
     errorText: "mt-1 text-xs text-red-600 font-medium self-end",
 };
 
-/*
-  Características:
-  -Campo de fecha reutilizable para formularios
-  -Utiliza input type="date" nativo del navegador
-  -Muestra label con asterisco si es requerido
-  -Estado normal: borde gris, al focus: borde azul
-  -Estado error: borde rojo, fondo rojo claro (solo si touched es true)
-  -Muestra mensaje de error debajo del campo si hay error y fue tocado
-
-  @ Ejemplo:
-  <DateField
-    label="Fecha de Certificación"
-    required
-    value={issueDate}
-    error={dateError}
-    touched={dateTouched}
-    disabled={isSubmitting}
-    onChange={handleDateChange}
-    onBlur={handleDateBlur}
-  />
-*/
+// Campo de fecha con validación visual, muestra error solo si fue tocado
 const DateField = ({
     label, required = false, value, error, touched = false, disabled = false, onChange, onBlur,
 }: DateFieldProps) => {

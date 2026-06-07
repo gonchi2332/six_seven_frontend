@@ -8,29 +8,7 @@ import {
     deleteCertificate as apiDeleteCertificate,
 } from "../services/certificateService";
 
-/*
-  Características:
-  -Hook personalizado que gestiona el estado y operaciones CRUD de certificados
-  -Maneja dos conjuntos de datos: certificados privados (autenticado) y públicos (vista de portafolio)
-  -Carga automática de certificados privados al montar el componente
-  -Carga automática de certificados públicos cuando cambia currentPublicUsername
-  -Filtra certificados públicos solo con visible === true
-  -Maneja mensajes de éxito y error (se autolimpian después de 3 segundos)
-  -Operaciones CRUD: agregar, editar, eliminar (recargan la lista automáticamente)
-
-  @ Ejemplo:
-  const {
-    certificates, publicCertificates, isLoading, error,
-    addCertificate, editCertificate, deleteCertificate, setPublicUser
-  } = useCertificates();
-
-  // Vista privada (panel de control)
-  <CertificateList certificates={certificates} onDelete={deleteCertificate} />
-
-  // Vista pública (portafolio)
-  setPublicUser("juanperez");
-  <PublicCertificateList certificates={publicCertificates} isLoading={isLoadingPublic} />
-*/
+// Hook para gestionar certificados privados y públicos
 export const useCertificates = () => {
     const [certificates, setCertificates] = useState<Certificate[]>([]);
     const [publicCertificates, setPublicCertificates] = useState<Certificate[]>([]);
@@ -41,6 +19,7 @@ export const useCertificates = () => {
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [currentPublicUsername, setCurrentPublicUsername] = useState<string | null>(null);
 
+    // Mensajes de éxito y error autolimpiables a los 3 segundos
     const showSuccess = (msg: string) => {
         setSuccessMessage(msg);
         setTimeout(() => setSuccessMessage(null), 3000);
@@ -51,7 +30,7 @@ export const useCertificates = () => {
         setTimeout(() => setError(null), 3000);
     };
 
-    // Carga de certificados privados (autenticado) al montar el componente
+    // Carga certificados privados del usuario autenticado al montar
     useEffect(() => {
         const load = async () => {
             setIsLoading(true);
@@ -68,7 +47,7 @@ export const useCertificates = () => {
         load();
     }, []);
 
-    // Carga certificados públicos automáticamente cuando cambia currentPublicUsername
+    // Carga certificados públicos al cambiar currentPublicUsername
     useEffect(() => {
         const fetchPublicUserCertificates = async () => {
             if (!currentPublicUsername || currentPublicUsername.trim() === "") {
@@ -76,17 +55,16 @@ export const useCertificates = () => {
                 setIsLoadingPublic(false);
                 return;
             }
-
             setIsLoadingPublic(true);
             setPublicError(null);
             try {
                 const data = await fetchCertificatesPublic(currentPublicUsername);
-                // Filtrar solo los visibles (portafolio público)
+                // Solo muestra los certificados con visible === true
                 const visibleData = (data ?? []).filter((cert) => cert.visible === true);
                 setPublicCertificates(visibleData);
             } catch (err: any) {
                 console.error(err);
-                // No mostrar error de autenticación en vista pública
+                // Suprime errores de autenticación en vista pública
                 if (!err.message?.includes("token") && !err.message?.includes("autenticacion") && !err.message?.includes("Authorization")) {
                     setPublicError(err.message || 'Error al obtener certificados públicos');
                 }
@@ -95,49 +73,27 @@ export const useCertificates = () => {
                 setIsLoadingPublic(false);
             }
         };
-
         fetchPublicUserCertificates();
     }, [currentPublicUsername]);
 
-    // Función pública para cambiar el usuario a visualizar en el portafolio
     const setPublicUser = useCallback((username: string | null) => {
         setCurrentPublicUsername(username);
     }, []);
 
-    /*
-      Agrega un nuevo certificado:
-      -Envía los datos al servicio createCertificate
-      -Recarga la lista actualizada
-    */
-    const addCertificate = async (
-        data: Omit<Certificate, "id" | "coverImage"> & { coverImage: File }
-    ) => {
+    const addCertificate = async (data: Omit<Certificate, "id" | "coverImage"> & { coverImage: File }) => {
         await createCertificate(data);
         const updated = await fetchCertificates();
         setCertificates(updated);
         showSuccess("Certificado registrado correctamente");
     };
 
-    /*
-      Edita un certificado existente:
-      -Envía los datos actualizados al servicio updateCertificate
-      -Recarga la lista actualizada
-    */
-    const editCertificate = async (
-        id: number,
-        data: Omit<Certificate, "id" | "coverImage"> & { coverImage: File }
-    ) => {
+    const editCertificate = async (id: number, data: Omit<Certificate, "id" | "coverImage"> & { coverImage: File }) => {
         await updateCertificate(id, data);
         const updated = await fetchCertificates();
         setCertificates(updated);
         showSuccess("Certificado modificado correctamente");
     };
 
-    /*
-      Elimina un certificado:
-      -Llama al servicio deleteCertificate
-      -Actualiza el estado local filtrando el certificado eliminado
-    */
     const deleteCertificate = async (id: number) => {
         await apiDeleteCertificate(id);
         setCertificates((prev) => prev.filter((c) => c.id !== id));
@@ -145,17 +101,10 @@ export const useCertificates = () => {
     };
 
     return {
-        certificates,
-        publicCertificates,
-        isLoading,
-        isLoadingPublic,
-        error,
-        publicError,
-        successMessage,
-        addCertificate,
-        editCertificate,
-        deleteCertificate,
-        setPublicUser,
-        currentPublicUsername,
+        certificates, publicCertificates,
+        isLoading, isLoadingPublic,
+        error, publicError, successMessage,
+        addCertificate, editCertificate, deleteCertificate,
+        setPublicUser, currentPublicUsername,
     };
 };

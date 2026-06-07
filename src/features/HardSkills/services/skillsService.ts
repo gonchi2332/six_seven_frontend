@@ -7,15 +7,7 @@ const jsonHeaders = () => ({
     "Content-Type": "application/json",
 });
 
-/*
-  Características:
-  -Obtiene habilidades técnicas públicas de un usuario (NO requiere autenticación)
-  -Endpoint: GET /api/v1/skills/users/{username}/hard-skills
-
-  @ Parámetro: username - Nombre de usuario del portafolio a visualizar
-  @ Retorna: Habilidades técnicas públicas del usuario
-  @ Lanza: Error si la solicitud falla
-*/
+// Obtener habilidades técnicas públicas de un usuario (portafolio visible)
 export const fetchSkillsPublicNew = async (username: string) => {
     const res = await fetch(`${BASE_URL}/users/${username}/hard-skills`,{
         headers: jsonHeaders(),
@@ -27,15 +19,7 @@ export const fetchSkillsPublicNew = async (username: string) => {
     return res.json();
 }
 
-/*
-  Características:
-  -Obtiene habilidades técnicas del usuario autenticado (requiere token)
-  -Endpoint: GET /api/v1/skills/users/hard-skills?username={username}
-  -Usa fetchWithAuth para manejo automático de refresh token
-
-  @ Retorna: Habilidades técnicas del usuario
-  @ Lanza: Error si la solicitud falla
-*/
+// Obtener habilidades técnicas del usuario autenticado
 export const fetchSkills = async () => {
     const username = getUsername();
     const res = await fetchWithAuth(`${BASE_URL}/users/hard-skills?username=${username}`, {
@@ -48,15 +32,7 @@ export const fetchSkills = async () => {
     return res.json();
 };
 
-/*
-  Características:
-  -Obtiene el catálogo completo de habilidades técnicas del sistema
-  -Endpoint: GET /api/v1/skills/system/all-hard-skills
-  -No requiere autenticación
-
-  @ Retorna: Array de nombres de habilidades del catálogo
-  @ Lanza: Error si la solicitud falla
-*/
+// Obtener catálogo de habilidades disponibles (para autocompletado)
 export const fetchCatalogSkills = async (): Promise<string[]> => {
     const res = await fetch(`${BASE_URL}/system/all-hard-skills`, {
         headers: jsonHeaders(),
@@ -66,13 +42,7 @@ export const fetchCatalogSkills = async (): Promise<string[]> => {
     return (data.data ?? []).map((s: { name: string }) => s.name);
 };
 
-/*
-  Características:
-  -Obtiene los nombres de las habilidades que ya tiene registradas el usuario
-  -Útil para validar que no se dupliquen habilidades
-
-  @ Retorna: Array de nombres de habilidades (en minúsculas) del usuario
-*/
+// Obtener nombres de habilidades que ya tiene el usuario (para evitar duplicados)
 export const getUserSkillNames = async (): Promise<string[]> => {
     try {
         const data = await fetchSkills();
@@ -83,15 +53,7 @@ export const getUserSkillNames = async (): Promise<string[]> => {
     }
 };
 
-/*
-  Características:
-  -Registra una habilidad desde el catálogo (habilidad existente en el sistema)
-  -Endpoint: POST /api/v1/skills/users/hard-skills
-  -Requiere autenticación
-
-  @ Parámetros: skillName - Nombre de la habilidad, punctuation - Nivel (1-5)
-  @ Lanza: Error si la habilidad ya existe o hay problema
-*/
+// Registrar habilidad desde catálogo
 export const postSkillFromCatalog = async (skillName: string, punctuation: number) => {
     const res = await fetchWithAuth(`${BASE_URL}/users/hard-skills`, {
         method: "POST",
@@ -102,20 +64,7 @@ export const postSkillFromCatalog = async (skillName: string, punctuation: numbe
     return data;
 };
 
-/*
-  Características:
-  -Registra una nueva habilidad (no existe en el catálogo)
-  -Endpoint: POST /api/v1/skills/users/new-hard-skill
-  -Requiere autenticación
-  -Maneja errores específicos:
-    - INAPPROPRIATE: nombre contiene palabras prohibidas
-    - ALREADY_EXISTS: ya tiene registrada esa habilidad
-    - not-found: habilidad no reconocida en el campo técnico
-
-  @ Parámetros: skillName - Nombre de la nueva habilidad, punctuation - Nivel (1-5)
-  @ Retorna: "success" si se registra, "not-found" si no es reconocida
-  @ Lanza: Error con mensajes específicos (INAPPROPRIATE, ALREADY_EXISTS)
-*/
+// Registrar nueva habilidad (no existe en catálogo)
 export const postNewSkill = async (
     skillName: string,
     punctuation: number
@@ -126,12 +75,15 @@ export const postNewSkill = async (
     });
     const data = await res.json();
     if (!res.ok) {
+        // Palabras inapropiadas/ofensivas
         if (data.message?.includes("inapropiado") || data.message?.includes("ofensivo")) {
             throw new Error("INAPPROPRIATE");
         }
+        // Ya existe en habilidades del usuario
         if (data.message?.includes("ya tiene registrada")) {
             throw new Error("ALREADY_EXISTS");
         }
+        // No reconocida como habilidad técnica
         if (data.message?.includes("no corresponde")) {
             return "not-found";
         }
@@ -140,17 +92,7 @@ export const postNewSkill = async (
     return "success";
 };
 
-/*
-  Características:
-  -Función principal de registro de habilidades (decide si usar catálogo o nueva)
-  -Primero intenta registrar desde el catálogo
-  -Si la habilidad "no existe" en el catálogo, intenta registrar como nueva
-  -Maneja caso de habilidad ya existente
-
-  @ Parámetros: skillName - Nombre de la habilidad, punctuation - Nivel (1-5)
-  @ Retorna: "success" si se registra, "not-found" si no es reconocida
-  @ Lanza: Error ALREADY_EXISTS si ya tiene la habilidad registrada
-*/
+// Registrar habilidad (decide automáticamente si es del catálogo o nueva)
 export const postSkill = async (
     skillName: string,
     punctuation: number
@@ -170,15 +112,7 @@ export const postSkill = async (
     }
 };
 
-/*
-  Características:
-  -Modifica el nivel de una habilidad existente
-  -Endpoint: PATCH /api/v1/skills/users/hard-skills
-  -Requiere autenticación
-
-  @ Parámetros: skillName - Nombre de la habilidad, newPunctuation - Nuevo nivel (1-5)
-  @ Lanza: Error si la solicitud falla
-*/
+// Modificar nivel de habilidad existente
 export const patchSkill = async (skillName: string, newPunctuation: number) => {
     const res = await fetchWithAuth(`${BASE_URL}/users/hard-skills`, {
         method: "PATCH",
@@ -190,15 +124,7 @@ export const patchSkill = async (skillName: string, newPunctuation: number) => {
     }
 };
 
-/*
-  Características:
-  -Elimina una habilidad del usuario
-  -Endpoint: DELETE /api/v1/skills/users/hard-skills
-  -Requiere autenticación
-
-  @ Parámetro: skillName - Nombre de la habilidad a eliminar
-  @ Lanza: Error si la solicitud falla
-*/
+// Eliminar habilidad
 export const deleteSkill = async (skillName: string) => {
     const res = await fetchWithAuth(`${BASE_URL}/users/hard-skills`, {
         method: "DELETE",
@@ -210,14 +136,7 @@ export const deleteSkill = async (skillName: string) => {
     }
 };
 
-/*
-  Características:
-  -Obtiene habilidades técnicas públicas (versión antigua, sin username específico)
-  -Endpoint: GET /api/v1/skills/users/hard-skills
-
-  @ Retorna: Habilidades técnicas públicas
-  @ Lanza: Error si la solicitud falla
-*/
+// Obtener habilidades públicas (versión antigua, sin username específico)
 export const fetchSkillsPublic = async () => {
     const res = await fetch(`${BASE_URL}/users/hard-skills`, {
         headers: jsonHeaders(),
@@ -226,5 +145,6 @@ export const fetchSkillsPublic = async () => {
     return res.json();
 };
 
+// Función obsoleta (vacía, para compatibilidad)
 export const getCatalogSkills = (): string[] => [];
 

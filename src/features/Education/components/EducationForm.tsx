@@ -6,17 +6,6 @@ import YearSelect from "./YearSelect";
 import AcademicLevelSelect from "./AcademicLevelSelect";
 import type { EducationEntry, AcademicDegree } from "../services/educationService";
 
-/*
-  Props del componente EducationForm:
-  -mode: Modo del formulario - "add" (crear nuevo) o "edit" (modificar existente)
-  -initial: Datos iniciales de la formación (solo en modo edit)
-  -academicDegrees: Lista de grados académicos disponibles para el select
-  -onSubmit: Función que se ejecuta al enviar el formulario
-  -onClose: Función que se ejecuta al cancelar o cerrar
-  -onBack: Función para volver atrás (cuando el formulario está en un flujo)
-  -serverError: Mensaje de error proveniente del servidor (opcional)
-  -isSubmitting: Estado de carga, deshabilita campos y botón mientras es true
-*/
 interface Props {
     mode: "add" | "edit";
     initial?: EducationEntry;
@@ -50,41 +39,11 @@ const educationStateOptions = [
     { value: "Egresado", label: "Egresado" },
 ];
 
-/*
-  Características:
-  -Formulario para registrar o modificar formación académica
-  -Campos: título/carrera, grado académico, institución, estado (Cursando/Egresado), año
-  -Modo "add": todos los campos editables
-  -Modo "edit": título, grado académico e institución deshabilitados (no se pueden modificar)
-  -Estado "Cursando": muestra "Año de inicio"
-  -Estado "Egresado": muestra "Año de emisión"
-  -Validaciones: campos obligatorios, año formato YYYY
-  -Muestra error del servidor si ocurre
-  -onBack: permite volver al menú anterior (útil en flujos anidados)
-
-  @ Ejemplo modo add:
-  <EducationForm
-    mode="add"
-    academicDegrees={degrees}
-    onSubmit={handleAddEducation}
-    onClose={() => setShowForm(false)}
-    isSubmitting={isLoading}
-  />
-
-  @ Ejemplo modo edit:
-  <EducationForm
-    mode="edit"
-    initial={educationToEdit}
-    academicDegrees={degrees}
-    onSubmit={handleUpdateEducation}
-    onClose={() => setShowForm(false)}
-    onBack={() => setShowMenu(true)}
-  />
-*/
+// Formulario unificado para registrar y modificar formaciones académicas
 const EducationForm = ({
     mode, initial, academicDegrees, onSubmit, onClose, onBack, serverError, isSubmitting = false,
 }: Props) => {
-    // Resuelve el ID del grado académico inicial (para modo edit)
+    // Resuelve el ID del grado académico inicial comparando por nombre si no viene el ID
     const resolvedInitialId = (() => {
         if (!initial) return 0;
         if (initial.academicLevelId && initial.academicLevelId !== 0) return initial.academicLevelId;
@@ -99,12 +58,11 @@ const EducationForm = ({
     const [institution, setInstitution] = useState(initial?.institution ?? "");
     const [startDate, setStartDate] = useState(initial?.startDate ?? "");
     const [educationState, setEducationState] = useState<string>(initial?.educationState ?? "Cursando");
-
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     const selectedDegree = academicDegrees.find((d) => d.id === academicLevelId);
 
-    // Label según el estado: "Año de inicio" para cursando, "Año de emisión" para egresado
+    // Cambia el label del año según el estado de la formación
     const yearLabel = educationState === "Cursando" ? "Año de inicio" : "Año de emisión";
 
     const isFormInvalid = () => {
@@ -120,6 +78,7 @@ const EducationForm = ({
         return !hasChanges();
     };
 
+    // Compara campos actuales con los datos iniciales para detectar cambios en modo edit
     const hasChanges = () => {
         if (mode === "add") return true;
         if (!initial) return false;
@@ -139,14 +98,12 @@ const EducationForm = ({
         if (!institution.trim()) newErrors.institution = "La institución es obligatoria";
         if (!startDate) newErrors.startDate = "El año es obligatorio";
         if (startDate && !/^\d{4}$/.test(startDate)) newErrors.startDate = "Formato: YYYY (ej: 2020)";
-
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async () => {
         if (!validateForm()) return;
-
         await onSubmit({
             degree: degree.trim(),
             academicLevelId: academicLevelId,
@@ -158,6 +115,7 @@ const EducationForm = ({
         });
     };
 
+    // Si hay onBack regresa al popup anterior, sino cierra el modal
     const handleCancelOrBack = () => {
         if (onBack) onBack();
         else onClose();
@@ -181,11 +139,10 @@ const EducationForm = ({
                                 }
                             }}
                             placeholder="Ej: Ingeniería Informática"
-                            disabled={isSubmitting || mode === "edit"}
+                            disabled={isSubmitting || mode === "edit"} // Título no editable en modo edit
                             error={errors.degree}
                             maxLength={100}
                         />
-
                         <div className={styles.row}>
                             <div className={styles.field}>
                                 <p className={styles.label}>Grado académico:<span className={styles.required}>*</span></p>
@@ -199,13 +156,12 @@ const EducationForm = ({
                                             setErrors((prev) => ({ ...prev, academicLevel: "El grado académico es obligatorio" }));
                                         }
                                     }}
-                                    disabled={isSubmitting || mode === "edit"}
+                                    disabled={isSubmitting || mode === "edit"} // Grado no editable en modo edit
                                     hasError={!!errors.academicLevel}
                                     options={academicDegrees}
                                 />
                                 {errors.academicLevel && <p className={styles.errorText}>{errors.academicLevel}</p>}
                             </div>
-
                             <TextField
                                 label="Institución:*"
                                 value={institution}
@@ -218,12 +174,11 @@ const EducationForm = ({
                                     }
                                 }}
                                 placeholder="Ej: Universidad Central"
-                                disabled={isSubmitting || mode === "edit"}
+                                disabled={isSubmitting || mode === "edit"} // Institución no editable en modo edit
                                 error={errors.institution}
                                 maxLength={100}
                             />
                         </div>
-
                         <div className={styles.row}>
                             <div className={styles.field}>
                                 <p className={styles.label}>Estado:</p>
@@ -239,7 +194,6 @@ const EducationForm = ({
                                     </select>
                                 </div>
                             </div>
-
                             <div className={styles.field}>
                                 <p className={styles.label}>{yearLabel}:<span className={styles.required}>*</span></p>
                                 <YearSelect
@@ -260,7 +214,6 @@ const EducationForm = ({
                             </div>
                         </div>
                     </div>
-
                     <div className={styles.buttonsWrapper}>
                         <Button variant="secondary" onClick={handleCancelOrBack} fullWidth disabled={isSubmitting}>
                             Cancelar
@@ -281,4 +234,3 @@ const EducationForm = ({
 };
 
 export default EducationForm;
-

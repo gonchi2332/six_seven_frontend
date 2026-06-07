@@ -2,47 +2,24 @@ import { useState } from "react";
 import { requestRecoveryCode, verifyRecoveryCode } from "../services/recoveryCodeService";
 import { useNavigate } from "react-router-dom";
 
-/*
-  Props del hook useSendRecoveryCode:
-  -username: Nombre de usuario ingresado por el usuario
-  -onSubmit: Función ejecutada al enviar exitosamente (recibe username y email)
-  -onCancel: Función ejecutada al cancelar (si no se provee, navega a /login)
-*/
 interface UseSendRecoveryCodeParams {
     username: string;
     onSubmit?: (username: string, email: string) => void;
     onCancel?: () => void;
 }
 
-/*
-  Características:
-  -Hook que maneja el envío del código de recuperación de contraseña
-  -Llama al servicio requestRecoveryCode para obtener el email asociado al username
-  -Retorna email para mostrar censurado en el UI
-  -Maneja estado de carga y errores
-  -handleCancel: si hay onCancel lo ejecuta, si no navega a /login
-
-  @ Ejemplo:
-  const { isLoading, email, error, handleSubmit, handleCancel } = useSendRecoveryCode({
-    username,
-    onSubmit: (user, mail) => setUserData(user, mail),
-    onCancel: () => setShowPopup(false)
-  });
-*/
 export const useSendRecoveryCode = ({ username, onSubmit, onCancel }: UseSendRecoveryCodeParams) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [email, setEmail] = useState<string | null>(null);
     const navigate = useNavigate();
 
-
-
     const handleSend = async (): Promise<{ success: boolean; email: string | null }> => {
         setIsLoading(true);
         setError(null);
         try {
             const data = await requestRecoveryCode({ username });
-            const recoveryEmail = data.verificationMails[0];
+            const recoveryEmail = data.verificationMails[0]; // Primer email de recuperación
             setEmail(recoveryEmail);
             return { success: true, email: recoveryEmail };
         } catch (err) {
@@ -53,14 +30,13 @@ export const useSendRecoveryCode = ({ username, onSubmit, onCancel }: UseSendRec
         }
     };
 
-
     const handleSubmit = async () => {
         const { success, email: mail } = await handleSend();
         if (success) {
             onSubmit?.(username, mail ?? "");
-
         }
     };
+
     const handleCancel = () => {
         if (onCancel) {
             onCancel();
@@ -69,35 +45,14 @@ export const useSendRecoveryCode = ({ username, onSubmit, onCancel }: UseSendRec
         }
     };
 
-
-
     return { isLoading, email, error, handleSend, handleSubmit, handleCancel };
 };
 
-/*
-  Props del hook useVerifyRecoveryCode:
-  -username: Nombre de usuario que está recuperando la contraseña
-  -code: Código de verificación ingresado por el usuario
-*/
 interface UseVerifyRecoveryParams {
     username: string;
     code: string;
 }
 
-/*
-  Características:
-  -Hook que maneja la verificación del código de recuperación
-  -Llama al servicio verifyRecoveryCode para validar el código
-  -Retorna título y descripción dinámicos según haya error o no
-  -Si hay error, muestra mensaje específico
-  -resetError permite limpiar el error para reintentar
-
-  @ Ejemplo:
-  const { isLoading, error, title, description, handleSubmit, resetError } = useVerifyRecoveryCode({
-    username: "juanperez",
-    code: "12345678"
-  });
-*/
 export const useVerifyRecoveryCode = ({ username, code }: UseVerifyRecoveryParams) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -122,6 +77,7 @@ export const useVerifyRecoveryCode = ({ username, code }: UseVerifyRecoveryParam
 
     const resetError = () => setError(null);
 
+    // Título y descripción dinámicos según estado de error
     const title = error ? "Código inválido" : "Recuperación de Contraseña";
     const description = error
         ? error

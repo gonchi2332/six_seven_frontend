@@ -24,12 +24,7 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
-/*
-  Características:
-  -Subcomponente que renderiza una fila de información con ícono, etiqueta y valor
-  -Recibe: ícono (lucide-react), etiqueta y valor
-  -Si no hay valor, muestra "No especificado" en cursiva y semi-transparente
-*/
+
 const InfoRow = ({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string | null | undefined }) => (
     <div className={styles.field}>
         <Icon size={18} className={styles.icon} />
@@ -44,20 +39,7 @@ const InfoRow = ({ icon: Icon, label, value }: { icon: React.ElementType; label:
     </div>
 );
 
-/*
-  Características:
-  -Componente público que muestra la información personal de un usuario en el portafolio
-  -Obtiene el username de la URL mediante useParams
-  -Usa usePersonalInfo (hook de navbar) para cargar los datos públicos
-  -Muestra nombre completo, nombre de usuario, residencia, correo de contacto y teléfono
-  -Organiza la información en dos tarjetas: "Datos Personales" y "Ubicación y Contacto"
-  -Maneja estados: carga, error, sin información
-  -Solo muestra campos que el usuario ha hecho públicos
-
-  @ Ejemplo:
-  // Ruta: /ver/juanperez/info-personal
-  <PersonalInfoPage /> // Muestra la información personal pública de juanperez
-*/
+// Página pública de información personal (portafolio visible)
 const PersonalInfoPage = () => {
     const { username } = useParams<{ username: string }>();
     const {
@@ -67,7 +49,7 @@ const PersonalInfoPage = () => {
         setPublicUser
     } = usePersonalInfo();
 
-    // Actualiza el usuario público cuando cambia el username de la URL
+    // Cargar información cuando cambia el username
     useEffect(() => {
         setPublicUser(username ?? null);
     }, [username, setPublicUser]);

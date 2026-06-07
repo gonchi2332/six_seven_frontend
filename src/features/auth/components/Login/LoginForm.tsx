@@ -6,20 +6,6 @@ import EmailVerificationFlow from "../../components/EmailPasswordVerification/Em
 import CodeEmailPopup from "../EmailPasswordVerification/CodeEmailPopup";
 import { useNavigate } from "react-router-dom";
 
-/*
-  Características:
-  -Formulario principal de inicio de sesión
-  -Campos: nombre de usuario y contraseña
-  -Validación en tiempo real con feedback de errores
-  -Muestra error de servidor si las credenciales son incorrectas
-  -Enlace "¿Olvidaste tu contraseña?" abre flujo de recuperación
-  -Enlace "Regístrate aquí" redirige a página de registro
-  -Después de registro exitoso, muestra popup de verificación de email
-  -Estado isLoading deshabilita campos y botón durante el envío
-
-  @ Ejemplo:
-  <LoginForm />
-*/
 const LoginForm = () => {
     const {
         username,
@@ -46,7 +32,6 @@ const LoginForm = () => {
     const FIELD_WRAPPER = "w-full";
     const BUTTON_WRAPPER = "flex justify-center mt-6";
     const FOOTER_WRAPPER = "text-center mt-6";
-
     const TITLE = "text-3xl lg:text-5xl font-regular text-center text-surface font-inter mb-6";
     const LINK_TEXT = "text-center text-sm text-surface font-nunito";
     const LINK_ANCHOR = "text-accent hover:text-accent/80 font-medium transition-colors font-nunito";
@@ -59,7 +44,6 @@ const LoginForm = () => {
                     <h1 className={TITLE}>
                         Bienvenido de vuelta
                     </h1>
-
                     <div onBlur={handleUsernameBlur} className={FIELD_WRAPPER}>
                         <TextField
                             label="Nombre de Usuario"
@@ -70,7 +54,6 @@ const LoginForm = () => {
                             disabled={isLoading}
                         />
                     </div>
-
                     <div onBlur={handlePasswordBlur} className={FIELD_WRAPPER}>
                         <TextField
                             label="Contraseña"
@@ -88,20 +71,17 @@ const LoginForm = () => {
                             ¿Olvidaste tu contraseña?
                         </button>
                     </div>
-
                     {serverError && (
                         <p className="text-red-300 drop-shadow-sm text-sm text-center">
                             {serverError}
                         </p>
                     )}
-
                     <div className={BUTTON_WRAPPER}>
                         <Button type="submit" variant="primary">
                             {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
                         </Button>
                     </div>
                 </div>
-
                 <p className={FOOTER_WRAPPER + " " + LINK_TEXT}>
                     ¿No tienes una cuenta?{" "}
                     <a href="/register" className={LINK_ANCHOR}>
@@ -110,6 +90,7 @@ const LoginForm = () => {
                 </p>
             </form>
 
+            {/* Popup de verificación para usuarios no verificados al hacer login */}
             {showVerified && (
                 <CodeEmailPopup
                     username={username}
@@ -121,10 +102,9 @@ const LoginForm = () => {
                     }}
                     onClose={() => setShowVerified(false)}
                 />
+            )}
 
-            )
-            }
-
+            {/* Flujo de recuperación de contraseña */}
             {showRecovery && (
                 <EmailVerificationFlow
                     initialMode="recovery"

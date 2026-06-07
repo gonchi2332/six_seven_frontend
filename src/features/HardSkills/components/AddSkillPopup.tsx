@@ -4,13 +4,6 @@ import TextField from "../../../components/TextField";
 import SkillLevelSelector from "./SkillLevelSelector";
 import useAddSkill from "../hooks/useAddSkill";
 
-/*
-  Props del componente AddSkillPopup:
-  -onSubmit: Función ejecutada al confirmar el registro, recibe nombre y nivel de la habilidad
-  -onClose: Función ejecutada al cancelar o cerrar el popup
-  -isSubmitting: Estado de carga externo (deshabilita botones)
-  -catalogSkills: Lista de habilidades predefinidas del catálogo para autocompletado
-*/
 interface AddSkillPopupProps {
     onSubmit: (name: string, level: number) => void;
     onClose: () => void;
@@ -36,26 +29,7 @@ const styles = {
     checkboxLabel: (active: boolean) => `text-[16px] text-white font-nunito transition-all duration-200 ${active ? "text-white font-semibold" : "text-surface/70 group-hover:text-white"}`,
 };
 
-/*
-  Características:
-  -Popup para registrar una nueva habilidad técnica
-  -Dos modos de selección:
-    1. Seleccionar del catálogo: input con autocompletado (sugerencias)
-    2. "Otro": permite escribir nombre personalizado
-  -Checkbox "Otro" para alternar entre modos
-  -Nivel de habilidad: selector visual de 0-5 (SkillLevelSelector)
-  -Validaciones: habilidad no duplicada, nivel requerido
-  -Muestra sugerencias dinámicas mientras escribe
-  -Mensajes de error: inline (campo) y top (error general)
-
-  @ Ejemplo:
-  <AddSkillPopup
-    onSubmit={(name, level) => addHardSkill(name, level)}
-    onClose={() => setShowPopup(false)}
-    catalogSkills={["JavaScript", "Python", "React", "Node.js"]}
-    isSubmitting={isLoading}
-  />
-*/
+// Popup para agregar nueva habilidad técnica (con autocompletado y opción "Otro")
 const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills = [] }: AddSkillPopupProps) => {
     const {
         search, suggestions, showDropdown, setShowDropdown, isOther, otherName,
@@ -64,6 +38,7 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
         handleOtherNameChange, handleConfirm,
     } = useAddSkill(onSubmit, onClose, catalogSkills);
 
+    // Clase del input según estado (error, deshabilitado, normal)
     const getInputClass = () => {
         if (isOther) return `${styles.inputBase} ${styles.inputDisabled}`;
         if (hasFieldError) return `${styles.inputBase} ${styles.inputError}`;
@@ -74,12 +49,14 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
         <div className={styles.overlay}>
             <div className="w-full max-w-xs sm:max-w-sm max-h-[90vh] overflow-y-auto">
                 <PopUpCard title="Registrar Habilidad Técnica">
+                    {/* Error general (top) */}
                     {topError && (
                         <div className="mx-6 sm:mx-8 mb-2 p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center">
                             {topError}
                         </div>
                     )}
                     <div className={styles.formWrapper}>
+                        {/* Campo de búsqueda/selector de habilidad */}
                         <div className="relative flex flex-col" ref={containerRef}>
                             <label className="mb-1 text-xl font-inter text-white">
                                 Seleccionar habilidad:<span className={styles.required}></span>
@@ -93,9 +70,11 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
                                 disabled={isOther || isSubmitting}
                                 className={getInputClass()}
                             />
+                            {/* Error inline */}
                             {!isOther && hasFieldError && inlineError && (
                                 <span className={styles.inlineError}>{inlineError}</span>
                             )}
+                            {/* Dropdown de sugerencias */}
                             {showDropdown && !isOther && suggestions.length > 0 && (
                                 <div className={styles.dropdown}>
                                     {suggestions.map((s) => (
@@ -107,6 +86,7 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
                             )}
                         </div>
 
+                        {/* Checkbox "Otro" */}
                         <button type="button" onClick={handleToggleOther} className={styles.checkboxWrapper}>
                             <span className={styles.checkboxBox(isOther)}>
                                 {isOther && (
@@ -118,6 +98,7 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
                             <span className={styles.checkboxLabel(isOther)}>Otro</span>
                         </button>
 
+                        {/* Input para nombre personalizado (si "Otro" está activo) */}
                         {isOther && (
                             <TextField
                                 label="Nombre de la habilidad:*"
@@ -130,6 +111,7 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
                             />
                         )}
 
+                        {/* Selector de nivel */}
                         <div>
                             <p className={styles.label}>
                                 Nivel de conocimiento:<span className={styles.required}>*</span>
@@ -138,6 +120,7 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
                         </div>
                     </div>
 
+                    {/* Botones */}
                     <div className={styles.buttonsWrapper}>
                         <Button type="button" variant="secondary" onClick={onClose} fullWidth disabled={loading || isSubmitting}>
                             Cancelar
@@ -153,4 +136,3 @@ const AddSkillPopup = ({ onSubmit, onClose, isSubmitting = false, catalogSkills 
 };
 
 export default AddSkillPopup;
-

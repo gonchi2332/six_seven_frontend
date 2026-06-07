@@ -1,13 +1,6 @@
 import Button from "../../../components/Button";
 import PopUpCard from "../../../components/PopUpCard";
 
-/*
-  Props del componente DeleteSkillPopup:
-  -skillName: Nombre de la habilidad a eliminar (se muestra en el mensaje de confirmación)
-  -onConfirm: Función ejecutada al confirmar la eliminación
-  -onClose: Función ejecutada al cancelar o cerrar el popup
-  -isSubmitting: Estado de carga, deshabilita botones mientras es true
-*/
 interface DeleteSkillPopupProps {
     skillName: string;
     onConfirm: () => void;
@@ -22,22 +15,7 @@ const styles = {
     buttonsWrapper: "flex gap-4 justify-center mt-2 px-6 sm:px-8 pb-6",
 };
 
-/*
-  Características:
-  -Popup de confirmación para eliminar una habilidad (técnica o blanda)
-  -Muestra mensaje con el nombre de la habilidad a eliminar
-  -Botón Cancelar: cierra el popup sin eliminar
-  -Botón Eliminar: ejecuta onConfirm
-  -Cuando isSubmitting es true, ambos botones se deshabilitan y el texto del botón Eliminar cambia a "Eliminando..."
-
-  @ Ejemplo:
-  <DeleteSkillPopup
-    skillName="JavaScript"
-    onConfirm={() => handleDeleteSkill(skillId)}
-    onClose={() => setShowPopup(false)}
-    isSubmitting={isDeleting}
-  />
-*/
+// Popup de confirmación para eliminar habilidad
 const DeleteSkillPopup = ({ skillName, onConfirm, onClose, isSubmitting = false }: DeleteSkillPopupProps) => {
     return (
         <div className={styles.overlay}>

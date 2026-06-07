@@ -14,22 +14,7 @@ const styles = {
     barInactive: "h-full flex-1 rounded-sm bg-white/10",
 };
 
-/*
-  Características:
-  -Componente que renderiza la lista de habilidades técnicas en modo público (portafolio)
-  -Obtiene el username de la URL mediante useParams
-  -Usa usePublicHardSkills para cargar las habilidades del usuario
-  -Muestra título "Habilidades Técnicas"
-  -Cada habilidad: nombre + barras visuales de nivel (0-5)
-  -Efecto de transición en barras al cargar (duration-500)
-  -Si está cargando: muestra mensaje "Cargando habilidades..."
-  -Si no hay habilidades: no renderiza nada (retorna null)
-  -Fondo semitransparente en cada item (bg-white/5) con borde acento
-
-  @ Ejemplo:
-  // Ruta: /ver/juanperez/habilidades-tecnicas
-  <PublicHardSkillsList /> // Muestra las habilidades técnicas públicas de juanperez
-*/
+// Lista pública de habilidades técnicas (portafolio visible)
 const PublicHardSkillsList = () => {
     const { username } = useParams<{ username: string }>();
     const { skills, isLoading } = usePublicHardSkills(username);
@@ -53,8 +38,7 @@ const PublicHardSkillsList = () => {
                                 {Array.from({ length: TOTAL_BARS }).map((_, i) => (
                                     <div
                                         key={i}
-                                        className={`${i < skill.level ? styles.barActive : styles.barInactive
-                                            }`}
+                                        className={`${i < skill.level ? styles.barActive : styles.barInactive}`}
                                     />
                                 ))}
                             </div>
@@ -67,4 +51,3 @@ const PublicHardSkillsList = () => {
 };
 
 export default PublicHardSkillsList;
-

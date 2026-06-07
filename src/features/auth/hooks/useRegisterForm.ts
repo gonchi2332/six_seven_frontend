@@ -3,16 +3,6 @@ import { registerUser } from '../services/registerFormService';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../context/AuthContext';
 
-/*
-  Tipo que define la estructura de los datos del formulario de registro:
-  -name: Nombre(s) del usuario
-  -paternalLastName: Primer apellido
-  -secondSurname: Segundo apellido (opcional)
-  -username: Nombre de usuario único
-  -password: Contraseña (mínimo 8 caracteres)
-  -confirmPassword: Confirmación de contraseña (debe coincidir)
-  -mail: Correo electrónico único
-*/
 interface RegisterFormData {
     name: string;
     paternalLastName: string;
@@ -23,9 +13,6 @@ interface RegisterFormData {
     mail: string;
 }
 
-/*
-  Tipo que define los mensajes de error para cada campo del formulario
-*/
 interface RegisterFormErrors {
     name: string;
     paternalLastName: string;
@@ -36,9 +23,6 @@ interface RegisterFormErrors {
     mail: string;
 }
 
-/*
-  Tipo que define qué campos han sido tocados (blur) para mostrar errores
-*/
 interface RegisterFormTouched {
     name: boolean;
     paternalLastName: boolean;
@@ -51,26 +35,7 @@ interface RegisterFormTouched {
 
 import { sendVerificationCode } from '../services/verificationCodeService';
 
-/*
-  Características:
-  -Hook personalizado que gestiona toda la lógica del formulario de registro
-  -Maneja estado de campos, validaciones, errores, y carga
-  -Validaciones por campo: nombre (solo letras), apellidos (solo letras), username (letras/números/_),
-    email (formato válido), password (mínimo 8 caracteres), confirmPassword (coincide con password)
-  -Validación en tiempo real al escribir (si el campo ya fue tocado)
-  -Validación al hacer blur (marca campo como tocado)
-  -Al enviar, registra usuario, obtiene token, lo guarda en AuthContext, envía código de verificación
-  -Maneja errores específicos: username ya existe, email ya registrado
-  -Redirige a /verification después del registro exitoso
-
-  @ Ejemplo:
-  const {
-    formData, errors, touched, isLoading, serverError,
-    handleNameChange, handlePasswordChange, handleSubmit
-  } = useRegisterForm();
-*/
 export const useRegisterForm = () => {
-
     const { login: authLogin } = useAuthContext();
     const navigate = useNavigate();
 
@@ -107,7 +72,7 @@ export const useRegisterForm = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [serverError, setServerError] = useState<string>("");
 
-    // Validaciones
+    // Validaciones por campo
     const validateName = (name: string): string => {
         if (!name) return "El nombre es requerido";
         if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(name)) return "Solo letras y espacios";
@@ -130,63 +95,44 @@ export const useRegisterForm = () => {
         if (!paternalName) return "El primer apellido es requerido";
         if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(paternalName)) return "Solo letras y espacios";
         return "";
-    }
+    };
 
     const validatesecondSurname = (secondSurname: string) => {
-        if (!secondSurname) return ""; // Opcional
+        if (!secondSurname) return ""; // Segundo apellido es opcional
         if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(secondSurname)) return "Solo letras y espacios";
         return "";
-    }
+    };
 
     const validateUsername = (username: string) => {
         if (!username) return "El nombre de usuario es obligatorio";
         if (!/^[a-zA-Z0-9_]+$/.test(username)) return "Solo letras, números y guión bajo";
         return "";
-    }
+    };
 
     const validateMail = (mail: string) => {
         if (!mail) return "El correo es obligatorio";
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) return "Correo no válido";
         return "";
-    }
+    };
 
-    // Handlers
-    const handleFieldChange = (
-        field: keyof RegisterFormData,
-        value: string
-    ) => {
+    // Handler genérico que valida en tiempo real si el campo fue tocado
+    const handleFieldChange = (field: keyof RegisterFormData, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
-
         if (touched[field]) {
             let error = "";
             switch (field) {
-                case "name":
-                    error = validateName(value);
-                    break;
-                case "paternalLastName":
-                    error = validatePaternalLastName(value);
-                    break;
-                case "secondSurname":
-                    error = validatesecondSurname(value);
-                    break;
-                case "username":
-                    error = validateUsername(value);
-                    break;
-                case "password":
-                    error = validatePassword(value);
-                    break;
-                case "confirmPassword":
-                    error = validateConfirmPassword(formData.password, value);
-                    break;
-                case "mail":
-                    error = validateMail(value);
-                    break;
+                case "name": error = validateName(value); break;
+                case "paternalLastName": error = validatePaternalLastName(value); break;
+                case "secondSurname": error = validatesecondSurname(value); break;
+                case "username": error = validateUsername(value); break;
+                case "password": error = validatePassword(value); break;
+                case "confirmPassword": error = validateConfirmPassword(formData.password, value); break;
+                case "mail": error = validateMail(value); break;
             }
             setErrors(prev => ({ ...prev, [field]: error }));
         }
     };
 
-    // Handlers específicos
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         handleFieldChange("name", e.target.value);
     };
@@ -207,15 +153,13 @@ export const useRegisterForm = () => {
         handleFieldChange("mail", e.target.value);
     };
 
+    // Revalida confirmPassword al cambiar la contraseña
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setFormData(prev => ({ ...prev, password: value }));
-
         if (touched.password) {
-            const error = validatePassword(value);
-            setErrors(prev => ({ ...prev, password: error }));
+            setErrors(prev => ({ ...prev, password: validatePassword(value) }));
         }
-
         if (touched.confirmPassword && formData.confirmPassword) {
             const confirmError = validateConfirmPassword(value, formData.confirmPassword);
             setErrors(prev => ({ ...prev, confirmPassword: confirmError }));
@@ -225,67 +169,59 @@ export const useRegisterForm = () => {
     const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setFormData(prev => ({ ...prev, confirmPassword: value }));
-
         if (touched.confirmPassword) {
             const error = validateConfirmPassword(formData.password, value);
             setErrors(prev => ({ ...prev, confirmPassword: error }));
         }
     };
 
-    // Blur handlers
+    // Blur handlers: activan validación al salir del campo por primera vez
     const handleNameBlur = () => {
         if (!touched.name) {
             setTouched(prev => ({ ...prev, name: true }));
-            const error = validateName(formData.name);
-            setErrors(prev => ({ ...prev, name: error }));
+            setErrors(prev => ({ ...prev, name: validateName(formData.name) }));
         }
     };
 
     const handleMailBlur = () => {
         if (!touched.mail) {
             setTouched(prev => ({ ...prev, mail: true }));
-            const error = validateMail(formData.mail!);
-            setErrors(prev => ({ ...prev, mail: error }));
+            setErrors(prev => ({ ...prev, mail: validateMail(formData.mail!) }));
         }
     };
 
     const handlePasswordBlur = () => {
         if (!touched.password) {
             setTouched(prev => ({ ...prev, password: true }));
-            const error = validatePassword(formData.password);
-            setErrors(prev => ({ ...prev, password: error }));
+            setErrors(prev => ({ ...prev, password: validatePassword(formData.password) }));
         }
     };
 
     const handleConfirmPasswordBlur = () => {
         if (!touched.confirmPassword) {
             setTouched(prev => ({ ...prev, confirmPassword: true }));
-            const error = validateConfirmPassword(formData.password, formData.confirmPassword);
-            setErrors(prev => ({ ...prev, confirmPassword: error }));
+            setErrors(prev => ({ ...prev, confirmPassword: validateConfirmPassword(formData.password, formData.confirmPassword) }));
         }
     };
 
     const handlePaternalLastNameBlur = () => {
         if (!touched.paternalLastName) {
             setTouched(prev => ({ ...prev, paternalLastName: true }));
-            const error = validatePaternalLastName(formData.paternalLastName);
-            setErrors(prev => ({ ...prev, paternalLastName: error }));
+            setErrors(prev => ({ ...prev, paternalLastName: validatePaternalLastName(formData.paternalLastName) }));
         }
     };
 
     const handlesecondSurnameBlur = () => {
         if (!touched.secondSurname) {
             setTouched(prev => ({ ...prev, secondSurname: true }));
-            const error = validatesecondSurname(formData.secondSurname);
-            setErrors(prev => ({ ...prev, secondSurname: error }));
+            setErrors(prev => ({ ...prev, secondSurname: validatesecondSurname(formData.secondSurname) }));
         }
     };
 
     const handleUsernameBlur = () => {
         if (!touched.username) {
             setTouched(prev => ({ ...prev, username: true }));
-            const error = validateUsername(formData.username!);
-            setErrors(prev => ({ ...prev, username: error }));
+            setErrors(prev => ({ ...prev, username: validateUsername(formData.username!) }));
         }
     };
 
@@ -293,14 +229,10 @@ export const useRegisterForm = () => {
         e.preventDefault();
         setServerError("");
 
+        // Marca todos los campos como tocados para mostrar errores
         setTouched({
-            name: true,
-            password: true,
-            confirmPassword: true,
-            paternalLastName: true,
-            secondSurname: true,
-            username: true,
-            mail: true
+            name: true, password: true, confirmPassword: true,
+            paternalLastName: true, secondSurname: true, username: true, mail: true
         });
 
         const nameError = validateName(formData.name);
@@ -312,30 +244,17 @@ export const useRegisterForm = () => {
         const mailError = validateMail(formData.mail!);
 
         setErrors({
-            name: nameError,
-            paternalLastName: paternalLastNameError,
-            secondSurname: secondSurnameError,
-            username: usernameError,
-            password: passwordError,
-            confirmPassword: confirmPasswordError,
-            mail: mailError
+            name: nameError, paternalLastName: paternalLastNameError,
+            secondSurname: secondSurnameError, username: usernameError,
+            password: passwordError, confirmPassword: confirmPasswordError, mail: mailError
         });
 
-        if (nameError ||
-            passwordError ||
-            confirmPasswordError ||
-            paternalLastNameError ||
-            secondSurnameError ||
-            usernameError ||
-            mailError
-        ) return;
+        if (nameError || passwordError || confirmPasswordError ||
+            paternalLastNameError || secondSurnameError || usernameError || mailError) return;
 
         setIsLoading(true);
-
         try {
-            // ============================================
-            // PASO 1: Registrar usuario
-            // ============================================
+            // Paso 1: Registrar usuario en el backend
             const registerData: any = {
                 username: formData.username,
                 password: formData.password,
@@ -343,65 +262,33 @@ export const useRegisterForm = () => {
                 firstSurname: formData.paternalLastName,
                 secondSurname: formData.secondSurname,
                 mainRegistrationEmail: formData.mail,
-
             };
 
-
-
             const response = await registerUser(registerData);
-
             const token = response.token;
-
             authLogin(token);
 
-            // ============================================
-            // PASO 2: Enviar código de verificación al email
-            // ============================================
+            // Paso 2: Enviar código de verificación al email
             try {
-                await sendVerificationCode({
-                    username: formData.username,
-                    targetMail: formData.mail,
-                    token: token
-                });
-
-
-                // Redirigir a página de verificación
+                await sendVerificationCode({ username: formData.username, targetMail: formData.mail, token });
                 navigate("/verification", {
-                    state: {
-                        email: formData.mail,
-                        username: formData.username,
-                        codeSent: true
-                    }
+                    state: { email: formData.mail, username: formData.username, codeSent: true }
                 });
-
             } catch (verificationError: any) {
-
                 navigate("/verification", {
                     state: {
-                        email: formData.mail,
-                        username: formData.username,
-                        codeSent: false,
-                        error: verificationError.message || "Error al enviar código"
+                        email: formData.mail, username: formData.username,
+                        codeSent: false, error: verificationError.message || "Error al enviar código"
                     }
                 });
             }
-
         } catch (error: any) {
-
-
             const errorMessage = error.message?.toLowerCase() || "";
-
             if (errorMessage.includes("username") || errorMessage.includes("ya existe") || errorMessage.includes("en uso")) {
-                setErrors(prev => ({
-                    ...prev,
-                    username: "Este nombre de usuario ya está en uso"
-                }));
+                setErrors(prev => ({ ...prev, username: "Este nombre de usuario ya está en uso" }));
                 setTouched(prev => ({ ...prev, username: true }));
             } else if (errorMessage.includes("email") || errorMessage.includes("correo")) {
-                setErrors(prev => ({
-                    ...prev,
-                    mail: "Este correo ya está registrado"
-                }));
+                setErrors(prev => ({ ...prev, mail: "Este correo ya está registrado" }));
                 setTouched(prev => ({ ...prev, mail: true }));
             } else {
                 setServerError(error.message);
@@ -412,25 +299,11 @@ export const useRegisterForm = () => {
     };
 
     return {
-        formData,
-        errors,
-        touched,
-        isLoading,
-        serverError,
-        handleNameChange,
-        handlePasswordChange,
-        handleConfirmPasswordChange,
-        handlePaternalLastNameChange,
-        handlesecondSurnameChange,
-        handleUsernameChange,
-        handleMailChange,
-        handleNameBlur,
-        handlePasswordBlur,
-        handleConfirmPasswordBlur,
-        handlePaternalLastNameBlur,
-        handlesecondSurnameBlur,
-        handleUsernameBlur,
-        handleMailBlur,
-        handleSubmit
+        formData, errors, touched, isLoading, serverError,
+        handleNameChange, handlePasswordChange, handleConfirmPasswordChange,
+        handlePaternalLastNameChange, handlesecondSurnameChange, handleUsernameChange,
+        handleMailChange, handleNameBlur, handlePasswordBlur, handleConfirmPasswordBlur,
+        handlePaternalLastNameBlur, handlesecondSurnameBlur, handleUsernameBlur,
+        handleMailBlur, handleSubmit
     };
 };

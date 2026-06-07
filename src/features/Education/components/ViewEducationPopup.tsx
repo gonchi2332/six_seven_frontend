@@ -3,13 +3,6 @@ import Button from "../../../components/Button";
 import PopUpCard from "../../../components/PopUpCard";
 import type { EducationEntry } from "../services/educationService";
 
-/*
-  Props del componente ViewEducationPopup:
-  -isOpen: Controla si el popup es visible
-  -entry: Entrada de formación académica a visualizar (null si no hay)
-  -onClose: Función ejecutada al cerrar el popup
-  -onBack: Función ejecutada al hacer clic en "Atrás" para volver al menú anterior
-*/
 interface Props {
     isOpen: boolean;
     entry: EducationEntry | null;
@@ -33,16 +26,9 @@ const styles = {
     closeButton: "absolute right-4 top-4 text-white/50 hover:text-[#90DDF0] transition-colors p-1 hover:bg-white/10 rounded-lg",
 };
 
-/*
-  Características:
-  -Subcomponente que renderiza una fila de información con ícono, etiqueta y valor
-  -Recibe: ícono (lucide-react), etiqueta y valor
-  -Si no hay valor, muestra "No especificado" en cursiva y semi-transparente
-*/
+// Subcomponente para mostrar una fila de información con ícono
 const InfoRow = ({
-    icon: Icon,
-    label,
-    value,
+    icon: Icon, label, value,
 }: {
     icon: React.ElementType;
     label: string;
@@ -63,28 +49,10 @@ const InfoRow = ({
     </div>
 );
 
-/*
-  Características:
-  -Popup para visualizar todos los detalles de una formación académica
-  -Muestra: título/carrera, grado académico, institución, estado (En curso/Egresado), periodo/año
-  -Formato de fecha dinámico: si estado es "cursando", muestra "YYYY - Presente", si no solo la fecha
-  -Mapeo de estado: "cursando" -> "En curso", otro -> "Egresado"
-  -Fondo con blur y overlay semitransparente
-  -Click fuera del popup cierra la ventana
-  -Botón "Atrás" para volver al menú anterior
-  -Botón "✕" en la esquina superior derecha
-
-  @ Ejemplo:
-  <ViewEducationPopup
-    isOpen={showPopup}
-    entry={selectedEducation}
-    onClose={() => setShowPopup(false)}
-    onBack={() => setShowMenu(true)}
-  />
-*/
 const ViewEducationPopup = ({ isOpen, entry, onClose, onBack }: Props) => {
     if (!isOpen || !entry) return null;
 
+    // Muestra rango con "Presente" si está cursando
     const dateDisplay = entry.educationState === "cursando"
         ? `${entry.startDate} - Presente`
         : entry.startDate;
@@ -96,7 +64,6 @@ const ViewEducationPopup = ({ isOpen, entry, onClose, onBack }: Props) => {
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
                 <PopUpCard title="Detalle de Formación Académica">
                     <button onClick={onClose} className={styles.closeButton}>✕</button>
-
                     <div className={styles.content}>
                         <InfoRow icon={GraduationCap} label="Título / Carrera" value={entry.degree} />
                         <div className={styles.metaGrid}>
@@ -109,9 +76,7 @@ const ViewEducationPopup = ({ isOpen, entry, onClose, onBack }: Props) => {
                         </div>
                     </div>
                     <div className={styles.buttonContainer}>
-                        <Button variant="secondary" onClick={onBack} fullWidth>
-                            Atrás
-                        </Button>
+                        <Button variant="secondary" onClick={onBack} fullWidth>Atrás</Button>
                     </div>
                 </PopUpCard>
             </div>
@@ -120,4 +85,3 @@ const ViewEducationPopup = ({ isOpen, entry, onClose, onBack }: Props) => {
 };
 
 export default ViewEducationPopup;
-

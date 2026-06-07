@@ -1,15 +1,8 @@
 import Button from "../../../components/Button";
 import PopUpCard from "../../../components/PopUpCard";
 
-/*
-  Props del componente DeleteCertificatePopup:
-  -title: Título del certificado que se va a eliminar (se muestra en el mensaje)
-  -onConfirm: Función ejecutada al confirmar la eliminación
-  -onClose: Función ejecutada al cancelar o cerrar
-  -isSubmitting: Estado de carga, deshabilita botones mientras es true
-*/
 interface Props {
-    title: string;
+    title: string; // Título del certificado a eliminar
     onConfirm: () => void;
     onClose: () => void;
     isSubmitting?: boolean;
@@ -22,22 +15,7 @@ const styles = {
     buttonsWrapper: "flex gap-3 justify-center mt-2 px-4 sm:px-8 pb-6",
 };
 
-/*
-  Características:
-  -Popup de confirmación para eliminar un certificado
-  -Muestra mensaje con el título del certificado a eliminar
-  -Botón Cancelar: cierra el popup sin eliminar
-  -Botón Eliminar: ejecuta onConfirm
-  -Cuando isSubmitting es true, ambos botones se deshabilitan y el texto del botón Eliminar cambia a "Eliminando..."
-
-  @ Ejemplo:
-  <DeleteCertificatePopup
-    title="AWS Certified Solutions Architect"
-    onConfirm={() => handleDelete(certificateId)}
-    onClose={() => setShowPopup(false)}
-    isSubmitting={isDeleting}
-  />
-*/
+// Popup de confirmación antes de eliminar un certificado
 const DeleteCertificatePopup = ({ title, onConfirm, onClose, isSubmitting = false }: Props) => {
     return (
         <div className={styles.overlay}>
@@ -62,4 +40,3 @@ const DeleteCertificatePopup = ({ title, onConfirm, onClose, isSubmitting = fals
 };
 
 export default DeleteCertificatePopup;
-

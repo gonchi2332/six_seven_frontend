@@ -34,21 +34,7 @@ const styles = {
     switchRow: "flex items-center justify-center border-t border-white/5 pt-2 mt-auto",
 };
 
-/*
-  Características:
-  -Página de configuración de visibilidad de formación académica
-  -Muestra todas las entradas de educación del usuario con un Switch para controlar visibilidad
-  -Búsqueda por título o institución
-  -Paginación (10 elementos por página)
-  -Botones: Mostrar todo, Ocultar todo, Guardar
-  -Detecta cambios locales antes de guardar (hasChanges)
-  -Solo habilita guardar si hay cambios pendientes
-  -Muestra mensajes de éxito/error con toast
-
-  @ Ejemplo:
-  // Ruta: /configurar/educacion/visibilidad
-  <EducationConfigPage />
-*/
+// Página de configuración de visibilidad de formación académica
 const EducationConfigPage = () => {
     const { entries, isLoading, error, successMessage } = useEducation();
 
@@ -62,7 +48,7 @@ const EducationConfigPage = () => {
     const [visibilityMap, setVisibilityMap] = useState<Record<string | number, boolean>>({});
     const [isSaving, setIsSaving] = useState(false);
 
-    // Inicializa mapas de visibilidad desde las entradas cargadas
+    // Inicializar mapa de visibilidad desde las entradas cargadas
     useEffect(() => {
         if (entries) {
             const initialMap: Record<string | number, boolean> = {};
@@ -74,7 +60,7 @@ const EducationConfigPage = () => {
         }
     }, [entries]);
 
-    // Muestra mensaje de éxito del hook
+    // Mostrar mensaje de éxito del hook
     useEffect(() => {
         if (successMessage) {
             setLocalSuccess(successMessage);
@@ -83,7 +69,7 @@ const EducationConfigPage = () => {
         }
     }, [successMessage]);
 
-    // Muestra mensaje de error del hook
+    // Mostrar mensaje de error del hook
     useEffect(() => {
         if (error) {
             setLocalError(error);
@@ -92,7 +78,7 @@ const EducationConfigPage = () => {
         }
     }, [error]);
 
-    // Limpia búsqueda cuando el input está vacío
+    // Limpiar búsqueda cuando el input está vacío
     useEffect(() => {
         if (searchInput === "") {
             setActiveSearch("");
@@ -107,6 +93,7 @@ const EducationConfigPage = () => {
         }));
     };
 
+    // Poner todas las entradas como ocultas
     const handleHideAll = () => {
         setVisibilityMap((prev) => {
             const updated = { ...prev };
@@ -117,6 +104,7 @@ const EducationConfigPage = () => {
         });
     };
 
+    // Poner todas las entradas como visibles
     const handleShowAll = () => {
         setVisibilityMap((prev) => {
             const updated = { ...prev };
@@ -127,6 +115,7 @@ const EducationConfigPage = () => {
         });
     };
 
+    // Guardar cambios de visibilidad en el backend
     const handleSaveChanges = async () => {
         try {
             setIsSaving(true);
@@ -152,7 +141,7 @@ const EducationConfigPage = () => {
         if (e.key === "Enter") handleSearch();
     };
 
-    // Filtra por título o institución
+    // Filtrar por título o institución
     const filtered = entries.filter((e) => {
         if (!activeSearch.trim()) return true;
         const term = activeSearch.toLowerCase();
@@ -162,6 +151,7 @@ const EducationConfigPage = () => {
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
+    // Verificar si hay cambios pendientes
     const hasChanges = Object.keys(initialVisibilityMap).some(
         (key) => initialVisibilityMap[key] !== visibilityMap[key]
     );

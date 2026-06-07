@@ -32,20 +32,7 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
-/*
-  Características:
-  -Página pública de formación académica (portafolio visible)
-  -Obtiene el username de la URL mediante useParams
-  -Carga entradas educativas públicas del usuario a través de useEducation.setPublicUser
-  -Búsqueda por título o institución
-  -Paginación (10 elementos por página)
-  -Al hacer clic en una tarjeta, abre modal ViewEducationPopup con detalles
-  -Muestra error si falla la carga
-
-  @ Ejemplo:
-  // Ruta: /ver/juanperez/educacion
-  <EducationPage />
-*/
+// Página pública de formación académica (portafolio visible)
 const EducationPage = () => {
     const { username } = useParams<{ username: string }>();
     const {
@@ -61,12 +48,12 @@ const EducationPage = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [selectedEntry, setSelectedEntry] = useState<EducationEntry | null>(null);
 
-    // Carga entradas públicas cuando cambia el username
+    // Cargar entradas públicas cuando cambia el username
     useEffect(() => {
         setPublicUser(username ?? null);
     }, [username, setPublicUser]);
 
-    // Limpia búsqueda cuando el input está vacío
+    // Limpiar búsqueda cuando el input está vacío
     useEffect(() => {
         if (searchInput === "") {
             setActiveSearch("");
@@ -83,7 +70,7 @@ const EducationPage = () => {
         if (e.key === "Enter") handleSearch();
     };
 
-    // Filtra por título o institución
+    // Filtrar por título o institución
     const filtered = publicEntries.filter((e) => {
         if (!activeSearch.trim()) return true;
         const term = activeSearch.toLowerCase();

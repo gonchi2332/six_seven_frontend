@@ -1,16 +1,8 @@
 import Button from "../../../components/Button/Button";
 import PopUpCard from "../../../components/PopUpCard/PopUpCard";
 
-/*
-  Props del componente DeleteEducationPopup:
-  -degree: Título o nombre del grado académico a eliminar (se muestra en el mensaje)
-  -onConfirm: Función ejecutada al confirmar la eliminación
-  -onClose: Función ejecutada al cerrar el popup (sin back)
-  -onBack: Función ejecutada para volver atrás (cuando el popup está en un flujo)
-  -isSubmitting: Estado de carga, deshabilita botones mientras es true
-*/
 interface Props {
-    degree: string;
+    degree: string; // Título de la formación a eliminar
     onConfirm: () => void;
     onClose: () => void;
     onBack?: () => void;
@@ -24,24 +16,8 @@ const styles = {
     buttonsWrapper: "flex gap-3 justify-center mt-2 px-4 sm:px-8 pb-6",
 };
 
-/*
-  Características:
-  -Popup de confirmación para eliminar un registro de formación académica
-  -Muestra mensaje con el nombre del grado académico a eliminar
-  -Botón Cancelar: si existe onBack lo ejecuta, si no ejecuta onClose
-  -Botón Eliminar: ejecuta onConfirm
-  -Cuando isSubmitting es true, ambos botones se deshabilitan y el texto del botón Eliminar cambia a "Eliminando..."
-
-  @ Ejemplo:
-  <DeleteEducationPopup
-    degree="Ingeniería en Sistemas"
-    onConfirm={() => handleDelete(educationId)}
-    onClose={() => setShowPopup(false)}
-    onBack={() => setShowMenu(true)}
-    isSubmitting={isDeleting}
-  />
-*/
 const DeleteEducationPopup = ({ degree, onConfirm, onClose, onBack, isSubmitting = false }: Props) => {
+    // Si hay onBack regresa al popup anterior, sino cierra el modal
     const handleCancel = () => {
         if (onBack) onBack();
         else onClose();
@@ -70,4 +46,3 @@ const DeleteEducationPopup = ({ degree, onConfirm, onClose, onBack, isSubmitting
 };
 
 export default DeleteEducationPopup;
-

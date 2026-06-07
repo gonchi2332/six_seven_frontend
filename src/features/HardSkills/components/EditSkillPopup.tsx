@@ -4,14 +4,6 @@ import PopUpCard from "../../../components/PopUpCard";
 import SkillLevelSelector from "./SkillLevelSelector";
 import type { Skill } from "../types/skill.types";
 
-/*
-  Props del componente EditSkillPopup:
-  -skill: Objeto con los datos de la habilidad a modificar (id, nombre, nivel actual)
-  -onSubmit: Función ejecutada al confirmar la modificación, recibe id, nombre y nuevo nivel
-  -onClose: Función ejecutada al cancelar o cerrar el popup
-  -serverError: Mensaje de error proveniente del servidor (opcional)
-  -isSubmitting: Estado de carga, deshabilita botón mientras es true
-*/
 interface EditSkillPopupProps {
     skill: Skill;
     onSubmit: (id: string | number, name: string, level: number) => Promise<void>;
@@ -29,27 +21,10 @@ const styles = {
     serverError: "mx-6 sm:mx-8 mb-2 p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center",
 };
 
-/*
-  Características:
-  -Popup para modificar el nivel de una habilidad existente (técnica o blanda)
-  -Muestra el nombre de la habilidad en el título
-  -Solo permite modificar el nivel, el nombre no se puede cambiar
-  -Selector visual de nivel (SkillLevelSelector) de 0 a 5
-  -Botón "Modificar": deshabilitado si no hay cambios (hasChanges = false)
-  -Cuando isSubmitting es true, el botón cambia a "Guardando..." y se deshabilita
-  -Muestra error del servidor si ocurre
-
-  @ Ejemplo:
-  <EditSkillPopup
-    skill={{ skill_id: 1, name: "JavaScript", level: 3 }}
-    onSubmit={(id, name, level) => updateSkillLevel(id, level)}
-    onClose={() => setShowPopup(false)}
-    serverError={errorMessage}
-    isSubmitting={isSaving}
-  />
-*/
+// Popup para modificar nivel de habilidad existente
 const EditSkillPopup = ({ skill, onSubmit, onClose, serverError, isSubmitting = false }: EditSkillPopupProps) => {
     const [level, setLevel] = useState(skill.level);
+    // Botón habilitado solo si hubo cambios
     const hasChanges = level !== skill.level;
 
     const handleSubmit = async () => {
