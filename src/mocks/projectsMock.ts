@@ -1,19 +1,6 @@
 import type { ProjectEntry } from "../features/PersonalProjects/services/personalProjectsService";
 
-/*
-  Características:
-  -Array de proyectos mock para pruebas y desarrollo
-  -Simula datos de proyectos personales para visualización
-  -Cada proyecto contiene: id, nombre, descripción, tema, rol, estado, enlaces, imagen, fechas y visibilidad
-  -Útil para pruebas sin depender del backend
-  -Los datos incluyen proyectos con diferentes temas (Full Stack, Frontend, Mobile, Backend)
-  -Estados posibles: "Finalizado", "En proceso", "Cancelado"
-
-  @ Ejemplo:
-  // Usar en pruebas
-  const projects = mockProjects;
-  console.log(projects.filter(p => p.status === "Finalizado"));
-*/
+// Datos mock de proyectos personales para pruebas y desarrollo
 export const mockProjects: ProjectEntry[] = [
     {
         id: "1",
