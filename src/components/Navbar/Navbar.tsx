@@ -8,6 +8,7 @@ import { useSectionsVisibility } from "../../hooks/usePublicProfileSections";
 import { Copy, LogOut, Menu, X, ChevronDown, Home, Printer } from "lucide-react";
 import PublicProfileLink from "../PublicProfileLink/PublicProfileLink";
 import Button from "../Button";
+import { useAuthContext } from "../../context/AuthContext";
 
 const defAvatar = "/defAvatar.png";
 
@@ -44,6 +45,7 @@ interface NavbarProps {
 }
 
 const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
+    const { logout } = useAuthContext();
     const { userInfo } = useNavbarInfo();
     const navigate = useNavigate();
     const location = useLocation();
@@ -116,7 +118,9 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
     const userFullName = [userInfo?.names, userInfo?.first_surname].filter(Boolean).join(" ");
 
     const handleLogout = () => {
+        logout();
         localStorage.clear();
+        sessionStorage.clear();
         navigate("/login");
     };
 
