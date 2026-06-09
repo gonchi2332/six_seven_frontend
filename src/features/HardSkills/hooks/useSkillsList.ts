@@ -4,6 +4,7 @@ import type { Skill } from "../types/skill.types";
 
 const PAGE_SIZE = 5;
 
+// Hook para orquestar la página de habilidades técnicas (paginación, modales)
 const useSkillsList = () => {
     const { skills, isLoading, error, successMessage, addSkill, editSkill, deleteSkill } = useSkills();
     const [showAdd, setShowAdd] = useState(false);
@@ -12,11 +13,15 @@ const useSkillsList = () => {
     const [serverError, setServerError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    
+    // Paginación
     const totalPages = Math.ceil(skills.length / PAGE_SIZE);
     const paginated = skills.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+    
     const handleAdd = (name: string, level: number) => {
         addSkill(name, level);
     };
+
 
     const handleEdit = async (id: string | number, name: string, level: number) => {
         setServerError(null);
@@ -31,11 +36,14 @@ const useSkillsList = () => {
         }
     };
 
+
+
     const handleDelete = async () => {
         if (!deleteTarget) return;
         try {
             await deleteSkill(deleteTarget.name);
             setDeleteTarget(null);
+            // Si era el último elemento de la página, retroceder
             if (paginated.length === 1 && currentPage > 1) {
                 setCurrentPage((p) => p - 1);
             }
@@ -68,3 +76,4 @@ const useSkillsList = () => {
 };
 
 export default useSkillsList;
+

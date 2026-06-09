@@ -17,6 +17,7 @@ const styles = {
     btnWide: "w-full sm:flex-1 sm:min-w-6",
 };
 
+// Popup de acciones sobre una formación académica: Ver, Modificar, Eliminar, Cancelar
 const EducationPopup = ({ isOpen, entry, onClose, onEdit, onDelete, onView }: Props) => {
     if (!isOpen || !entry) return null;
 
@@ -26,26 +27,17 @@ const EducationPopup = ({ isOpen, entry, onClose, onEdit, onDelete, onView }: Pr
                 <PopUpCard title={entry.degree}>
                     <div className={styles.buttonContainer}>
                         <div className={styles.btnWide}>
-                            <Button variant="primary" onClick={onClose} fullWidth>
-                                Cancelar
-                            </Button>
+                            <Button variant="primary" onClick={onClose} fullWidth>Cancelar</Button>
                         </div>
                         <div className={styles.btnWide}>
-                            <Button variant="primary" onClick={() => onDelete(entry)} fullWidth>
-                                Eliminar
-                            </Button>
+                            <Button variant="primary" onClick={() => onDelete(entry)} fullWidth>Eliminar</Button>
                         </div>
                         <div className={styles.btnWide}>
-                            <Button variant="secondary" onClick={onView} fullWidth>
-                                Ver
-                            </Button>
+                            <Button variant="secondary" onClick={onView} fullWidth>Ver</Button>
                         </div>
                         <div className={styles.btnWide}>
-                            <Button variant="secondary" onClick={() => onEdit(entry)} fullWidth>
-                                Modificar
-                            </Button>
+                            <Button variant="secondary" onClick={() => onEdit(entry)} fullWidth>Modificar</Button>
                         </div>
-
                     </div>
                 </PopUpCard>
             </div>

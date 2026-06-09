@@ -1,5 +1,7 @@
 import EmailVerificationFlow from "../../features/auth/components/EmailPasswordVerification/EmailVerificationFlow";
 
+// Página pública para recuperar contraseña
+// initialMode="recovery" inicia el flujo de recuperación (email -> código -> nueva contraseña)
 const PasswordResetPage = () => {
   return (
     <div>
@@ -7,6 +9,5 @@ const PasswordResetPage = () => {
     </div>
   );
 };
-
 
 export default PasswordResetPage;

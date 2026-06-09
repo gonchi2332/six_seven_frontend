@@ -52,15 +52,15 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
 
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
     const [isSkillsDropdownOpen, setIsSkillsDropdownOpen] = useState(false);
     const [isVisibilityDropdownOpen, setIsVisibilityDropdownOpen] = useState(false);
-
     const [isMobileSkillsOpen, setIsMobileSkillsOpen] = useState(false);
     const [isMobileVisibilityOpen, setIsMobileVisibilityOpen] = useState(false);
 
     const skillsRef = useRef<HTMLDivElement>(null);
     const visibilityRef = useRef<HTMLDivElement>(null);
+
+    // Username activo: puede venir de la URL o de ownerName en modo público
     const activeUsername = urlUsername || ownerName;
 
     const { visibility: publicVisibility } = useSectionsVisibility(activeUsername, isPublic);
@@ -78,6 +78,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
         certificates: "/configurar/certificados",
     };
 
+    // Tabs con rutas dinámicas según modo público o privado
     const allTabs = [
         { id: "profile", name: "Perfil", path: isPublic ? `/ver/${activeUsername}` : "/info-personal" },
         { id: "has_work_experience", name: "Experiencia Laboral", path: isPublic ? `/ver/${activeUsername}/experiencia-laboral` : "/experiencia-laboral" },
@@ -89,9 +90,9 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
 
     const isSkillsTabActive = location.pathname === pathTech || location.pathname === pathSoft;
     const isVisibilityActive = Object.values(configPaths).includes(location.pathname);
-
     const showHomeButton = isPublic && location.pathname !== "/";
 
+    // Cierra dropdowns al hacer clic fuera de ellos
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (skillsRef.current && !skillsRef.current.contains(event.target as Node)) {
@@ -105,6 +106,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    // Cierra todos los menús al cambiar de ruta
     useEffect(() => {
         setIsMenuOpen(false);
         setIsSkillsDropdownOpen(false);
@@ -120,6 +122,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
         navigate("/login");
     };
 
+    // Filtra tabs según visibilidad del portafolio en modo público
     const visibleTabs = allTabs.filter(tab => {
         if (!isPublic) return true;
         if (tab.id === "profile") return true;
@@ -127,6 +130,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
         return !!publicVisibility[tab.id as keyof typeof publicVisibility];
     });
 
+    // Muestra el dropdown de habilidades si alguna de las dos está visible
     const showSkillsDropdown = !isPublic || (
         publicVisibility ? (publicVisibility.has_hard_skills || publicVisibility.has_soft_skills) : true
     );
@@ -149,6 +153,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                             </span>
                         </div>
 
+                        {/* Tabs de navegación — solo desktop */}
                         <div className={STYLES.TABS_CONTAINER}>
                             {visibleTabs.find(t => t.id === "profile") && (
                                 <button
@@ -202,6 +207,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                                 </button>
                             ))}
 
+                            {/* Dropdown de visibilidad — solo modo privado */}
                             {!isPublic && (
                                 <div className={STYLES.dropdownWrapper} ref={visibilityRef}>
                                     <button
@@ -242,7 +248,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                         </div>
                     </div>
 
-                    {/* ── ACTIONS DESKTOP ── */}
+                    {/* Acciones del lado derecho — desktop */}
                     <div className={STYLES.ACTIONS_CONTAINER}>
                         {showHomeButton && (
                             <Button onClick={() => navigate("/")} className={STYLES.HOME_BUTTON}>
@@ -281,11 +287,13 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                         ) : null}
                     </div>
 
+                    {/* Botón hamburguesa — mobile */}
                     <button className={STYLES.MOBILE_TOGGLE} onClick={() => setIsMenuOpen(!isMenuOpen)}>
                         {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                     </button>
                 </div>
 
+                {/* Menú desplegable mobile */}
                 {isMenuOpen && (
                     <div className={STYLES.MOBILE_MENU}>
                         <div className="flex flex-col gap-1">
@@ -371,7 +379,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                             )}
                         </div>
 
-                        {/* ── ACTIONS MOBILE ── */}
+                        {/* Acciones mobile */}
                         <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
                             {showHomeButton && (
                                 <button

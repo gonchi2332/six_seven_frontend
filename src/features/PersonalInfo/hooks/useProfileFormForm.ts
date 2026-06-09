@@ -3,6 +3,7 @@ import { getPersonalInfo } from "../services/personalInfoService";
 import type { FormData } from "./useProfileFormRegex";
 import { parseProfilePicture } from "../../../services/decodeBase64";
 
+// Extraer username del token JWT
 const getUsernameFromToken = (): string => {
     const token = localStorage.getItem("token");
     if (!token) return "";
@@ -16,6 +17,7 @@ const getUsernameFromToken = (): string => {
     }
 };
 
+// Hook para cargar información personal del usuario autenticado
 export const usePersonalInfo = (setInitialData: (data: Partial<FormData>) => void) => {
     const [isLoadingData, setIsLoadingData] = useState(true);
     const [loadError, setLoadError] = useState<string | null>(null);
@@ -28,9 +30,7 @@ export const usePersonalInfo = (setInitialData: (data: Partial<FormData>) => voi
 
                 const info = await getPersonalInfo(username);
 
-                // USAMOS || undefined: 
-                // Si el valor es null o "", se enviará como undefined, 
-                // permitiendo que el componente Card oculte el campo.
+                // Si el valor es null o "", se envía como undefined para ocultar el campo en el formulario
                 setInitialData({
                     firstName: info.names || "",
                     firstSurname: info.first_surname || "",
@@ -52,3 +52,4 @@ export const usePersonalInfo = (setInitialData: (data: Partial<FormData>) => voi
 
     return { isLoadingData, loadError };
 };
+

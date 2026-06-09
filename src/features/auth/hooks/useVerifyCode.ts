@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { verify } from "../services/verificationCodeService";
 import { useAuthContext } from "../../../context/AuthContext";
@@ -9,6 +8,7 @@ interface UseVerifyCodeParams {
     token: string | null;
 }
 
+// Hook para verificar el código de activación de cuenta
 export const useVerifyCode = ({ username, code, token }: UseVerifyCodeParams) => {
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -16,12 +16,11 @@ export const useVerifyCode = ({ username, code, token }: UseVerifyCodeParams) =>
 
     const handleSubmit = async () => {
         setIsLoading(true);
-
         try {
             const data = await verify({ username, code, token });
             if (data.success !== false) {
                 if (data.token) {
-                    login(data.token);
+                    login(data.token); // Actualiza el token si el backend devuelve uno nuevo
                 }
                 return true;
             } else {
@@ -38,17 +37,11 @@ export const useVerifyCode = ({ username, code, token }: UseVerifyCodeParams) =>
 
     const resetError = () => setError(null);
 
+    // Título y descripción dinámicos según estado de error
     const title = error ? "Código inválido" : "Verificación de cuenta";
     const description = error
         ? error
         : "Ingresa el código de verificación enviado a tu correo";
 
-    return {
-        error,
-        isLoading,
-        title,
-        description,
-        handleSubmit,
-        resetError
-    };
+    return { error, isLoading, title, description, handleSubmit, resetError };
 };

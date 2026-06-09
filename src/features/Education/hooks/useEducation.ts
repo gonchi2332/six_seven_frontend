@@ -1,14 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import type { EducationEntry, AcademicDegree } from "../services/educationService";
 import {
-    fetchEducation,
-    fetchPublicEducation,
-    fetchAcademicDegrees,
-    createEducation,
-    updateEducation,
-    deleteEducation as apiDeleteEducation,
+    fetchEducation, fetchPublicEducation, fetchAcademicDegrees,
+    createEducation, updateEducation, deleteEducation as apiDeleteEducation,
 } from "../services/educationService";
 
+// Hook para gestionar formaciones académicas privadas y públicas
 export const useEducation = () => {
     const [entries, setEntries] = useState<EducationEntry[]>([]);
     const [publicEntries, setPublicEntries] = useState<EducationEntry[]>([]);
@@ -20,6 +17,7 @@ export const useEducation = () => {
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [currentPublicUsername, setCurrentPublicUsername] = useState<string | null>(null);
 
+    // Mensajes autolimpiables a los 3 segundos
     const showSuccess = (msg: string) => {
         setSuccessMessage(msg);
         setTimeout(() => setSuccessMessage(null), 3000);
@@ -30,7 +28,7 @@ export const useEducation = () => {
         setTimeout(() => setError(null), 3000);
     };
 
-    // Carga de datos privados (autenticado)
+    // Carga formaciones y catálogo de grados en paralelo al montar
     useEffect(() => {
         const load = async () => {
             setIsLoading(true);
@@ -51,7 +49,7 @@ export const useEducation = () => {
         load();
     }, []);
 
-    // useEffect para cargar formaciones públicas automáticamente cuando cambia currentPublicUsername
+    // Carga formaciones públicas al cambiar currentPublicUsername
     useEffect(() => {
         const fetchPublicUserEducation = async () => {
             if (!currentPublicUsername || currentPublicUsername.trim() === "") {
@@ -59,7 +57,6 @@ export const useEducation = () => {
                 setIsLoadingPublic(false);
                 return;
             }
-
             setIsLoadingPublic(true);
             setPublicError(null);
             try {
@@ -67,7 +64,7 @@ export const useEducation = () => {
                 setPublicEntries(data);
             } catch (err: any) {
                 console.error(err);
-                // No mostrar error de autenticación en vista pública
+                // Suprime errores de autenticación en vista pública
                 if (!err.message?.includes("token") && !err.message?.includes("autenticacion") && !err.message?.includes("Authorization")) {
                     setPublicError(err.message || 'Error al obtener formaciones académicas públicas');
                 }
@@ -76,11 +73,9 @@ export const useEducation = () => {
                 setIsLoadingPublic(false);
             }
         };
-
         fetchPublicUserEducation();
     }, [currentPublicUsername]);
 
-    // Función pública para cambiar el usuario a visualizar
     const setPublicUser = useCallback((username: string | null) => {
         setCurrentPublicUsername(username);
     }, []);
@@ -116,18 +111,10 @@ export const useEducation = () => {
     };
 
     return {
-        entries,
-        publicEntries,
-        academicDegrees,
-        isLoading,
-        isLoadingPublic,
-        error,
-        publicError,
-        successMessage,
-        addEntry,
-        editEntry,
-        deleteEntry,
-        setPublicUser,
-        currentPublicUsername,
+        entries, publicEntries, academicDegrees,
+        isLoading, isLoadingPublic,
+        error, publicError, successMessage,
+        addEntry, editEntry, deleteEntry,
+        setPublicUser, currentPublicUsername,
     };
 };

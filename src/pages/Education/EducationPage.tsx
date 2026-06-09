@@ -34,9 +34,9 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
+// Página principal de gestión de formación académica
 const EducationPage = () => {
     const { entries, academicDegrees, isLoading, error, successMessage, addEntry, editEntry, deleteEntry } = useEducation();
-
 
     const [searchInput, setSearchInput] = useState("");
     const [activeSearch, setActiveSearch] = useState("");
@@ -78,6 +78,7 @@ const EducationPage = () => {
         if (e.key === "Enter") handleSearch();
     };
 
+    // Filtrar por título o institución
     const filtered = entries.filter((e) => {
         if (!activeSearch.trim()) return true;
         const term = activeSearch.toLowerCase();
@@ -142,6 +143,7 @@ const EducationPage = () => {
         setIsSubmitting(true);
         try {
             await deleteEntry(selectedEntry.id);
+            // Si era el último elemento de la página, retroceder
             if (paginated.length === 1 && currentPage > 1) setCurrentPage((p) => p - 1);
             closeAll();
         } finally {
@@ -169,7 +171,6 @@ const EducationPage = () => {
                                     />
                                 </div>
 
-
                                 <div className={styles.actionRow}>
                                     <Button
                                         variant="secondary"
@@ -191,6 +192,7 @@ const EducationPage = () => {
                             </div>
                         </div>
 
+                        {/* Mensajes de error/éxito */}
                         {error && (
                             <p className={`${styles.toast} bg-red-500/10 border border-red-500 text-red-400`}>
                                 {error}
@@ -231,6 +233,7 @@ const EducationPage = () => {
                 </div>
             </div>
 
+            {/* Popup de acciones al hacer clic en una tarjeta */}
             {isMenuOpen && selectedEntry && (
                 <EducationPopup
                     isOpen={isMenuOpen}
@@ -242,6 +245,7 @@ const EducationPage = () => {
                 />
             )}
 
+            {/* Modal para ver detalle */}
             {isViewOpen && selectedEntry && (
                 <ViewEducationPopup
                     isOpen={isViewOpen}
@@ -251,6 +255,7 @@ const EducationPage = () => {
                 />
             )}
 
+            {/* Modal para crear nueva entrada */}
             {isAddOpen && (
                 <EducationForm
                     mode="add"
@@ -262,6 +267,7 @@ const EducationPage = () => {
                 />
             )}
 
+            {/* Modal para editar entrada existente */}
             {isEditOpen && selectedEntry && (
                 <EducationForm
                     mode="edit"
@@ -275,6 +281,7 @@ const EducationPage = () => {
                 />
             )}
 
+            {/* Modal de confirmación para eliminar */}
             {isConfirmDeleteOpen && selectedEntry && (
                 <ConfirmDeleteModal
                     degree={selectedEntry.degree}

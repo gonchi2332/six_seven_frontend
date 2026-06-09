@@ -15,6 +15,7 @@ const styles = {
     buttonsWrapper: "flex flex-row flex-wrap sm:flex-nowrap gap-2 justify-center mt-2 px-4 sm:px-6 pb-6",
 };
 
+// Popup de acciones sobre un certificado: Ver, Modificar, Eliminar, Cancelar
 const CertificateActionPopup = ({ certificate, onView, onModify, onDelete, onClose }: Props) => {
     return (
         <div className={styles.overlay}>

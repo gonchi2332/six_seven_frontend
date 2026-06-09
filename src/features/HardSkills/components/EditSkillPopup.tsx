@@ -21,8 +21,10 @@ const styles = {
     serverError: "mx-6 sm:mx-8 mb-2 p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center",
 };
 
+// Popup para modificar nivel de habilidad existente
 const EditSkillPopup = ({ skill, onSubmit, onClose, serverError, isSubmitting = false }: EditSkillPopupProps) => {
     const [level, setLevel] = useState(skill.level);
+    // Botón habilitado solo si hubo cambios
     const hasChanges = level !== skill.level;
 
     const handleSubmit = async () => {

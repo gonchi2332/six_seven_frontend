@@ -27,6 +27,7 @@ const styles = {
     toastError: "bg-red-500/10 border border-red-500 text-red-400",
 };
 
+// Fila configurable con Switch para campos de contacto (residencia, email, teléfono)
 const ConfigInfoRow = ({
     icon: Icon,
     label,
@@ -61,6 +62,7 @@ const ConfigInfoRow = ({
     </div>
 );
 
+// Página de configuración de visibilidad de información personal
 const PersonalInfoConfigPage = () => {
     const [refreshKey, setRefreshKey] = useState(0);
     const { userInfo, isLoading } = useNavbarInfo(refreshKey);
@@ -72,6 +74,7 @@ const PersonalInfoConfigPage = () => {
     const [initialVisibilityMap, setInitialVisibilityMap] = useState<Record<string, boolean>>({});
     const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>({});
 
+    // Inicializar mapa de visibilidad desde los datos del usuario
     useEffect(() => {
         if (userInfo) {
             const initialMap = {
@@ -91,6 +94,7 @@ const PersonalInfoConfigPage = () => {
         }));
     };
 
+    // Poner todas las opciones como ocultas
     const handleHideAll = () => {
         setVisibilityMap((prev) => {
             const updated = { ...prev };
@@ -101,6 +105,7 @@ const PersonalInfoConfigPage = () => {
         });
     };
 
+    // Poner todas las opciones como visibles
     const handleShowAll = () => {
         setVisibilityMap((prev) => {
             const updated = { ...prev };
@@ -111,6 +116,7 @@ const PersonalInfoConfigPage = () => {
         });
     };
 
+    // Guardar cambios de visibilidad
     const handleSaveChanges = async () => {
         try {
             setIsSaving(true);
@@ -122,7 +128,7 @@ const PersonalInfoConfigPage = () => {
 
             setInitialVisibilityMap(visibilityMap);
             setLocalSuccess(res.message || "Cambios guardados exitosamente");
-            setRefreshKey((prev) => prev + 1); // Forzar actualización limpia si el hook lo requiere
+            setRefreshKey((prev) => prev + 1);
             setTimeout(() => setLocalSuccess(null), 3000);
         } catch (err: any) {
             setLocalError(err.message || "Error al guardar los cambios.");
@@ -140,6 +146,7 @@ const PersonalInfoConfigPage = () => {
         .filter(Boolean)
         .join(", ");
 
+    // Verificar si hay cambios pendientes
     const hasChanges = Object.keys(initialVisibilityMap).some(
         (key) => initialVisibilityMap[key] !== visibilityMap[key]
     );
@@ -193,6 +200,7 @@ const PersonalInfoConfigPage = () => {
                             <div className={styles.loading}>Cargando panel de configuración...</div>
                         ) : (
                             <div className={styles.listWrapper}>
+                                {/* Tarjeta de datos personales (visibilidad fija) */}
                                 <div className={styles.infoCard}>
                                     <p className={styles.sectionTitle}>
                                         <User size={14} /> Datos Personales
@@ -210,6 +218,7 @@ const PersonalInfoConfigPage = () => {
                                     </div>
                                 </div>
 
+                                {/* Tarjeta de ubicación y contacto (configurable) */}
                                 <div className={styles.infoCard}>
                                     <p className={styles.sectionTitle}>
                                         <MapPin size={14} /> Ubicación y Contacto Público
@@ -256,6 +265,7 @@ const PersonalInfoConfigPage = () => {
     );
 };
 
+// Fila estática para campos con visibilidad fija (Siempre Público o Siempre Oculto)
 const InfoRowStatic = ({ icon: Icon, label, value, badgeText }: { icon: React.ElementType; label: string; value: string; badgeText: string }) => (
     <div className={`${styles.fieldWrapper} opacity-80 bg-black/5`}>
         <div className={styles.field}>

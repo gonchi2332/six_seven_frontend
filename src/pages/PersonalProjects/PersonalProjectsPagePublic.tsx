@@ -33,6 +33,7 @@ const styles = {
     toastError: "bg-red-500/10 border border-red-500 text-red-400",
 };
 
+// Página pública de proyectos personales (portafolio visible)
 const ProjectsPage = () => {
     const { username } = useParams<{ username: string }>();
     const {
@@ -48,6 +49,7 @@ const ProjectsPage = () => {
     const [selectedProject, setSelectedProject] = useState<ProjectEntry | null>(null);
     const [showViewModal, setShowViewModal] = useState(false);
 
+    // Cargar proyectos públicos cuando cambia el username
     useEffect(() => {
         setPublicUser(username ?? null);
     }, [username, setPublicUser]);
@@ -61,7 +63,6 @@ const ProjectsPage = () => {
         setShowViewModal(false);
     };
 
-
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") handleSearch();
     };
@@ -71,6 +72,7 @@ const ProjectsPage = () => {
         setShowViewModal(true);
     };
 
+    // Filtrar por nombre o tema
     const filtered = publicProjects.filter((p) =>
         p.name.toLowerCase().includes(activeSearch.toLowerCase()) ||
         p.topic.toLowerCase().includes(activeSearch.toLowerCase())
@@ -176,8 +178,7 @@ const ProjectsPage = () => {
                 </div>
             </div>
 
-
-
+            {/* Modal para ver detalle del proyecto */}
             {showViewModal && selectedProject && (
                 <ViewProjectPopup
                     project={selectedProject}

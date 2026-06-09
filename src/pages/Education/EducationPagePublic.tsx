@@ -32,6 +32,7 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
+// Página pública de formación académica (portafolio visible)
 const EducationPage = () => {
     const { username } = useParams<{ username: string }>();
     const {
@@ -41,18 +42,18 @@ const EducationPage = () => {
         setPublicUser
     } = useEducation();
 
-    // Estados de búsqueda y paginación
     const [searchInput, setSearchInput] = useState("");
     const [activeSearch, setActiveSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [selectedEntry, setSelectedEntry] = useState<EducationEntry | null>(null);
 
+    // Cargar entradas públicas cuando cambia el username
     useEffect(() => {
         setPublicUser(username ?? null);
     }, [username, setPublicUser]);
 
+    // Limpiar búsqueda cuando el input está vacío
     useEffect(() => {
         if (searchInput === "") {
             setActiveSearch("");
@@ -69,6 +70,7 @@ const EducationPage = () => {
         if (e.key === "Enter") handleSearch();
     };
 
+    // Filtrar por título o institución
     const filtered = publicEntries.filter((e) => {
         if (!activeSearch.trim()) return true;
         const term = activeSearch.toLowerCase();
@@ -78,7 +80,6 @@ const EducationPage = () => {
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-    // Flujo de Modales
     const handleCardClick = (entry: EducationEntry) => {
         setSelectedEntry(entry);
         setIsMenuOpen(true);

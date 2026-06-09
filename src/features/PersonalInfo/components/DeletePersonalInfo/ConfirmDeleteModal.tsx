@@ -1,5 +1,6 @@
 import Button from '../../../../components/Button';
 
+
 interface ConfirmDeleteModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -17,6 +18,7 @@ const styles = {
     buttonContainer: "flex gap-3",
 };
 
+// Modal de confirmación para eliminar un campo de información personal
 const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm, fieldLabel, isDeleting }: ConfirmDeleteModalProps) => {
     if (!isOpen) return null;
 
@@ -43,3 +45,4 @@ const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm, fieldLabel, isDeleting
 };
 
 export default ConfirmDeleteModal;
+

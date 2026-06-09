@@ -29,6 +29,7 @@ const styles = {
     statusMessage: "text-white/40 font-nunito text-xs text-center py-4 italic",
 };
 
+// Página principal (landing page) con buscador de perfiles públicos
 const HomePage = () => {
     const navigate = useNavigate();
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -36,6 +37,7 @@ const HomePage = () => {
     
     const { query, setQuery, filteredUsers, isFetching } = useUserSearch();
 
+    // Cerrar dropdown al hacer clic fuera
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -85,6 +87,7 @@ const HomePage = () => {
                         />
                     </div>
 
+                    {/* Dropdown de resultados de búsqueda */}
                     {showDropdown && query.trim() && (
                         <div className={styles.resultsDropdown}>
                             {isFetching ? (

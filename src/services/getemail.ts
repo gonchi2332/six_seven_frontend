@@ -1,11 +1,14 @@
 import { fetchWithAuth } from "./refreshToken";
+
 interface EmailResponse {
     success: boolean;
     message: string;
     email: string;
 }
+
 const API_URL = import.meta.env.VITE_API_URL;
 
+// Obtiene el correo del usuario autenticado
 export const getEmail = async (): Promise<EmailResponse> => {
     const response = await fetchWithAuth(
         `${API_URL}/api/v2/verification/users/mail`,
@@ -13,14 +16,9 @@ export const getEmail = async (): Promise<EmailResponse> => {
             method: "GET",
         }
     );
-
     const data = await response.json();
-
     if (!response.ok) {
         throw new Error(data.message);
     }
-
-
     return data;
 };
-

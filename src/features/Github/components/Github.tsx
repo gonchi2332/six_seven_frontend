@@ -48,12 +48,9 @@ function Github({ isPublic }: Props) {
             <div className={styles.pageContent}>
                 <div className={styles.outerCard}>
                     <div className={styles.greenContainer}>
-
                         <div className={styles.header}>
-                            <h1 className={styles.title}>
-                                Perfil de GitHub
-                            </h1>
-
+                            <h1 className={styles.title}>Perfil de GitHub</h1>
+                            {/* Botón de cambio solo visible en modo privado si ya hay perfil vinculado */}
                             {githubUser && !isPublic && (
                                 <Button variant="secondary" onClick={() => setShowModal(true)}>
                                     Cambiar Perfil
@@ -67,16 +64,13 @@ function Github({ isPublic }: Props) {
                             <div className={styles.content}>
                                 {!githubUser ? (
                                     <>
-                                        {!isPublic && (
-                                            <p className={styles.emptyText}>
-                                                Vincula tu cuenta de GitHub para mostrar tu insignia profesional en tu portafolio público
-                                            </p>
-                                        )}
-                                        {isPublic && (
-                                            <p className={styles.emptyText}>
-                                                Aún no se vinculó una cuenta de GitHub
-                                            </p>
-                                        )}
+                                        <p className={styles.emptyText}>
+                                            {!isPublic
+                                                ? "Vincula tu cuenta de GitHub para mostrar tu insignia profesional en tu portafolio público"
+                                                : "Aún no se vinculó una cuenta de GitHub"
+                                            }
+                                        </p>
+                                        {/* Botón de vinculación solo en modo privado */}
                                         {!isPublic && (
                                             <Button variant="primary" onClick={() => setShowModal(true)}>
                                                 Vincular Ahora

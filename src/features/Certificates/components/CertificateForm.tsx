@@ -24,11 +24,14 @@ const styles = {
     mainLabel: "mb-1 text-xl font-inter text-white"
 };
 
+// Formulario unificado para registrar y modificar certificados
 const CertificateForm = ({ mode, initial, onSubmit, onClose, serverError, isSubmitting = false }: Props) => {
     const { title, titleError, handleTitleChange, handleTitleBlur, description, descError, handleDescChange, handleDescBlur,
         area, areaError, handleAreaChange, handleAreaBlur, issueDate, dateError, dateTouched, handleDateChange, handleDateBlur,
         imagePreview, handleImageChange, isFormValid, hasChanges, handleSubmit,
     } = useCertificateForm({ mode, initial, onSubmit });
+
+    // Título del popup según el modo
     const formTitle = mode === "add" ? "Registrar Certificado" : `Modificar: ${initial?.title ?? ""}`;
 
     return (
@@ -43,7 +46,7 @@ const CertificateForm = ({ mode, initial, onSubmit, onClose, serverError, isSubm
                             onChange={(e) => handleTitleChange(e.target.value)}
                             placeholder="Ej: AWS Certified Solutions Architect"
                             maxLength={100}
-                            disabled={isSubmitting || mode === "edit"}
+                            disabled={isSubmitting || mode === "edit"} // Título no editable en modo edit
                             error={titleError || undefined}
                             inputProps={{ onBlur: handleTitleBlur }}
                         />
@@ -53,7 +56,7 @@ const CertificateForm = ({ mode, initial, onSubmit, onClose, serverError, isSubm
                             onChange={(e) => handleAreaChange(e.target.value)}
                             placeholder="Ej: Desarrollo Web, Cloud Computing..."
                             maxLength={100}
-                            disabled={isSubmitting || mode === "edit"}
+                            disabled={isSubmitting || mode === "edit"} // Área no editable en modo edit
                             error={areaError || undefined}
                             inputProps={{ onBlur: handleAreaBlur }}
                         />
@@ -94,7 +97,8 @@ const CertificateForm = ({ mode, initial, onSubmit, onClose, serverError, isSubm
                             onClick={handleSubmit}
                             fullWidth
                             disabled={isSubmitting || !isFormValid || (mode === "edit" && !hasChanges)}
-                        > {isSubmitting ? "Guardando..." : mode === "add" ? "Registrar" : "Modificar"}
+                        >
+                            {isSubmitting ? "Guardando..." : mode === "add" ? "Registrar" : "Modificar"}
                         </Button>
                     </div>
                 </PopUpCard>

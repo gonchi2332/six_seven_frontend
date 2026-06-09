@@ -3,7 +3,7 @@ import PopUpCard from "../PopUpCard";
 
 interface ConfirmDeletePopupProps {
     isOpen: boolean;
-    skillName: string;
+    skillName: string; // Nombre del elemento a eliminar
     onConfirm: () => void;
     onClose: () => void;
     isLoading?: boolean;

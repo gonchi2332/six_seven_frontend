@@ -33,6 +33,7 @@ const styles = {
     switchRow: "flex items-center justify-between border-t border-white/5 pt-2 mt-auto",
 };
 
+// Página de configuración de visibilidad de proyectos personales
 const PersonalProjectsConfigPage = () => {
     const { projects, isLoading, error, successMessage } = useProjects();
     const [searchInput, setSearchInput] = useState("");
@@ -44,6 +45,7 @@ const PersonalProjectsConfigPage = () => {
     const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>({});
     const [isSaving, setIsSaving] = useState(false);
 
+    // Inicializar mapa de visibilidad desde los proyectos cargados
     useEffect(() => {
         if (projects) {
             const initialMap: Record<string, boolean> = {};
@@ -55,6 +57,7 @@ const PersonalProjectsConfigPage = () => {
         }
     }, [projects]);
 
+    // Mostrar mensaje de éxito del hook
     useEffect(() => {
         if (successMessage) {
             setLocalSuccess(successMessage);
@@ -63,6 +66,7 @@ const PersonalProjectsConfigPage = () => {
         }
     }, [successMessage]);
 
+    // Mostrar mensaje de error del hook
     useEffect(() => {
         if (error) {
             setLocalError(error);
@@ -79,6 +83,7 @@ const PersonalProjectsConfigPage = () => {
         }));
     };
 
+    // Poner todos los proyectos como ocultos
     const handleHideAll = () => {
         setVisibilityMap((prev) => {
             const updated = { ...prev };
@@ -89,6 +94,7 @@ const PersonalProjectsConfigPage = () => {
         });
     };
 
+    // Poner todos los proyectos como visibles
     const handleShowAll = () => {
         setVisibilityMap((prev) => {
             const updated = { ...prev };
@@ -99,6 +105,7 @@ const PersonalProjectsConfigPage = () => {
         });
     };
 
+    // Guardar cambios de visibilidad en el backend
     const handleSaveChanges = async () => {
         try {
             setIsSaving(true);
@@ -124,6 +131,7 @@ const PersonalProjectsConfigPage = () => {
         if (e.key === "Enter") handleSearch();
     };
 
+    // Filtrar por nombre o tema del proyecto
     const filtered = (projects || []).filter((p) =>
         (p.name || "").toLowerCase().includes(activeSearch.toLowerCase()) ||
         (p.topic || "").toLowerCase().includes(activeSearch.toLowerCase())

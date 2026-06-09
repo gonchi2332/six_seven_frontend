@@ -20,7 +20,9 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
+// Página principal de gestión de certificados
 const CertificatesPage = () => {
+    // Destructurar todo desde el hook que orquesta la página
     const {
         isLoading, error, successMessage, searchInput, paginated, filtered, certificates, currentPage, totalPages,
         prevPage, nextPage, onSearch, handleKeyDown, handleChange, certAction, setCertAction, certToView, setCertToView,
@@ -45,6 +47,7 @@ const CertificatesPage = () => {
                             />
                         </div>
 
+                        {/* Mensajes de error/éxito */}
                         {error && <p className={`${styles.toast} bg-red-500/10 border border-red-500 text-red-400`}>{error}</p>}
                         {successMessage && <p className={`${styles.toast} bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]`}>{successMessage}</p>}
 
@@ -62,6 +65,7 @@ const CertificatesPage = () => {
                 </div>
             </div>
 
+            {/* Popup de acciones al hacer clic en un certificado */}
             {certAction && (
                 <CertificateActionPopup
                     certificate={certAction}
@@ -72,10 +76,12 @@ const CertificatesPage = () => {
                 />
             )}
 
+            {/* Modal para ver detalle del certificado */}
             {certToView && (
                 <ViewCertificatePopup certificate={certToView} onClose={() => goToMenu(certToView)} />
             )}
 
+            {/* Modal para crear nuevo certificado */}
             {showAdd && (
                 <CertificateForm mode="add"
                     onSubmit={onAddSubmit}
@@ -85,6 +91,7 @@ const CertificatesPage = () => {
                 />
             )}
 
+            {/* Modal para editar certificado existente */}
             {certToEdit && (
                 <CertificateForm
                     mode="edit"
@@ -96,6 +103,7 @@ const CertificatesPage = () => {
                 />
             )}
 
+            {/* Modal de confirmación para eliminar */}
             {certToDelete && (
                 <DeleteCertificatePopup
                     title={certToDelete.title}

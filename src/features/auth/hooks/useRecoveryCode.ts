@@ -2,7 +2,6 @@ import { useState } from "react";
 import { requestRecoveryCode, verifyRecoveryCode } from "../services/recoveryCodeService";
 import { useNavigate } from "react-router-dom";
 
-
 interface UseSendRecoveryCodeParams {
     username: string;
     onSubmit?: (username: string, email: string) => void;
@@ -15,14 +14,12 @@ export const useSendRecoveryCode = ({ username, onSubmit, onCancel }: UseSendRec
     const [email, setEmail] = useState<string | null>(null);
     const navigate = useNavigate();
 
-
-
     const handleSend = async (): Promise<{ success: boolean; email: string | null }> => {
         setIsLoading(true);
         setError(null);
         try {
             const data = await requestRecoveryCode({ username });
-            const recoveryEmail = data.verificationMails[0];
+            const recoveryEmail = data.verificationMails[0]; // Primer email de recuperación
             setEmail(recoveryEmail);
             return { success: true, email: recoveryEmail };
         } catch (err) {
@@ -33,14 +30,13 @@ export const useSendRecoveryCode = ({ username, onSubmit, onCancel }: UseSendRec
         }
     };
 
-
     const handleSubmit = async () => {
         const { success, email: mail } = await handleSend();
         if (success) {
             onSubmit?.(username, mail ?? "");
-
         }
     };
+
     const handleCancel = () => {
         if (onCancel) {
             onCancel();
@@ -48,8 +44,6 @@ export const useSendRecoveryCode = ({ username, onSubmit, onCancel }: UseSendRec
             navigate("/login");
         }
     };
-
-
 
     return { isLoading, email, error, handleSend, handleSubmit, handleCancel };
 };
@@ -83,6 +77,7 @@ export const useVerifyRecoveryCode = ({ username, code }: UseVerifyRecoveryParam
 
     const resetError = () => setError(null);
 
+    // Título y descripción dinámicos según estado de error
     const title = error ? "Código inválido" : "Recuperación de Contraseña";
     const description = error
         ? error
@@ -90,4 +85,3 @@ export const useVerifyRecoveryCode = ({ username, code }: UseVerifyRecoveryParam
 
     return { isLoading, error, title, description, handleSubmit, resetError };
 };
-

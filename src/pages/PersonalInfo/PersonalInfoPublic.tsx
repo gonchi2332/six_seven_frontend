@@ -8,6 +8,7 @@ const STYLES = {
     GRID_CONTAINER: "grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"
 };
 
+// Dashboard principal que muestra información personal, LinkedIn y GitHub en modo público
 const Dashboard = () => {
     return (
         <div className={STYLES.WRAPPER}>

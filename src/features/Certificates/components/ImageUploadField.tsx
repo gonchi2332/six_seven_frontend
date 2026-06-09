@@ -6,7 +6,7 @@ interface ImageUploadFieldProps {
     preview: string | null;
     error?: string;
     touched?: boolean;
-    showCurrentHint?: boolean;
+    showCurrentHint?: boolean; // Indica si ya hay una imagen cargada previamente
     disabled?: boolean;
     onChange: (file: File | null) => void;
     onBlur?: () => void;
@@ -24,6 +24,7 @@ const styles = {
     preview: "w-full h-32 object-contain rounded-xl border border-white/10 bg-black/20 mt-2",
 };
 
+// Campo de carga de imagen con previsualización y validación
 const ImageUploadField = ({
     label, required = false, preview, error, touched = false,
     showCurrentHint = false, disabled = false, onChange, onBlur,
@@ -49,6 +50,7 @@ const ImageUploadField = ({
                 disabled={disabled}
                 className={`${styles.input} ${touched && error ? styles.inputError : styles.inputNormal}`}
             />
+            {/* Aviso cuando ya existe una imagen cargada en modo edición */}
             {showCurrentHint && (
                 <span className={styles.hint}>Imagen actual cargada. Selecciona una nueva para reemplazarla.</span>
             )}

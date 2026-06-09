@@ -13,6 +13,7 @@ export interface Certificate {
 
 const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/portfolio`;
 
+// Extrae el username del token JWT almacenado en localStorage
 const getUsername = (): string => {
     const token = localStorage.getItem("token");
     if (!token) return "";
@@ -30,7 +31,7 @@ const jsonHeaders = () => ({
     "Content-Type": "application/json",
 });
 
-// GET - Certificados públicos (NO requiere autenticación)
+// Obtiene certificados públicos de un usuario sin autenticación
 export const fetchCertificatesPublic = async (username: string): Promise<Certificate[]> => {
     const res = await fetch(`${BASE_URL}/users/${username}/certificates`, {
         headers: jsonHeaders(),
@@ -40,43 +41,32 @@ export const fetchCertificatesPublic = async (username: string): Promise<Certifi
     if (!data.certificates) return [];
 
     return data.certificates.map((c: {
-        id: number;
-        title: string;
-        description: string;
-        area: string;
-        issue_date: string;
-        file: string;
-        visible: boolean
+        id: number; title: string; description: string;
+        area: string; issue_date: string; file: string; visible: boolean
     }) => ({
         id: c.id,
         title: c.title,
         description: c.description,
         area: c.area,
-        issueDate: c.issue_date.split("T")[0],
+        issueDate: c.issue_date.split("T")[0], // Extrae solo la fecha sin la hora
         coverImage: parseProfilePicture(c.file) ?? "",
         visible: c.visible,
     }));
-}
+};
 
-// GET - Certificados del usuario autenticado (requiere token)
+// Obtiene certificados del usuario autenticado
 export const fetchCertificates = async (): Promise<Certificate[]> => {
     const username = getUsername();
     if (!username) return [];
 
-    const res = await fetchWithAuth(`${BASE_URL}/users/certificates?username=${username}`, {method: "GET"});
-
+    const res = await fetchWithAuth(`${BASE_URL}/users/certificates?username=${username}`, { method: "GET" });
     const data = await res.json();
     if (!res.ok) return [];
     if (!data.certificates) return [];
 
     return data.certificates.map((c: {
-        id: number;
-        title: string;
-        description: string;
-        area: string;
-        issue_date: string;
-        file: string;
-        visible: boolean
+        id: number; title: string; description: string;
+        area: string; issue_date: string; file: string; visible: boolean
     }) => ({
         id: c.id,
         title: c.title,
@@ -88,7 +78,7 @@ export const fetchCertificates = async (): Promise<Certificate[]> => {
     }));
 };
 
-// POST - Crear certificado
+// Crea un certificado enviando los datos como FormData con la imagen
 export const createCertificate = async (
     data: Omit<Certificate, "id" | "coverImage"> & { coverImage: File }
 ): Promise<void> => {
@@ -110,6 +100,7 @@ export const createCertificate = async (
     const resData = await res.json();
     if (!res.ok) {
         const msg = resData.message ?? "";
+        // Manejo especial para error de tamaño de imagen de Multer
         if (msg.toLowerCase().includes("file too large") || msg.toLowerCase().includes("multer")) {
             throw new Error("La imagen es demasiado grande. Por favor selecciona una imagen más pequeña.");
         }
@@ -117,7 +108,7 @@ export const createCertificate = async (
     }
 };
 
-// PATCH - Actualizar certificado
+// Actualiza un certificado existente por ID
 export const updateCertificate = async (
     id: number,
     data: Omit<Certificate, "id" | "coverImage"> & { coverImage: File }
@@ -147,7 +138,7 @@ export const updateCertificate = async (
     }
 };
 
-// DELETE - Eliminar certificado
+// Elimina un certificado por ID
 export const deleteCertificate = async (id: number): Promise<void> => {
     const username = getUsername();
     if (!username) throw new Error("Usuario no autenticado.");

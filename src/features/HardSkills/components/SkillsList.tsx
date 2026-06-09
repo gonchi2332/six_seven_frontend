@@ -18,6 +18,7 @@ const styles = {
     paginationLabel: "text-[14px] font-nunito text-surface/70",
 };
 
+// Lista principal de habilidades técnicas (con paginación y CRUD)
 const SkillsList = () => {
     const {
         skills,
@@ -62,6 +63,7 @@ const SkillsList = () => {
                     <div className={styles.list}>
                         {paginated.map((skill) => (
                             <SkillBar
+                                key={skill.skill_id}
                                 skill={skill}
                                 onEdit={() => setEditTarget(skill)}
                                 onDelete={() => setDeleteTarget(skill)}
@@ -69,6 +71,7 @@ const SkillsList = () => {
                         ))}
                     </div>
 
+                    {/* Paginación */}
                     {totalPages > 1 && (
                         <div className={styles.paginationWrapper}>
                             <button
@@ -95,6 +98,7 @@ const SkillsList = () => {
                 </>
             )}
 
+            {/* Popups modales */}
             {showAdd && (
                 <AddSkillPopup
                     onSubmit={handleAdd}
@@ -125,3 +129,5 @@ const SkillsList = () => {
 };
 
 export default SkillsList;
+
+

@@ -1,5 +1,6 @@
 import type { ProjectEntry } from "../features/PersonalProjects/services/personalProjectsService";
 
+// Datos mock de proyectos personales para pruebas y desarrollo
 export const mockProjects: ProjectEntry[] = [
     {
         id: "1",
@@ -105,3 +106,4 @@ export const mockProjects: ProjectEntry[] = [
         visible: true
     }
 ];
+

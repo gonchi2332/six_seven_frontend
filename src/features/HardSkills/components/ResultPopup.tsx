@@ -8,6 +8,7 @@ const BUTTONS_WRAPPER = "flex gap-4 justify-center mt-2 px-6 sm:px-8 pb-6";
 
 export type ResultType = "success" | "not-found";
 
+// Contenido dinámico según tipo de resultado
 const CONTENT: Record<ResultType, { title: string; message: string; subtitle?: string }> = {
     success: {
         title: "Habilidad Registrada",
@@ -24,6 +25,7 @@ interface Props {
     onClose: () => void;
 }
 
+// Popup de resultado (éxito o error "no encontrado")
 const ResultPopup = ({ type, onClose }: Props) => {
     const { title, message, subtitle } = CONTENT[type];
     return (

@@ -3,11 +3,13 @@ import PopUpCard from "../../../components/PopUpCard";
 import LevelBars from "./LevelBars/Levelbars ";
 import type { Skill } from "../types/skill.types";
 
+
 interface Props {
     skill: Skill;
     onClose: () => void;
 }
 
+// Mapeo de niveles a etiquetas descriptivas
 const LEVEL_LABELS: Record<number, string> = {
     1: "Básico",
     2: "Elemental",
@@ -27,6 +29,7 @@ const styles = {
     buttonContainer: "flex gap-3 px-4 sm:px-6 pb-6",
 };
 
+// Popup para ver detalle de habilidad técnica
 const ViewHardSkillPopup = ({ skill, onClose }: Props) => {
     return (
         <div className={styles.overlay}>
@@ -58,3 +61,4 @@ const ViewHardSkillPopup = ({ skill, onClose }: Props) => {
 };
 
 export default ViewHardSkillPopup;
+

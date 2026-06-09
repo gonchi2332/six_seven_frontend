@@ -24,6 +24,7 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
+
 const InfoRow = ({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string | null | undefined }) => (
     <div className={styles.field}>
         <Icon size={18} className={styles.icon} />
@@ -38,6 +39,7 @@ const InfoRow = ({ icon: Icon, label, value }: { icon: React.ElementType; label:
     </div>
 );
 
+// Página pública de información personal (portafolio visible)
 const PersonalInfoPage = () => {
     const { username } = useParams<{ username: string }>();
     const {
@@ -47,6 +49,7 @@ const PersonalInfoPage = () => {
         setPublicUser
     } = usePersonalInfo();
 
+    // Cargar información cuando cambia el username
     useEffect(() => {
         setPublicUser(username ?? null);
     }, [username, setPublicUser]);
@@ -82,7 +85,8 @@ const PersonalInfoPage = () => {
                             <div className={styles.listWrapper}>
                                 <div className={styles.infoCard}>
                                     <p className={styles.sectionTitle}>
-                                        <User size={14} /> Datos Personales  </p>
+                                        <User size={14} /> Datos Personales
+                                    </p>
                                     <div className="flex flex-col gap-5">
                                         <InfoRow icon={User} label="Nombre Completo" value={fullName} />
                                         <InfoRow icon={Hash} label="Nombre de Usuario" value={publicInfo?.username} />
@@ -108,3 +112,4 @@ const PersonalInfoPage = () => {
 };
 
 export default PersonalInfoPage;
+

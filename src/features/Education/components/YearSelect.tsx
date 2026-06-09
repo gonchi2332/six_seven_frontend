@@ -9,12 +9,15 @@ interface Props {
 }
 
 const currentYear = new Date().getFullYear();
+// Genera años desde el actual hasta 1900 en orden descendente
 const years = Array.from({ length: currentYear - 1900 + 1 }, (_, i) => currentYear - i);
 
+// Selector de año con dropdown personalizado y scroll
 const YearSelect = ({ value, onChange, disabled = false, placeholder = "Seleccionar...", hasError = false }: Props) => {
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
+    // Cierra el dropdown al hacer clic fuera del componente
     useEffect(() => {
         const handler = (e: MouseEvent) => {
             if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
@@ -36,7 +39,6 @@ const YearSelect = ({ value, onChange, disabled = false, placeholder = "Seleccio
                 <span className={value ? "text-black" : "text-gray-400"}>{value || placeholder}</span>
                 <span className="text-gray-400 text-xs ml-2">▼</span>
             </button>
-
             {open && (
                 <div className="absolute z-[9999] left-0 right-0 mt-1 bg-white border border-gray-300 rounded-xl shadow-xl overflow-hidden">
                     <div className="overflow-y-auto max-h-[160px]">

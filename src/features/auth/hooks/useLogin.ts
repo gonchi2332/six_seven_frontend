@@ -8,11 +8,9 @@ import { useNavigate } from "react-router-dom";
 const useLogin = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
     const [errors, setErrors] = useState({ username: "", password: "" });
     const [touched, setTouched] = useState({ username: false, password: false });
     const [serverError, setServerError] = useState<string>("");
-
     const [isLoading, setIsLoading] = useState(false);
     const [showVerified, setShowVerified] = useState(false);
     const [userEmail, setUserEmail] = useState("");
@@ -33,6 +31,7 @@ const useLogin = () => {
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value;
         setUsername(val);
+        // Valida en tiempo real solo si el campo fue tocado
         if (touched.username) {
             setErrors(prev => ({ ...prev, username: validateUsername(val) }));
         }
@@ -62,7 +61,6 @@ const useLogin = () => {
         setTouched({ username: true, password: true });
         const userErr = validateUsername(username);
         const passErr = validatePassword(password);
-
         setErrors({ username: userErr, password: passErr });
         setServerError("");
 
@@ -71,7 +69,6 @@ const useLogin = () => {
         setIsLoading(true);
         try {
             const data = await login({ username, password });
-            
             const accessToken = data.token || data.accessToken;
             const refreshToken = data.refreshToken;
 
@@ -79,12 +76,11 @@ const useLogin = () => {
                 sessionStorage.setItem("refreshToken", refreshToken);
             }
 
-            // Guardamos el Access Token mediante el contexto (que internamente lo mandará a localStorage)
+            // Guarda el accessToken en localStorage mediante el contexto
             authLogin(accessToken);
 
             if (data.user.state.toUpperCase() === "UNVERIFIED") {
                 let freshEmail = "";
-
                 try {
                     const emailData = await getEmail();
                     freshEmail = emailData.email;
@@ -92,11 +88,10 @@ const useLogin = () => {
                 } catch (e) {
                     setUserEmail("");
                 }
-
                 try {
                     await sendVerificationCode({ username, targetMail: freshEmail, token: accessToken });
                 } catch {}
-
+                // Muestra popup de verificación para usuarios no verificados
                 setShowVerified(true);
             } else {
                 navigate("/info-personal");
@@ -104,7 +99,6 @@ const useLogin = () => {
         } catch (err) {
             const msg = err instanceof Error ? err.message : "Error inesperado";
             const lowerMsg = msg.toLowerCase();
-
             if (
                 lowerMsg.includes("cannot read properties of undefined") ||
                 lowerMsg.includes("reading 'profile_picture'") ||

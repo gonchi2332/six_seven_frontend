@@ -9,19 +9,16 @@ interface Props {
     options: Array<{ id: number; academicdegree: string }>;
 }
 
-const AcademicLevelSelect = ({ 
-    value, 
-    onChange, 
-    disabled = false, 
-    placeholder = "Seleccionar...", 
-    hasError = false,
-    options 
+// Selector de grado académico con dropdown personalizado
+const AcademicLevelSelect = ({
+    value, onChange, disabled = false, placeholder = "Seleccionar...", hasError = false, options
 }: Props) => {
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
-    
+
     const selectedOption = options.find(opt => opt.id === value);
 
+    // Cierra el dropdown al hacer clic fuera del componente
     useEffect(() => {
         const handler = (e: MouseEvent) => {
             if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
@@ -45,7 +42,6 @@ const AcademicLevelSelect = ({
                 </span>
                 <span className="text-gray-400 text-xs ml-2">▼</span>
             </button>
-
             {open && (
                 <div className="absolute z-[9999] left-0 right-0 mt-1 bg-white border border-gray-300 rounded-xl shadow-xl overflow-hidden">
                     <div className="overflow-y-auto max-h-[240px]">

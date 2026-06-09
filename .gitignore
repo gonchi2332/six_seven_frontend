@@ -666,3 +666,5 @@ FodyWeavers.xsd
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,linux,archlinuxpackages,macos,visualstudiocode,visualstudio,vim,node,react
+*storybook.log
+storybook-static

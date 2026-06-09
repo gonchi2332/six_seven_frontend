@@ -7,6 +7,7 @@ const jsonHeaders = () => ({
     "Content-Type": "application/json",
 });
 
+// Obtener habilidades técnicas públicas de un usuario (portafolio visible)
 export const fetchSkillsPublicNew = async (username: string) => {
     const res = await fetch(`${BASE_URL}/users/${username}/hard-skills`,{
         headers: jsonHeaders(),
@@ -18,7 +19,7 @@ export const fetchSkillsPublicNew = async (username: string) => {
     return res.json();
 }
 
-
+// Obtener habilidades técnicas del usuario autenticado
 export const fetchSkills = async () => {
     const username = getUsername();
     const res = await fetchWithAuth(`${BASE_URL}/users/hard-skills?username=${username}`, {
@@ -31,6 +32,7 @@ export const fetchSkills = async () => {
     return res.json();
 };
 
+// Obtener catálogo de habilidades disponibles (para autocompletado)
 export const fetchCatalogSkills = async (): Promise<string[]> => {
     const res = await fetch(`${BASE_URL}/system/all-hard-skills`, {
         headers: jsonHeaders(),
@@ -40,6 +42,7 @@ export const fetchCatalogSkills = async (): Promise<string[]> => {
     return (data.data ?? []).map((s: { name: string }) => s.name);
 };
 
+// Obtener nombres de habilidades que ya tiene el usuario (para evitar duplicados)
 export const getUserSkillNames = async (): Promise<string[]> => {
     try {
         const data = await fetchSkills();
@@ -50,6 +53,7 @@ export const getUserSkillNames = async (): Promise<string[]> => {
     }
 };
 
+// Registrar habilidad desde catálogo
 export const postSkillFromCatalog = async (skillName: string, punctuation: number) => {
     const res = await fetchWithAuth(`${BASE_URL}/users/hard-skills`, {
         method: "POST",
@@ -60,6 +64,7 @@ export const postSkillFromCatalog = async (skillName: string, punctuation: numbe
     return data;
 };
 
+// Registrar nueva habilidad (no existe en catálogo)
 export const postNewSkill = async (
     skillName: string,
     punctuation: number
@@ -70,12 +75,15 @@ export const postNewSkill = async (
     });
     const data = await res.json();
     if (!res.ok) {
+        // Palabras inapropiadas/ofensivas
         if (data.message?.includes("inapropiado") || data.message?.includes("ofensivo")) {
             throw new Error("INAPPROPRIATE");
         }
+        // Ya existe en habilidades del usuario
         if (data.message?.includes("ya tiene registrada")) {
             throw new Error("ALREADY_EXISTS");
         }
+        // No reconocida como habilidad técnica
         if (data.message?.includes("no corresponde")) {
             return "not-found";
         }
@@ -84,6 +92,7 @@ export const postNewSkill = async (
     return "success";
 };
 
+// Registrar habilidad (decide automáticamente si es del catálogo o nueva)
 export const postSkill = async (
     skillName: string,
     punctuation: number
@@ -103,6 +112,7 @@ export const postSkill = async (
     }
 };
 
+// Modificar nivel de habilidad existente
 export const patchSkill = async (skillName: string, newPunctuation: number) => {
     const res = await fetchWithAuth(`${BASE_URL}/users/hard-skills`, {
         method: "PATCH",
@@ -114,6 +124,7 @@ export const patchSkill = async (skillName: string, newPunctuation: number) => {
     }
 };
 
+// Eliminar habilidad
 export const deleteSkill = async (skillName: string) => {
     const res = await fetchWithAuth(`${BASE_URL}/users/hard-skills`, {
         method: "DELETE",
@@ -125,6 +136,7 @@ export const deleteSkill = async (skillName: string) => {
     }
 };
 
+// Obtener habilidades públicas (versión antigua, sin username específico)
 export const fetchSkillsPublic = async () => {
     const res = await fetch(`${BASE_URL}/users/hard-skills`, {
         headers: jsonHeaders(),
@@ -133,4 +145,6 @@ export const fetchSkillsPublic = async () => {
     return res.json();
 };
 
+// Función obsoleta (vacía, para compatibilidad)
 export const getCatalogSkills = (): string[] => [];
+

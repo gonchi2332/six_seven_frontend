@@ -6,12 +6,14 @@ import { useAddInfoForm } from '../../hooks/useAddInfoForm';
 // Campos que se pueden agregar (los que pueden estar vacíos)
 type AvailableField = 'secondSurname' | 'city' | 'email' | 'phone' | 'country';
 
+
 interface FieldOption {
     value: AvailableField;
     label: string;
     placeholder: string;
     type?: 'text' | 'email';
 }
+
 
 const fieldOptions: FieldOption[] = [
     { value: 'secondSurname', label: 'Segundo apellido', placeholder: 'Ej: Pérez', type: 'text' },
@@ -20,6 +22,7 @@ const fieldOptions: FieldOption[] = [
     { value: 'phone', label: 'Teléfono', placeholder: 'Ej: +591 77123456', type: 'text' },
     { value: 'country', label: 'País de residencia', placeholder: 'Selecciona un país', type: 'text' },
 ];
+
 
 interface AddInfoModalProps {
     isOpen: boolean;
@@ -38,6 +41,7 @@ const styles = {
     buttonContainer: "flex gap-3 mt-6",
 };
 
+// Modal para agregar campos faltantes de información personal
 const AddInfoModal = ({ isOpen, onClose, onAdd, emptyFields }: AddInfoModalProps) => {
     const { countries, isLoading: countriesLoading } = useCountries();
 
@@ -82,6 +86,7 @@ const AddInfoModal = ({ isOpen, onClose, onAdd, emptyFields }: AddInfoModalProps
                             <label className={styles.label}>
                                 {selectedOption?.label}
                             </label>
+                            {/* Selector de país especial (usa API de países) */}
                             {selectedField === 'country' ? (
                                 <select
                                     value={value}
@@ -107,6 +112,7 @@ const AddInfoModal = ({ isOpen, onClose, onAdd, emptyFields }: AddInfoModalProps
                         </div>
                     )}
 
+                    {/* Mensaje de error general */}
                     {(error || (selectedField && !fieldError && !value && error)) && (
                         <p className="text-red-500 text-sm mt-2">{error}</p>
                     )}
@@ -131,3 +137,4 @@ const AddInfoModal = ({ isOpen, onClose, onAdd, emptyFields }: AddInfoModalProps
 };
 
 export default AddInfoModal;
+

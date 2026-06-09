@@ -48,6 +48,7 @@ const CertificatesConfigPage = () => {
     const [initialVisibilityMap, setInitialVisibilityMap] = useState<Record<string | number, boolean>>({});
     const [visibilityMap, setVisibilityMap] = useState<Record<string | number, boolean>>({});
 
+    // Inicializar mapa de visibilidad desde los certificados cargados
     useEffect(() => {
         if (certificates) {
             const initialMap: Record<string | number, boolean> = {};
@@ -59,6 +60,7 @@ const CertificatesConfigPage = () => {
         }
     }, [certificates]);
 
+    // Mostrar mensaje de éxito del hook y auto-ocultarlo
     useEffect(() => {
         if (successMessage) {
             setLocalSuccess(successMessage);
@@ -67,6 +69,7 @@ const CertificatesConfigPage = () => {
         }
     }, [successMessage]);
 
+    // Mostrar mensaje de error del hook y auto-ocultarlo
     useEffect(() => {
         if (error) {
             setLocalError(error);
@@ -83,6 +86,7 @@ const CertificatesConfigPage = () => {
         }));
     };
 
+    // Poner todos los certificados como ocultos
     const handleHideAll = () => {
         setVisibilityMap((prev) => {
             const updated = { ...prev };
@@ -93,6 +97,7 @@ const CertificatesConfigPage = () => {
         });
     };
 
+    // Poner todos los certificados como visibles
     const handleShowAll = () => {
         setVisibilityMap((prev) => {
             const updated = { ...prev };
@@ -103,6 +108,7 @@ const CertificatesConfigPage = () => {
         });
     };
 
+    // Guardar cambios de visibilidad en el backend
     const handleSaveChanges = async () => {
         try {
             setIsSaving(true);
@@ -129,6 +135,7 @@ const CertificatesConfigPage = () => {
         if (e.key === "Enter") handleSearch();
     };
 
+    // Filtrar certificados por título
     const filteredCertificates = (certificates || []).filter((cert) =>
         cert.title?.toLowerCase().includes(activeSearch.toLowerCase())
     );
@@ -136,6 +143,7 @@ const CertificatesConfigPage = () => {
     const totalPages = Math.max(1, Math.ceil(filteredCertificates.length / PAGE_SIZE));
     const paginatedCertificates = filteredCertificates.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
+    // Verificar si hay cambios pendientes para habilitar el botón Guardar
     const hasChanges = Object.keys(initialVisibilityMap).some(
         (key) => initialVisibilityMap[key] !== visibilityMap[key]
     );

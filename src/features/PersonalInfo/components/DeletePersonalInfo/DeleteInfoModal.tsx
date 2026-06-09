@@ -4,11 +4,13 @@ import Button from '../../../../components/Button';
 // Campos que se pueden eliminar (todos excepto username, firstName, firstSurname, imagen)
 export type DeletableField = 'secondSurname' | 'city' | 'email' | 'phone' | 'country';
 
+
 export interface FieldValue {
     field: DeletableField;
     label: string;
     value: string;
 }
+
 
 interface DeleteInfoModalProps {
     isOpen: boolean;
@@ -30,6 +32,7 @@ const styles = {
     buttonContainer: "flex gap-3 mt-6",
 };
 
+// Modal para eliminar información personal (con selector de campo)
 const DeleteInfoModal = ({ isOpen, onClose, onDelete, fieldsWithValues }: DeleteInfoModalProps) => {
     const [selectedField, setSelectedField] = useState<DeletableField | ''>('');
     const [isDeleting, setIsDeleting] = useState(false);
@@ -70,7 +73,7 @@ const DeleteInfoModal = ({ isOpen, onClose, onDelete, fieldsWithValues }: Delete
 
     if (!isOpen) return null;
 
-    // Modal de confirmación
+    // Segundo paso: modal de confirmación
     if (showConfirm && selectedOption) {
         return (
             <div className={styles.overlay} onClick={handleClose}>
@@ -99,6 +102,7 @@ const DeleteInfoModal = ({ isOpen, onClose, onDelete, fieldsWithValues }: Delete
         );
     }
 
+    // Primer paso: seleccionar campo a eliminar
     return (
         <div className={styles.overlay} onClick={handleClose}>
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
@@ -119,6 +123,7 @@ const DeleteInfoModal = ({ isOpen, onClose, onDelete, fieldsWithValues }: Delete
                         ))}
                     </select>
 
+                    {/* Mostrar valor actual del campo seleccionado */}
                     {selectedOption && (
                         <div className={styles.selectedInfo}>
                             <p className={styles.selectedLabel}>{selectedOption.label}</p>
@@ -146,3 +151,4 @@ const DeleteInfoModal = ({ isOpen, onClose, onDelete, fieldsWithValues }: Delete
 };
 
 export default DeleteInfoModal;
+

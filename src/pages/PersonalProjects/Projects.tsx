@@ -1,3 +1,4 @@
+// Componente simple de respaldo
 const Projects = () => {
   return (
     <div className="min-h-screen bg-main flex flex-col">

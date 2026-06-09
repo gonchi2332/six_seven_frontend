@@ -1,13 +1,19 @@
 import { useState } from 'react';
 
+
 type AvailableField = 'secondSurname' | 'city' | 'email' | 'phone' | 'country';
+
 
 interface UseAddInfoFormProps {
     onAdd: (field: AvailableField, value: string) => Promise<void>;
     onClose: () => void;
 }
 
-// Validaciones
+// ============================================
+// VALIDACIONES POR CAMPO
+// ============================================
+
+// Segundo apellido: solo letras y espacios, máx 50
 const validateSecondSurname = (value: string): string | null => {
     if (!value.trim()) return 'El segundo apellido no puede estar vacio';
     const regex = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/;
@@ -16,6 +22,7 @@ const validateSecondSurname = (value: string): string | null => {
     return null;
 };
 
+// Ciudad: solo letras y espacios, máx 50
 const validateCity = (value: string): string | null => {
     if (!value.trim()) return 'La ciudad no puede estar vacia';
     const regex = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/;
@@ -24,6 +31,7 @@ const validateCity = (value: string): string | null => {
     return null;
 };
 
+// Email: formato válido, máx 50
 const validateEmail = (value: string): string | null => {
     if (!value.trim()) return 'El correo de contacto no puede estar vacio';
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -32,6 +40,7 @@ const validateEmail = (value: string): string | null => {
     return null;
 };
 
+// Teléfono: números, espacios y +, máx 20
 const validatePhone = (value: string): string | null => {
     if (!value.trim()) return 'El teléfono no puede estar vacio';
     const regex = /^[\+\d\s]+$/;
@@ -40,12 +49,14 @@ const validatePhone = (value: string): string | null => {
     return null;
 };
 
+// País: no vacío, máx 50
 const validateCountry = (value: string): string | null => {
     if (!value.trim()) return 'El país no puede estar vacio';
     if (value.length > 50) return 'Máximo 50 caracteres';
     return null;
 };
 
+// Hook para manejar el formulario de agregar información personal
 export const useAddInfoForm = ({ onAdd, onClose }: UseAddInfoFormProps) => {
     const [selectedField, setSelectedField] = useState<AvailableField | ''>('');
     const [value, setValue] = useState('');
@@ -53,6 +64,7 @@ export const useAddInfoForm = ({ onAdd, onClose }: UseAddInfoFormProps) => {
     const [error, setError] = useState<string | null>(null);
     const [fieldError, setFieldError] = useState<string | null>(null);
 
+    // Validar según el tipo de campo
     const validateField = (field: AvailableField, val: string): string | null => {
         switch (field) {
             case 'secondSurname':
@@ -81,7 +93,7 @@ export const useAddInfoForm = ({ onAdd, onClose }: UseAddInfoFormProps) => {
         setValue(newValue);
         setFieldError(null);
         setError(null);
-
+        // Validar en tiempo real
         if (selectedField) {
             const validationError = validateField(selectedField as AvailableField, newValue);
             setFieldError(validationError);
@@ -99,7 +111,7 @@ export const useAddInfoForm = ({ onAdd, onClose }: UseAddInfoFormProps) => {
             return;
         }
 
-        // Validar antes de enviar
+        // Validación final antes de enviar
         const validationError = validateField(selectedField, value);
         if (validationError) {
             setFieldError(validationError);
@@ -131,6 +143,7 @@ export const useAddInfoForm = ({ onAdd, onClose }: UseAddInfoFormProps) => {
         onClose();
     };
 
+    // Deshabilitar submit si está cargando, no hay campo seleccionado, valor vacío o hay error de validación
     const isSubmitDisabled = () => {
         return isSubmitting || !selectedField || !value.trim() || !!fieldError;
     };
@@ -148,3 +161,4 @@ export const useAddInfoForm = ({ onAdd, onClose }: UseAddInfoFormProps) => {
         isSubmitDisabled,
     };
 };
+

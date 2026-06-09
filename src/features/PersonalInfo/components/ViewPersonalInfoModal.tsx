@@ -27,11 +27,11 @@ const styles = {
     sectionLabel: 'text-[#90DDF0] font-bold text-xs uppercase tracking-widest flex items-center gap-2 mb-3 mt-4 first:mt-0 col-span-full',
     divider: 'border-t border-white/10 my-3 col-span-full',
 
-    // Filas de datos - TEXTO QUE NO SE SALE
+    // Filas de datos
     row: 'flex items-start gap-4 py-3 w-full',
     iconBox: 'w-10 h-10 rounded-xl bg-[#2C666E]/40 flex items-center justify-center shrink-0 mt-0.5',
     icon: 'text-[#90DDF0] w-5 h-5',
-    textGroup: 'flex flex-col flex-1 min-w-0', // ← min-w-0 permite que el texto se rompa
+    textGroup: 'flex flex-col flex-1 min-w-0',
     label: 'text-[#90DDF0] text-[10px] uppercase tracking-wide font-bold mb-1',
     value: 'text-white font-nunito text-base sm:text-lg font-medium break-words overflow-wrap-anywhere leading-snug',
     emptyValue: 'text-white/30 italic font-nunito text-base sm:text-lg',
@@ -45,6 +45,7 @@ const styles = {
 // COMPONENTE AUXILIAR
 // ============================================
 
+// Fila de información con ícono y formato
 const InfoRow = ({
     icon: Icon,
     label,
@@ -73,12 +74,14 @@ const InfoRow = ({
 // COMPONENTE PRINCIPAL
 // ============================================
 
+
 interface ViewPersonalInfoModalProps {
     isOpen: boolean;
     onClose: () => void;
     userInfo: PersonalInfoResponse | null;
 }
 
+// Modal para visualizar información personal del usuario
 const ViewPersonalInfoModal = ({ isOpen, onClose, userInfo }: ViewPersonalInfoModalProps) => {
     if (!isOpen || !userInfo) return null;
 
@@ -90,6 +93,7 @@ const ViewPersonalInfoModal = ({ isOpen, onClose, userInfo }: ViewPersonalInfoMo
         .filter(Boolean)
         .join(', ');
 
+    // Decodificar imagen de perfil o usar default
     const avatarSrc = userInfo.profile_picture
         ? (parseProfilePicture(userInfo.profile_picture) ?? defAvatar)
         : defAvatar;
@@ -99,7 +103,6 @@ const ViewPersonalInfoModal = ({ isOpen, onClose, userInfo }: ViewPersonalInfoMo
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
                 <PopUpCard title="Mi Perfil">
 
-
                     {/* Avatar y nombre */}
                     <div className={styles.avatarSection}>
                         <div className={styles.avatarWrapper}>
@@ -107,6 +110,7 @@ const ViewPersonalInfoModal = ({ isOpen, onClose, userInfo }: ViewPersonalInfoMo
                                 src={avatarSrc}
                                 alt="Foto de perfil"
                                 className={styles.avatar}
+                                // Fallback a avatar por defecto si la imagen falla
                                 onError={(e) => { (e.currentTarget as HTMLImageElement).src = defAvatar; }}
                             />
                         </div>
@@ -128,7 +132,7 @@ const ViewPersonalInfoModal = ({ isOpen, onClose, userInfo }: ViewPersonalInfoMo
                             <InfoRow icon={Mail} label="Correo de Registro" value={userInfo.main_registration_email} />
                             <InfoRow icon={Mail} label="Correo de Contacto" value={userInfo.contact_email} />
 
-
+                            {/* Separador visual */}
                             <div className={styles.divider} />
 
                             {/* Sección Ubicación */}
@@ -137,13 +141,14 @@ const ViewPersonalInfoModal = ({ isOpen, onClose, userInfo }: ViewPersonalInfoMo
                             </p>
                             <InfoRow icon={MapPin} label="Ciudad" value={userInfo.residence_city_name} />
                             <InfoRow icon={Globe} label="País" value={userInfo.residence_country_name} />
+                            {/* Mostrar residencia completa solo si ambos campos existen */}
                             {residence && residence !== ', ' && (
                                 <InfoRow icon={MapPin} label="Residencia Completa" value={residence} />
                             )}
                         </div>
                     </div>
 
-                    {/* Footer */}
+                    {/* Footer con botón de cierre */}
                     <div className={styles.footer}>
                         <Button
                             variant="secondary"
@@ -160,3 +165,4 @@ const ViewPersonalInfoModal = ({ isOpen, onClose, userInfo }: ViewPersonalInfoMo
 };
 
 export default ViewPersonalInfoModal;
+

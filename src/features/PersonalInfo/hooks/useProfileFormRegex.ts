@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 
+
 export interface FormData {
     is_new: boolean;
     firstName: string;
@@ -13,6 +14,7 @@ export interface FormData {
     profileImageUrl: string | null;
 }
 
+// Hook para manejar el formulario de información personal con validaciones
 export const useProfileForm = () => {
     const [formData, setFormData] = useState<FormData>({
         is_new: true,
@@ -29,8 +31,10 @@ export const useProfileForm = () => {
 
     const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
     const originalDataRef = useRef<FormData | null>(null);
+    // Conjunto de campos que existían originalmente (para saber cuáles mostrar)
     const [fieldsThatExisted, setFieldsThatExisted] = useState<Set<keyof FormData>>(new Set());
 
+    // Cargar datos iniciales y registrar qué campos existían
     const setInitialData = (data: Partial<FormData>) => {
         setFormData((prev) => ({ ...prev, ...data }));
         
@@ -52,10 +56,10 @@ export const useProfileForm = () => {
         setFieldsThatExisted(existed);
     };
 
+    // Restaurar datos originales (para cancelar edición)
     const restoreOriginalData = () => {
         if (originalDataRef.current) {
             setFormData(originalDataRef.current);
-            // También restaurar errores
             setErrors({});
         }
     };
@@ -70,12 +74,13 @@ export const useProfileForm = () => {
         return "";
     };
 
+    // Manejar cambios en los campos con validación en tiempo real
     const handleChange = (field: keyof FormData, value: string | File | null) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
         
         const newErrors = { ...errors };
         
-        // Validación de campo vacío (solo para campos existentes y string)
+        // Validación de campo vacío (solo para campos existentes)
         if (typeof value === "string") {
             const emptyError = validateNotEmpty(field, value);
             if (emptyError) {
@@ -85,8 +90,9 @@ export const useProfileForm = () => {
             }
         }
         
-        // Validaciones de formato existentes
+        // Validaciones de formato
         if (typeof value === "string") {
+            // Nombres: solo letras y espacios
             if (["firstName", "firstSurname", "secondSurname"].includes(field)) {
                 const spanishLettersRegex = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]*$/;
                 if (!spanishLettersRegex.test(value) && !newErrors[field]) {
@@ -95,6 +101,7 @@ export const useProfileForm = () => {
                     delete newErrors[field];
                 }
             }
+            // Email: formato válido
             if (field === "email") {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (value.length > 0 && !emailRegex.test(value) && !newErrors[field]) {
@@ -103,6 +110,7 @@ export const useProfileForm = () => {
                     delete newErrors[field];
                 }
             }
+            // Teléfono: números, espacios y +
             if (field === "phone") {
                 const phoneRegex = /^[\+]?[0-9\s]*$/;
                 if (!phoneRegex.test(value) && !newErrors[field]) {
@@ -116,11 +124,10 @@ export const useProfileForm = () => {
         setErrors(newErrors);
     };
 
+    // Validar todo el formulario antes de enviar
     const validateForm = () => {
-        // Validar todos los campos existentes
         const newErrors = { ...errors };
         
-        // Validar campos existentes que puedan estar vacíos
         fieldsThatExisted.forEach((field) => {
             const value = formData[field];
             if (typeof value === 'string') {
@@ -135,18 +142,19 @@ export const useProfileForm = () => {
         return Object.keys(newErrors).length === 0;
     };
 
+    // Verificar si el formulario está completo y sin errores
     const isFormComplete = (): boolean => {
-        // Verificar campos obligatorios
+        // Campos obligatorios siempre
         if (!formData.firstName?.trim() || !formData.firstSurname?.trim()) {
             return false;
         }
         
-        // Verificar que no haya errores
+        // No debe haber errores
         if (Object.keys(errors).length > 0) {
             return false;
         }
         
-        // Verificar que campos existentes no estén vacíos
+        // Campos existentes no deben estar vacíos
         let hasEmptyField = false;
         fieldsThatExisted.forEach((field) => {
             const value = formData[field];
@@ -158,6 +166,7 @@ export const useProfileForm = () => {
         return !hasEmptyField;
     };
 
+    // Determinar si un campo debe mostrarse (firstName y firstSurname siempre, otros solo si existían)
     const shouldShowField = (field: keyof FormData): boolean => {
         if (field === 'firstName' || field === 'firstSurname') return true;
         return fieldsThatExisted.has(field);

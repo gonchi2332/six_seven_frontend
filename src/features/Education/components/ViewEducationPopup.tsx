@@ -26,10 +26,9 @@ const styles = {
     closeButton: "absolute right-4 top-4 text-white/50 hover:text-[#90DDF0] transition-colors p-1 hover:bg-white/10 rounded-lg",
 };
 
+// Subcomponente para mostrar una fila de información con ícono
 const InfoRow = ({
-    icon: Icon,
-    label,
-    value,
+    icon: Icon, label, value,
 }: {
     icon: React.ElementType;
     label: string;
@@ -53,6 +52,7 @@ const InfoRow = ({
 const ViewEducationPopup = ({ isOpen, entry, onClose, onBack }: Props) => {
     if (!isOpen || !entry) return null;
 
+    // Muestra rango con "Presente" si está cursando
     const dateDisplay = entry.educationState === "cursando"
         ? `${entry.startDate} - Presente`
         : entry.startDate;
@@ -64,7 +64,6 @@ const ViewEducationPopup = ({ isOpen, entry, onClose, onBack }: Props) => {
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
                 <PopUpCard title="Detalle de Formación Académica">
                     <button onClick={onClose} className={styles.closeButton}>✕</button>
-
                     <div className={styles.content}>
                         <InfoRow icon={GraduationCap} label="Título / Carrera" value={entry.degree} />
                         <div className={styles.metaGrid}>
@@ -77,9 +76,7 @@ const ViewEducationPopup = ({ isOpen, entry, onClose, onBack }: Props) => {
                         </div>
                     </div>
                     <div className={styles.buttonContainer}>
-                        <Button variant="secondary" onClick={onBack} fullWidth>
-                            Atrás
-                        </Button>
+                        <Button variant="secondary" onClick={onBack} fullWidth>Atrás</Button>
                     </div>
                 </PopUpCard>
             </div>

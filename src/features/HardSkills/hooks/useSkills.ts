@@ -3,6 +3,7 @@ import type { Skill } from "../types/skill.types";
 import { fetchSkills, patchSkill, deleteSkill as apiDeleteSkill, fetchCatalogSkills, fetchSkillsPublicNew } from "../services/skillsService";
 import { useParams } from "react-router-dom";
 
+// Hook principal para gestionar habilidades técnicas (privadas y públicas)
 export const useSkills = () => {
     const { username: publicUsernameUrl } = useParams<{ username: string }>();
 
@@ -15,6 +16,7 @@ export const useSkills = () => {
     const [isLoadingPublic, setIsLoadingPublic] = useState(false);
     const [currentPublicUsername, setCurrentPublicUsername] = useState<string | null>(null);
 
+    // Mostrar mensaje de éxito temporal
     const showSuccess = (msg: string) => {
         setSuccessMessage(msg);
         setTimeout(() => setSuccessMessage(null), 3000);
@@ -25,7 +27,9 @@ export const useSkills = () => {
         setTimeout(() => setError(null), 3000);
     };
 
+    // Cargar habilidades privadas (autenticado)
     useEffect(() => {
+        // Si estamos en modo público (URL con /ver), no cargar habilidades privadas
         if (publicUsernameUrl) {
             setIsLoading(false);
             return;
@@ -56,6 +60,7 @@ export const useSkills = () => {
         load();
     }, [publicUsernameUrl]);
 
+    // Cargar habilidades públicas cuando cambia currentPublicUsername
     useEffect(() => {
         if (!currentPublicUsername || currentPublicUsername.trim() === "") {
             setPublicSkills([]);
@@ -90,10 +95,12 @@ export const useSkills = () => {
         fetchPublicUserSkills();
     }, [currentPublicUsername]);
 
+    // Función para setear el usuario público a visualizar
     const setPublicUser = useCallback((username: string | null) => {
         setCurrentPublicUsername(username);
     }, []);
 
+    // Agregar habilidad (optimista, actualiza estado local inmediatamente)
     const addSkill = (name: string, level: number) => {
         const tempId = Date.now();
         const newSkill: Skill = {
@@ -107,6 +114,7 @@ export const useSkills = () => {
         showSuccess("Habilidad registrada correctamente");
     };
 
+    // Editar habilidad
     const editSkill = async (skillId: number | string, name: string, level: number) => {
         try {
             await patchSkill(name, level);
@@ -119,6 +127,7 @@ export const useSkills = () => {
         }
     };
 
+    // Eliminar habilidad
     const deleteSkill = async (skillName: string) => {
         try {
             await apiDeleteSkill(skillName);
@@ -144,3 +153,4 @@ export const useSkills = () => {
         currentPublicUsername
     };
 };
+

@@ -11,6 +11,7 @@ const styles = {
 };
 
 const SkillPagination = ({ currentPage, totalPages, onPrev, onNext }: SkillPaginationProps) => {
+    // No renderiza si solo hay una página
     if (totalPages <= 1) return null;
     
     return (

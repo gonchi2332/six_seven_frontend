@@ -26,6 +26,7 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
+// Página pública de habilidades técnicas (portafolio visible)
 const HardSkillsPage = () => {
     const { username } = useParams<{ username: string }>();
     const {
@@ -44,6 +45,7 @@ const HardSkillsPage = () => {
 
     const [, setSkillAction] = useState<Skill | null>(null);
 
+    // Cargar habilidades públicas cuando cambia el username
     useEffect(() => {
         if (username) {
             setPublicUser(username);

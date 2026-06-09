@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { postSkill, getUserSkillNames } from "../services/skillsService";
 import useClickOutside from "../../../hooks/useClickOutside";
 
+// Hook para manejar la lógica de agregar habilidad (autocompletado + opción "Otro")
 const useAddSkill = (
     onSubmit: (name: string, level: number) => void,
     onClose: () => void,
@@ -20,6 +21,7 @@ const useAddSkill = (
     const [loading, setLoading] = useState(false);
 
     const containerRef = useRef<HTMLDivElement>(null);
+    // Cerrar dropdown al hacer clic fuera
     useClickOutside(containerRef, () => setShowDropdown(false));
 
     const clearError = () => {
@@ -34,6 +36,7 @@ const useAddSkill = (
         setSelectedName(null);
         clearError();
         if (val.trim()) {
+            // Filtrar sugerencias del catálogo
             setSuggestions(catalogSkills.filter((s) => s.toLowerCase().includes(val.toLowerCase())));
             setShowDropdown(true);
         } else {
@@ -49,6 +52,7 @@ const useAddSkill = (
         setShowDropdown(false);
     };
 
+    // Alternar entre modo catálogo y modo "Otro"
     const handleToggleOther = () => {
         setIsOther((prev) => {
             if (!prev) {
@@ -69,6 +73,7 @@ const useAddSkill = (
         clearError();
     };
 
+    // Enviar formulario
     const handleConfirm = async () => {
         const nameToSubmit = isOther ? otherName.trim() : selectedName;
         if (!nameToSubmit) return;
@@ -77,6 +82,7 @@ const useAddSkill = (
         clearError();
 
         try {
+            // Validar que no exista ya en las habilidades del usuario (solo modo catálogo)
             if (!isOther) {
                 const userSkills = await getUserSkillNames();
                 if (userSkills.includes(nameToSubmit.toLowerCase())) {
@@ -123,3 +129,4 @@ const useAddSkill = (
 };
 
 export default useAddSkill;
+

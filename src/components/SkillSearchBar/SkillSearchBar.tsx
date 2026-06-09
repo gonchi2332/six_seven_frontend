@@ -1,6 +1,6 @@
 import { Search } from "lucide-react";
-
 import Button from "../Button";
+
 interface SkillSearchBarProps {
     value: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -40,23 +40,15 @@ const SkillSearchBar = ({
                     className={styles.searchInput}
                 />
             </div>
-
-            <Button
-                variant="secondary"
-                onClick={onSearch}
-                fullWidth
-            >
+            <Button variant="secondary" onClick={onSearch} fullWidth>
                 Buscar
             </Button>
-        {!isPublic && (<Button
-                variant="quaternary"
-                onClick={onAdd}
-                fullWidth
-            >
-                Registrar
-            </Button>)}
-
-
+            {/* Botón de registro oculto en modo público */}
+            {!isPublic && (
+                <Button variant="quaternary" onClick={onAdd} fullWidth>
+                    Registrar
+                </Button>
+            )}
         </div>
     );
 };

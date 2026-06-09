@@ -19,6 +19,7 @@ const styles = {
     errorText: "mt-1 text-xs text-red-600 font-medium self-end",
 };
 
+// Campo de fecha con validación visual, muestra error solo si fue tocado
 const DateField = ({
     label, required = false, value, error, touched = false, disabled = false, onChange, onBlur,
 }: DateFieldProps) => {
