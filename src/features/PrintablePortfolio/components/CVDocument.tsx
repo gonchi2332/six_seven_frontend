@@ -1,4 +1,3 @@
-
 import { MapPin, Mail, Phone } from "lucide-react";
 import type { CVDocumentProps } from "../types/cv.types";
 import LevelDots from "./LevelDots";
@@ -45,13 +44,24 @@ const CVDocument = ({
         : null;
 
     return (
-        <div className="bg-white text-gray-800 w-[210mm] min-h-[297mm] p-[14mm] box-border font-sans">
+        <div className="
+            bg-white text-gray-800 font-sans box-border overflow-hidden
+            w-[210mm] min-h-[297mm] p-[14mm]
+            max-sm:w-full max-sm:min-h-0 max-sm:p-4
+        ">
 
             {/* HEADER */}
-            <div className="flex justify-between items-start pb-4 mb-6 border-b-[3px] border-[#07393C]">
-                <div>
+            <div className="
+                flex justify-between items-start pb-4 mb-6 border-b-[3px] border-[#07393C]
+                max-sm:pb-3 max-sm:mb-4
+            ">
+                <div className="min-w-0 flex-1">
                     <h1
-                        className="text-[28px] font-bold text-[#07393C] mb-1 tracking-tight"
+                        className="
+                            text-[28px] font-bold text-[#07393C] mb-1 tracking-tight min-w-0
+                            [overflow-wrap:anywhere]
+                            max-sm:text-[20px]
+                        "
                         style={{ fontFamily: "Georgia, serif" }}
                     >
                         {fullName}
@@ -59,42 +69,42 @@ const CVDocument = ({
                 </div>
             </div>
 
-            {/* DOS COLUMNAS */}
-            <div className="flex gap-6">
+            {/* DOS COLUMNAS → una columna en mobile */}
+            <div className="flex gap-6 max-sm:flex-col max-sm:gap-0">
 
                 {/* Columna izquierda — 3/4 */}
-                <div className="w-3/4 min-w-0">
+                <div className="w-3/4 min-w-0 max-sm:w-full">
 
                     {/* INFORMACIÓN PERSONAL */}
                     {personalInfo && (
-                        <div className="mb-6 bg-[#F5F5F5] rounded-lg p-2.5">
-                            <div className="grid grid-cols-3 gap-2 text-xs">
+                        <div className="mb-6 bg-[#F5F5F5] rounded-lg p-2.5 max-sm:mb-4">
+                            <div className="grid grid-cols-3 gap-2 text-xs max-sm:grid-cols-1 max-sm:gap-1.5">
                                 <div className="flex items-center gap-1.5 min-w-0">
                                     <MapPin size={12} className="text-[#07393C] shrink-0" />
                                     <div className="min-w-0">
                                         <p className="text-[8px] text-gray-400 uppercase leading-tight">Ubicación</p>
-                                        <p className="text-[10px] font-semibold text-gray-800 truncate">
+                                        <p className="text-[10px] font-semibold text-gray-800 [overflow-wrap:anywhere] max-sm:text-[11px]">
                                             {residence || "No especificada"}
                                         </p>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-1.5">
+                                <div className="flex items-center gap-1.5 min-w-0">
                                     <Mail size={12} className="text-[#07393C] shrink-0" />
-                                    <div>
+                                    <div className="min-w-0">
                                         <p className="text-[8px] text-gray-400 uppercase leading-tight">Correo</p>
-                                        <p className="text-[10px] font-semibold text-gray-800 break-all">
+                                        <p className="text-[10px] font-semibold text-gray-800 [overflow-wrap:anywhere] overflow-hidden max-sm:text-[11px]">
                                             {personalInfo.contact_email || "No especificado"}
                                         </p>
                                     </div>
                                 </div>
 
                                 {personalInfo.phone_number && (
-                                    <div className="flex items-center gap-1.5">
+                                    <div className="flex items-center gap-1.5 min-w-0">
                                         <Phone size={12} className="text-[#07393C] shrink-0" />
-                                        <div>
+                                        <div className="min-w-0">
                                             <p className="text-[8px] text-gray-400 uppercase leading-tight">Teléfono</p>
-                                            <p className="text-[10px] font-semibold text-gray-800">
+                                            <p className="text-[10px] font-semibold text-gray-800 [overflow-wrap:anywhere] max-sm:text-[11px]">
                                                 {personalInfo.phone_number}
                                             </p>
                                         </div>
@@ -106,9 +116,12 @@ const CVDocument = ({
 
                     {/* EXPERIENCIA LABORAL */}
                     {visibleWorkExperiences.length > 0 && (
-                        <div className="mb-6">
-                            <div className="flex items-center gap-3 mb-4">
-                                <h2 className="text-[11px] font-bold tracking-[2.5px] uppercase text-[#07393C] whitespace-nowrap m-0">
+                        <div className="mb-6 max-sm:mb-4">
+                            <div className="flex items-center gap-3 mb-4 max-sm:mb-3">
+                                <h2 className="
+                                    text-[11px] font-bold tracking-[2.5px] uppercase text-[#07393C] whitespace-nowrap m-0
+                                    max-sm:text-[10px]
+                                ">
                                     Experiencia Laboral
                                 </h2>
                                 <div className="flex-1 h-px bg-[#2C666E]" />
@@ -119,18 +132,22 @@ const CVDocument = ({
                                         key={exp.id}
                                         className="flex justify-between items-start pb-2 border-b border-gray-100 last:border-b-0"
                                     >
-                                        <div className="flex-1">
-                                            <p className="text-[12px] font-bold text-gray-800">{exp.position}</p>
-                                            <p className="text-[11px] text-[#2C666E] font-medium">{exp.company_name}</p>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-[12px] font-bold text-gray-800 [overflow-wrap:anywhere] max-sm:text-[13px]">
+                                                {exp.position}
+                                            </p>
+                                            <p className="text-[11px] text-[#2C666E] font-medium [overflow-wrap:anywhere] max-sm:text-[12px]">
+                                                {exp.company_name}
+                                            </p>
                                             {exp.description && (
-                                                <p className="text-[9px] text-gray-500 mt-0.5 line-clamp-2">
+                                                <p className="text-[9px] text-gray-500 mt-0.5 line-clamp-2 [overflow-wrap:anywhere] overflow-hidden max-sm:text-[10px]">
                                                     {exp.description}
                                                 </p>
                                             )}
                                         </div>
                                         <div className="text-right shrink-0 ml-3">
                                             {exp.start_date && (
-                                                <p className="text-[9px] text-gray-400 whitespace-nowrap">
+                                                <p className="text-[9px] text-gray-400 whitespace-nowrap max-sm:text-[10px]">
                                                     {formatDate(exp.start_date)}{" "}
                                                     {exp.end_date ? `- ${formatDate(exp.end_date)}` : "- Actualidad"}
                                                 </p>
@@ -144,9 +161,12 @@ const CVDocument = ({
 
                     {/* FORMACIÓN ACADÉMICA */}
                     {education.length > 0 && (
-                        <div className="mb-6">
-                            <div className="flex items-center gap-3 mb-4">
-                                <h2 className="text-[11px] font-bold tracking-[2.5px] uppercase text-[#07393C] whitespace-nowrap m-0">
+                        <div className="mb-6 max-sm:mb-4">
+                            <div className="flex items-center gap-3 mb-4 max-sm:mb-3">
+                                <h2 className="
+                                    text-[11px] font-bold tracking-[2.5px] uppercase text-[#07393C] whitespace-nowrap m-0
+                                    max-sm:text-[10px]
+                                ">
                                     Formación Académica
                                 </h2>
                                 <div className="flex-1 h-px bg-[#2C666E]" />
@@ -156,14 +176,20 @@ const CVDocument = ({
                                     key={e.id}
                                     className="flex justify-between items-start mb-3 pb-3 border-b border-gray-200 last:border-b-0 last:mb-0 last:pb-0"
                                 >
-                                    <div className="flex-1">
-                                        <p className="text-[12px] font-bold mb-0.5 text-gray-800">{e.degree}</p>
-                                        <p className="text-[11px] text-[#2C666E] font-semibold mb-0.5">{e.institution}</p>
-                                        <p className="text-[10px] text-gray-400 m-0">{e.academicLevel}</p>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-[12px] font-bold mb-0.5 text-gray-800 [overflow-wrap:anywhere] max-sm:text-[13px]">
+                                            {e.degree}
+                                        </p>
+                                        <p className="text-[11px] text-[#2C666E] font-semibold mb-0.5 [overflow-wrap:anywhere] max-sm:text-[12px]">
+                                            {e.institution}
+                                        </p>
+                                        <p className="text-[10px] text-gray-400 m-0 max-sm:text-[11px]">
+                                            {e.academicLevel}
+                                        </p>
                                     </div>
                                     <div className="text-right shrink-0 ml-3">
-                                        <p className="text-[10px] text-gray-400 mb-0.5">{e.startDate}</p>
-                                        <p className="text-[10px] text-[#2C666E] font-semibold m-0">{e.educationState}</p>
+                                        <p className="text-[10px] text-gray-400 mb-0.5 max-sm:text-[11px]">{e.startDate}</p>
+                                        <p className="text-[10px] text-[#2C666E] font-semibold m-0 max-sm:text-[11px]">{e.educationState}</p>
                                     </div>
                                 </div>
                             ))}
@@ -172,9 +198,12 @@ const CVDocument = ({
 
                     {/* PROYECTOS PERSONALES */}
                     {projects.length > 0 && (
-                        <div className="mb-6">
-                            <div className="flex items-center gap-3 mb-4">
-                                <h2 className="text-[11px] font-bold tracking-[2.5px] uppercase text-[#07393C] whitespace-nowrap m-0">
+                        <div className="mb-6 max-sm:mb-4">
+                            <div className="flex items-center gap-3 mb-4 max-sm:mb-3">
+                                <h2 className="
+                                    text-[11px] font-bold tracking-[2.5px] uppercase text-[#07393C] whitespace-nowrap m-0
+                                    max-sm:text-[10px]
+                                ">
                                     Proyectos Personales
                                 </h2>
                                 <div className="flex-1 h-px bg-[#2C666E]" />
@@ -186,9 +215,11 @@ const CVDocument = ({
                                         className="pb-3 border-b border-gray-100 last:border-b-0 last:pb-0"
                                     >
                                         <div className="flex justify-between items-start gap-2">
-                                            <div className="flex-1">
+                                            <div className="flex-1 min-w-0">
                                                 <div className="flex items-center gap-2 flex-wrap">
-                                                    <p className="text-[12px] font-bold text-gray-800">{project.name}</p>
+                                                    <p className="text-[12px] font-bold text-gray-800 [overflow-wrap:anywhere] max-sm:text-[13px]">
+                                                        {project.name}
+                                                    </p>
                                                     <span className="text-[8px] bg-[#2C666E]/10 text-[#2C666E] px-1.5 py-0.5 rounded-full">
                                                         {STATUS_MAP[project.status] || project.status}
                                                     </span>
@@ -199,12 +230,12 @@ const CVDocument = ({
                                                     )}
                                                 </div>
                                                 {project.role && (
-                                                    <p className="text-[9px] text-[#2C666E] font-medium mt-0.5">
+                                                    <p className="text-[9px] text-[#2C666E] font-medium mt-0.5 [overflow-wrap:anywhere] max-sm:text-[10px]">
                                                         Rol: {project.role}
                                                     </p>
                                                 )}
                                                 {project.description && (
-                                                    <p className="text-[9px] text-gray-500 mt-0.5 line-clamp-2">
+                                                    <p className="text-[9px] text-gray-500 mt-0.5 line-clamp-2 [overflow-wrap:anywhere] overflow-hidden max-sm:text-[10px]">
                                                         {project.description}
                                                     </p>
                                                 )}
@@ -213,7 +244,7 @@ const CVDocument = ({
                                                         {project.links.slice(0, 2).map((link, idx) => (
                                                             <span
                                                                 key={`${project.id}-link-${idx}`}
-                                                                className="text-[8px] text-gray-400 truncate max-w-[150px]"
+                                                                className="text-[8px] text-gray-400 truncate max-w-[120px] block"
                                                             >
                                                                 {link.label}
                                                             </span>
@@ -227,7 +258,7 @@ const CVDocument = ({
                                                 )}
                                             </div>
                                             {project.createdAt && (
-                                                <p className="text-[8px] text-gray-400 shrink-0">
+                                                <p className="text-[8px] text-gray-400 shrink-0 max-sm:text-[9px]">
                                                     {formatDate(project.createdAt)}
                                                 </p>
                                             )}
@@ -240,9 +271,12 @@ const CVDocument = ({
 
                     {/* CERTIFICACIONES */}
                     {visibleCertificates.length > 0 && (
-                        <div className="mb-6">
-                            <div className="flex items-center gap-3 mb-4">
-                                <h2 className="text-[11px] font-bold tracking-[2.5px] uppercase text-[#07393C] whitespace-nowrap m-0">
+                        <div className="mb-6 max-sm:mb-4">
+                            <div className="flex items-center gap-3 mb-4 max-sm:mb-3">
+                                <h2 className="
+                                    text-[11px] font-bold tracking-[2.5px] uppercase text-[#07393C] whitespace-nowrap m-0
+                                    max-sm:text-[10px]
+                                ">
                                     Certificaciones
                                 </h2>
                                 <div className="flex-1 h-px bg-[#2C666E]" />
@@ -253,17 +287,23 @@ const CVDocument = ({
                                         key={cert.id}
                                         className="flex justify-between items-start pb-2 border-b border-gray-100 last:border-b-0"
                                     >
-                                        <div className="flex-1">
-                                            <p className="text-[11px] font-semibold text-gray-800">{cert.title}</p>
-                                            {cert.area && <p className="text-[9px] text-[#2C666E]">{cert.area}</p>}
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-[11px] font-semibold text-gray-800 [overflow-wrap:anywhere] max-sm:text-[12px]">
+                                                {cert.title}
+                                            </p>
+                                            {cert.area && (
+                                                <p className="text-[9px] text-[#2C666E] [overflow-wrap:anywhere] max-sm:text-[10px]">
+                                                    {cert.area}
+                                                </p>
+                                            )}
                                             {cert.description && (
-                                                <p className="text-[9px] text-gray-400 mt-0.5 line-clamp-1">
+                                                <p className="text-[9px] text-gray-400 mt-0.5 line-clamp-1 [overflow-wrap:anywhere] overflow-hidden max-sm:text-[10px]">
                                                     {cert.description}
                                                 </p>
                                             )}
                                         </div>
                                         {cert.issueDate && (
-                                            <p className="text-[9px] text-gray-400 shrink-0 ml-3">
+                                            <p className="text-[9px] text-gray-400 shrink-0 ml-3 max-sm:text-[10px]">
                                                 {formatDate(cert.issueDate)}
                                             </p>
                                         )}
@@ -284,22 +324,32 @@ const CVDocument = ({
                         )}
                 </div>
 
-                {/* Columna derecha — 1/4 */}
-                <div className="w-1/4 min-w-0">
+                {/* Columna derecha — 1/4 → ancho completo en mobile */}
+                <div className="w-1/4 min-w-0 max-sm:w-full max-sm:mt-2">
+
+                    {/* Divisor visible solo en mobile */}
+                    <div className="hidden max-sm:block mb-4">
+                        <div className="h-px bg-[#07393C]" />
+                    </div>
 
                     {/* HABILIDADES TÉCNICAS */}
                     {hardSkills.length > 0 && (
-                        <div className="mb-6">
-                            <div className="flex items-center gap-3 mb-4">
-                                <h2 className="text-[11px] font-bold tracking-[2.5px] uppercase text-[#07393C] whitespace-nowrap m-0">
+                        <div className="mb-6 max-sm:mb-4">
+                            <div className="flex items-center gap-3 mb-4 max-sm:mb-3">
+                                <h2 className="
+                                    text-[11px] font-bold tracking-[2.5px] uppercase text-[#07393C] whitespace-nowrap m-0
+                                    max-sm:text-[10px]
+                                ">
                                     Habilidades Técnicas
                                 </h2>
                                 <div className="flex-1 h-px bg-[#2C666E]" />
                             </div>
-                            <div className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-2 max-sm:grid max-sm:grid-cols-2 max-sm:gap-x-4 max-sm:gap-y-2">
                                 {hardSkills.map((s) => (
-                                    <div key={s.skill_id} className="flex flex-col gap-1">
-                                        <span className="text-[11px] font-semibold text-gray-800">{s.name}</span>
+                                    <div key={s.skill_id} className="flex flex-col gap-1 min-w-0">
+                                        <span className="text-[11px] font-semibold text-gray-800 [overflow-wrap:anywhere] max-sm:text-[12px]">
+                                            {s.name}
+                                        </span>
                                         <LevelDots level={s.level} />
                                     </div>
                                 ))}
@@ -309,9 +359,12 @@ const CVDocument = ({
 
                     {/* HABILIDADES BLANDAS */}
                     {softSkills.length > 0 && (
-                        <div className="mb-6">
-                            <div className="flex items-center gap-3 mb-4">
-                                <h2 className="text-[11px] font-bold tracking-[2.5px] uppercase text-[#07393C] whitespace-nowrap m-0">
+                        <div className="mb-6 max-sm:mb-4">
+                            <div className="flex items-center gap-3 mb-4 max-sm:mb-3">
+                                <h2 className="
+                                    text-[11px] font-bold tracking-[2.5px] uppercase text-[#07393C] whitespace-nowrap m-0
+                                    max-sm:text-[10px]
+                                ">
                                     Habilidades Blandas
                                 </h2>
                                 <div className="flex-1 h-px bg-[#2C666E]" />
@@ -320,7 +373,7 @@ const CVDocument = ({
                                 {softSkills.map((s) => (
                                     <span
                                         key={s.skill_id}
-                                        className="text-[10px] bg-[#2C666E]/10 text-[#2C666E] px-2 py-1 rounded-full font-medium"
+                                        className="text-[10px] bg-[#2C666E]/10 text-[#2C666E] px-2 py-1 rounded-full font-medium [overflow-wrap:anywhere] max-sm:text-[11px]"
                                     >
                                         {s.name}
                                     </span>
@@ -337,11 +390,6 @@ const CVDocument = ({
                 </div>
             </div>
 
-            {/* FOOTER */}
-            <div className="mt-6 border-t border-gray-200 pt-2.5 flex justify-between items-center">
-                <p className="text-[9px] text-gray-400 m-0">Documento generado automáticamente</p>
-                <p className="text-[9px] text-gray-400 m-0">@{username}</p>
-            </div>
         </div>
     );
 };

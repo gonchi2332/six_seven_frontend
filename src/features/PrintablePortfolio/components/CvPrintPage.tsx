@@ -49,7 +49,7 @@ const CVPrintPage = () => {
                 <div className="flex items-center gap-2">
                     <Printer size={15} className="text-[#90DDF0]" />
                     <span className="text-white text-[13px] font-semibold">
-                        Vista previa — @{username}
+                        Vista previa
                     </span>
                 </div>
 
