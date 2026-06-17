@@ -25,7 +25,7 @@ const RegisterForm = () => {
     } = useRegisterForm();
 
     // Layout
-    const FORM_SPACING = "flex flex-col gap-6";
+    const FORM_SPACING = "flex flex-col gap-4";
     const FIELD_WRAPPER = "w-full";
     const BUTTON_WRAPPER = "flex justify-center mt-6";
     const TOP_SECTION = "w-full";
