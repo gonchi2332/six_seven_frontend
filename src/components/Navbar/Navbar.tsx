@@ -121,7 +121,7 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
         logout();
         localStorage.clear();
         sessionStorage.clear();
-        navigate("/login");
+        navigate("/");
     };
 
     const visibleTabs = allTabs.filter(tab => {
