@@ -31,8 +31,6 @@ const RegisterPage = () => {
             <div className={TOP_BAR}>
                 <h1 className={TOP_BAR_TITLE}>Registro</h1>
             </div>
-
-            {/* Contenido con scroll */}
             <div className={MAIN_CONTENT}>
                 <div className={FLEX_LAYOUT}>
                     <div className={IMAGE_SECTION}>

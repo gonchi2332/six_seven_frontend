@@ -21,7 +21,6 @@ const styles = {
     buttonsWrapper: "flex gap-4 justify-center mt-2 px-6 sm:px-8 pb-6",
     required: "text-white ml-0.5",
     inlineError: "mt-1 text-xs text-red-600 font-medium self-end",
-    // Unificado con el estado disabled visualmente claro (bg-gray-100 y text-gray-400)
     inputBase: "w-full px-4 py-2 border rounded-xl outline-none transition-all duration-200 bg-white font-nunito disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400",
     inputNormal: "border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500",
     inputError: "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500 bg-red-50",
