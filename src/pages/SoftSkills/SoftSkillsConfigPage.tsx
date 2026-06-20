@@ -26,9 +26,10 @@ const styles = {
     skillName: "text-white font-nunito text-[14px] sm:text-[16px] truncate flex-1 min-w-0",
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
     toastSuccess: "bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]",
-    toastError: "bg-red-500/10 border border-red-500 text-red-400",
+    toastError: "bg-red-400/10 border border-red-400 text-red-400",
 };
 
+// Página de configuración de visibilidad de habilidades blandas
 const SoftSkillsConfigPage = () => {
     const { skills, isLoading, error, successMessage } = useSoftSkills();
     const { searchInput, filtered, handleSearch, handleKeyDown, handleChange } = useSearch(
@@ -43,6 +44,7 @@ const SoftSkillsConfigPage = () => {
     const [visibilityMap, setVisibilityMap] = useState<Record<string | number, boolean>>({});
     const [isSaving, setIsSaving] = useState(false);
 
+    // Inicializar mapa de visibilidad desde las habilidades cargadas
     useEffect(() => {
         if (skills) {
             const initialMap: Record<string | number, boolean> = {};
@@ -55,6 +57,7 @@ const SoftSkillsConfigPage = () => {
         }
     }, [skills]);
 
+    // Mostrar mensaje de éxito del hook
     useEffect(() => {
         if (successMessage) {
             setLocalSuccess(successMessage);
@@ -63,6 +66,7 @@ const SoftSkillsConfigPage = () => {
         }
     }, [successMessage]);
 
+    // Mostrar mensaje de error del hook
     useEffect(() => {
         if (error) {
             setLocalError(error);
@@ -78,6 +82,7 @@ const SoftSkillsConfigPage = () => {
         }));
     };
 
+    // Poner todas las habilidades como ocultas
     const handleHideAll = () => {
         setVisibilityMap((prev) => {
             const updated = { ...prev };
@@ -88,6 +93,7 @@ const SoftSkillsConfigPage = () => {
         });
     };
 
+    // Poner todas las habilidades como visibles
     const handleShowAll = () => {
         setVisibilityMap((prev) => {
             const updated = { ...prev };
@@ -98,6 +104,7 @@ const SoftSkillsConfigPage = () => {
         });
     };
 
+    // Guardar cambios de visibilidad en el backend
     const handleSaveChanges = async () => {
         try {
             setIsSaving(true);
@@ -119,6 +126,7 @@ const SoftSkillsConfigPage = () => {
         resetPage();
     };
 
+    // Verificar si hay cambios pendientes
     const hasChanges = JSON.stringify(initialVisibilityMap) !== JSON.stringify(visibilityMap);
 
     const visibilityValues = Object.values(visibilityMap);

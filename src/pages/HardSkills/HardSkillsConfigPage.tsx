@@ -29,9 +29,10 @@ const styles = {
     skillName: "text-white font-nunito text-[14px] sm:text-[16px] sm:w-36 shrink-0 truncate",
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
     toastSuccess: "bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]",
-    toastError: "bg-red-500/10 border border-red-500 text-red-400",
+    toastError: "bg-red-400/10 border border-red-400 text-red-400",
 };
 
+// Página de configuración de visibilidad de habilidades técnicas
 const HardSkillsConfigPage = () => {
     const { skills, isLoading, error, successMessage } = useSkills();
     const { searchInput, filtered, handleSearch, handleKeyDown, handleChange } = useSearch(
@@ -42,11 +43,11 @@ const HardSkillsConfigPage = () => {
 
     const [localError, setLocalError] = useState<string | null>(null);
     const [localSuccess, setLocalSuccess] = useState<string | null>(null);
-
     const [initialVisibilityMap, setInitialVisibilityMap] = useState<Record<string, boolean>>({});
     const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>({});
     const [isSaving, setIsSaving] = useState(false);
 
+    // Inicializar mapa de visibilidad desde las habilidades cargadas
     useEffect(() => {
         if (skills) {
             const initialMap: Record<string, boolean> = {};
@@ -58,6 +59,7 @@ const HardSkillsConfigPage = () => {
         }
     }, [skills]);
 
+    // Mostrar mensaje de éxito del hook
     useEffect(() => {
         if (successMessage) {
             setLocalSuccess(successMessage);
@@ -66,6 +68,7 @@ const HardSkillsConfigPage = () => {
         }
     }, [successMessage]);
 
+    // Mostrar mensaje de error del hook
     useEffect(() => {
         if (error) {
             setLocalError(error);
@@ -82,6 +85,7 @@ const HardSkillsConfigPage = () => {
         }));
     };
 
+    // Poner todas las habilidades como ocultas
     const handleHideAll = () => {
         setVisibilityMap((prev) => {
             const updated = { ...prev };
@@ -92,6 +96,7 @@ const HardSkillsConfigPage = () => {
         });
     };
 
+    // Poner todas las habilidades como visibles
     const handleShowAll = () => {
         setVisibilityMap((prev) => {
             const updated = { ...prev };
@@ -102,6 +107,7 @@ const HardSkillsConfigPage = () => {
         });
     };
 
+    // Guardar cambios de visibilidad en el backend
     const handleSaveChanges = async () => {
         try {
             setIsSaving(true);
@@ -123,6 +129,7 @@ const HardSkillsConfigPage = () => {
         resetPage();
     };
 
+    // Verificar si hay cambios pendientes para habilitar el botón Guardar
     const hasChanges = Object.keys(initialVisibilityMap).some(
         (key) => initialVisibilityMap[key] !== visibilityMap[key]
     );

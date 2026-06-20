@@ -27,6 +27,7 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
+// Página principal de gestión de habilidades blandas
 const SoftSkillsPage = () => {
     const { skills, catalogSkills, isLoading, error, successMessage, username, addSkill, removeSkill } = useSoftSkills();
     const { searchInput, filtered, handleSearch, handleKeyDown, handleChange } = useSearch(
@@ -77,7 +78,8 @@ const SoftSkillsPage = () => {
                             />
                         </div>
 
-                        {error && <p className={`${styles.toast} bg-red-500/10 border border-red-500 text-red-400`}>{error}</p>}
+                        {/* Mensajes de error/éxito */}
+                        {error && <p className={`${styles.toast} bg-red-400/10 border border-red-400 text-red-400`}>{error}</p>}
                         {successMessage && <p className={`${styles.toast} bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]`}>{successMessage}</p>}
 
                         {isLoading ? (
@@ -108,6 +110,7 @@ const SoftSkillsPage = () => {
                 </div>
             </div>
 
+            {/* Modal para crear nueva habilidad blanda */}
             {showAdd && (
                 <AddSoftSkillPopup
                     onSubmit={handleAddSubmit}
@@ -118,6 +121,7 @@ const SoftSkillsPage = () => {
                 />
             )}
 
+            {/* Popup de acciones al hacer clic en una habilidad */}
             {skillAction && (
                 <SoftSkillActionPopup
                     skillName={skillAction.name}
@@ -127,6 +131,7 @@ const SoftSkillsPage = () => {
                 />
             )}
 
+            {/* Modal para ver detalle de la habilidad */}
             {skillToView && (
                 <ViewSoftSkillPopup
                     name={skillToView.name}
@@ -134,6 +139,7 @@ const SoftSkillsPage = () => {
                 />
             )}
 
+            {/* Modal de confirmación para eliminar */}
             <ConfirmDeletePopup
                 isOpen={!!skillToDelete}
                 skillName={skillToDelete ?? ""}

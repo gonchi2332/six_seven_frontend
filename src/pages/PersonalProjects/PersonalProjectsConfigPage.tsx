@@ -28,11 +28,12 @@ const styles = {
     pageArrow: "w-8 h-8 sm:w-10 sm:h-10 rounded-lg border border-white/20 text-white/70 text-sm sm:text-base hover:border-[#90DDF0] hover:text-[#90DDF0] transition-colors disabled:opacity-30 disabled:cursor-not-allowed",
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
     toastSuccess: "bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]",
-    toastError: "bg-red-500/10 border border-red-500 text-red-400",
+    toastError: "bg-red-400/10 border border-red-400 text-red-400",
     cardConfigWrapper: "flex flex-col gap-3 p-3 bg-black/30 border border-white/10 rounded-xl hover:border-[#90DDF0]/40 transition-all",
     switchRow: "flex items-center justify-between border-t border-white/5 pt-2 mt-auto",
 };
 
+// Página de configuración de visibilidad de proyectos personales
 const PersonalProjectsConfigPage = () => {
     const { projects, isLoading, error, successMessage } = useProjects();
     const [searchInput, setSearchInput] = useState("");
@@ -44,6 +45,7 @@ const PersonalProjectsConfigPage = () => {
     const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>({});
     const [isSaving, setIsSaving] = useState(false);
 
+    // Inicializar mapa de visibilidad desde los proyectos cargados
     useEffect(() => {
         if (projects) {
             const initialMap: Record<string, boolean> = {};
@@ -55,6 +57,7 @@ const PersonalProjectsConfigPage = () => {
         }
     }, [projects]);
 
+    // Mostrar mensaje de éxito del hook
     useEffect(() => {
         if (successMessage) {
             setLocalSuccess(successMessage);
@@ -63,6 +66,7 @@ const PersonalProjectsConfigPage = () => {
         }
     }, [successMessage]);
 
+    // Mostrar mensaje de error del hook
     useEffect(() => {
         if (error) {
             setLocalError(error);
@@ -79,6 +83,7 @@ const PersonalProjectsConfigPage = () => {
         }));
     };
 
+    // Poner todos los proyectos como ocultos
     const handleHideAll = () => {
         setVisibilityMap((prev) => {
             const updated = { ...prev };
@@ -89,6 +94,7 @@ const PersonalProjectsConfigPage = () => {
         });
     };
 
+    // Poner todos los proyectos como visibles
     const handleShowAll = () => {
         setVisibilityMap((prev) => {
             const updated = { ...prev };
@@ -99,6 +105,7 @@ const PersonalProjectsConfigPage = () => {
         });
     };
 
+    // Guardar cambios de visibilidad en el backend
     const handleSaveChanges = async () => {
         try {
             setIsSaving(true);
@@ -124,6 +131,7 @@ const PersonalProjectsConfigPage = () => {
         if (e.key === "Enter") handleSearch();
     };
 
+    // Filtrar por nombre o tema del proyecto
     const filtered = (projects || []).filter((p) =>
         (p.name || "").toLowerCase().includes(activeSearch.toLowerCase()) ||
         (p.topic || "").toLowerCase().includes(activeSearch.toLowerCase())

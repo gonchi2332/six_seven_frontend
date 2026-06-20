@@ -1,4 +1,3 @@
-
 interface ForgotPasswordParams {
     username: string;
 }
@@ -17,7 +16,7 @@ interface ResetPasswordParams {
 interface ForgotPasswordResponse {
     result: boolean;
     messageState: string;
-    verificationMails: [string, string[]];
+    verificationMails: [string, string[]]; // Primer elemento es el email principal
 }
 
 interface VerifyCodeResponse {
@@ -29,59 +28,45 @@ interface ErrorResponse {
     error: string;
 }
 
-
 const API_URL = import.meta.env.VITE_API_URL;
 
-
+// Solicita el código de recuperación al email del usuario
 export const requestRecoveryCode = async ({ username }: ForgotPasswordParams): Promise<ForgotPasswordResponse> => {
     const response = await fetch(`${API_URL}/api/v2/auth/users/forgot-password?username=${username}`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
     });
-
     const data: ForgotPasswordResponse | ErrorResponse = await response.json();
-
     if (!response.ok) {
         throw new Error((data as ErrorResponse).error ?? "Error al solicitar el código de recuperación");
     }
-
     return data as ForgotPasswordResponse;
 };
 
+// Verifica que el código de recuperación sea válido
 export const verifyRecoveryCode = async ({ username, code }: VerifyCodeParams): Promise<VerifyCodeResponse> => {
     const response = await fetch(`${API_URL}/api/v2/auth/users/verify-code`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, code }),
     });
-
     const data = await response.json();
-
     if (!response.ok) {
         throw new Error(data.error ?? "Error al verificar el código");
     }
-
     return data;
 };
 
+// Restablece la contraseña usando el código verificado
 export const resetPassword = async ({ username, newPassword, code }: ResetPasswordParams) => {
     const response = await fetch(`${API_URL}/api/v2/auth/users/reset-password`, {
         method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password: newPassword, verificationCode: code }),
     });
-
     const data = await response.json();
-
     if (!response.ok) {
         throw new Error(data.message ?? data.error ?? "Error al restablecer la contraseña");
     }
-
     return data;
 };

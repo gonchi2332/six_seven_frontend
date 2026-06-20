@@ -19,17 +19,18 @@ const VisibilitySwitch = ({ id, initialState = true, onChange }: VisibilitySwitc
         const newValue = e.target.checked;
         setIsVisible(newValue);
         if (onChange) {
-            onChange(id, newValue);
+            onChange(id, newValue); // Notifica al padre el nuevo estado
         }
     };
 
     return (
+        // Detiene propagación para no activar clicks del contenedor padre
         <label className={styles.switchLabel} onClick={(e) => e.stopPropagation()}>
             <input
                 type="checkbox"
                 checked={isVisible}
                 onChange={handleToggle}
-                className="sr-only peer"
+                className="sr-only peer" // Input oculto, estilo aplicado al div siguiente
             />
             <span className={styles.switchText}>
                 {isVisible ? "Público" : "Oculto"}

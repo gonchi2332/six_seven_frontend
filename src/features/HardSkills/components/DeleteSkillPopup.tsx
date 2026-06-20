@@ -15,6 +15,7 @@ const styles = {
     buttonsWrapper: "flex gap-4 justify-center mt-2 px-6 sm:px-8 pb-6",
 };
 
+// Popup de confirmación para eliminar habilidad
 const DeleteSkillPopup = ({ skillName, onConfirm, onClose, isSubmitting = false }: DeleteSkillPopupProps) => {
     return (
         <div className={styles.overlay}>

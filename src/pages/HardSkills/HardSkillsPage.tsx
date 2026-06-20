@@ -30,6 +30,7 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
+// Página principal de gestión de habilidades técnicas
 const HardSkillsPage = () => {
     const { skills, catalogSkills, isLoading, error, successMessage, addSkill, editSkill, deleteSkill } = useSkills();
     const { searchInput, filtered, handleSearch, handleKeyDown, handleChange } = useSearch(
@@ -96,7 +97,8 @@ const HardSkillsPage = () => {
                             />
                         </div>
 
-                        {error && <p className={`${styles.toast} bg-red-500/10 border border-red-500 text-red-400`}>{error}</p>}
+                        {/* Mensajes de error/éxito */}
+                        {error && <p className={`${styles.toast} bg-red-400/10 border border-red-400 text-red-400`}>{error}</p>}
                         {successMessage && <p className={`${styles.toast} bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]`}>{successMessage}</p>}
 
                         {isLoading ? (
@@ -130,6 +132,7 @@ const HardSkillsPage = () => {
                 </div>
             </div>
 
+            {/* Modal para crear nueva habilidad */}
             {showAdd && (
                 <AddSkillPopup
                     onSubmit={handleAddSubmit}
@@ -138,6 +141,7 @@ const HardSkillsPage = () => {
                 />
             )}
 
+            {/* Popup de acciones al hacer clic en una habilidad */}
             {skillAction && (
                 <SkillActionPopup
                     skill={skillAction}
@@ -148,6 +152,7 @@ const HardSkillsPage = () => {
                 />
             )}
 
+            {/* Modal para ver detalle de la habilidad */}
             {skillToView && (
                 <ViewHardSkillPopup
                     skill={skillToView}
@@ -155,6 +160,7 @@ const HardSkillsPage = () => {
                 />
             )}
 
+            {/* Modal para editar habilidad existente */}
             {skillToEdit && (
                 <EditSkillPopup
                     skill={skillToEdit}
@@ -165,6 +171,7 @@ const HardSkillsPage = () => {
                 />
             )}
 
+            {/* Modal de confirmación para eliminar */}
             <ConfirmDeletePopup
                 isOpen={!!skillToDelete}
                 skillName={skillToDelete?.name ?? ""}

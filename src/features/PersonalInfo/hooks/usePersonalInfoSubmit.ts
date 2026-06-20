@@ -7,8 +7,10 @@ import { useNavigate } from "react-router-dom";
 // TIPOS
 // ============================================
 
+// Campos que se pueden eliminar/agregar
 export type DeletableField = 'secondSurname' | 'city' | 'email' | 'phone' | 'country';
 
+// Estructura de la respuesta de información personal
 export interface PersonalInfoResponse {
     username: string;
     is_new: boolean;
@@ -27,13 +29,14 @@ export interface PersonalInfoResponse {
 // HOOK PRINCIPAL
 // ============================================
 
+// Hook para manejar envío de información personal (edición completa y agregar campos)
 export const usePersonalInfoSubmit = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [submitSuccess, setSubmitSuccess] = useState(false);
     const navigate = useNavigate();
 
-    
+    // Enviar formulario completo de edición
     const handleSubmit = async (profileData: ProfileFormData) => {
         setIsSubmitting(true);
         setSubmitError(null);
@@ -42,17 +45,18 @@ export const usePersonalInfoSubmit = () => {
             const formData = new FormData();
             formData.append("is_new", "false");
 
-            // Solo hacemos append si el valor tiene contenido real
+            // Campos obligatorios
             if (profileData.firstName?.trim()) formData.append("names", profileData.firstName);
             if (profileData.firstSurname?.trim()) formData.append("firstSurname", profileData.firstSurname);
             
-            // Campos opcionales: solo se envían si existen y no están vacíos
+            // Campos opcionales (solo si tienen valor)
             if (profileData.secondSurname?.trim()) formData.append("secondSurname", profileData.secondSurname);
             if (profileData.city?.trim()) formData.append("residenceCity", profileData.city);
             if (profileData.country?.trim()) formData.append("residenceCountry", profileData.country);
             if (profileData.email?.trim()) formData.append("contactEmail", profileData.email);
             if (profileData.phone?.trim()) formData.append("phone", profileData.phone);
             
+            // Imagen de perfil
             if (profileData.profileImage) {
                 formData.append("profilePicture", profileData.profileImage);
             }
@@ -71,6 +75,7 @@ export const usePersonalInfoSubmit = () => {
     // AGREGAR UN CAMPO ESPECÍFICO
     // ============================================
 
+    // Agregar un campo específico manteniendo los demás datos
     const addField = async (field: DeletableField, value: string, currentUserInfo: PersonalInfoResponse | null) => {
         setIsSubmitting(true);
         setSubmitError(null);
@@ -80,7 +85,7 @@ export const usePersonalInfoSubmit = () => {
             const formData = new FormData();
             formData.append("is_new", "false");
             
-            // Campos obligatorios
+            // Campos obligatorios (se mantienen)
             formData.append("names", currentUserInfo?.names || '');
             formData.append("firstSurname", currentUserInfo?.first_surname || '');
             
@@ -100,8 +105,7 @@ export const usePersonalInfoSubmit = () => {
             setIsSubmitting(false);
         }
     };
-
-
+    
 
     return { 
         handleSubmit, 

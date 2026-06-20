@@ -16,7 +16,9 @@ const styles = {
     date: "text-white/40 font-nunito text-xs",
 };
 
+// Tarjeta visual de certificado para el listado
 const CertificateCard = ({ certificate, onClick }: Props) => {
+    // Formatea la fecha en DD/MM/YYYY para mostrar en la tarjeta
     const formattedDate = certificate.issueDate ? new Date(certificate.issueDate + "T00:00:00").toLocaleDateString("es-ES", {
         day: "2-digit", month: "2-digit", year: "numeric",
     }) : "";
@@ -24,8 +26,11 @@ const CertificateCard = ({ certificate, onClick }: Props) => {
     return (
         <div className={styles.container} onClick={() => onClick(certificate)}>
             <div className={styles.imageWrapper}>
-                {certificate.coverImage ? (<img src={certificate.coverImage} alt={certificate.title} className={styles.image} />) : (
-                    <span className={styles.imageFallback}>Sin imagen</span>)}
+                {certificate.coverImage ? (
+                    <img src={certificate.coverImage} alt={certificate.title} className={styles.image} />
+                ) : (
+                    <span className={styles.imageFallback}>Sin imagen</span>
+                )}
             </div>
             <div className={styles.content}>
                 <h3 className={styles.title}>{certificate.title}</h3>

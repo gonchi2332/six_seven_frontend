@@ -18,11 +18,13 @@ const styles = {
     buttonsWrapper: "flex gap-4 justify-center mt-2 px-6 sm:px-8 pb-6",
     label: "text-[18px] font-nunito text-surface",
     required: "text-white ml-0.5",
-    serverError: "mx-6 sm:mx-8 mb-2 p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center",
+    serverError: "mx-6 sm:mx-8 mb-2 p-3 rounded-xl bg-red-400/10 border border-red-400 text-red-400 text-sm font-nunito text-center",
 };
 
+// Popup para modificar nivel de habilidad existente
 const EditSkillPopup = ({ skill, onSubmit, onClose, serverError, isSubmitting = false }: EditSkillPopupProps) => {
     const [level, setLevel] = useState(skill.level);
+    // Botón habilitado solo si hubo cambios
     const hasChanges = level !== skill.level;
 
     const handleSubmit = async () => {

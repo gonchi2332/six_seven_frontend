@@ -9,19 +9,16 @@ interface Props {
     options: Array<{ id: number; academicdegree: string }>;
 }
 
-const AcademicLevelSelect = ({ 
-    value, 
-    onChange, 
-    disabled = false, 
-    placeholder = "Seleccionar...", 
-    hasError = false,
-    options 
+// Selector de grado académico con dropdown personalizado
+const AcademicLevelSelect = ({
+    value, onChange, disabled = false, placeholder = "Seleccionar...", hasError = false, options
 }: Props) => {
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
-    
+
     const selectedOption = options.find(opt => opt.id === value);
 
+    // Cierra el dropdown al hacer clic fuera del componente
     useEffect(() => {
         const handler = (e: MouseEvent) => {
             if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
@@ -37,7 +34,7 @@ const AcademicLevelSelect = ({
                 disabled={disabled}
                 onClick={() => !disabled && setOpen((o) => !o)}
                 className={`w-full bg-white border rounded-xl px-4 py-2 font-nunito text-[15px] outline-none transition-all flex items-center justify-between
-                    ${hasError ? "border-red-500 bg-red-50" : "border-gray-300"}
+                    ${hasError ? "border-red-400 bg-red-50" : "border-gray-300"}
                     ${disabled ? "cursor-not-allowed bg-gray-100" : "cursor-pointer hover:border-blue-400"}`}
             >
                 <span className={selectedOption ? "text-black" : "text-gray-400"}>
@@ -45,7 +42,6 @@ const AcademicLevelSelect = ({
                 </span>
                 <span className="text-gray-400 text-xs ml-2">▼</span>
             </button>
-
             {open && (
                 <div className="absolute z-[9999] left-0 right-0 mt-1 bg-white border border-gray-300 rounded-xl shadow-xl overflow-hidden">
                     <div className="overflow-y-auto max-h-[240px]">

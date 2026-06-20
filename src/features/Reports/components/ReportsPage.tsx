@@ -10,7 +10,7 @@ const styles = {
     header: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3",
     title: "text-xl sm:text-2xl font-bold font-inter text-white",
     loading: "text-white/70 font-nunito text-center py-12 bg-black/20 rounded-xl border border-white/10",
-    error: "text-red-400 text-center py-12 bg-red-500/10 rounded-xl border border-red-500",
+    error: "text-red-400 text-center py-12 bg-red-400/10 rounded-xl border border-red-400",
     empty: "text-white/50 font-nunito text-center py-12 bg-black/20 rounded-xl border border-white/10",
 };
 

@@ -2,7 +2,7 @@ import Button from "../../../components/Button";
 import PopUpCard from "../../../components/PopUpCard";
 
 interface Props {
-    title: string;
+    title: string; // Título del certificado a eliminar
     onConfirm: () => void;
     onClose: () => void;
     isSubmitting?: boolean;
@@ -15,6 +15,7 @@ const styles = {
     buttonsWrapper: "flex gap-3 justify-center mt-2 px-4 sm:px-8 pb-6",
 };
 
+// Popup de confirmación antes de eliminar un certificado
 const DeleteCertificatePopup = ({ title, onConfirm, onClose, isSubmitting = false }: Props) => {
     return (
         <div className={styles.overlay}>

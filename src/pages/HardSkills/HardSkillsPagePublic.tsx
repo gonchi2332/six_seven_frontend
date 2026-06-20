@@ -26,6 +26,7 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
+// Página pública de habilidades técnicas (portafolio visible)
 const HardSkillsPage = () => {
     const { username } = useParams<{ username: string }>();
     const {
@@ -44,6 +45,7 @@ const HardSkillsPage = () => {
 
     const [, setSkillAction] = useState<Skill | null>(null);
 
+    // Cargar habilidades públicas cuando cambia el username
     useEffect(() => {
         if (username) {
             setPublicUser(username);
@@ -74,7 +76,7 @@ const HardSkillsPage = () => {
                             />
                         </div>
 
-                        {error && <p className={`${styles.toast} bg-red-500/10 border border-red-500 text-red-400`}>{error}</p>}
+                        {error && <p className={`${styles.toast} bg-red-400/10 border border-red-400 text-red-400`}>{error}</p>}
 
                         {isLoadingPublic ? (
                             <p className={styles.loading}>Cargando...</p>

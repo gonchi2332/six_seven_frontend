@@ -28,7 +28,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const styles = {
     LABEL: `${labelBase} ${
       sizeError
-        ? "border-red-500 hover:border-red-600"
+        ? "border-red-400 hover:border-red-600"
         : "border-primary hover:border-secondary"
     }`,
     REMOVE_BUTTON:
@@ -36,9 +36,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     IMAGE: "w-full h-full object-cover",
     PLACEHOLDER: "flex flex-col items-center justify-center p-4 text-center",
     ICON: `w-8 h-8 mb-2 transition-colors ${
-      sizeError ? "text-red-500" : "text-primary group-hover:text-secondary"
+      sizeError ? "text-red-400" : "text-primary group-hover:text-secondary"
     }`,
-    UPLOAD_TEXT: `font-semibold ${sizeError ? "text-red-500" : "text-primary"}`,
+    UPLOAD_TEXT: `font-semibold ${sizeError ? "text-red-400" : "text-primary"}`,
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -111,7 +111,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               />
             </svg>
             {sizeError ? (
-              <p className="text-sm font-semibold text-red-500">
+              <p className="text-sm font-semibold text-red-400">
                 La imagen pesa más de {maxSizeMB}Mb
               </p>
             ) : (

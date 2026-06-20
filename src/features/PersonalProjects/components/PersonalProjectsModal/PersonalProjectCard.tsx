@@ -14,7 +14,7 @@ const STYLES = {
     TOPIC: "text-[#90DDF0] text-xs mb-2",
     DESCRIPTION: "text-white/60 text-sm line-clamp-2",
     STATUS: (status: string) => `inline-block px-2 py-0.5 rounded-full text-xs mt-2 ${status === "Finalizado" ? "bg-green-500/20 text-green-400" :
-            status === "Cancelado" ? "bg-red-500/20 text-red-400" :
+            status === "Cancelado" ? "bg-red-400/20 text-red-400" :
                 "bg-yellow-500/20 text-yellow-400"
         }`,
 };

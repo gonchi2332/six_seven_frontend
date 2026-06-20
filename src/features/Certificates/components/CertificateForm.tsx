@@ -19,16 +19,19 @@ interface Props {
 const styles = {
     overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 py-4 z-50",
     body: "flex flex-col gap-4 px-4 sm:px-8 pb-2",
-    serverError: "mx-4 sm:mx-8 mb-2 p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center",
+    serverError: "mx-4 sm:mx-8 mb-2 p-3 rounded-xl bg-red-400/10 border border-red-400 text-red-400 text-sm font-nunito text-center",
     buttonsWrapper: "flex gap-3 justify-center mt-4 px-4 sm:px-8 pb-6",
     mainLabel: "mb-1 text-xl font-inter text-white"
 };
 
+// Formulario unificado para registrar y modificar certificados
 const CertificateForm = ({ mode, initial, onSubmit, onClose, serverError, isSubmitting = false }: Props) => {
     const { title, titleError, handleTitleChange, handleTitleBlur, description, descError, handleDescChange, handleDescBlur,
         area, areaError, handleAreaChange, handleAreaBlur, issueDate, dateError, dateTouched, handleDateChange, handleDateBlur,
         imagePreview, handleImageChange, isFormValid, hasChanges, handleSubmit,
     } = useCertificateForm({ mode, initial, onSubmit });
+
+    // Título del popup según el modo
     const formTitle = mode === "add" ? "Registrar Certificado" : `Modificar: ${initial?.title ?? ""}`;
 
     return (
@@ -43,7 +46,7 @@ const CertificateForm = ({ mode, initial, onSubmit, onClose, serverError, isSubm
                             onChange={(e) => handleTitleChange(e.target.value)}
                             placeholder="Ej: AWS Certified Solutions Architect"
                             maxLength={100}
-                            disabled={isSubmitting || mode === "edit"}
+                            disabled={isSubmitting || mode === "edit"} // Título no editable en modo edit
                             error={titleError || undefined}
                             inputProps={{ onBlur: handleTitleBlur }}
                         />
@@ -53,7 +56,7 @@ const CertificateForm = ({ mode, initial, onSubmit, onClose, serverError, isSubm
                             onChange={(e) => handleAreaChange(e.target.value)}
                             placeholder="Ej: Desarrollo Web, Cloud Computing..."
                             maxLength={100}
-                            disabled={isSubmitting || mode === "edit"}
+                            disabled={isSubmitting || mode === "edit"} // Área no editable en modo edit
                             error={areaError || undefined}
                             inputProps={{ onBlur: handleAreaBlur }}
                         />
@@ -94,7 +97,8 @@ const CertificateForm = ({ mode, initial, onSubmit, onClose, serverError, isSubm
                             onClick={handleSubmit}
                             fullWidth
                             disabled={isSubmitting || !isFormValid || (mode === "edit" && !hasChanges)}
-                        > {isSubmitting ? "Guardando..." : mode === "add" ? "Registrar" : "Modificar"}
+                        >
+                            {isSubmitting ? "Guardando..." : mode === "add" ? "Registrar" : "Modificar"}
                         </Button>
                     </div>
                 </PopUpCard>

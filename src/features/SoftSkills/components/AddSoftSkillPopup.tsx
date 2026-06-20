@@ -23,7 +23,7 @@ const styles = {
     inlineError: "mt-1 text-xs text-red-600 font-medium self-end",
     inputBase: "w-full px-4 py-2 border rounded-xl outline-none transition-all duration-200 bg-white font-nunito disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400",
     inputNormal: "border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500",
-    inputError: "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500 bg-red-50",
+    inputError: "border-red-400 focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-red-50",
     inputDisabled: "border-gray-300 opacity-60",
     dropdown: "absolute top-full left-0 right-0 mt-1 z-10 rounded-xl border border-gray-300 bg-white overflow-hidden max-h-44 overflow-y-auto shadow-lg",
     dropdownItem: "w-full text-left px-4 py-2.5 text-[15px] font-nunito text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600 cursor-pointer",
@@ -60,7 +60,7 @@ const AddSoftSkillPopup = ({
             <div className="w-full max-w-xs sm:max-w-sm max-h-[90vh] overflow-y-auto">
                 <PopUpCard title="Registrar Habilidad Blanda">
                     {topError && (
-                        <div className="mx-6 sm:mx-8 mb-2 p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center">
+                        <div className="mx-6 sm:mx-8 mb-2 p-3 rounded-xl bg-red-400/10 border border-red-400 text-red-400 text-sm font-nunito text-center">
                             {topError}
                         </div>
                     )}

@@ -9,9 +9,7 @@ export interface PublicSectionsVisibility {
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-/**
- * Obtiene el estado de visibilidad de las secciones para el portafolio público de un usuario
- */
+// Obtiene la visibilidad de secciones del portafolio público de un usuario
 export const fetchPublicSectionsVisibility = async (username: string): Promise<PublicSectionsVisibility> => {
     const token = localStorage.getItem("token");
     
@@ -20,7 +18,7 @@ export const fetchPublicSectionsVisibility = async (username: string): Promise<P
     };
     
     if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
+        headers['Authorization'] = `Bearer ${token}`; // Agrega auth si hay sesión activa
     }
     
     const response = await fetch(`${API_URL}/api/v1/profile/users/${username}/sections-visibility`, {
@@ -32,6 +30,5 @@ export const fetchPublicSectionsVisibility = async (username: string): Promise<P
         throw new Error(data.message || "Error al obtener la visibilidad de las secciones");
     }
     
-    // Si la respuesta es exitosa, simplemente devuelve los datos
     return await response.json();
 };

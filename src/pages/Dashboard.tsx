@@ -10,6 +10,7 @@ const STYLES = {
     SECTION: "mb-2 pb-2",
 };
 
+// Dashboard principal (modo privado) que muestra info personal, LinkedIn y GitHub
 const Dashboard = () => {
     return (
         <div className={STYLES.WRAPPER}>
@@ -31,4 +32,5 @@ const Dashboard = () => {
         </div>
     );
 };
+
 export default Dashboard;

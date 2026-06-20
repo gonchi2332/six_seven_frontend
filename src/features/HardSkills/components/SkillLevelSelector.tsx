@@ -3,6 +3,7 @@ interface SkillLevelSelectorProps {
     onChange: (level: number) => void;
 }
 
+// Opciones de nivel (1-5 con etiquetas descriptivas)
 const LEVELS = [
     { value: 1, label: "Básico" },
     { value: 2, label: "Elemental" },
@@ -26,6 +27,7 @@ const styles = {
         }`,
 };
 
+// Selector visual de nivel (botones con número y etiqueta)
 const SkillLevelSelector = ({ value, onChange }: SkillLevelSelectorProps) => {
     return (
         <div className={styles.wrapper}>

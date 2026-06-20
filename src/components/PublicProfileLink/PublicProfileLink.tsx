@@ -20,12 +20,13 @@ interface ShareProfileModalProps {
 const ShareProfileModal = ({ username, onClose }: ShareProfileModalProps) => {
   const [copied, setCopied] = useState(false);
   
-  // Construimos la URL completa
+  // URL pública del portafolio del usuario
   const publicUrl = `${window.location.origin}/ver/${username}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(publicUrl);
     setCopied(true);
+    // Restaura el ícono tras 2 segundos
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -35,7 +36,6 @@ const ShareProfileModal = ({ username, onClose }: ShareProfileModalProps) => {
         <p className={STYLES.DESCRIPTION}>
           Cualquier persona con este enlace podrá ver tu portafolio profesional, habilidades y experiencia.
         </p>
-
         <div className={STYLES.INPUT_GROUP}>
           <input 
             type="text" 
@@ -43,7 +43,6 @@ const ShareProfileModal = ({ username, onClose }: ShareProfileModalProps) => {
             value={publicUrl} 
             className={STYLES.INPUT}
           />
-          
           <div className={STYLES.COPY_AREA}>
             <button
               onClick={handleCopy}
@@ -61,7 +60,6 @@ const ShareProfileModal = ({ username, onClose }: ShareProfileModalProps) => {
             </button>
           </div>
         </div>
-
         <div className={STYLES.FOOTER}>
           <Button variant="secondary" onClick={onClose} fullWidth >
             Cerrar

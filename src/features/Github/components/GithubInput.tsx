@@ -10,7 +10,7 @@ interface Props {
 
 const STYLES = {
     CONTAINER: "p-10 flex flex-col items-center gap-6 bg-primary rounded-2xl shadow-xl font-nunito",
-}
+};
 
 function GithubInput({ onSuccess, onClose, initialValue = '' }: Props) {
     const [input, setInput] = useState(initialValue);
@@ -22,9 +22,8 @@ function GithubInput({ onSuccess, onClose, initialValue = '' }: Props) {
 
     const handleAccept = () => {
         if (!isValid) return;
-
-        const trimmedInput = input.trim();
-        const cleanUser = trimmedInput.split('/').filter(Boolean).pop() || "";
+        // Extrae solo el username si se pegó una URL completa
+        const cleanUser = input.trim().split('/').filter(Boolean).pop() || "";
         onSuccess(cleanUser);
     };
 
@@ -32,8 +31,6 @@ function GithubInput({ onSuccess, onClose, initialValue = '' }: Props) {
         setInput(e.target.value);
         setTouched(true);
     };
-
-
 
     return (
         <div className={STYLES.CONTAINER}>
@@ -48,10 +45,7 @@ function GithubInput({ onSuccess, onClose, initialValue = '' }: Props) {
                 <Button variant='secondary' onClick={onClose}>
                     Cancelar
                 </Button>
-                <Button
-                    onClick={handleAccept}
-                    disabled={!isValid}
-                >
+                <Button onClick={handleAccept} disabled={!isValid}>
                     {initialValue ? 'Actualizar' : 'Vincular'}
                 </Button>
             </div>

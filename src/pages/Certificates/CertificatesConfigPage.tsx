@@ -29,7 +29,7 @@ const styles = {
     pageArrow: "w-8 h-8 sm:w-10 sm:h-10 rounded-lg border border-white/20 text-white/70 text-sm sm:text-base hover:border-[#90DDF0] hover:text-[#90DDF0] transition-colors disabled:opacity-30 disabled:cursor-not-allowed",
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
     toastSuccess: "bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]",
-    toastError: "bg-red-500/10 border border-red-500 text-red-400",
+    toastError: "bg-red-400/10 border border-red-400 text-red-400",
     cardConfigWrapper: "flex flex-col gap-3 p-3 bg-black/30 border border-white/10 rounded-xl hover:border-[#90DDF0]/40 transition-all",
     switchRow: "flex items-center justify-center border-t border-white/5 pt-2 mt-auto",
 };
@@ -48,6 +48,7 @@ const CertificatesConfigPage = () => {
     const [initialVisibilityMap, setInitialVisibilityMap] = useState<Record<string | number, boolean>>({});
     const [visibilityMap, setVisibilityMap] = useState<Record<string | number, boolean>>({});
 
+    // Inicializar mapa de visibilidad desde los certificados cargados
     useEffect(() => {
         if (certificates) {
             const initialMap: Record<string | number, boolean> = {};
@@ -59,6 +60,7 @@ const CertificatesConfigPage = () => {
         }
     }, [certificates]);
 
+    // Mostrar mensaje de éxito del hook y auto-ocultarlo
     useEffect(() => {
         if (successMessage) {
             setLocalSuccess(successMessage);
@@ -67,6 +69,7 @@ const CertificatesConfigPage = () => {
         }
     }, [successMessage]);
 
+    // Mostrar mensaje de error del hook y auto-ocultarlo
     useEffect(() => {
         if (error) {
             setLocalError(error);
@@ -83,6 +86,7 @@ const CertificatesConfigPage = () => {
         }));
     };
 
+    // Poner todos los certificados como ocultos
     const handleHideAll = () => {
         setVisibilityMap((prev) => {
             const updated = { ...prev };
@@ -93,6 +97,7 @@ const CertificatesConfigPage = () => {
         });
     };
 
+    // Poner todos los certificados como visibles
     const handleShowAll = () => {
         setVisibilityMap((prev) => {
             const updated = { ...prev };
@@ -103,6 +108,7 @@ const CertificatesConfigPage = () => {
         });
     };
 
+    // Guardar cambios de visibilidad en el backend
     const handleSaveChanges = async () => {
         try {
             setIsSaving(true);
@@ -129,6 +135,7 @@ const CertificatesConfigPage = () => {
         if (e.key === "Enter") handleSearch();
     };
 
+    // Filtrar certificados por título
     const filteredCertificates = (certificates || []).filter((cert) =>
         cert.title?.toLowerCase().includes(activeSearch.toLowerCase())
     );
@@ -136,6 +143,7 @@ const CertificatesConfigPage = () => {
     const totalPages = Math.max(1, Math.ceil(filteredCertificates.length / PAGE_SIZE));
     const paginatedCertificates = filteredCertificates.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
+    // Verificar si hay cambios pendientes para habilitar el botón Guardar
     const hasChanges = Object.keys(initialVisibilityMap).some(
         (key) => initialVisibilityMap[key] !== visibilityMap[key]
     );

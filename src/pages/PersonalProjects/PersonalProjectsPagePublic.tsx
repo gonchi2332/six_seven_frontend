@@ -30,9 +30,10 @@ const styles = {
     pageArrow: "w-8 h-8 sm:w-10 sm:h-10 rounded-lg border border-white/20 text-white/70 text-sm sm:text-base hover:border-[#90DDF0] hover:text-[#90DDF0] transition-colors disabled:opacity-30 disabled:cursor-not-allowed",
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
     toastSuccess: "bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]",
-    toastError: "bg-red-500/10 border border-red-500 text-red-400",
+    toastError: "bg-red-400/10 border border-red-400 text-red-400",
 };
 
+// Página pública de proyectos personales (portafolio visible)
 const ProjectsPage = () => {
     const { username } = useParams<{ username: string }>();
     const {
@@ -48,6 +49,7 @@ const ProjectsPage = () => {
     const [selectedProject, setSelectedProject] = useState<ProjectEntry | null>(null);
     const [showViewModal, setShowViewModal] = useState(false);
 
+    // Cargar proyectos públicos cuando cambia el username
     useEffect(() => {
         setPublicUser(username ?? null);
     }, [username, setPublicUser]);
@@ -61,7 +63,6 @@ const ProjectsPage = () => {
         setShowViewModal(false);
     };
 
-
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") handleSearch();
     };
@@ -71,6 +72,7 @@ const ProjectsPage = () => {
         setShowViewModal(true);
     };
 
+    // Filtrar por nombre o tema
     const filtered = publicProjects.filter((p) =>
         p.name.toLowerCase().includes(activeSearch.toLowerCase()) ||
         p.topic.toLowerCase().includes(activeSearch.toLowerCase())
@@ -176,8 +178,7 @@ const ProjectsPage = () => {
                 </div>
             </div>
 
-
-
+            {/* Modal para ver detalle del proyecto */}
             {showViewModal && selectedProject && (
                 <ViewProjectPopup
                     project={selectedProject}

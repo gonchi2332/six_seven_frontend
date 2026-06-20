@@ -2,7 +2,7 @@ import Button from "../../../components/Button/Button";
 import PopUpCard from "../../../components/PopUpCard/PopUpCard";
 
 interface Props {
-    degree: string;
+    degree: string; // Título de la formación a eliminar
     onConfirm: () => void;
     onClose: () => void;
     onBack?: () => void;
@@ -17,6 +17,7 @@ const styles = {
 };
 
 const DeleteEducationPopup = ({ degree, onConfirm, onClose, onBack, isSubmitting = false }: Props) => {
+    // Si hay onBack regresa al popup anterior, sino cierra el modal
     const handleCancel = () => {
         if (onBack) onBack();
         else onClose();

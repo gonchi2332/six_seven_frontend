@@ -18,7 +18,9 @@ const styles = {
     academicLevel: "text-surface font-inter text-sm sm:text-base leading-tight line-clamp-1"
 };
 
+// Tarjeta visual de formación académica para el listado
 const EducationCard = ({ entry, onView }: Props) => {
+    // Muestra rango con "Presente" si está cursando
     const dateDisplay = entry.educationState === "cursando"
         ? `${entry.startDate} - Presente`
         : entry.startDate;
@@ -28,9 +30,7 @@ const EducationCard = ({ entry, onView }: Props) => {
             <div className={styles.content}>
                 <div className={styles.header}>
                     <h3 className={styles.title}>{entry.degree}</h3>
-                    <h3 className={styles.academicLevel}>
-                        {entry.academicLevel}
-                    </h3>
+                    <h3 className={styles.academicLevel}>{entry.academicLevel}</h3>
                     <div className={styles.infoRow}>
                         <span className={styles.educationState}>{entry.educationState}</span>
                         <span className={styles.separator}>|</span>

@@ -15,6 +15,7 @@ const styles = {
     buttonsWrapper: "flex flex-row flex-wrap gap-2 justify-center mt-2 px-4 sm:px-6 pb-6",
 };
 
+// Popup de acciones para una habilidad (Ver, Modificar, Eliminar, Cancelar)
 const SkillActionPopup = ({ skill, onView, onModify, onDelete, onClose }: Props) => {
     return (
         <div className={styles.overlay}>

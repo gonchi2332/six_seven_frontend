@@ -21,9 +21,9 @@ const Button = ({
   className = '',
   size = 'md',
 }: ButtonProps) => {
-
   const BASE_STYLES = "rounded-xl transition-all duration-200 font-nunito font-bold cursor-pointer inline-flex items-center justify-center text-center";
   
+  // Padding y tamaño de texto por tamaño
   const sizeStyles = {
     sm: "px-2.5 py-1 text-xs sm:px-3 sm:py-1.5 sm:text-sm",
     md: "px-3.5 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base",
@@ -32,6 +32,7 @@ const Button = ({
   
   const widthStyles = fullWidth ? "w-full" : "w-fit";
 
+  // Colores por variante
   const variantStyles = {
     primary: "bg-secondary text-surface hover:bg-secondary/90",
     secondary: "bg-surface text-primary hover:bg-surface/90",

@@ -11,6 +11,7 @@ export interface UserSearchResult {
 }
 
 export const userService = {
+    // Obtiene todos los usuarios registrados para el buscador de la homepage
     getAllUsers: async (): Promise<UserSearchResult[]> => {
         const response = await fetch(BASE_URL);
         const data = await response.json();

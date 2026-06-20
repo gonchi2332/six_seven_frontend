@@ -29,11 +29,12 @@ const styles = {
     pageArrow: "w-8 h-8 sm:w-10 sm:h-10 rounded-lg border border-white/20 text-white/70 text-sm sm:text-base hover:border-[#90DDF0] hover:text-[#90DDF0] transition-colors disabled:opacity-30 disabled:cursor-not-allowed",
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
     toastSuccess: "bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]",
-    toastError: "bg-red-500/10 border border-red-500 text-red-400",
+    toastError: "bg-red-400/10 border border-red-400 text-red-400",
     cardConfigWrapper: "flex flex-col gap-3 p-3 bg-black/30 border border-white/10 rounded-xl hover:border-[#90DDF0]/40 transition-all",
     switchRow: "flex items-center justify-center border-t border-white/5 pt-2 mt-auto",
 };
 
+// Página de configuración de visibilidad de formación académica
 const EducationConfigPage = () => {
     const { entries, isLoading, error, successMessage } = useEducation();
 
@@ -47,6 +48,7 @@ const EducationConfigPage = () => {
     const [visibilityMap, setVisibilityMap] = useState<Record<string | number, boolean>>({});
     const [isSaving, setIsSaving] = useState(false);
 
+    // Inicializar mapa de visibilidad desde las entradas cargadas
     useEffect(() => {
         if (entries) {
             const initialMap: Record<string | number, boolean> = {};
@@ -58,6 +60,7 @@ const EducationConfigPage = () => {
         }
     }, [entries]);
 
+    // Mostrar mensaje de éxito del hook
     useEffect(() => {
         if (successMessage) {
             setLocalSuccess(successMessage);
@@ -66,6 +69,7 @@ const EducationConfigPage = () => {
         }
     }, [successMessage]);
 
+    // Mostrar mensaje de error del hook
     useEffect(() => {
         if (error) {
             setLocalError(error);
@@ -74,6 +78,7 @@ const EducationConfigPage = () => {
         }
     }, [error]);
 
+    // Limpiar búsqueda cuando el input está vacío
     useEffect(() => {
         if (searchInput === "") {
             setActiveSearch("");
@@ -88,6 +93,7 @@ const EducationConfigPage = () => {
         }));
     };
 
+    // Poner todas las entradas como ocultas
     const handleHideAll = () => {
         setVisibilityMap((prev) => {
             const updated = { ...prev };
@@ -98,6 +104,7 @@ const EducationConfigPage = () => {
         });
     };
 
+    // Poner todas las entradas como visibles
     const handleShowAll = () => {
         setVisibilityMap((prev) => {
             const updated = { ...prev };
@@ -108,6 +115,7 @@ const EducationConfigPage = () => {
         });
     };
 
+    // Guardar cambios de visibilidad en el backend
     const handleSaveChanges = async () => {
         try {
             setIsSaving(true);
@@ -133,6 +141,7 @@ const EducationConfigPage = () => {
         if (e.key === "Enter") handleSearch();
     };
 
+    // Filtrar por título o institución
     const filtered = entries.filter((e) => {
         if (!activeSearch.trim()) return true;
         const term = activeSearch.toLowerCase();
@@ -142,6 +151,7 @@ const EducationConfigPage = () => {
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
+    // Verificar si hay cambios pendientes
     const hasChanges = Object.keys(initialVisibilityMap).some(
         (key) => initialVisibilityMap[key] !== visibilityMap[key]
     );

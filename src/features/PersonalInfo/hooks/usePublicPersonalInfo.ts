@@ -3,6 +3,7 @@ import { getPersonalInfo } from "../services/personalInfoService";
 import { parseProfilePicture } from "../../../services/decodeBase64";
 import type { FormData } from "./useProfileFormRegex";
 
+// Hook para cargar información personal pública (portafolio visible)
 export const usePublicPersonalInfo = (username: string | undefined) => {
     const [data, setData] = useState<Partial<FormData> | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -37,3 +38,4 @@ export const usePublicPersonalInfo = (username: string | undefined) => {
 
     return { data, isLoading, error };
 };
+

@@ -1,12 +1,14 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
 let isRefreshing = false;
+// Cola de callbacks pendientes mientras se renueva el token
 let refreshSubscribers: ((token: string) => void)[] = [];
 
 const subscribeTokenRefresh = (cb: (token: string) => void) => {
     refreshSubscribers.push(cb);
 };
 
+// Notifica a todos los suscriptores con el nuevo token
 const onRefreshed = (token: string) => {
     refreshSubscribers.map((cb) => cb(token));
     refreshSubscribers = [];
@@ -29,10 +31,8 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}, form
     if (response.status === 401) {
         if (!isRefreshing) {
             isRefreshing = true;
-
             try {
                 const refreshToken = sessionStorage.getItem("refreshToken");
-
                 if (!refreshToken) {
                     throw new Error("No hay un refresh token disponible");
                 }
@@ -43,11 +43,9 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}, form
                     },
                     body: JSON.stringify({ refreshToken })
                 });
-
                 const data = await refreshResponse.json();
                 if (refreshResponse.ok && data.success) {
                     const newToken = data.accessToken;
-                    
                     localStorage.setItem("token", newToken);
                     isRefreshing = false;
                     onRefreshed(newToken);
@@ -56,12 +54,14 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}, form
                 }
             } catch (error) {
                 isRefreshing = false;
+                // Si falla la renovación, limpia sesión y redirige al login
                 localStorage.clear();
                 sessionStorage.clear();
                 window.location.href = "/login";
                 return response;
             }
         }
+        // Encola la petición hasta que el token sea renovado
         return new Promise((resolve) => {
             subscribeTokenRefresh((newToken) => {
                 if (options.headers) {
@@ -71,6 +71,5 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}, form
             });
         });
     }
-
     return response;
 };

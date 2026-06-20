@@ -18,6 +18,7 @@ const EYE_OPEN_ICON = "fa-solid fa-eye";
 const EYE_CLOSE_ICON = "fa-solid fa-eye-slash";
 const EMAIL_HINT = "text-surface text-sm font-nunito text-center mb-2";
 
+// Censura el email mostrando solo los primeros 4 caracteres de la parte local
 const censorEmail = (email: string): string => {
     const [local, domain] = email.split("@");
     if (!local || !domain) return email;
@@ -55,31 +56,25 @@ const ResetPasswordPopup = ({ username, code, email, onClose }: Props) => {
                 <div className={VERIFICATION_ICON_WRAPPER}>
                     <i className={SHIELD_ICON}></i>
                 </div>
-
                 <h2 className={VERIFICATION_TITLE}>
                     Recuperación de Contraseña
                 </h2>
-
                 <p className={VERIFICATION_DESCRIPTION}>
                     Ingrese y confirme su nueva contraseña
                 </p>
-
+                {/* Muestra el email censurado al que se envió el código */}
                 {email && (
                     <p className={EMAIL_HINT}>
                         Código enviado a: {censorEmail(email)}
                     </p>
                 )}
-
                 {error && (
                     <p className={ERROR_TEXT} style={{ textAlign: "center", marginBottom: "1rem" }}>
                         {error}
                     </p>
                 )}
-
                 <div className={INPUT_WRAPPER}>
-                    <label className={LABEL}>
-                        Nueva Contraseña
-                    </label>
+                    <label className={LABEL}>Nueva Contraseña</label>
                     <div className={INPUT_CONTAINER}>
                         <input
                             type={showPassword ? "text" : "password"}
@@ -88,22 +83,18 @@ const ResetPasswordPopup = ({ username, code, email, onClose }: Props) => {
                             onChange={(e) => updatePassword(e.target.value)}
                             placeholder="Mínimo 8 caracteres"
                         />
+                        {/* Toggle visibilidad de contraseña */}
                         <i
                             className={`${showPassword ? EYE_CLOSE_ICON : EYE_OPEN_ICON} ${EYE_ICON}`}
                             onClick={toggleShowPassword}
                         ></i>
                     </div>
                     {validation.passwordError && (
-                        <p className={ERROR_TEXT}>
-                            {validation.passwordError}
-                        </p>
+                        <p className={ERROR_TEXT}>{validation.passwordError}</p>
                     )}
                 </div>
-
                 <div className={INPUT_WRAPPER}>
-                    <label className={LABEL}>
-                        Confirmar Contraseña
-                    </label>
+                    <label className={LABEL}>Confirmar Contraseña</label>
                     <div className={INPUT_CONTAINER}>
                         <input
                             type={showConfirmPassword ? "text" : "password"}
@@ -118,12 +109,9 @@ const ResetPasswordPopup = ({ username, code, email, onClose }: Props) => {
                         ></i>
                     </div>
                     {validation.confirmError && (
-                        <p className={ERROR_TEXT}>
-                            {validation.confirmError}
-                        </p>
+                        <p className={ERROR_TEXT}>{validation.confirmError}</p>
                     )}
                 </div>
-
                 <div className={BUTTONS_WRAPPER}>
                     <Button
                         variant="secondary"

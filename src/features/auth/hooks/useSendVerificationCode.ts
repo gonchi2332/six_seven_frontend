@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { sendVerificationCode } from "../services/verificationCodeService";
 
@@ -8,6 +7,7 @@ interface UseSendVerificationCodeParams {
     token?: string | null;
 }
 
+// Hook para enviar el código de verificación al email del usuario
 export const useSendVerificationCode = ({ username, mail, token }: UseSendVerificationCodeParams) => {
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -15,7 +15,6 @@ export const useSendVerificationCode = ({ username, mail, token }: UseSendVerifi
     const handleSend = async (): Promise<boolean> => {
         setError(null);
         setIsLoading(true);
-
         try {
             const data = await sendVerificationCode({ username, targetMail: mail, token });
             if (data.success) {
@@ -32,10 +31,5 @@ export const useSendVerificationCode = ({ username, mail, token }: UseSendVerifi
         }
     };
 
-
-    return {
-        error,
-        isLoading,
-        handleSend,
-    };
+    return { error, isLoading, handleSend };
 };

@@ -3,7 +3,6 @@ import Button from "../../../../components/Button/Button";
 import { useSendRecoveryCode } from "../../hooks/useRecoveryCode";
 import { censorEmail } from "../../utils/stringUtils";
 
-
 const CONTAINER = "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6";
 const CARD = "bg-primary rounded-2xl w-full max-w-md shadow-2xl py-5 flex flex-col items-center px-8";
 const ICON_WRAPPER = "w-20 h-20 flex items-center justify-center bg-black rounded-full shadow-lg border border-white/10 mb-3";
@@ -24,9 +23,7 @@ interface Props {
 
 const EmailInputPopup = ({ onSubmit, onCancel }: Props) => {
     const [username, setUsername] = useState("");
-
     const { email, error, isLoading, handleSubmit, handleCancel } = useSendRecoveryCode({ username, onSubmit, onCancel });
-
 
     return (
         <div className={CONTAINER}>
@@ -34,15 +31,12 @@ const EmailInputPopup = ({ onSubmit, onCancel }: Props) => {
                 <div className={ICON_WRAPPER}>
                     <i className={ICON}></i>
                 </div>
-
                 <h2 className={TITLE}>
                     Recuperación de Contraseña
                 </h2>
-
                 <p className={DESCRIPTION}>
                     Ingresa tu nombre de usuario para recuperar tu cuenta
                 </p>
-
                 <div className={INPUT_WRAPPER}>
                     <label className={LABEL}>
                         Nombre de usuario:*
@@ -55,17 +49,15 @@ const EmailInputPopup = ({ onSubmit, onCancel }: Props) => {
                         onChange={(e) => setUsername(e.target.value)}
                     />
                 </div>
-
+                {/* Muestra el email censurado al que se enviará el código */}
                 {email && (
                     <p className={EMAIL_HINT}>
                         Se enviará un código a: {censorEmail(email)}
                     </p>
                 )}
-
                 {error && (
                     <p className={ERROR}>{error}</p>
                 )}
-
                 <div className={BUTTONS_WRAPPER}>
                     <Button
                         variant="secondary"
@@ -75,7 +67,6 @@ const EmailInputPopup = ({ onSubmit, onCancel }: Props) => {
                     >
                         {isLoading ? "Enviando..." : "Enviar"}
                     </Button>
-
                     <Button
                         variant="primary"
                         onClick={handleCancel}

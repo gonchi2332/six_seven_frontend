@@ -7,20 +7,17 @@ interface UseCertificateFormProps {
     onSubmit: (data: any) => Promise<void>;
 }
 
+// Hook para gestionar el formulario de certificados en modo add y edit
 const useCertificateForm = ({ mode, initial, onSubmit }: UseCertificateFormProps) => {
     const [title, setTitle] = useState(initial?.title ?? "");
     const [titleError, setTitleError] = useState("");
-
     const [description, setDescription] = useState(initial?.description ?? "");
     const [descError, setDescError] = useState("");
-
     const [area, setArea] = useState(initial?.area ?? "");
     const [areaError, setAreaError] = useState("");
-
     const [issueDate, setIssueDate] = useState(initial?.issueDate ?? "");
     const [dateError, setDateError] = useState("");
     const [dateTouched, setDateTouched] = useState(false);
-
     const [coverImage, setCoverImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(initial?.coverImage ?? null);
     const [imageError, setImageError] = useState("");
@@ -28,23 +25,17 @@ const useCertificateForm = ({ mode, initial, onSubmit }: UseCertificateFormProps
 
     const fileRef = useRef<HTMLInputElement>(null);
 
+    // En modo add requiere imagen nueva; en modo edit acepta la imagen existente
     const isFormValid = mode === "add"
-        ? title.trim() !== "" &&
-        description.trim() !== "" &&
-        area.trim() !== "" &&
-        issueDate !== "" &&
-        coverImage !== null
-        : description.trim() !== "" &&
-        issueDate !== "" &&
-        (coverImage !== null || !!initial?.coverImage);
-    //(mode === "edit" ? (coverImage !== null || !!initial?.coverImage) : coverImage !== null);
+        ? title.trim() !== "" && description.trim() !== "" && area.trim() !== "" && issueDate !== "" && coverImage !== null
+        : description.trim() !== "" && issueDate !== "" && (coverImage !== null || !!initial?.coverImage);
 
+    // En modo add siempre hay cambios; en modo edit compara con los datos originales
     const hasChanges = mode === "add"
         ? true
         : description !== (initial?.description ?? "") ||
-        //area !== (initial?.area ?? "") ||
-        issueDate !== (initial?.issueDate ?? "") ||
-        coverImage !== null;
+          issueDate !== (initial?.issueDate ?? "") ||
+          coverImage !== null;
 
     const handleTitleChange = (v: string) => {
         setTitle(v);
@@ -83,7 +74,7 @@ const useCertificateForm = ({ mode, initial, onSubmit }: UseCertificateFormProps
             return;
         }
         setCoverImage(file);
-        setImagePreview(URL.createObjectURL(file));
+        setImagePreview(URL.createObjectURL(file)); // Genera URL temporal para previsualización
         setImageError("");
     };
 
@@ -91,6 +82,7 @@ const useCertificateForm = ({ mode, initial, onSubmit }: UseCertificateFormProps
         if (!isFormValid) return;
 
         let imageToSend = coverImage;
+        // En modo edit sin nueva imagen, convierte la imagen existente a File
         if (!imageToSend && mode === "edit" && initial?.coverImage) {
             const res = await fetch(initial.coverImage);
             const blob = await res.blob();
@@ -106,24 +98,10 @@ const useCertificateForm = ({ mode, initial, onSubmit }: UseCertificateFormProps
         };
 
         if (mode === "add") {
-            await onSubmit({
-                ...baseData,
-                title: title.trim(),
-                //area: area.trim(),
-            });
+            await onSubmit({ ...baseData, title: title.trim() });
         } else {
             await onSubmit(baseData as any);
         }
-
-        /*
-        await onSubmit({
-            title: title.trim(),
-            description: description.trim(),
-            area: area.trim(),
-            issueDate,
-            coverImage: imageToSend,
-        });
-        */
     };
 
     return {

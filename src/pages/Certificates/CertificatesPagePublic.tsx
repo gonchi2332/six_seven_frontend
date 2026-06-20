@@ -27,6 +27,7 @@ const styles = {
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
 };
 
+// Página pública de certificados (portafolio visible)
 const CertificatesPublicPage = () => {
     const { username } = useParams<{ username: string }>();
     const {
@@ -41,6 +42,7 @@ const CertificatesPublicPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedCertificate, setSelectedCertificate] = useState<any>(null);
 
+    // Cargar certificados del usuario cuando cambia el username en la URL
     useEffect(() => {
         setPublicUser(username ?? null);
     }, [username, setPublicUser]);
@@ -62,7 +64,7 @@ const CertificatesPublicPage = () => {
         setSelectedCertificate(null);
     };
 
-    // Filtrar por búsqueda
+    // Filtrar por título
     const filtered = publicCertificates.filter((cert) =>
         (cert.title || "").toLowerCase().includes(activeSearch.toLowerCase())
     );
@@ -173,6 +175,7 @@ const CertificatesPublicPage = () => {
                 </div>
             </div>
 
+            {/* Modal para ver detalle al hacer clic */}
             {selectedCertificate && (
                 <ViewCertificatePopup
                     certificate={selectedCertificate}

@@ -14,8 +14,8 @@ type Props = {
     onClose?: () => void;
 };
 
+// Orquesta los tres pasos del flujo: ingreso de username → código → nueva contraseña
 const VerificationFlow = (props: Props) => {
-
     const {
         step,
         mode,

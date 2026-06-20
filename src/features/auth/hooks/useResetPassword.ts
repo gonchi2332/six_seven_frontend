@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { resetPassword } from "../services/recoveryCodeService";
 
+// Hook para ejecutar el reseteo de contraseña en el backend
 export const useResetPassword = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -19,9 +20,5 @@ export const useResetPassword = () => {
         }
     };
 
-    return {
-        isLoading,
-        error,
-        handleResetPassword,
-    };
+    return { isLoading, error, handleResetPassword };
 };

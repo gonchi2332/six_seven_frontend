@@ -10,7 +10,7 @@ interface Props {
 
 const STYLES = {
     CONTAINER: "p-10 flex flex-col items-center gap-6 bg-primary rounded-2xl shadow-xl font-nunito",
-}
+};
 
 function LinkedInCard({ onSuccess, onClose, initialValue = '' }: Props) {
     const [input, setInput] = useState(initialValue);
@@ -18,6 +18,7 @@ function LinkedInCard({ onSuccess, onClose, initialValue = '' }: Props) {
     const handleAccept = () => {
         const trimmedInput = input.trim();
         if (trimmedInput.length > 0) {
+            // Extrae solo el username si se pegó una URL completa
             const cleanUser = trimmedInput.split('/').filter(Boolean).pop() || "";
             onSuccess(cleanUser);
         }
@@ -32,13 +33,12 @@ function LinkedInCard({ onSuccess, onClose, initialValue = '' }: Props) {
                 onChange={(e) => setInput(e.target.value)}
             />
             <div className='flex gap-4 w-full justify-center'>
-                <Button variant='secondary' onClick={onClose} >
+                <Button variant='secondary' onClick={onClose}>
                     Cancelar
                 </Button>
                 <Button onClick={handleAccept}>
                     {initialValue ? 'Actualizar' : 'Vincular'}
                 </Button>
-
             </div>
         </div>
     );

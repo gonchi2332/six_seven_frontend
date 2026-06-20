@@ -28,7 +28,7 @@ const STYLES = {
     LINKS_SECTION: "flex flex-col gap-3",
     LINK_GROUP: "flex flex-col sm:flex-row gap-2 items-start",
     LINK_FIELDS: "flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2 w-full",
-    REMOVE_BTN: "sm:mt-6 p-1.5 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors self-end sm:self-auto",
+    REMOVE_BTN: "sm:mt-6 p-1.5 rounded-lg bg-red-400/20 text-red-400 hover:bg-red-400/30 transition-colors self-end sm:self-auto",
     FOOTER: "flex gap-3 mt-6 pt-4 px-6 pb-2",
 };
 
@@ -176,12 +176,12 @@ const PersonalProjectsModal = ({
                                     maxSizeMB={2}
                                 />
                                 {errors.image && (
-                                    <p className="text-red-500 text-xs mt-0.5">{errors.image as string}</p>
+                                    <p className="text-red-400 text-xs mt-0.5">{errors.image as string}</p>
                                 )}
                             </div>
 
                             {externalError && (
-                                <p className="text-red-500 text-sm">{externalError}</p>
+                                <p className="text-red-400 text-sm">{externalError}</p>
                             )}
                         </div>
 

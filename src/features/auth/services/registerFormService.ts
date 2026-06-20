@@ -16,25 +16,18 @@ export interface RegisterResponse {
     token: string;
 }
 
-const API_URL = import.meta.env.VITE_API_URL 
+const API_URL = import.meta.env.VITE_API_URL;
 
-// Paso 1: Registrar credenciales
-export const registerUser = async (
-    data: RegisterRequest
-): Promise<RegisterResponse> => {
+// Registra las credenciales del nuevo usuario y retorna el token JWT
+export const registerUser = async (data: RegisterRequest): Promise<RegisterResponse> => {
     const response = await fetch(`${API_URL}/api/v2/auth/users/credentials-info`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
     });
-
     if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message || 'El nombre de usuario ya está en uso');
     }
-
     return response.json();
 };
-

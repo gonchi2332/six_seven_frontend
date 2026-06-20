@@ -23,6 +23,7 @@ interface UseVerificationFlowReturn {
     handleClose: () => void;
 }
 
+// Orquesta los tres pasos del flujo: email → verificación → reset
 export const useEmailVerificationFlow = ({
     initialMode = "verify",
     initialStep = "email",
@@ -55,7 +56,7 @@ export const useEmailVerificationFlow = ({
         if (codeString) {
             setVerifiedCode(codeString);
         }
-
+        // En recovery avanza a reset, en verify cierra el flujo
         if (mode === "recovery") {
             setStep("reset");
         } else if (mode === "verify") {
@@ -64,13 +65,7 @@ export const useEmailVerificationFlow = ({
     };
 
     return {
-        step,
-        mode,
-        username,
-        email,
-        verifiedCode,
-        handleEmailSubmit,
-        handleCodeSuccess,
-        handleClose,
+        step, mode, username, email, verifiedCode,
+        handleEmailSubmit, handleCodeSuccess, handleClose,
     };
 };

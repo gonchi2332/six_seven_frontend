@@ -1,4 +1,4 @@
-// Opcional: Puedes definir la interfaz de lo que devuelve la API para mayor tipado
+// Interfaz de la respuesta de la API RestCountries
 export interface RestCountryResponse {
   name: {
     common: string;
@@ -10,6 +10,7 @@ export interface RestCountryResponse {
   };
 }
 
+// Obtiene todos los países con soporte para nombre en español
 export const getCountries = async (): Promise<RestCountryResponse[]> => {
   const response = await fetch("https://restcountries.com/v3.1/all?fields=translations,name");
   

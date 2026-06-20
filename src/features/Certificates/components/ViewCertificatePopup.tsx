@@ -29,6 +29,7 @@ const styles = {
     closeButton: "absolute right-4 top-4 text-white/50 hover:text-[#90DDF0] transition-colors p-1 hover:bg-white/10 rounded-lg",
 };
 
+// Subcomponente para mostrar una fila de información con ícono
 const InfoRow = ({
     icon: Icon,
     label,
@@ -56,11 +57,10 @@ const InfoRow = ({
 );
 
 const ViewCertificatePopup = ({ certificate, onClose }: Props) => {
+    // Formatea la fecha en DD/MM/YYYY para mostrar en el popup
     const formattedDate = certificate.issueDate
         ? new Date(certificate.issueDate + "T00:00:00").toLocaleDateString("es-ES", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric"
+            day: "2-digit", month: "2-digit", year: "numeric"
         })
         : null;
 
@@ -69,7 +69,6 @@ const ViewCertificatePopup = ({ certificate, onClose }: Props) => {
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
                 <PopUpCard title="Certificado">
                     <button onClick={onClose} className={styles.closeButton}>✕</button>
-
                     <div className={styles.content}>
                         <div className={styles.imageWrapper}>
                             {certificate.coverImage ? (
