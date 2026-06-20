@@ -11,7 +11,7 @@ const styles = {
     addBtn: "px-4 py-2 rounded-xl bg-primary text-white text-sm font-nunito font-semibold transition-all hover:brightness-110 active:scale-95",
     list: "flex flex-col gap-3",
     empty: "text-surface/50 font-nunito text-sm text-center py-6",
-    error: "p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center",
+    error: "p-3 rounded-xl bg-red-400/10 border border-red-400 text-red-400 text-sm font-nunito text-center",
     success: "p-3 rounded-xl bg-primary/10 border border-primary text-primary text-sm font-nunito text-center",
     paginationWrapper: "flex items-center justify-center gap-4 pt-3",
     paginationBtn: "w-10 h-10 rounded-xl border border-white text-white flex items-center justify-center transition-all duration-200 hover:scale-105 hover:shadow-md active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed",

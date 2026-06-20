@@ -19,7 +19,7 @@ interface Props {
 const styles = {
     overlay: "fixed inset-0 bg-black/60 flex items-center justify-center px-4 sm:px-6 py-4 z-50",
     body: "flex flex-col gap-4 px-4 sm:px-8 pb-2",
-    serverError: "mx-4 sm:mx-8 mb-2 p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center",
+    serverError: "mx-4 sm:mx-8 mb-2 p-3 rounded-xl bg-red-400/10 border border-red-400 text-red-400 text-sm font-nunito text-center",
     buttonsWrapper: "flex gap-3 justify-center mt-4 px-4 sm:px-8 pb-6",
     mainLabel: "mb-1 text-xl font-inter text-white"
 };

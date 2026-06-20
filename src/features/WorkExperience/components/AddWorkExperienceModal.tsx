@@ -19,7 +19,7 @@ const styles = {
     checkbox: "w-4 h-4 text-primary rounded focus:ring-primary cursor-pointer",
     checkboxLabel: "text-surface font-nunito text-sm cursor-pointer",
     buttonContainer: "flex gap-3 px-6 pb-6",
-    apiError: "mx-6 mt-2 p-3 text-sm text-red-400 bg-red-500/10 border border-red-500/50 rounded-xl font-nunito",
+    apiError: "mx-6 mt-2 p-3 text-sm text-center text-red-400 bg-red-400/10 border border-red-400/50 rounded-xl font-nunito",
 };
 
 const AddWorkExperienceModal = ({ isOpen, onClose, onAdd }: AddWorkExperienceModalProps) => {

@@ -34,7 +34,7 @@ const AcademicLevelSelect = ({
                 disabled={disabled}
                 onClick={() => !disabled && setOpen((o) => !o)}
                 className={`w-full bg-white border rounded-xl px-4 py-2 font-nunito text-[15px] outline-none transition-all flex items-center justify-between
-                    ${hasError ? "border-red-500 bg-red-50" : "border-gray-300"}
+                    ${hasError ? "border-red-400 bg-red-50" : "border-gray-300"}
                     ${disabled ? "cursor-not-allowed bg-gray-100" : "cursor-pointer hover:border-blue-400"}`}
             >
                 <span className={selectedOption ? "text-black" : "text-gray-400"}>

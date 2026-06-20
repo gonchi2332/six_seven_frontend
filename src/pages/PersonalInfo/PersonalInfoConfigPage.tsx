@@ -24,7 +24,7 @@ const styles = {
     loading: "text-white/70 font-nunito text-center py-12 bg-black/20 rounded-xl border border-white/10",
     toast: "font-nunito text-sm text-center py-2 px-4 rounded-xl",
     toastSuccess: "bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]",
-    toastError: "bg-red-500/10 border border-red-500 text-red-400",
+    toastError: "bg-red-400/10 border border-red-400 text-red-400",
 };
 
 // Fila configurable con Switch para campos de contacto (residencia, email, teléfono)

@@ -17,7 +17,7 @@ const styles = {
     label: "mb-1 text-xl font-inter text-white",
     required: "text-white ml-0.5",
     input: "w-full px-4 py-2 border rounded-xl outline-none transition-all duration-200 bg-white font-nunito cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-[#07393C] file:text-[#90DDF0] file:font-nunito file:text-sm hover:file:bg-[#2C666E] file:cursor-pointer",
-    inputError: "border-red-500",
+    inputError: "border-red-400",
     inputNormal: "border-gray-300",
     hint: "mt-1 text-xs text-white/50 font-nunito",
     errorText: "mt-1 text-xs text-red-600 font-medium self-end",

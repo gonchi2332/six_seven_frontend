@@ -25,11 +25,11 @@ const styles = {
     field: "flex flex-col gap-1",
     label: "mb-1 text-xl font-inter text-white",
     required: "text-white ml-0.5",
-    errorText: "text-xs text-red-500 mt-1 text-right",
+    errorText: "text-xs text-red-400 mt-1 text-right",
     checkboxContainer: "flex items-center gap-2 mt-1",
     checkbox: "w-4 h-4 accent-[#90DDF0] rounded cursor-pointer",
     checkboxLabel: "text-white/80 font-nunito text-sm cursor-pointer hover:text-white transition-colors",
-    serverError: "mx-4 sm:mx-8 mb-2 p-3 rounded-xl bg-red-500/10 border border-red-500 text-red-500 text-sm font-nunito text-center",
+    serverError: "mx-4 sm:mx-8 mb-2 p-3 rounded-xl bg-red-400/10 border border-red-400 text-red-400 text-sm font-nunito text-center",
     buttonsWrapper: "flex gap-3 justify-center mt-4 px-4 sm:px-8 pb-6",
     selectWrapper: "w-full",
 };

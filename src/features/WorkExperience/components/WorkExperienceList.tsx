@@ -163,7 +163,7 @@ const WorkExperienceList = () => {
                         </div>
 
                         {error && (
-                            <p className={`${styles.toast} bg-red-500/10 border border-red-500 text-red-400`}>{error}</p>
+                            <p className={`${styles.toast} bg-red-400/10 border border-red-400 text-red-400`}>{error}</p>
                         )}
                         {successMessage && (
                             <p className={`${styles.toast} bg-[#90DDF0]/10 border border-[#90DDF0]/40 text-[#90DDF0]`}>

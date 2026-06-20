@@ -114,7 +114,7 @@ const AddInfoModal = ({ isOpen, onClose, onAdd, emptyFields }: AddInfoModalProps
 
                     {/* Mensaje de error general */}
                     {(error || (selectedField && !fieldError && !value && error)) && (
-                        <p className="text-red-500 text-sm mt-2">{error}</p>
+                        <p className="text-red-400 text-sm mt-2">{error}</p>
                     )}
 
                     <div className={styles.buttonContainer}>

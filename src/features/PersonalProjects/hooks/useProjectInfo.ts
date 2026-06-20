@@ -1,4 +1,3 @@
-// hooks/useProjectInfo.ts
 import { useState, useEffect } from "react";
 import type { CreateProjectPayload, UpdateProjectPayload } from "../services/personalProjectsService";
 type FormErrors = Partial<Record<keyof CreateProjectPayload | string, string>>;
@@ -13,13 +12,12 @@ const INITIAL_FORM: CreateProjectPayload = {
     image: null,
 };
 
-// Hook para manejar el estado y validacion del formulario de proyectos
 export const useProjectForm = (
     onSubmit: (data: CreateProjectPayload | UpdateProjectPayload, id?: string) => Promise<void>,
     isSubmitting: boolean,
     projectId?: string,
-    initialData?: Partial<CreateProjectPayload>,  // Opcional
-    isEditing: boolean = false,  // Opcional con valor por defecto
+    initialData?: Partial<CreateProjectPayload>,
+    isEditing: boolean = false,
 ) => {
     const [formData, setFormData] = useState<CreateProjectPayload>({
         ...INITIAL_FORM,
@@ -30,10 +28,8 @@ export const useProjectForm = (
     const [originalData, setOriginalData] = useState<Partial<CreateProjectPayload>>({});
     const [errors, setErrors] = useState<FormErrors>({});
 
-    // Obtener la URL de la imagen si existe
     const imageUrl = typeof formData.image === 'string' ? formData.image : null;
 
-    // Guardar los datos originales cuando initialData cambie
     useEffect(() => {
         if (initialData && isEditing) {
             setOriginalData({
@@ -47,11 +43,9 @@ export const useProjectForm = (
         }
     }, [initialData, isEditing]);
 
-    // Verificar si hay cambios en el formulario
     const hasChanges = (): boolean => {
-        if (!isEditing) return true; // En modo creación siempre habilitado
+        if (!isEditing) return true;
 
-        // Comparar campos
         const descriptionChanged = formData.description !== originalData.description;
         const topicChanged = formData.topic !== originalData.topic;
         const roleChanged = formData.role !== originalData.role;
@@ -62,7 +56,6 @@ export const useProjectForm = (
         return descriptionChanged || topicChanged || roleChanged || statusChanged || linksChanged || imageChanged;
     };
 
-    // Manejar cambios en los campos del formulario
     const handleChange = <K extends keyof CreateProjectPayload>(
         field: K,
         value: CreateProjectPayload[K]
@@ -74,8 +67,6 @@ export const useProjectForm = (
             newValue = value;
             if (value.length === 0) {
                 setErrors((prev) => ({ ...prev, [field]: "El título del proyecto es obligatorio" }));
-            } else if (value.length > 50) {
-                setErrors((prev) => ({ ...prev, [field]: "El nombre del proyecto supera el límite de 50 caracteres" }));
             } else {
                 setErrors((prev) => ({ ...prev, [field]: undefined }));
             }
@@ -86,8 +77,6 @@ export const useProjectForm = (
             newValue = value;
             if (value.length === 0) {
                 setErrors((prev) => ({ ...prev, [field]: "La descripción es obligatoria" }));
-            } else if (value.length > 200) {
-                setErrors((prev) => ({ ...prev, [field]: "La descripción supera el límite de 200 caracteres" }));
             } else {
                 setErrors((prev) => ({ ...prev, [field]: undefined }));
             }
@@ -98,8 +87,6 @@ export const useProjectForm = (
             newValue = value;
             if (value.length === 0) {
                 setErrors((prev) => ({ ...prev, [field]: "El rol es obligatorio" }));
-            } else if (value.length > 50) {
-                setErrors((prev) => ({ ...prev, [field]: "El rol supera el límite de 50 caracteres" }));
             } else {
                 setErrors((prev) => ({ ...prev, [field]: undefined }));
             }
@@ -126,7 +113,6 @@ export const useProjectForm = (
         setFormData((prev) => ({ ...prev, [field]: newValue }));
     };
 
-    // Manejar cambios en los campos de enlaces
     const handleLinkChange = (index: number, field: "label" | "url", value: string) => {
         setFormData((prev) => {
             const updated = [...prev.links];
@@ -137,33 +123,24 @@ export const useProjectForm = (
             return { ...prev, links: updated };
         });
 
-        // Validar el campo cuando el usuario escribe o borra
         const errorKey = `link${index}_${field}`;
-
-        if (field === 'label') {
-            if (value.trim() === "") {
-                setErrors((prev) => ({ ...prev, [errorKey]: "El nombre del enlace es obligatorio" }));
-            } else {
-                setErrors((prev) => ({ ...prev, [errorKey]: undefined }));
-            }
-        }
 
         if (field === 'url') {
             if (value.trim() === "") {
-                setErrors((prev) => ({ ...prev, [errorKey]: "El enlace es obligatorio" }));
+                setErrors((prev) => ({ ...prev, [errorKey]: undefined }));
             } else {
-                // Validar formato de URL si no está vacío
                 const urlPattern = /^https?:\/\/([\w-]+\.)+[\w-]+(\/[\w\-./?%&=]*)?$/;
-                if (value.trim() && !urlPattern.test(value)) {
+                if (!urlPattern.test(value)) {
                     setErrors((prev) => ({ ...prev, [errorKey]: "Debe ser un enlace valido (ej: https://github.com/usuario)" }));
                 } else {
                     setErrors((prev) => ({ ...prev, [errorKey]: undefined }));
                 }
             }
+        } else {
+            setErrors((prev) => ({ ...prev, [errorKey]: undefined }));
         }
     };
-    
-    // Agregar un nuevo campo de enlace
+
     const addLink = () => {
         setFormData((prev) => ({
             ...prev,
@@ -171,7 +148,6 @@ export const useProjectForm = (
         }));
     };
 
-    // Eliminar un campo de enlace por indice
     const removeLink = (index: number) => {
         setFormData((prev) => ({
             ...prev,
@@ -180,59 +156,40 @@ export const useProjectForm = (
         const newErrors = { ...errors };
         delete newErrors[`link${index}_label`];
         delete newErrors[`link${index}_url`];
-        // También renombrar los errores de los índices siguientes
         setErrors(newErrors);
     };
 
-    // Manejar cambio de imagen
     const handleImageChange = (file: File | null) => {
         setFormData((prev) => ({ ...prev, image: file }));
         setErrors((prev) => ({ ...prev, image: undefined }));
     };
 
-    // Validar todo el formulario antes de enviar
     const validateForm = (): boolean => {
         const e: FormErrors = {};
 
-        // Validar nombre
         if (!formData.name?.trim()) {
             e.name = "El título del proyecto es obligatorio";
         } else if (formData.name.length > 50) {
             e.name = "El título del proyecto supera el límite de 50 caracteres";
         }
 
-        // Validar descripción
         if (!formData.description?.trim()) {
             e.description = "La descripción es obligatoria";
         } else if (formData.description.length > 200) {
             e.description = "La descripción supera el límite de 200 caracteres";
         }
 
-        // Validar temática
         if (!formData.topic?.trim()) {
             e.topic = "La temática es obligatoria";
         }
 
-        // Validar rol
         if (!formData.role?.trim()) {
             e.role = "El rol es obligatorio";
         } else if (formData.role.length > 50) {
             e.role = "El rol supera el límite de 50 caracteres";
         }
 
-        // Validar enlaces
         const urlPattern = /^https?:\/\/([\w-]+\.)+[\w-]+(\/[\w\-./?%&=]*)?$/;
-
-        // Verificar si hay al menos un enlace válido
-        const hasValidLink = formData.links.some(link =>
-            link.label?.trim() && link.url?.trim()
-        );
-
-        if (!hasValidLink && !isEditing) {
-            e.link0_label = "Al menos un enlace es obligatorio";
-        }
-
-        // Validar cada enlace individualmente
         formData.links.forEach((link, idx) => {
             if (link.label?.trim() && !link.url?.trim()) {
                 e[`link${idx}_url`] = "La URL es obligatoria";
@@ -245,16 +202,10 @@ export const useProjectForm = (
             }
         });
 
-        // Validar imagen
-        if (!formData.image && !imageUrl) {
-            e.image = "La imagen del proyecto es obligatoria";
-        }
-
         setErrors(e);
         return Object.keys(e).length === 0;
     };
 
-    // Establecer datos iniciales del formulario
     const setInitialData = (data: Partial<CreateProjectPayload>) => {
         setFormData({
             ...INITIAL_FORM,
@@ -265,7 +216,6 @@ export const useProjectForm = (
         setErrors({});
     };
 
-    // Resetear el formulario a su estado inicial
     const reset = () => {
         setFormData({
             ...INITIAL_FORM,
@@ -276,29 +226,27 @@ export const useProjectForm = (
         setErrors({});
     };
 
-    // Verificar si todos los campos requeridos estan completos
     const isFormComplete = () => {
-        if (isEditing) return true; // Para edición, solo verificamos cambios después
+        if (isEditing) return true;
 
-        // Para crear, verificamos que todos los campos requeridos tengan valor
         const hasName = formData.name && formData.name.trim() !== "";
         const hasDescription = formData.description && formData.description.trim() !== "";
         const hasTopic = formData.topic && formData.topic.trim() !== "";
         const hasRole = formData.role && formData.role.trim() !== "";
-        const hasImage = formData.image !== null && formData.image !== undefined && formData.image !== "";
 
-        // Verificar que todos los enlaces tengan nombre y URL
-        const areLinksValid = formData.links.every(link =>
-            link.label && link.label.trim() !== "" &&
-            link.url && link.url.trim() !== ""
-        );
+        const areLinksValid = formData.links.every(link => {
+            const hasLabel = link.label && link.label.trim() !== "";
+            const hasUrl = link.url && link.url.trim() !== "";
+            if (hasLabel && !hasUrl) return false;
+            if (!hasLabel && hasUrl) return false;
+            return true;
+        });
 
-        return hasName && hasDescription && hasTopic && hasRole && hasImage && areLinksValid;
+        return hasName && hasDescription && hasTopic && hasRole && areLinksValid;
     };
 
-    // Verificar si hay errores criticos que impidan enviar
     const hasCriticalErrors = () => {
-        const criticalFields = ['name', 'description', 'topic', 'role', 'image'];
+        const criticalFields = ['name', 'description', 'topic', 'role'];
 
         const hasLinkErrors = formData.links.some((_, index) =>
             errors[`link${index}_label`] || errors[`link${index}_url`]
@@ -307,25 +255,25 @@ export const useProjectForm = (
         return criticalFields.some(field => errors[field]) || hasLinkErrors;
     };
 
-    // Determinar si el boton de enviar debe estar deshabilitado
     const isSubmitDisabled = () => {
         if (isSubmitting) return true;
-        if (isEditing && !hasChanges) return true;
-        // En modo creación, deshabilitar si el formulario no está completo o hay errores críticos
+        if (isEditing && !hasChanges()) return true;
         if (!isEditing && (!isFormComplete() || hasCriticalErrors())) return true;
         return false;
     };
 
-    // Obtener el error de un campo de enlace especifico
     const getLinkError = (index: number, field: 'label' | 'url') => {
         const errorKey = `link${index}_${field}`;
         const error = errors[errorKey];
         return typeof error === 'string' ? error : undefined;
     };
 
-    // Enviar el formulario
     const handleSubmit = async () => {
         if (!validateForm()) return;
+
+        const cleanLinks = formData.links.filter(
+            link => link.label?.trim() && link.url?.trim()
+        );
 
         if (isEditing && projectId) {
             const updatePayload: UpdateProjectPayload = {
@@ -333,7 +281,7 @@ export const useProjectForm = (
                 topic: formData.topic,
                 role: formData.role,
                 status: formData.status,
-                links: formData.links,
+                links: cleanLinks,
                 image: formData.image,
             };
             await onSubmit(updatePayload, projectId);
@@ -344,7 +292,7 @@ export const useProjectForm = (
                 topic: formData.topic,
                 role: formData.role,
                 status: formData.status,
-                links: formData.links,
+                links: cleanLinks,
                 image: formData.image,
             };
             await onSubmit(createPayload);
