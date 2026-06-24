@@ -19,7 +19,7 @@ interface PersonalProjectsModalProps {
 }
 
 const STYLES = {
-    FORM_WRAPPER: "flex flex-col gap-4 px-6 pb-20",
+    FORM_WRAPPER: "flex flex-col gap-4 px-6 pb-4",
     DYNAMIC_GRID: "grid grid-cols-1 md:grid-cols-3 gap-3 auto-rows-min",
     TITLE: "w-1/2",
     INPUT_LABEL: "mb-0.5 text-sm font-medium text-white",

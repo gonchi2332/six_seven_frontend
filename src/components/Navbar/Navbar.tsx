@@ -24,6 +24,7 @@ const STYLES = {
     TAB_ACTIVE: "bg-accent text-secondary shadow-lg shadow-accent/20",
     TAB_INACTIVE: "text-white/60 hover:text-white hover:bg-white/5",
     ACTIONS_CONTAINER: "flex items-center gap-3 ml-4 shrink-0",
+
     HOME_BUTTON: "flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-bold transition-all duration-200 bg-[#2C666E]/40 border border-[#90DDF0]/30 text-[#90DDF0] hover:bg-[#2C666E]/60 whitespace-nowrap",
     COPY_BUTTON: "flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-bold transition-all duration-200 bg-white/10 hover:bg-white/20 text-white whitespace-nowrap",
     PRINT_BUTTON: "flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-bold transition-all duration-200 bg-[#07393C]/60 border border-[#2C666E]/40 text-[#90DDF0] hover:bg-[#07393C]/80 whitespace-nowrap",
@@ -262,22 +263,8 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                             </Button>
                         )}
 
-                        {/* Botón Imprimir CV — solo versión privada */}
-                        {!isPublic && (
-                            <Button onClick={() => navigate("/print")} className={STYLES.PRINT_BUTTON}>
-                                <Printer size={16} />
-                                <span className="hidden sm:inline">Imprimir CV</span>
-                                <span className="sm:hidden">CV</span>
-                            </Button>
-                        )}
 
-                        {!isPublic && userInfo?.username && (
-                            <Button onClick={() => setIsShareModalOpen(true)} className={STYLES.COPY_BUTTON}>
-                                <Copy size={16} />
-                                <span className="hidden sm:inline">Generar Enlace</span>
-                                <span className="sm:hidden">Enlace</span>
-                            </Button>
-                        )}
+
 
                         {!isPublic && token ? (
                             <Button onClick={handleLogout} className={STYLES.LOGOUT_BUTTON}>
