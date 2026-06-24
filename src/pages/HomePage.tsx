@@ -5,13 +5,12 @@ import { useUserSearch } from "../hooks/useHomepage";
 import Button from "../components/Button";
 
 const styles = {
-    wrapper: "min-h-screen bg-[#031B1D] flex flex-col items-center justify-center p-4 sm:p-6",
-    heroCard: "w-full max-w-[800px] rounded-2xl border border-[#2C666E] bg-[#07393C] p-6 sm:p-10 flex flex-col items-center gap-8 shadow-2xl relative overflow-hidden",
-    glowEffect: "absolute -top-40 -right-40 w-80 h-80 bg-[#90DDF0]/10 rounded-full blur-3xl pointer-events-none",
+    wrapper: "min-h-dvh bg-[#031B1D] flex flex-col items-center justify-center p-4 sm:p-6",
+    heroCard: "w-full max-w-[800px] rounded-2xl  p-6 sm:p-10 flex flex-col items-center gap-8 relative overflow-hidden",
     brandWrapper: "flex items-center gap-2 text-[#90DDF0] font-inter text-xs uppercase tracking-widest font-bold bg-black/20 px-3 py-1.5 rounded-full border border-white/5",
     title: "text-3xl sm:text-5xl font-extrabold font-inter text-white text-center leading-tight max-w-xl",
     subtitle: "text-white/60 font-nunito text-sm sm:text-base text-center -mt-4 max-w-md",
-    buttonGroup: "flex items-center gap-4 w-full sm:w-auto",
+    buttonGroup: "flex items-center justify-center gap-4 w-full",
     primaryBtn: "flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-[#90DDF0] text-[#07393C] font-nunito font-bold text-sm sm:text-base hover:bg-[#90DDF0]/90 transition-all shadow-lg shadow-[#90DDF0]/10 flex items-center justify-center gap-2 group",
     secondaryBtn: "flex-1 sm:flex-none px-6 py-2.5 rounded-xl border border-white/20 text-white font-nunito font-bold text-sm sm:text-base hover:border-[#90DDF0] hover:text-[#90DDF0] transition-all bg-black/10 flex items-center justify-center gap-2",
     searchSection: "w-full max-w-lg flex flex-col gap-2 relative mt-4",
@@ -29,15 +28,13 @@ const styles = {
     statusMessage: "text-white/40 font-nunito text-xs text-center py-4 italic",
 };
 
-// Página principal (landing page) con buscador de perfiles públicos
 const HomePage = () => {
     const navigate = useNavigate();
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [showDropdown, setShowDropdown] = useState(false);
-    
+
     const { query, setQuery, filteredUsers, isFetching } = useUserSearch();
 
-    // Cerrar dropdown al hacer clic fuera
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -56,7 +53,7 @@ const HomePage = () => {
 
     return (
         <div className={styles.wrapper}>
-                <div className={styles.glowEffect} />
+            <div className={styles.heroCard}>
 
                 <div className={styles.brandWrapper}>
                     <span>SixSeven Portafolios profesionales</span>
@@ -109,9 +106,9 @@ const HomePage = () => {
                                             <div className="flex items-center overflow-hidden flex-1">
                                                 <div className={styles.avatarWrapper}>
                                                     {user.profile_picture_url ? (
-                                                        <img 
-                                                            src={user.profile_picture_url} 
-                                                            alt={fullName} 
+                                                        <img
+                                                            src={user.profile_picture_url}
+                                                            alt={fullName}
                                                             className={styles.avatarImg}
                                                         />
                                                     ) : (
@@ -148,6 +145,7 @@ const HomePage = () => {
                         <span>Registrarse</span>
                     </Button>
                 </div>
+            </div>
         </div>
     );
 };
