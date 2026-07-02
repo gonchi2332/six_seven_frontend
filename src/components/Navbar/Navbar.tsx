@@ -1,5 +1,3 @@
-// src/components/Navbar/Navbar.tsx
-
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { parseProfilePicture } from "../../services/decodeBase64";
@@ -263,7 +261,21 @@ const Navbar = ({ isPublic = false, ownerName }: NavbarProps) => {
                             </Button>
                         )}
 
-
+                        {/* Botón Imprimir CV — solo versión privada y solo desktop */}
+                        {!isPublic && (
+                            <div className="hidden lg:block">
+                                <Button onClick={() => navigate("/print")} className={STYLES.PRINT_BUTTON}>
+                                    <Printer size={16} />
+                                    <span>Imprimir CV</span>
+                                </Button>
+                            </div>
+                        )}
+                        {!isPublic && userInfo?.username && (
+                            <Button onClick={() => setIsShareModalOpen(true)} className={STYLES.COPY_BUTTON}>
+                                <Copy size={16} className="hidden lg:inline" />
+                                <span className="hidden lg:inline">Generar Enlace</span>
+                            </Button>
+                        )}
 
 
                         {!isPublic && token ? (
